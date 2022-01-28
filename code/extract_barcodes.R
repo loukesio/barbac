@@ -5,6 +5,7 @@
 library(here)         # set the working directory 
 library(tidyverse)    # best package ever
 library(Biostrings)   # read sequence data; be careful of the overlap with tidyverse
+library(Rsamtools)
 
 ###############################
 # set the working directory
@@ -19,13 +20,76 @@ setwd(here("data"))
 #$ the data contains 4 sequences that have been mapped to the reference
 
 # extract the sequnce after using str_extract
-(test <- readDNAStringSet("covert_bam_fasta.fasta") %>%   
-  reverseComplement() %>%        # I do not understand why we need the reverse complement 
+
+readDNAStringSet("covert_bam_fasta.fasta") %>%   
+  reverseComplement()   %>%     # I do not understand why we need the reverse complement 
   as.data.frame() %>%
   as_tibble() %>% 
+  mutate(names=names(readDNAStringSet("covert_bam_fasta.fasta"))) %>% 
  dplyr::rename(seq=x) %>% 
-  mutate(seq=str_extract(string = .$seq, pattern = "(?<=CTACG).*(?=CAGTC)"))
+  mutate(seq=str_extract(string = .$seq, pattern = "(?<=CTACG).*(?=CAGTC)")) %>% 
+  mutate(length=str_length(seq))
+
+library(tidystringdist)
+
+df <- data.frame(stringsAsFactors = FALSE,
+                 Name = as.factor(c(" CANON PVT. LTD ", " Antila,Thomas ", " Greg ",
+                                    " St.Luke's Hospital ", " Z_SANDSTONE COOLING LTD ",
+                                    " St.Luke's Hospital ", " CANON PVT. LTD. ",
+                                    " SANDSTONE COOLING LTD ", " Greg ", " ANTILA,THOMAS ")),
+                 City = as.factor(c(" Georgia ", " Georgia ", " Georgia ", " Georgia ",
+                                    " Georgia ", " Georgia ", " Georgia ", " Georgia ",
+                                    " Georgia ", " Georgia "))
 )
+df
+
+df %>% 
+  tidy_comb_all(Name) %>% 
+  tidy_stringdist() %>% 
+  filter(soundex == 0) %>% 
+  pivot_longer(cols=starts_with("V"), 
+               names_to = "match",
+               values_to = "V"
+  )
+
+library("RBioinf")
+Lpattern <- "CTACG"
+Rpattern <- c("CAGTC")
+
+
+x <- c("T", "A", "C", "G")
+
+dict <- expand.grid(rep(list(x), 5)) %>% 
+  unite("dictionary", 1:5, sep="")
+dict
+
+library(levenR)
+
+L <- leven(dict$dictionary,Lpattern,substring2 = TRUE) %>% 
+  as.data.frame() %>% 
+  dplyr::rename(distance="V1")  %>% 
+  mutate(Lpattern=dict$dictionary) %>% 
+  filter(distance==1 | distance==0) %>% 
+  arrange(distance)
+  
+R <- leven(dict$dictionary,Rpattern,substring2 = TRUE) %>% 
+  as.data.frame() %>% 
+  dplyr::rename(distance="V1")  %>% 
+  mutate(Rpattern=dict$dictionary) %>% 
+  filter(distance==1 | distance==0) %>%
+  arrange(distance) %>% 
+  select(Rpattern)
+
+tidy_comb_all(Lpattern,Rpattern) 
+  
+    
+  
+setnames(.,refer) 
+  mutate(barcodes= oper$barcodes) %>% 
+  relocate(barcodes) %>% 
+
+tidy_comb_all(dict, Lpattern)
+
 
 
 setwd(here("Volumes","home","test_bam"))
