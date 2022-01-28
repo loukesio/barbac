@@ -16,6 +16,7 @@ setwd(here("data"))
 ###############################
 # read data 
 ###############################
+####
 
 #$ the data contains 4 sequences that have been mapped to the reference
 

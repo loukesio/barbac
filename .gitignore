@@ -38,5 +38,5 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-.DS_Store
+# Do not store DS_Store
 .DS_Store
