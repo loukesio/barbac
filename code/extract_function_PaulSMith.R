@@ -1,31 +1,7 @@
-guess I have solved the problem, @LDT!
-  
-  The idea is to use _all_ variants of the the following patterns to extract the wanted middle string:
-  
-  ```
-"(?<=TGCA).*(?=CTGC)"
-"AAAAAA"
-"(?<=TGCA).*(?=CTGC)"
-"AAAAAA"
-"(?<=TGCA).*(?=CTGC)"
-"AAAAAA"
-"(?<=TGCA).*(?=CTGC)"
-"AAAAAA"
-"(?<=TGCA).*(?=CTGC)"
-"AAAAAA"
-"(?<=[A-Z]GCA).*(?=CTGC)"
-"AAAAAA"
-"(?<=[A-Z]GCA).*(?=[A-Z]TGC)"
-...
-
-```
-
-The code below accomplishes that:
-  
-  ``` r
 library(tidyverse)
 
 s <- "AAAAAATGCAAAAAAACTGC"
+s
 
 delim1 <- "TGCA"
 delim2 <- "CTGC"
@@ -49,32 +25,3 @@ for (i in 0:nchar(delim1))
     
   }
 }
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-#> [1] "AAAAAA"
-```
-
-I would like to collaborate with you as long as my free time allows me.
-
