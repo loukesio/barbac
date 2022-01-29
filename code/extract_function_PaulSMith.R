@@ -1,7 +1,6 @@
 library(tidyverse)
 
-s <- "AAAAAATGCAAAAAAACTGC"
-s
+
 
 delim1 <- "TGCA"
 delim2 <- "CTGC"

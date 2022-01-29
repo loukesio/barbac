@@ -22,14 +22,7 @@ setwd(here("data"))
 
 # extract the sequnce after using str_extract
 
-readDNAStringSet("covert_bam_fasta.fasta") %>%   
-  reverseComplement()   %>%     # I do not understand why we need the reverse complement 
-  as.data.frame() %>%
-  as_tibble() %>% 
-  mutate(names=names(readDNAStringSet("covert_bam_fasta.fasta"))) %>% 
- dplyr::rename(seq=x) %>% 
-  mutate(seq=str_extract(string = .$seq, pattern = "(?<=CTACG).*(?=CAGTC)")) %>% 
-  mutate(length=str_length(seq))
+c
 
 library(tidystringdist)
 
