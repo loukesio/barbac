@@ -1,4 +1,46 @@
+library(here)
 library(tidyverse)
+library(Biostrings)
+library(systemfonts)
+
+setwd(here("data"))
+getwd()
+
+# here with strict border I am missing two from the output
+ 
+readDNAStringSet("convert_test_special.fasta") %>%   
+    reverseComplement() %>%        # I do not understand why we need the reverse complement 
+    as.data.frame() %>%
+    as_tibble() %>% 
+    dplyr::rename(seq=x) %>% 
+    mutate(seq=str_extract(string = .$seq, pattern = "(?<=CTACG).*(?=CAGTC)"))
+
+
+check1 <- readDNAStringSet("convert_test_special.fasta") %>%   
+  reverseComplement() %>%        # I do not understand why we need the reverse complement 
+  as.data.frame() %>%
+  as_tibble() %>% 
+  dplyr::rename(seq=x) %>% 
+  mutate(name=names(readDNAStringSet("convert_test_special.fasta"))) %>% 
+  mutate(barcodes= str_extract(string = .$seq, pattern = "(?<=CTACG).*(?=CAGTC)"))
+
+check1 %>% 
+  filter_all(any_vars(is.na(.))) %>% 
+  mutate(barcodes=str_extract())
+
+
+check2 <- check1 %>% 
+  filter(is.na(barcodes)) 
+
+require("dplyr")
+Sequences=c("AzzY","BbDe")
+Database=c("TTUAzzY","aaa","DBbDe","CAzzY")
+
+df=as.data.frame(sapply(Sequences, function(x) grepl(x,Database)))
+Sequences
+stats=df %>% summarise_each(funs(sum))
+stats
+cbind(Sequences,as.numeric(stats))
 
 
 
