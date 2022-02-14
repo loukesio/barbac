@@ -5,6 +5,9 @@
 # Session Data files
 .RData
 
+# Do not add this file anymore
+.RDataTmp
+
 # User-specific files
 .Ruserdata
 
