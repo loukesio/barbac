@@ -69,50 +69,34 @@ raw.data <- readDNAStringSet("covert_bam_fasta.fasta") %>%
   dplyr::rename(seq=x)
 
 test <- expand_grid(seq = raw.data$seq,
-            pattern = patterns1) %>%
+            pattern = patterns2) %>%
   distinct() %>% 
   mutate(match = str_extract_all(seq, pattern)) %>% 
   pivot_wider(
     names_from = "pattern",
     values_from = "match"
   ) %>% 
-  dplyr::rename_with(~names(patterns1),
+  dplyr::rename_with(~names(patterns2),
               .cols = -seq) %>% 
   select(where(~!all(lengths(.) == 0))) %>% 
-  as.data.frame() 
-  #mutate_all(., function(x) lapply(x, length) == 0) <- NA )
+  mutate(across(starts_with('pattern'), ~ lapply(., function(x) ifelse(length(x) == 0, NA, x))))
 
-test  
+test
 
-test[apply(test, 2, function(x) lapply(x, length) == 0)] <- NA #Replace empty lists with NA
-
-test %>% 
-  as.data.frame() %>% 
-  mutate_at(vars(2:last_col()), as.character) %>% 
-  pivot_longer(!seq,names_to = "patterns", values_to = "barcodes")
-
-
-
-
-test[apply(test, 2, function(x) lapply(x, length) == 0)] <- NA #Replace empty lists with NA
-
-test %>% 
-  as.data.frame()
-
-check = (test[apply(test, 2, function(x) lapply(x, length) == 0) == T] <- NA) #Replace empty lists with NA
-check
-test %>% 
-  unnest(vars(2:last_col()), keep_empty = TRUE)
+# i ll find a way   
+test1 <- test %>%   
+as.data.frame() %>% 
+mutate_at(vars(2:last_col()), as.character) %>% 
+pivot_longer(!seq,names_to = "patterns", values_to = "barcodes") %>% 
+  arrange(patterns) %>% 
+  mutate(barcode_length=str_length(barcodes)) %>% 
+  filter(barcode_length < 27 & barcode_length > 23)
 
 test1
-test
-test %>% 
-  mutate_at(vars(2:last_col()), funs(unlist))
-  
-  
 
-select(pattern1:pattern2) %>% 
-  unnest(pattern1)
+test1 %>% 
+  group_by(barcodes) %>% 
+  mutate(count=n())
 # how to rename columns which have lists inside and then how to select only the  rows from the ones that are not NA
 
 
