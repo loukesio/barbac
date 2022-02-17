@@ -1,9 +1,7 @@
 # barcodes Dave 
 
-setwd(here("data","barcodes_Dave"))
-
 library(tictoc)
-
+library(here)
 library(tidyverse)
 library(Biostrings)
 library(levenR)
@@ -11,6 +9,10 @@ library(data.table)
 library(systemfonts)
 
 ##### set the plots style 
+
+setwd(here("data","barcodes_Dave"))
+
+########################################
 
 match_font('Avenir', italic = TRUE)
 
@@ -57,12 +59,13 @@ dat1 %>%
   geom_histogram(aes(log10(n), fill=n), binwidth = 1) +
   labs(x="barcode counts in log10 scale", y="counts", title="Distribution of barocde counts per position in log scale") +
   ggtext::geom_textbox(
-  data = tibble(x = 3, y = 100000, label = "In the Plasmid Sequence, plasmidSeq, there are 41492 unique barcodes. The total number of barcodes in the plasmid is 129935."),
+  data = tibble(x = 2.5, y = 120000, label = "In the Plasmid Sequence, plasmidSeq, there are 41492 unique barcodes. The total number of barcodes in the plasmid is 129935."),
   aes(x, y, label = label),
   size = 4.5, family = "Avenir",
-  fill = "cornsilk", box.color = "cornsilk3",
+  fill = NA, box.color = NA,
   width = unit(11, "lines")
-)
+) +
+  geom_point(data=tibble(x1=2.5, y1=125000), aes(x1,y1), size=90, shape=21)
 
 # Barcode counts in the plasmidSeq
 data %>% 
@@ -76,6 +79,7 @@ test.distance <- data %>%
   filter(position == "1534")  
 
 test.distance %>% 
+  arrange(desc(count)) %>% 
   View()
 
 # check for 1534 the following two barcodes the TTTTTATTTTACAGTTTTTT [83]
@@ -87,13 +91,24 @@ test.distance
 leven(test.distance$barcode, substring2 = TRUE) %>% 
   as.data.frame() %>% 
   setnames(.,test.distance$barcode) %>% 
-  mutate(barcodes=test.distance$barcode) %>%
-  relocate(barcodes) %>% 
-  pivot_longer(!barcodes, names_to = "barcodes_2", values_to = "distance") %>% 
-  filter(distance>0 & distance <4)  %>% 
+  mutate(barcode=test.distance$barcode) %>%
+  relocate(barcode) %>% 
+  pivot_longer(!barcode, names_to = "barcodes_2", values_to = "distance") %>% 
+  filter(distance>0 & distance <4) %>% 
+    left_join(.,test.distance, by="barcode") %>%
+  mutate(Var = map2_chr(barcode, barcodes_2, ~toString(sort(c(.x, .y))))) %>%
+  distinct(Var, .keep_all = TRUE) %>%
+  select(-Var) %>%
+  arrange(barcode) %>% 
+  left_join(., test.distance, by = c("barcodes_2" = "barcode")) %>% 
+  select(barcode,barcodes_2, distance, position.x, gene_name.x, count.x, count.y) %>% 
+  rename(count_barcode=count.x,count_barcodes_2=count.y)
+  
+
+test.distance
+
   unique(.[,c('barcodes','barcodes_2')])
 
-  View()
   mutate(position=test.distance$position) 
   mutate(gene_name=test.distance$gene_name) %>% 
   mutate(count=test.distance$count) %>% 
