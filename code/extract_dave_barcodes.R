@@ -45,7 +45,12 @@ tic("group barcodes")
 
 data <- fread(file = "4853_K barcode positions.txt")
 
-# how many 
+#___________________________________________
+# ┌┬┐┌─┐┌┬┐┌─┐┬    ┌┐ ┌─┐┬─┐┌─┐┌─┐┌┬┐┌─┐┌─┐
+#  │ │ │ │ ├─┤│    ├┴┐├─┤├┬┘│  │ │ ││├┤ └─┐
+#  ┴ └─┘ ┴ ┴ ┴┴─┘  └─┘┴ ┴┴└─└─┘└─┘─┴┘└─┘└─┘
+#___________________________________________
+
 dat1 <-  data %>% 
   group_by(corrected_insertion_site) %>% 
   count(corrected_insertion_site) %>% 
@@ -57,7 +62,7 @@ dat1 %>%
   mutate(position= as.numeric(corrected_insertion_site)) %>% 
   ggplot(.) +
   geom_histogram(aes(log10(n), fill=n), binwidth = 1) +
-  labs(x="barcode counts in log10 scale", y="counts", title="Distribution of barocde counts per position in log scale") +
+  labs(x="barcode counts in log10 scale", y="counts", title="Distribution of barocde counts in log scale") +
   ggtext::geom_textbox(
   data = tibble(x = 2.5, y = 120000, label = "In the Plasmid Sequence, plasmidSeq, there are 41492 unique barcodes. The total number of barcodes in the plasmid is 129935."),
   aes(x, y, label = label),
@@ -67,20 +72,68 @@ dat1 %>%
 ) +
   geom_point(data=tibble(x1=2.5, y1=125000), aes(x1,y1), size=90, shape=21)
 
-# Barcode counts in the plasmidSeq
+#______________________________________________________
+# ┌┐ ┌─┐┬─┐┌─┐┌─┐┌┬┐┌─┐┌─┐  ┬┌┐┌  ┌─┐┬  ┌─┐┌─┐┌┬┐┬┌┬┐
+# ├┴┐├─┤├┬┘│  │ │ ││├┤ └─┐  ││││  ├─┘│  ├─┤└─┐││││ ││
+# └─┘┴ ┴┴└─└─┘└─┘─┴┘└─┘└─┘  ┴┘└┘  ┴  ┴─┘┴ ┴└─┘┴ ┴┴─┴┘
+#______________________________________________________
+
 data %>% 
   filter(corrected_insertion_site == "plasmidSeq") %>% 
-  summarise(sum(count))
+  summarise(sum_plasmid=sum(count))
 
-test.distance <- data %>% 
+#_________________________________________________________________________________
+# ╔╗ ┌─┐┬─┐┌─┐┌─┐┌┬┐┌─┐  ╦╔╗╔  ╔╦╗┬┌─┐┌─┐┌─┐┬─┐┌─┐┌┐┌┌┬┐  ╔═╗┌─┐┌─┐┬┌┬┐┬┌─┐┌┐┌┌─┐
+# ╠╩╗├─┤├┬┘│  │ │ ││├┤   ║║║║   ║║│├┤ ├┤ ├┤ ├┬┘├┤ │││ │   ╠═╝│ │└─┐│ │ ││ ││││└─┐
+# ╚═╝┴ ┴┴└─└─┘└─┘─┴┘└─┘  ╩╝╚╝  ═╩╝┴└  └  └─┘┴└─└─┘┘└┘ ┴   ╩  └─┘└─┘┴ ┴ ┴└─┘┘└┘└─┘
+#_________________________________________________________________________________
+
+head(data)
+diff.positions <- data %>% 
+  filter(corrected_insertion_site != "plasmidSeq") %>% 
+  dplyr::rename(position=corrected_insertion_site) %>% 
+  group_by(barcode) %>% 
+  summarise(groups = list(position), n_groups = n(), counts = sum(count)) %>% 
+  arrange(desc(n_groups)) %>% 
+  filter(n_groups > 1) %>% 
+  select(-groups) %>% 
+  mutate(n_positions=n_groups)
+
+data %>% 
+  filter(corrected_insertion_site != "plasmidSeq") %>% 
+  dplyr::rename(position=corrected_insertion_site) %>% 
+  group_by(barcode) %>% 
+  summarise(groups = list(position), n_groups = n(), counts = sum(count)) %>% 
+  arrange(desc(n_groups)) %>% 
+  filter(n_groups < 2) %>% 
+  filter(grepl("^GGG", barcode))
+
+df1 %>% filter(!grepl("^x|xx$", fruit))
+
+  grepl('^GG', x) # starts with AB?
+
+
+write.table(diff.positions,"barcodes_diffpos.txt")
+
+  ungroup() %>% 
+  count(barcode)
+  # slice(1) %>% 
+  # select(groups) %>% 
+  # unlist()
+
+#_________________________________________________________
+# ╔═╗┬  ┬ ┬┌─┐┌┬┐┌─┐┬─┐  ┌─┐┌─┐┬─┐  ╔═╗┌─┐┌─┐┬┌┬┐┬┌─┐┌┐┌
+# ║  │  │ │└─┐ │ ├┤ ├┬┘  ├─┘├┤ ├┬┘  ╠═╝│ │└─┐│ │ ││ ││││
+# ╚═╝┴─┘└─┘└─┘ ┴ └─┘┴└─  ┴  └─┘┴└─  ╩  └─┘└─┘┴ ┴ ┴└─┘┘└┘
+#_________________________________________________________
+
+data %>% 
   filter(corrected_insertion_site != "plasmidSeq" & corrected_insertion_site != "int64") %>% 
   dplyr::rename(position=corrected_insertion_site) %>% 
   group_by(position) %>% 
-  filter(position == "1534")  
-
-test.distance %>% 
-  arrange(desc(count)) %>% 
-  View()
+  filter(position == "1534")  %>% 
+  arrange(desc(count))
+  
 
 # check for 1534 the following two barcodes the TTTTTATTTTACAGTTTTTT [83]
 # and the TTTCCTCCAATAGACTTCTT [23]
