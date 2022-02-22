@@ -88,7 +88,6 @@ data %>%
 # ╚═╝┴ ┴┴└─└─┘└─┘─┴┘└─┘  ╩╝╚╝  ═╩╝┴└  └  └─┘┴└─└─┘┘└┘ ┴   ╩  └─┘└─┘┴ ┴ ┴└─┘┘└┘└─┘
 #_________________________________________________________________________________
 
-head(data)
 diff.positions <- data %>% 
   filter(corrected_insertion_site != "plasmidSeq") %>% 
   dplyr::rename(position=corrected_insertion_site) %>% 
@@ -99,6 +98,15 @@ diff.positions <- data %>%
   select(-groups) %>% 
   mutate(n_positions=n_groups)
 
+# find how many barcodes are present in more than one position
+# write.table(diff.positions,"barcodes_diffpos.txt")
+
+
+######
+# this is a very cool function to grep all the barcodes that start with multiple GGGG s
+# also I can use this function to count how barcodes are present in a single position
+######
+
 data %>% 
   filter(corrected_insertion_site != "plasmidSeq") %>% 
   dplyr::rename(position=corrected_insertion_site) %>% 
@@ -108,24 +116,16 @@ data %>%
   filter(n_groups < 2) %>% 
   filter(grepl("^GGG", barcode))
 
-df1 %>% filter(!grepl("^x|xx$", fruit))
-
-  grepl('^GG', x) # starts with AB?
-
-
-write.table(diff.positions,"barcodes_diffpos.txt")
-
-  ungroup() %>% 
-  count(barcode)
-  # slice(1) %>% 
-  # select(groups) %>% 
-  # unlist()
-
 #_________________________________________________________
 # ╔═╗┬  ┬ ┬┌─┐┌┬┐┌─┐┬─┐  ┌─┐┌─┐┬─┐  ╔═╗┌─┐┌─┐┬┌┬┐┬┌─┐┌┐┌
 # ║  │  │ │└─┐ │ ├┤ ├┬┘  ├─┘├┤ ├┬┘  ╠═╝│ │└─┐│ │ ││ ││││
 # ╚═╝┴─┘└─┘└─┘ ┴ └─┘┴└─  ┴  └─┘┴└─  ╩  └─┘└─┘┴ ┴ ┴└─┘┘└┘
 #_________________________________________________________
+
+# here comes the fun; 
+# 1. try to cluster all barcodes together 
+# 2. try to cluster all barcodes that map in a single position togehter in a genome
+# 3. try to cluster all barcodes that map in a single position in each position
 
 data %>% 
   filter(corrected_insertion_site != "plasmidSeq" & corrected_insertion_site != "int64") %>% 
@@ -134,7 +134,6 @@ data %>%
   filter(position == "1534")  %>% 
   arrange(desc(count))
   
-
 # check for 1534 the following two barcodes the TTTTTATTTTACAGTTTTTT [83]
 # and the TTTCCTCCAATAGACTTCTT [23]
 
@@ -228,6 +227,7 @@ step3 <- leven(step2$barcodes,substring2 = TRUE)  %>%
   filter(dist<3 & dist>0)  %>% 
   arrange(clust)
 
+
 step4 <- inner_join(step3,step1) %>% 
   group_by(barcodes_ref) %>% 
   summarise(adds = sum(counts)) %>% 
@@ -237,4 +237,9 @@ step4 <- inner_join(step3,step1) %>%
 
 toc()
 
+
+library(levenR)
+seqs <- replicate(50, paste(sample(letters, 100, TRUE), collapse = ""))
+system.time(leven(seqs))
+system.time(leven(seqs, nThreads = 4))
 

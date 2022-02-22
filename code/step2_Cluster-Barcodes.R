@@ -45,3 +45,27 @@ step4 <- inner_join(step3,step1) %>%
 toc()
 
 
+### alternative clustering methods
+
+
+
+library(stringdist)
+stringdist("ca","abc")
+
+stringdist(c("ATTTC","TTTC"), c("ATTTC","TTTC"),method="lv", nthread = 4)
+
+a=c("ATTTC","TTTC")
+
+data(phiX174Phage)
+phiX174Phage
+
+
+stringDist(phiX174Phage, method = "levenshtein", nthread=2)
+
+library(stringdist)
+vec = c("keep", "teem", "meat", "weep")
+
+out <- as.matrix(stringdistmatrix(vec), method=levenshtein)
+dimnames(out) <- list(vec, vec)
+out
+
