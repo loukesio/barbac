@@ -56,3 +56,30 @@ toc()
 # https://stackoverflow.com/questions/71161281/sum-the-counts-of-the-unique-elements-of-a-group-and-keep-the-one-with-the-highe
 # but also break the 
 
+# References 
+
+# #https://jamesfeigenbaum.github.io/post/2017/speed-testing-string-distance-measures/
+library(tidyverse)
+
+df <- data.frame(names=c("A ADAM", "S BEAN", "A APPLE", "J BOND", "J BOND"), 
+                 v1=c("Test_a", "Test_b", "Test_a", "Test_b", "Test_b"), 
+                 v2=c("Test_c", "Test_c", "Test_d", "Test_d", "Test_d"))
+
+df
+
+lapply(df, stringdist::stringdistmatrix, method = 'lv') %>% 
+   map_df(broom::tidy, .id = 'var') %>% 
+  spread(var, distance)
+
+
+library(rbenchmark)
+library(RecordLinkage)
+library(stringdist)
+
+ x <- sapply(sample(5:25,1e5,replace=TRUE), function(n) paste(sample(letters,n,replace=TRUE),collapse="")) 
+ y <- sapply(sample(5:25,1e5,replace=TRUE), function(n) paste(sample(letters,n,replace=TRUE),collapse="")) 
+
+ benchmark(
+     d1 <- stringdist(x,y,method='lv'),
+      d2 <- levenshteinDist(x,y),
+     replications=10)
