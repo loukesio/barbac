@@ -107,14 +107,20 @@ diff.positions <- data %>%
 # also I can use this function to count how barcodes are present in a single position
 ######
 
-data %>% 
+bar.map1 <- data %>% 
   filter(corrected_insertion_site != "plasmidSeq") %>% 
   dplyr::rename(position=corrected_insertion_site) %>% 
   group_by(barcode) %>% 
   summarise(groups = list(position), n_groups = n(), counts = sum(count)) %>% 
   arrange(desc(n_groups)) %>% 
-  filter(n_groups < 2) %>% 
-  filter(grepl("^GGG", barcode))
+  filter(n_groups < 2) 
+
+bar.map1 %>% 
+  ungroup() %>% 
+  n_distinct(bar.map1$barcode)
+
+  
+#filter(grepl("^GGG", barcode))
 
 #_________________________________________________________
 # ╔═╗┬  ┬ ┬┌─┐┌┬┐┌─┐┬─┐  ┌─┐┌─┐┬─┐  ╔═╗┌─┐┌─┐┬┌┬┐┬┌─┐┌┐┌

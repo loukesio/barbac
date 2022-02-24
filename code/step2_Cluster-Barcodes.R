@@ -47,25 +47,12 @@ toc()
 
 ### alternative clustering methods
 
+# here are the things to do 
 
 
-library(stringdist)
-stringdist("ca","abc")
-
-stringdist(c("ATTTC","TTTC"), c("ATTTC","TTTC"),method="lv", nthread = 4)
-
-a=c("ATTTC","TTTC")
-
-data(phiX174Phage)
-phiX174Phage
-
-
-stringDist(phiX174Phage, method = "levenshtein", nthread=2)
-
-library(stringdist)
-vec = c("keep", "teem", "meat", "weep")
-
-out <- as.matrix(stringdistmatrix(vec), method=levenshtein)
-dimnames(out) <- list(vec, vec)
-out
+# I think you have already work for this 
+# you find the counts for both barcodes # you can do that with the join, I am sure you have worked on that on the step2
+# and then you have found the function to keep the highest 
+# https://stackoverflow.com/questions/71161281/sum-the-counts-of-the-unique-elements-of-a-group-and-keep-the-one-with-the-highe
+# but also break the 
 
