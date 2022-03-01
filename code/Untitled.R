@@ -1,35 +1,91 @@
 library(tidyverse)
-# adding everything I need to do and updating the github
 
-df2 <- tibble(col1= c("apple","apple","banana","banana","banana"), 
-              col2 = c("appl","aple","banan","bananb","banat"),
-              count_col1=c(1,1,4,4,4), count_col2=c(3,4,1,1,1))
+library(reclin2)
+
+vec <- c("apple","aple","banan","bananan")
+stringdist(vec,useNames="strings", method = c("lv"))
 
 
-df2 %>% 
-  group_by(col1) %>% 
-  mutate(sum_col2=sum(count_col2))  %>% 
-  mutate(Max = pmax(count_col1, count_col2)) %>% 
-  filter(Max == max(Max)) %>% 
-  ungroup %>%
-  select(-Max) %>% 
-  rowwise() %>% 
-  mutate(all_sum= sum(c_across(c(sum_col2, count_col1))))
+# Put vector in data.frame as that is what reclin2 expects
+dta <- data.table(str = vec)
+dta
+p <- pair_minsim(dta, on = "str", deduplication = TRUE,
+                 default_comparator = jaro_winkler(), minsim = 0)
+p
+
+p[, selection := simsum > 0.8]
+deduplicate_equivalence(p, "group", "selection")
+
+my_dist <- function(x, y, ...) stringdist(x, y, method=c("lv"))
+p <- pair_minsim(dta, on = "str", deduplication = TRUE,
+                 default_comparator = my_dist, minsim = 0)
+
+p
+
+vec <- c("apple","aple","banan","bananan")
+stringdistmatrix(vec, useNames = "strings")
 
 
 library(tidyverse)
-df3 <- tibble(col1 = c("apple",rep("banana",3)),
-              col2 = c("aple", "banan","bananb","banat"), 
-              count_col1 = c(1,4,4,4), 
-              count_col2 = c(4,1,1,1))
-df3
+library(stringdist)
 
-reprex()
-
-df3 %>% 
-  group_by(col1) %>% 
-  mutate(case_when(count_col2 > count_col1 ~ col1==NA,
-                   count_col1 > count_col2 ~ col2==NA ))
+vec <- c("apple","aple","banan","bananan")
+stringdistmatrix(vec, useNames = "strings")
 
 
-reprex()
+
+
+library(lvec)
+
+a <- sample(c("jan", "pier", "tjorres", "korneel"), 10, replace = TRUE)
+a
+b <- sample(c("jan", "pier", "joris", "corneel"), 10, replace = TRUE)
+b
+
+chunks <- lvec::chunk(a, chunk_size = 1E1)
+i=seq(chunks[1])
+j <- seq_along(b)
+res <- expand.grid(i=i, j=j)
+res
+res$dist <- stringdist(a[res$i], b[res$j])
+res$dist
+res <- res[res$dist <= 2, ]
+res
+
+dist <- lapply(chunks, function(chunk, a, b, threshold, ...) {
+  i <- seq(chunk[1], chunk[2])
+  j <- seq_along(b)
+  res <- expand.grid(i=i, j=j)
+  res$dist <- stringdist(a[res$i], b[res$j])
+  res <- res[res$dist <= threshold, ]
+  res
+}, a=a, b=b, threshold = 2)
+
+dist <- do.call(rbind, dist)
+dist
+
+
+
+
+
+
+
+
+library(stringdist)
+lookup <- c('Dog', 'Cat', 'Bear')
+data <- c('Do g', 'Do gg', 'Caat')
+d.matrix <- stringdistmatrix(a = lookup, b = data, useNames="strings",method="cosine")
+d.matrix
+#list of minimun cosine.s
+cosines<-apply(d.matrix, 2, min)
+cosines
+#return list of the row number of the minimum value
+minlist<-apply(d.matrix, 2, which.min) 
+#return list of matching values
+matchwith<-lookup[minlist]
+
+#final answer
+answer<-data.frame(data, matchwith, cosines)
+
+
+
