@@ -1,5 +1,48 @@
 library(tidyverse)
 
+df <- tibble(position=c(100,200,300),
+             correction=c("62M89S", 
+                     "8M1D55M88S",
+                     "1S25M1P36M89S"))
+
+df1 <- df %>% 
+  separate(correction, into = str_c("col", 1:5), 
+           sep = "(?<=\\D)(?=\\d)", fill = "left", remove = FALSE)
+
+df1
+
+reprex()
+
+
+df1 %>% 
+  mutate(across(starts_with("col")), 
+                ~case_when(grepl("*M") | grepl("*S") | grepl("*D")   ~ "",
+                           TRUE ~ 0))
+
+         
+         
+#_______________________________
+
+library(tidyverse)
+
+df1 <- tibble(.x=c(334,335,395),
+              .y=c(574,600,466))
+
+df1
+
+
+df2 <- tibble(id=c(334,335,395,466,574,600),
+              fruits=c("apple","banana","ananas","pear","cherry","orange"))
+
+df2
+
+df1 %>%
+  mutate(across(everything(), .names="fruits_{col}", ~df2$fruits[match(., df2$id)]))
+
+reprex()
+
+library(reprex)
+
 library(reclin2)
 
 vec <- c("apple","aple","banan","bananan")

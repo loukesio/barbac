@@ -2,10 +2,11 @@
 # adding libraries
 ###################
 
-library(tictoc) 
-library(tidyverse)
-library(Biostrings)
-library(stringdist)
+library(tidyverse)    # best package for manipulating data
+library(Biostrings)   # package for Bioinformatic analysis
+library(stringdist)   # find the distance among strings
+library(lvec)         # a cool package for saving memory
+library(reclin2)      # Functions to assist in performing probabilistic record linkage and deduplication.
 
 ##############################
 # setting working directory
@@ -15,9 +16,16 @@ setwd(here("data","barcodes_Dave"))
 
 #################
 # read the data
-################
+#################
+
+check <- c("CCACGCTGTCGTCCAACTCACGCAATCCATCGCGCAGTTTGTTCGGCAGGCTTTGTTAGTTC")
+check %>% 
+  str_length()
 
 data <- fread(file = "4853_K barcode positions.txt")
+
+sum(!complete.cases(data))
+
 
 step1 <- data %>% 
   filter(corrected_insertion_site != "plasmidSeq") %>% 
@@ -30,12 +38,15 @@ step1 <- data %>%
   dplyr::filter(length > 19 & length  < 21) %>% 
   dplyr::select(barcode)
 
+
 set.seed(123)
 test <- step1 %>% 
-  dplyr::slice_sample(n=10) %>% 
-  mutate(barcode=as.character(barcode))
+  dplyr::slice_sample(n=1000) %>% 
+  mutate(barcode=as.character(barcode)) %>% 
+  ungroup() %>% 
+  mutate(id=row_number())
 
-
+test
 #_________________________
 # ┌┬┐┌─┐┌┬┐┬ ┬┌─┐┌┬┐  ╔═╗
 # │││├┤  │ ├─┤│ │ ││  ╠═╣
@@ -68,6 +79,34 @@ my_dist <- function(x, y, ...){
 
 system.time(
 p <- pair_minsim(test, on = "barcode", deduplication = TRUE,
-                 default_comparator = my_dist, minsim = -2)
+                 default_comparator = my_dist, minsim = -2) # minsim=-2, reflects lv.distace = 3
 )
-p
+
+p2 <- p %>% 
+  as.data.frame() %>% 
+  mutate(across(1:2, .names="barcodes{col}", ~test$barcode[match(., test$id)])) %>% 
+  mutate(across(4:5, .names="{col}.counts", ~ data$count[match(., data$barcode)]))
+
+p2
+
+data %>% 
+  filter(grepl("ATTACGACTAGGTGAAAGCA", barcode))
+
+head(data)
+
+step4 <- inner_join(step3,step1) %>% 
+  group_by(barcodes_ref) %>% 
+  summarise(adds = sum(counts)) %>% 
+  arrange(barcodes_ref)
+
+
+add.counts <- inner_join(cluster1,oper) %>% 
+  group_by(REFERENCE) %>% 
+  summarise(adds = sum(n)) %>% 
+  arrange(REFERENCE)
+  
+
+
+group_by(barcodes_ref) %>% 
+  summarise(adds = sum(counts)) %>% 
+  arrange(barcodes_ref)

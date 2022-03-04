@@ -42,6 +42,8 @@ step4 <- inner_join(step3,step1) %>%
 
 #write.table(step4,"leven_example.txt", sep=",")
 
+# almost finishing up
+
 toc()
 
 
