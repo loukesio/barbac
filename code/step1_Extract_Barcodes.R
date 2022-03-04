@@ -107,3 +107,6 @@ test1 %>%
 
 # 1. https://stackoverflow.com/questions/11388359/unique-combination-of-all-elements-from-two-or-more-vectors [how to make all combinations]
 
+library(ggplot2)
+library(paint)
+paint(iris)
