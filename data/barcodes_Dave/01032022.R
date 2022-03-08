@@ -8,6 +8,7 @@ library(stringdist)   # find the distance among strings
 library(lvec)         # a cool package for saving memory
 library(reclin2)      # Functions to assist in performing probabilistic record linkage and deduplication.
 library(here)
+library(data.table)
 
 ##############################
 # setting working directory
@@ -42,7 +43,7 @@ step1 <- data %>%
 
 set.seed(123)
 test <- step1 %>% 
-  dplyr::slice_sample(n=1000) %>% 
+  dplyr::slice_sample(n=90000) %>% 
   mutate(barcode=as.character(barcode)) %>% 
   ungroup() %>% 
   mutate(id=row_number())
@@ -73,16 +74,20 @@ system.time(
 # ┴ ┴└─┘ ┴ ┴ ┴└─┘─┴┘  ╚═╝
 #________________________
 
+devtools::install_github("djvanderlaan/reclin2")
+
 my_dist <- function(x, y, ...){
   1 - stringdist(x, y, method=c("lv"))
 }
 
+library(stringdist)
 system.time(
 p <- pair_minsim(test, on = "barcode", deduplication = TRUE,
                  default_comparator = my_dist, minsim = -2) # minsim=-2, reflects lv.distace = 3
 )
 
-p2 <- p %>% 
+
+ p2 <- p %>% 
   as.data.frame() %>% 
   mutate(across(1:2, .names="barcodes{col}", ~test$barcode[match(., test$id)])) %>% 
   mutate(across(4:5, .names="{col}.counts", ~ data$count[match(., data$barcode)]))
