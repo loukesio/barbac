@@ -7,6 +7,7 @@ library(Biostrings)   # package for Bioinformatic analysis
 library(stringdist)   # find the distance among strings
 library(lvec)         # a cool package for saving memory
 library(reclin2)      # Functions to assist in performing probabilistic record linkage and deduplication.
+library(here)
 
 ##############################
 # setting working directory
@@ -71,7 +72,6 @@ system.time(
 # │││├┤  │ ├─┤│ │ ││  ╠╩╗
 # ┴ ┴└─┘ ┴ ┴ ┴└─┘─┴┘  ╚═╝
 #________________________
-
 
 my_dist <- function(x, y, ...){
   1 - stringdist(x, y, method=c("lv"))
