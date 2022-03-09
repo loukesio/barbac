@@ -109,4 +109,75 @@ test1 %>%
 
 library(ggplot2)
 library(paint)
-paint(iris)
+library(here)
+library(data.table)
+library(tidyverse)
+library(Biostrings)
+library(rBLAST)
+setwd(here("data"))
+
+
+library(Rsamtools)
+bam <- scanBam("test_4_seqs_sorted.bam")
+bam
+
+#names of the BAM fields
+names(bam[[1]])
+
+#distribution of BAM flags
+table(bam[[1]]$flag)
+
+.unlist <- function (x){
+  ## do.call(c, ...) coerces factor to integer, which is undesired
+  x1 <- x[[1L]]
+  if (is.factor(x1)){
+    structure(unlist(x), class = "factor", levels = levels(x1))
+  } else {
+    do.call(c, x)
+  }
+}
+
+#store names of BAM fields
+bam_field <- names(bam[[1]])
+
+#go through each BAM field and unlist
+list <- lapply(bam_field, function(y) .unlist(lapply(bam, "[[", y)))
+
+#store as data frame
+bam_df <- do.call("DataFrame", list)
+bam_df
+names(bam_df) <- bam_field
+
+bam_df 
+
+
+bam_df %>% 
+  as_tibble() %>% 
+  select(seq,cigar) %>% 
+  View()
+bam_df
+test <- bam_df %>% 
+  as_tibble() %>% 
+  select(seq,flag,cigar) %>% 
+separate(cigar, into = str_c("col", 1:5), 
+         sep = "(?<=\\D)(?=\\d)", fill = "right", remove = FALSE) %>% 
+mutate(
+    across(starts_with("col"),~case_when(
+      is.na(.) ~ NA_real_,
+      grepl("[SDI]$", .) ~ parse_number(.),
+      TRUE ~ 0
+    )
+    ))
+
+test %>% 
+  View()
+
+
+test %>% 
+  mutate(removed = str_sub(seq, col1 + 1)) %>% 
+  select(removed) %>% 
+  mutate(check=str_sub(removed, start=54, end=78)) %>% 
+  View()
+
+TACGGTTATATTGACAGACCGAGGG
+
