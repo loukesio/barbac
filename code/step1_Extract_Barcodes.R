@@ -179,5 +179,8 @@ test %>%
   mutate(check=str_sub(removed, start=54, end=78)) %>% 
   View()
 
-TACGGTTATATTGACAGACCGAGGG
+
+library(GenomicAlignments)
+stack <- stackStringsFromBam("test_4_seqs_sorted.bam", param=GRanges("Reference_barcodes:54-78"))
+stack
 
