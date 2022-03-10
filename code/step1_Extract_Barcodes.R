@@ -182,5 +182,11 @@ test %>%
 
 library(GenomicAlignments)
 stack <- stackStringsFromBam("test_4_seqs_sorted.bam", param=GRanges("Reference_barcodes:54-78"))
-stack
 
+stack
+  (alphabetFrequency(., as.prob = T,baseOnly=T))
+
+afmc=consensusMatrix(stack, baseOnly=T,as.prob = T)
+tafmc=t(afmc)
+matplot(tafmc[,-5], type="l", lwd=2, xlab="Read Length", ylab= "Base frequency at each position")
+legend(legend = colnames(tafmc)[-5],"topright",col=1:4, lty=1:4, lwd=2)
