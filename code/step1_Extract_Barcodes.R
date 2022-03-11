@@ -190,3 +190,6 @@ afmc=consensusMatrix(stack, baseOnly=T,as.prob = T)
 tafmc=t(afmc)
 matplot(tafmc[,-5], type="l", lwd=2, xlab="Read Length", ylab= "Base frequency at each position")
 legend(legend = colnames(tafmc)[-5],"topright",col=1:4, lty=1:4, lwd=2)
+
+
+# essential adding in the plot
