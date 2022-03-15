@@ -115,3 +115,16 @@ add.counts <- inner_join(cluster1,oper) %>%
 group_by(barcodes_ref) %>% 
   summarise(adds = sum(counts)) %>% 
   arrange(barcodes_ref)
+
+
+
+######### Thats a big problem to solve ################
+
+library(tidyverse)
+
+df <- tibble(col1 = c("apple","apple","pple", "banana", "banana","bananna"),
+             col2 = c("pple","app","app", "bananna", "banan", "banan"), 
+             distance = c(1,2,3,1,1,2),
+             counts_col1 = c(100,100,2,200,200,2),
+             counts_col2 = c(2,50,50,2,20,20))
+df    
