@@ -125,7 +125,24 @@ library(tidyverse)
 
 df <- tibble(col1 = c("apple","apple","pple", "banana", "banana","bananna"),
              col2 = c("pple","app","app", "bananna", "banan", "banan"), 
-             distance = c(1,2,3,1,1,2),
              counts_col1 = c(100,100,2,200,200,2),
-             counts_col2 = c(2,50,50,2,20,20))
-df    
+             counts_col2 = c(2,50,50,2,20,20),
+             id=c(1,1,1,2,2,2))
+
+df %>%
+  rename_with(~ str_c("fruit_", .x), starts_with('col')) %>% 
+  pivot_longer(cols = -id, names_to = c(".value", "grp"), 
+               names_pattern = "(.*)_(col\\d+)") %>% 
+  group_by(id, grp) %>%
+  add_count(fruit) %>%
+  group_by(id) %>% 
+  summarise(central_fruit = fruit[which.max(n)], 
+            fruits = toString(unique(fruit)), 
+            sum_counts = sum(unique(counts)),
+            counts = toString(sort(unique(counts), decreasing = TRUE)),
+            .groups = 'drop' ) %>%
+  relocate(counts, .before = 'sum_counts')
+
+
+
+
