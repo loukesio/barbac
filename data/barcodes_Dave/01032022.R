@@ -144,5 +144,8 @@ df %>%
   relocate(counts, .before = 'sum_counts')
 
 
+# add the missing step1 
+# and the missing step3
+
 
 
