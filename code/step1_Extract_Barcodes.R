@@ -116,10 +116,18 @@ library(Biostrings)
 library(rBLAST)
 library(reprex)
 library(styler)
-setwd(here("data"))
+setwd(here("data","test_extraction"))
 
+###############
+# Reference 
+#############
+
+readDNAStringSet("Reference_barcodes.fasta") %>% 
+  as.data.frame()
 
 library(GenomicAlignments)
+
+readDNAStringSet("")
 
 stack1 <- stackStringsFromBam("un_mapped.sorted.bam", 
                              param=GRanges("Reference_barcodes:54-78"))
@@ -130,39 +138,8 @@ stack2 <- stackStringsFromBam("unmapped.alignment.sorted.bam",
                               param=GRanges("Reference_barcodes:54-78"))
 
 
-# for i in ls /mnt/path/DEC2017/*1.fastq.gz 
-# do dir=/mnt/path/DEC2017/ 
-#   base=$(basename $i _1.fastq.gz) 
-# bowtie2 -p 4 -x testbuild -1 $dir/${base}_1.fastq.gz -2 $dir/${base}_2.fastq.gz | samtools view -b -o $dir/${base}.bam -
-#   done
-
-
-# for i in $(path_to_my_fastq_file/*.fastq)
-# do
-# bowtie2 -p 4 -x hg19 ${i} | samtools view -bo ${i%%.fastq}.bam -
-#   done
-
-# for i in $(path_to_my_fastq_file/*.fastq)
-# do
-# bowtie2 -p 4 -x hg19 ${i} | samtools sort -o ${i%%.fastq}.bam -
-#   done
-
-
-
-# 6.0 years ago
-# GouthamAtla  11k
-# There are multiple ways but this should also work. You can specify a output directory where you want to save sam files.
-# 
-# for sample in `ls /media/sample/fastqfiles/*R1.fastq`
-# do
-# dir="/media/sample/fastqfiles"
-# base=$(basename $sample "_R1.fastq")
-# bowtie2 -x path_to_my_index -1 ${dir}/${base}_R1.fastq -2 ${dir}/${base}_R2.fastq -S ${dir}/${base}.sam
-# done
-
-# echo "bowtie2 -x path_to_my_index -1 ${dir}/${base}_R1.fastq -2 ${dir}/${base}_R2.fastq -S ${dir}/${base}.sam"
-
 # https://wikis.utexas.edu/display/bioiteam/Adva
+# use this for tomorrow as well https://stackoverflow.com/questions/4854130/how-to-iterate-over-file-names-in-a-r-script
 
 stack
   (alphabetFrequency(., as.prob = T,baseOnly=T))
