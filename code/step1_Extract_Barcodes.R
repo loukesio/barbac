@@ -151,3 +151,48 @@ legend(legend = colnames(tafmc)[-5],"topright",col=1:4, lty=1:4, lwd=2)
 
 
 # essential adding in the plot
+
+
+
+
+library(GenomicAlignments)
+
+setwd("/home/theodosiou/Projects/Barcodes/Barcodes_data/Shaking_Treatment/20201219_ShakExp_rep3/merged/assembled_reads/minimap2_output/")
+
+
+files <- list.files(pattern = "*.sorted.bam$", recursive = T)
+for(i in 1:length(files)) {
+  
+  stack <- stackStringsFromBam(files[i], 
+                               param=GRanges("Reference_barcodes:54-78"),
+                               use.names = TRUE,
+                               what = "seq") 
+  
+  write.table(data, quote=FALSE, sep=", ", sub("\\.txt$","-edit.txt", file))
+  
+  
+}
+
+i=1
+stack <- stackStringsFromBam(files[i], 
+                             param=GRanges("Reference_barcodes:54-78"),
+                             use.names = TRUE,
+                             what = "seq") 
+
+
+check <- stack %>% 
+  as.data.frame() %>% 
+  mutate(names=stack$names)
+
+
+
+stack <- stackStringsFromBam("Day10_Sample3.assembled.fastq_sorted.bam", 
+                             param=GRanges("Reference_barcodes:54-78"),
+                             use.names = TRUE,
+                             what = "seq")
+
+
+stack
+
+reprex()
+
