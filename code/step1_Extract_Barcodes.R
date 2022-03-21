@@ -7,6 +7,8 @@ library(tidyverse)       # best package ever
 library(Biostrings)      # read sequence data; be careful of the overlap with tidyverse
 library(levenR)          # very useful package 
 library(tidystringdist)  # finding string distance an alternative to levenR
+library('edlibR')
+
 
 ###############################
 # set the working directory
