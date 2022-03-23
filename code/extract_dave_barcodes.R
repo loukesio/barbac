@@ -250,3 +250,4 @@ seqs <- replicate(50, paste(sample(letters, 100, TRUE), collapse = ""))
 system.time(leven(seqs))
 system.time(leven(seqs, nThreads = 4))
 
+
