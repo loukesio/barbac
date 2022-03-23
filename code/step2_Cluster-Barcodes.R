@@ -2,13 +2,11 @@
 
 setwd(here("data","barcodes_Dave"))
 
-library(tictoc)
-
+## clearing the steps out
 library(tidyverse)
 library(Biostrings)
 library(levenR)
-
-tic("clustering")
+library(beepr)
 
 step1 <- readDNAStringSet("example.fasta") %>% 
   as.data.frame() %>%
