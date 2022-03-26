@@ -8,6 +8,8 @@ library(Biostrings)
 library(levenR)
 library(beepr)
 
+# pulling your mind for step 3. Everything is gonna be alright :)
+
 step1 <- readDNAStringSet("example.fasta") %>% 
   as.data.frame() %>%
   as_tibble() %>% 
