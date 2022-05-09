@@ -2,13 +2,13 @@
 # libraries 
 ################################
 
+rm(list=ls())
 library(here)            # set the working directory 
 library(tidyverse)       # best package ever
 library(Biostrings)      # read sequence data; be careful of the overlap with tidyverse
 library(levenR)          # very useful package 
 library(tidystringdist)  # finding string distance an alternative to levenR
 library('edlibR')
-
 
 ###############################
 # set the working directory
@@ -62,16 +62,18 @@ names(patterns2) <- paste0("pattern", 1:length(patterns2))
 #___________________________________________________
 
 # first read the sequence from which you want to extract barcodes 
+setwd("/Users/theodosiou/Documents/Projects/Barcodes/barbac/data/test_extraction/")
 
-raw.data <- readDNAStringSet("covert_bam_fasta.fasta") %>%   
+
+raw.data <- readDNAStringSet("covert_bam_fq.fasta") %>% 
   reverseComplement() %>% 
-  as.data.frame() %>%
+  as.data.frame() %>% 
   as_tibble() %>% 
-  mutate(names=names(readDNAStringSet("covert_bam_fasta.fasta"))) %>% 
+  mutate(names=names(readDNAStringSet("covert_bam_fq.fasta"))) %>% 
   dplyr::rename(seq=x)
 
-test <- expand_grid(seq = raw.data$seq,
-            pattern = patterns2) %>%
+test <-  expand_grid(seq = raw.data$seq,
+            pattern = patterns2) %>% 
   distinct() %>% 
   mutate(match = str_extract_all(seq, pattern)) %>% 
   pivot_wider(
@@ -86,12 +88,12 @@ test <- expand_grid(seq = raw.data$seq,
 test
 
 # i ll find a way   
-test1 <- test %>%   
+test %>%   
 as.data.frame() %>% 
 mutate_at(vars(2:last_col()), as.character) %>% 
 pivot_longer(!seq,names_to = "patterns", values_to = "barcodes") %>% 
   arrange(patterns) %>% 
-  mutate(barcode_length=str_length(barcodes)) %>% 
+  mutate(barcode_length=str_length(barcodes))
   filter(barcode_length < 27 & barcode_length > 23)
 
 test1
@@ -197,4 +199,10 @@ stack <- stackStringsFromBam("Day10_Sample3.assembled.fastq_sorted.bam",
 stack
 
 reprex()
+
+library(wesanderson)
+
+pal <- wes_palette("Zissou1", 5, type = "continuous")
+str(pal)
+image(volcano, col = pal)
 
