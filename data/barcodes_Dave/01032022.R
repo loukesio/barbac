@@ -147,5 +147,25 @@ df %>%
 # add the missing step1 
 # and the missing step3
 
+# what is really missing from step3 
+# It is missing to match hundred thousands of sequences to a reference 
+library(reclin2)
+library(stringdist)
 
 
+reference = 
+
+amatch(c("hello","g'day"),c("hi","hallo","ola"),maxDist=2)
+amatch("leia",c("uhura","leela"),maxDist=5)
+
+d <- data.frame(x=c(1,1,1,2,2,3,3), y=c(1,2,3,4,5,6,7), w=1:7)
+d
+# One-to-one matching:
+d[match_n_to_m(d$x, d$y, d$w, n=999, m=999), ]
+
+
+df1 <- data.frame(reference=c("cat","dog"))
+df2 <- data.frame(data=c("cat","car","catt","cart","dog","dog","pitbull"), 
+                  counts )
+df1
+df2
