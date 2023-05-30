@@ -138,11 +138,11 @@ shannon_entropy <- function(seq) {
   return(entropy)
 }
 
-test
 test %>% 
   mutate(entropy = sapply(barcode, shannon_entropy)) %>% 
   ggplot() +
-  geom_histogram(aes(x=entropy))
+  geom_histogram(aes(x=entropy)) +
+  theme_b
 
 #__________________________________________________________________________ 
 # ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔  ╔╦╗╦ ╦╔═╗       ┌─┐┬  ┬ ┬┌─┐┌┬┐┌─┐┬─┐┬┌┐┌┌─┐
