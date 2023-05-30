@@ -1,9 +1,24 @@
+#____________________________ 
+# ┬  ┬┌┐ ┬─┐┌─┐┬─┐┬┌─┐┌─┐
+# │  │├┴┐├┬┘├─┤├┬┘│├┤ └─┐
+# ┴─┘┴└─┘┴└─┴ ┴┴└─┴└─┘└─┘
+#__________________________
+
+library(here)
 library(dplyr)
 library(stringr)
 library(gt)
 
+#______________________________________________________________________
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔  ╔═╗╔╗╔╔═╗       ┬─┐┌─┐┌─┐┌┬┐  ┌─┐┬┬  ┌─┐┌─┐
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║  ║ ║║║║║╣   ───  ├┬┘├┤ ├─┤ ││  ├┤ ││  ├┤ └─┐
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝  ╚═╝╝╚╝╚═╝       ┴└─└─┘┴ ┴─┴┘  └  ┴┴─┘└─┘└─┘
+#______________________________________________________________________
 
-files[1]
+files=list.files(here("data","barbac_testdata"), pattern = "*barcodes.txt$", full.names = TRUE)   # select all the files that have isolate barcodes 
+files         # all files
+
+files[1]      # only one file
 
 raw_counts <- function(file_path) {
   # Read the table from the file
@@ -50,15 +65,96 @@ raw_counts <- function(file_path) {
   return(data)
 }
 test <- raw_counts(files[1])
-table(test, c(22,28))
 
+#_______________________________________________________________________________
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔  ╔═╗╔╗╔╔═╗ ╔═╗╔╗╔╔═╗       ┬─┐┌─┐┌─┐┌┬┐  ┌─┐┬┬  ┌─┐┌─┐
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║  ║ ║║║║║╣  ║ ║║║║║╣   ───  ├┬┘├┤ ├─┤ ││  ├┤ ││  ├┤ └─┐
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝  ╚═╝╝╚╝╚═╝o╚═╝╝╚╝╚═╝       ┴└─└─┘┴ ┴─┴┘  └  ┴┴─┘└─┘└─┘
+#_______________________________________________________________________________
+
+library(dplyr)
+library(gt)
+library(gtExtras)
+
+table <- function(file, barcode_length) {
+  # Check if the 'barcode_length' parameter is a numeric vector of length 2
+  if (!is.numeric(barcode_length) || length(barcode_length) != 2) {
+    stop("Error: 'barcode_length' should be a numeric vector of length 2.")
+  }
+  
+  # Check if 'file' is a data frame or tibble
+  if (!is.data.frame(file) && !is.tbl(file)) {
+    stop("Error: 'file' should be a data frame or tibble.")
+  }
+  
+  file %>%
+    mutate(
+      bin = case_when(
+        (length_barcode < barcode_length[1] & length_barcode > 0) ~ paste0("(", 0, ",", barcode_length[1], ")"),
+        (length_barcode >= barcode_length[1] & length_barcode <= barcode_length[2]) ~ paste0("[", barcode_length[1], ",", barcode_length[2], "]"),
+        TRUE ~ paste0("[", barcode_length[2] + 1, ",∞)")
+      )
+    ) %>%
+    group_by(bin) %>%
+    count() %>%
+    tableGrob()
+    # gt() %>%
+    # cols_label(n = "No of barcodes") %>%
+    # tab_source_note(
+    #   source_note = "Barbac: A versatile tool to quantify barcodes."
+    # ) %>%
+    # gt_theme_espn()
+}
+
+# Usage example
+test
+file <- test  # Assuming 'data' is your input dataframe
+barcode_length <- c(22, 28)  # Specify the bin ranges here
+
+table(file, barcode_length)
+
+test %>% 
+  ggplot(., aes(x=length_barcode)) +
+  geom_histogram(fill="#FF5349", color=NA, alpha=0.8) +
+  labs(x="Barcode length (bp)", y="Number of barcodes", title="Barcode length distribution") + 
+  theme_bw() +
+  theme(plot.title = element_text(hjust=0.5))
+
+
+test %>%   
+ggplot(., aes(x=log(counts))) +
+geom_histogram(fill="#FF5349", color=NA, alpha=0.8) +
+  labs(x="log(Barcode counts)", y="Number of barcodes", title="Barcode counts distribution") + 
+  theme_bw() +
+  theme(plot.title = element_text(hjust=0.5))
+
+# Function to calculate Shannon entropy
+shannon_entropy <- function(seq) {
+  n <- nchar(seq)
+  nucleotides <- unique(strsplit(seq, "")[[1]])
+  counts <- sapply(nucleotides, function(nuc) sum(strsplit(seq, "")[[1]] == nuc))
+  probabilities <- counts / n
+  entropy <- -sum(probabilities * log2(probabilities))
+  return(entropy)
+}
+
+test
+test %>% 
+  mutate(entropy = sapply(barcode, shannon_entropy)) %>% 
+  ggplot() +
+  geom_histogram(aes(x=entropy))
+
+#__________________________________________________________________________ 
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔  ╔╦╗╦ ╦╔═╗       ┌─┐┬  ┬ ┬┌─┐┌┬┐┌─┐┬─┐┬┌┐┌┌─┐
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║   ║ ║║║║ ║  ───  │  │  │ │└─┐ │ ├┤ ├┬┘│││││ ┬
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝   ╩ ╚╩╝╚═╝       └─┘┴─┘└─┘└─┘ ┴ └─┘┴└─┴┘└┘└─┘
+#__________________________________________________________________________
 
 library(dplyr)
 library(stringdist)
 library(igraph)
 
 df <- test
-
 group.compmat <- function(df, method = "lv", distance) {
   
   # Check if the input dataframe has the required columns
