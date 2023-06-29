@@ -9,16 +9,21 @@
 # here are the libraries that I need 
 # what is the meaning of the lib.loc? 
 # lib.loc is a character vector describing the location of R library trees to search through, or NULL 
+<<<<<<< HEAD
 
 #library(tidyverse, lib.loc="/data/modules/R/4.1.2/lib64/R/library")
 #library(reclin2, lib.loc="/data/modules/R/4.1.2/lib64/R/library")      # package to minimize memory in R
 
+=======
+#library(tidyverse, lib.loc="/data/modules/R/4.1.2/lib64/R/library")
+>>>>>>> origin/main
 library(tidyverse)
 library(data.table)                                                    # best package together with tidyverse for data analysis
 library(here)
 library(gt)
 library(gtExtras)
 library(stringdist)                                                    # best package for calculating string distances
+<<<<<<< HEAD
 library(reclin2)
 
 
@@ -28,6 +33,9 @@ library(reclin2)
 
 
 
+=======
+#library(reclin2)      # package to minimize memory in R
+>>>>>>> origin/main
 
 #______________________________________________
 # ┬ ┬┌─┐┬─┐┬┌─┬┌┐┌┌─┐  ┌┬┐┬┬─┐┌─┐┌┬┐┌─┐┬─┐┬ ┬
@@ -43,9 +51,8 @@ setwd("/home/theodosiou/Projects/Barcodes/Static_Experiment/Amplicon_Barcodes/re
 # ╚  ╚═╝╩╚═  ╚═╝╝╚╝╚═╝  ╚  ╩╩═╝╚═╝
 #__________________________________
 
-files=list.files(pattern = "*barcodes.txt$")   # select all the files that have isolate barcodes 
-
-day1= files[1]                                 # From all these files work only with the one from the first day --> aka "day1"
+files=list.files(here("data","barbac_testdata"), pattern = "*barcodes.txt$", full.names = TRUE)   # select all the files that have isolate barcodes 
+files
 
 #___________________________________
 # ┌─┐┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌  ╔═╗╔╗╔╔═╗
@@ -76,6 +83,11 @@ files
 #   
 # }
 
+files[1]
+raw.barcodes <- read.table(files[1],sep=",") %>% 
+  dplyr::mutate(barcode=str_replace_all(barcode,"-","")) %>% 
+  dplyr::mutate(length_barcode=str_length(barcode)) %>% 
+  filter(length_barcode!="0")
 
 
 barcodes.extract.m1 <- function(file) {
@@ -119,7 +131,10 @@ plot.rawbar <- ggplot(raw.barcodes, aes(x=length_barcode)) +
   return(raw.barcodes)
 }
 
-raw.day1 <- barcodes.extract.m1(day1)
+files[1]
+raw.day1 <- barcodes.extract.m1(files[1])
+barcodes.extract.m1(files[1])
+
 
 #___________________________________
 # ┌─┐┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌  ╔╦╗╦ ╦╔═╗
@@ -179,7 +194,6 @@ test <- expand_grid(seq = raw.data$seq,
 return(test)
 
 }
-
 
 #___________________________________________________________________________________________
 #

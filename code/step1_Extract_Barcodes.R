@@ -66,7 +66,6 @@ setwd("/Users/theodosiou/Documents/Projects/Barcodes/barbac/data/test_extraction
 
 
 raw.data <- readDNAStringSet("covert_bam_fq.fasta") %>% 
-  reverseComplement() %>% 
   as.data.frame() %>% 
   as_tibble() %>% 
   mutate(names=names(readDNAStringSet("covert_bam_fq.fasta"))) %>% 
@@ -86,6 +85,7 @@ test <-  expand_grid(seq = raw.data$seq,
   mutate(across(starts_with('pattern'), ~ lapply(., function(x) ifelse(length(x) == 0, NA, x))))
 
 test
+library(tidyverse)
 
 # i ll find a way   
 test %>%   
@@ -93,8 +93,12 @@ as.data.frame() %>%
 mutate_at(vars(2:last_col()), as.character) %>% 
 pivot_longer(!seq,names_to = "patterns", values_to = "barcodes") %>% 
   arrange(patterns) %>% 
-  mutate(barcode_length=str_length(barcodes))
-  filter(barcode_length < 27 & barcode_length > 23)
+  mutate(barcode_length=str_length(barcodes)) %>% 
+  filter(barcode_length < 27 & barcode_length > 23) %>% 
+  select(-seq) %>% 
+  head()
+
+
 
 test1
 
