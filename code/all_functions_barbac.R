@@ -9,14 +9,33 @@
 # here are the libraries that I need 
 # what is the meaning of the lib.loc? 
 # lib.loc is a character vector describing the location of R library trees to search through, or NULL 
+<<<<<<< HEAD
+
 #library(tidyverse, lib.loc="/data/modules/R/4.1.2/lib64/R/library")
+#library(reclin2, lib.loc="/data/modules/R/4.1.2/lib64/R/library")      # package to minimize memory in R
+
+=======
+#library(tidyverse, lib.loc="/data/modules/R/4.1.2/lib64/R/library")
+>>>>>>> origin/main
 library(tidyverse)
 library(data.table)                                                    # best package together with tidyverse for data analysis
 library(here)
 library(gt)
 library(gtExtras)
 library(stringdist)                                                    # best package for calculating string distances
+<<<<<<< HEAD
+library(reclin2)
+
+
+#system("conda activate minimap2")
+#system(paste("gsed -i 's/NaN/null/g'",paste0(path,"*.json")))
+
+
+
+
+=======
 #library(reclin2)      # package to minimize memory in R
+>>>>>>> origin/main
 
 #______________________________________________
 # ┬ ┬┌─┐┬─┐┬┌─┬┌┐┌┌─┐  ┌┬┐┬┬─┐┌─┐┌┬┐┌─┐┬─┐┬ ┬
