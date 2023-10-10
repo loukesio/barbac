@@ -2,6 +2,9 @@
 
 **barbac** is a versatile R package tailor-made for researchers and bioinformaticians working with barcoded sequences. Whether you're delving into the vast realm of genomic data or investigating the temporal dynamics of molecular barcodes, `barbac` has got you covered.
 
+Install the package using the following commands  <img align="right" src="graphic_elements/barbac_logo.png" width=400>
+
+
 ### Key Features:
 
 1. **Barcode Extraction**: Efficiently and accurately extract barcode sequences from your genomic datasets.
