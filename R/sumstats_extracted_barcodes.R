@@ -43,22 +43,27 @@ sumstats <- function(file, barcode_length, fill_color = "#FF5349") {
     if (!is.data.frame(file) && !is.data.frame(file)) {
       stop("Error: 'file' should be a data frame or tibble.")
     }
-    
-    
-    t1 <-
-      dplyr::mutate(file,
-                    bin = dplyr::case_when(
-                      (length_barcode < barcode_length[1] & length_barcode > 0) ~ paste0("(", 0, ",", barcode_length[1], ")"),
-                      (length_barcode >= barcode_length[1] & length_barcode <= barcode_length[2]) ~ paste0("[", barcode_length[1], ",", barcode_length[2], "]"),
-                      TRUE ~ paste0("[", barcode_length[2] + 1, ",\\u221e)")
-                    )
+
+      t1 <- 
+      file %>%
+      mutate(
+        bin = case_when(
+          (length_barcode < barcode_length[1] & length_barcode > 0) ~ paste0("(", 0, ",", barcode_length[1], ")"),
+          (length_barcode >= barcode_length[1] & length_barcode <= barcode_length[2]) ~ paste0("[", barcode_length[1], ",", barcode_length[2], "]"),
+          TRUE ~ paste0("[", barcode_length[2] + 1, ",∞)")
+        )
       ) %>%
-      dplyr::group_by(bin) %>%
-      dplyr::count() %>%
-      dplyr::rename(barcodes=n) %>%
-      gridExtra::tableGrob(rows = NULL,
-                           theme = gridExtra::ttheme_default(
-                             core = list(bg_params = list(fill = "white"))
+      group_by(bin) %>%
+      count() %>%
+      dplyr::rename(barcodes=n) %>% 
+      gridExtra::tableGrob(.,
+                           rows = NULL,
+                           theme = ttheme_default(
+                             core = list(bg_params = list(fill = "white")),
+                             colhead = list(
+                               fg_params = list(col = "black"), 
+                               bg_params = list(fill = "white", lwd = 1, lty = 1, lineend = "butt", col = "#333333")
+                             )
                            ))
     
     p1 <-
