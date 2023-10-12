@@ -110,3 +110,5 @@ group.compmat <- function(df, method = "lv", distance) {
   return(p4)
   
 }
+
+
