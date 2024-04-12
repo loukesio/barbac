@@ -19,13 +19,7 @@ Install the package using the following commands  <img align="right" src="graphi
 - **Biodiversity Analysis**: Understand the diversity and prevalence of barcode sequences in different samples.
 - **Evolutionary Dynamics**: Track and visualize the emergence, dominance, and decline of barcoded sequences across time.
 
-### Get Started:
 
-To install `barbac` and embark on your barcode analysis journey:
-```R
-install.packages("barbac")
 ```
 
 ---
-
-Feel free to edit or adjust the description as per your requirements and the functionalities of the package.
