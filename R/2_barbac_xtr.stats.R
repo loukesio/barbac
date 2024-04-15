@@ -18,11 +18,11 @@
 #'
 #' @examples
 #' # Generate summary statistics for barcode data
-#' sumstats(my_data, c(5, 15))
+#' barbac_xtr.stats(my_data, c(5, 15))
 #'
 #' @export
 #'
-sumstats <- function(file, barcode_length, fill_color = "#FF5349") {
+barbac_xtr.stats <- function(file, barcode_length, fill_color = "#FF5349") {
   # Check if the barcode_length parameter is a numeric vector of length 2
   if (!is.numeric(barcode_length) || length(barcode_length) != 2) {
     stop("Error: 'barcode_length' should be a numeric vector of length 2.")
