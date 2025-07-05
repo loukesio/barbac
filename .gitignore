@@ -7,6 +7,7 @@
 
 # Do not add this file anymore
 .RDataTmp
+**/.RDataTmp*
 
 # User-specific files
 .Ruserdata
