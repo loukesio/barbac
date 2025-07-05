@@ -1,0 +1,3 @@
+"sample","R1","R2"
+"sample1","path/to/sample1_R1.fastq","path/to/sample1_R2.fastq"
+"sample2","path/to/sample2_R1.fastq","path/to/sample2_R2.fastq"

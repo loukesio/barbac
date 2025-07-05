@@ -1,0 +1,9 @@
+fastqc:
+  threads: 4
+
+pear:
+  min_overlap: 10
+quality_threshold: 30
+max_memory: 4G
+min_assembly_length: 50
+
