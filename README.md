@@ -21,10 +21,6 @@ Install the package using the following commands  <img align="right" src="graphi
 
 ---
 
-Absolutely! Here's a clean and user-friendly **`README.md`** draft for your `barbac` package, based on what you've built so far.
-
----
-
 ## 📦 `barbac`: A Lightweight R Wrapper for Barcode-Based Bioinformatics Workflows
 
 `barbac` is an R package that wraps commonly used command-line bioinformatics tools (FastQC, MultiQC, PEAR, minimap2, samtools) into an easy-to-use R workflow.
