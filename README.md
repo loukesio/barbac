@@ -19,7 +19,109 @@ Install the package using the following commands  <img align="right" src="graphi
 - **Biodiversity Analysis**: Understand the diversity and prevalence of barcode sequences in different samples.
 - **Evolutionary Dynamics**: Track and visualize the emergence, dominance, and decline of barcoded sequences across time.
 
+---
 
+Absolutely! Here's a clean and user-friendly **`README.md`** draft for your `barbac` package, based on what you've built so far.
+
+---
+
+## 📦 `barbac`: A Lightweight R Wrapper for Barcode-Based Bioinformatics Workflows
+
+`barbac` is an R package that wraps commonly used command-line bioinformatics tools (FastQC, MultiQC, PEAR, minimap2, samtools) into an easy-to-use R workflow.
+It is especially designed for processing paired-end reads mapped to barcode reference sequences.
+
+---
+
+## 🚀 Features
+
+* 🔬 Run **FastQC** on raw reads
+* 📊 Summarize results using **MultiQC**
+* 🔗 Merge paired-end reads with **PEAR**
+* 🎯 Map merged reads to a reference using **minimap2**
+* 📎 Sort and index BAM files using **samtools**
+* 📈 Summarize mapped/unmapped read counts
+
+---
+
+## 📁 Expected Input
+
+A `sample_table` (data frame or CSV) with the following columns:
+
+| sample  | R1                     | R2                     |
+| ------- | ---------------------- | ---------------------- |
+| sample1 | data/sample1\_R1.fastq | data/sample1\_R2.fastq |
+| sample2 | data/sample2\_R1.fastq | data/sample2\_R2.fastq |
+
+---
+
+## ⚙️ Setup Instructions
+
+Before using `barbac`, install the required command-line tools in a Conda environment:
+
+```r
+# Install bioinformatics tools in a clean Conda env
+barbac::configure_environment()
+```
+
+This will:
+
+* Create a Conda environment named `barbac_env`
+* Install `fastqc`, `multiqc`, `pear`, `minimap2`, and `samtools` via bioconda
+
+---
+
+## 📌 Available Functions
+
+### 🔬 Quality Control
+
+```r
+barbac::run_fastqc(sample_table, output_dir = "fastQC")
+barbac::run_multiqc(input_dir = "fastQC", output_dir = "multiQC")
+```
+
+### 🔗 Merge Paired-End Reads
+
+```r
+barbac::run_pear_merge(sample_table, output_dir = "merged")
+```
+
+### 🧬 Map to Reference + BAM Processing
+
+```r
+barbac::run_minimap2(merged_dir = "merged", reference = "path/to/barcode.fasta")
+```
+
+### 📊 BAM Stats Summary
+
+```r
+barbac::summarise_bam_stats(bam_dir = "merged/bam")
 ```
 
 ---
+
+## ✅ Optional: Check if Tools Are Available
+
+```r
+barbac::check_barbac_tools()
+```
+
+Returns a logical vector indicating if each CLI tool is available in your system path.
+
+---
+
+## 📦 Installation (Development Version)
+
+```r
+# You need devtools or remotes
+remotes::install_github("loukesio/barbac")
+```
+
+---
+
+## 📝 License
+
+MIT License © \[Your Name / Institute]
+
+---
+
+Would you like me to also generate a `DESCRIPTION` file based on this content and current dependencies?
