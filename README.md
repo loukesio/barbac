@@ -8,8 +8,6 @@
 
 **barbac** (_**bar**code **b**ioinformatics **a**nalysis and **c**lustering_) is a comprehensive R package designed for researchers and bioinformaticians working with barcoded sequences. This lightweight wrapper integrates essential command-line bioinformatics tools into streamlined R workflows, making barcode analysis accessible and reproducible.
 
-### Quick Start
-
 ### Installation
 
 ```r
