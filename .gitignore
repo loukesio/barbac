@@ -1,0 +1,108 @@
+# -----------------------------------------------------------------------------
+# .gitignore for the barbac R package
+#
+# Guiding principle: track code and text that a reviewer/collaborator
+# needs to reproduce the paper. Ignore anything that can be regenerated
+# from that code (simulation outputs, built vignettes, rendered sites,
+# R workspace snapshots).
+# -----------------------------------------------------------------------------
+
+# --------------------------------- R -----------------------------------------
+.Rproj.user/
+.Rhistory
+.RData
+.RDataTmp*
+.Ruserdata
+
+# Compiled C++ artefacts inside src/ -- regenerated on install
+src/*.o
+src/*.so
+src/*.dll
+src/*.rds
+
+# --------------------------------- OS ----------------------------------------
+.DS_Store
+Thumbs.db
+
+# --------------------------------- Build outputs -----------------------------
+# devtools::build_vignettes() writes to doc/; devtools::document() to Meta/
+doc/
+Meta/
+
+# pkgdown builds to docs/. Publication is handled by the pkgdown GitHub
+# Actions workflow, which builds fresh and pushes to the gh-pages branch.
+# Committing docs/ on main would just duplicate that output.
+docs/
+pkgdown/
+
+# --------------------------------- Docker ------------------------------------
+# Local build caches (image layers live in /var/lib/docker, not the repo).
+# Uncomment only if you use `docker buildx --output=type=local,dest=./out`
+# ./out/
+
+# --------------------------------- Benchmark data ----------------------------
+# Keep the reproducibility code (compare_with_shepherd.ipynb,
+# run_experiment.py, simulate.py, run_barbac.R, validate_clustering.R)
+# but drop the ~700 MB of simulation output. Regenerate any time with:
+#   python3 benchmark/indel_experiment/run_experiment.py --reuse-sim
+benchmark/indel_experiment/results/
+benchmark/**/*.bam
+benchmark/**/*.bam.bai
+benchmark/**/*.fastq
+benchmark/**/*.fastq.gz
+
+# Cached shepherd/starcode/bartender intermediates
+benchmark/**/shepherd_input*
+benchmark/**/*_pb_freq.csv
+benchmark/**/*_seq_clust.csv
+
+# --------------------------------- Manuscript --------------------------------
+# The Markdown source is the source of truth. The `_updated.docx` is
+# regenerated from it via pandoc; only track the base .docx if it is your
+# working editable copy.
+manuscript/barbac_manuscript_updated.docx
+manuscript/media/**/*.tmp
+
+# --------------------------------- Vignette assets ---------------------------
+# Stale 46 MB CSV that no vignette references. Delete if truly unneeded;
+# if a future vignette wants example data, put a small sample in
+# inst/extdata/ and load it with system.file().
+vignettes/example_data.csv
+
+# --------------------------------- Raw sequencing data -----------------------
+# Never commit large binary sequencing data. Users obtain it from SRA /
+# ENA / a Zenodo mirror, referenced in the vignette / README.
+*.bam
+*.bam.bai
+*.fastq
+*.fastq.gz
+*.cram
+*.sra
+
+# Defensive: any private test-data folders that might get dropped into
+# the repo by accident (from external collaborators, USB imports, etc.)
+# stay out of git no matter what. Move sanitised fixtures to
+# inst/extdata/ if you ever need to ship them with the package.
+data/
+raw/
+private/
+
+# --------------------------------- Design sources ----------------------------
+# Affinity Designer files can be huge and are unlikely to belong in git.
+# If you ever need to version the logo source, that's the one legitimate
+# Git LFS case for this repo.
+*.afdesign
+*.psd
+*.ai
+
+# --------------------------------- Python cache ------------------------------
+__pycache__/
+*.pyc
+*.pyo
+
+# --------------------------------- Editor / tooling --------------------------
+.claude/
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,23 @@
+# Keep the Docker build context small. Anything listed here won't be
+# COPY'd into the image.
+
+.git
+.github
+.Rproj.user
+.Rhistory
+.RData
+.RDataTmp*
+.DS_Store
+*.Rproj
+
+# Large private benchmark artefacts (regenerate inside the container if needed)
+benchmark
+manuscript
+docs
+doc
+
+# Rendered pkgdown site
+_pkgdown.yml
+
+# Local caches
+node_modules

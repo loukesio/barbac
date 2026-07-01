@@ -1,0 +1,55 @@
+name: pkgdown
+
+# Auto-deploys the pkgdown site to GitHub Pages on:
+#   * every push to main    -> replaces the live site
+#   * every release         -> replaces the live site with the tagged version
+#   * manual dispatch       -> button in the Actions tab
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pkgdown:
+    runs-on: ubuntu-latest
+    concurrency:
+      # Serialise concurrent runs so the site never ends up half-built.
+      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::pkgdown
+            any::remotes
+            local::.
+          needs: website
+
+      - name: Install GitHub-only palette used by the vignette
+        run: Rscript -e 'remotes::install_github("loukesio/ltc_palettes", upgrade = "never")'
+
+      - name: Build site
+        run: Rscript -e 'pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)'
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        with:
+          clean: false
+          branch: gh-pages
+          folder: docs

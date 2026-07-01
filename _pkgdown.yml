@@ -1,0 +1,69 @@
+url: https://loukesio.github.io/barbac/
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#2C4A63"
+    base_font: {google: "Inter"}
+    heading_font: {google: "Inter"}
+    code_font: {google: "JetBrains Mono"}
+
+home:
+  title: barbac - DNA barcode lineage analysis
+  description: >
+    End-to-end R pipeline for DNA barcode lineage tracking, from raw
+    FASTQ reads through error-corrected centroid clusters to
+    time-resolved lineage trajectories.
+
+reference:
+- title: Core clustering
+  desc: >
+    Abundance-ranked greedy Levenshtein clustering with a bit-parallel
+    C++ kernel.
+  contents:
+  - super_cluster2
+
+- title: Time-series visualisation
+  desc: Stacked-area plots of lineage frequencies over time.
+  contents:
+  - barbac_ts_area
+  - theme_barbac
+
+- title: Barcode extraction
+  contents:
+  - barbac_xtr
+  - barbac_xtr.stats
+
+- title: End-to-end pipeline orchestrator
+  contents:
+  - run_cli_pipeline
+
+- title: Individual pipeline steps
+  desc: Wrappers around FastQC, PEAR, minimap2 and samtools.
+  contents:
+  - run_fastqc
+  - run_multiqc
+  - run_pear_merge
+  - run_minimap2
+  - summarise_bam_stats
+
+- title: Environment management
+  desc: Provision and activate a conda environment with the CLI tools.
+  contents:
+  - configure_environment
+  - use_barbac_env
+  - check_barbac_tools
+
+- title: Package overview
+  contents:
+  - barbac-package
+
+articles:
+- title: Getting started
+  contents:
+  - barbac
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, github]

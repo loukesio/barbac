@@ -1,0 +1,364 @@
+---
+title: "Introduction to barbac"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to barbac}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+set.seed(1)
+```
+
+<img src="../man/figures/logo.png" align="right" height="160" alt="barbac logo"/>
+
+**barbac** (_**bar**code **b**ioinformatics **a**nalysis and
+**c**lustering_) is an R package for end-to-end DNA barcode lineage
+tracking. This vignette walks through the core R-level workflow —
+clustering a count table with `super_cluster2()` and visualising a
+time series with `barbac_ts_area()` — without requiring any external
+CLI tools. For the full FASTQ→BAM pipeline (FastQC → PEAR →
+minimap2 → samtools), see `?run_cli_pipeline`.
+
+```{r setup, message = FALSE}
+library(barbac)
+library(tibble)
+library(dplyr)
+```
+
+## A tiny synthetic dataset
+
+We build a toy dataset of 4 true barcodes, each seeded from a
+20-nucleotide random sequence, with 100 noisy reads per barcode. Each
+read has a per-base substitution probability of 1%.
+
+```{r simulate}
+alphabet <- c("A", "C", "G", "T")
+
+random_barcode <- function(len = 20) {
+  paste0(sample(alphabet, len, replace = TRUE), collapse = "")
+}
+
+mutate_seq <- function(seq, sub_rate = 0.01) {
+  bases <- strsplit(seq, "")[[1]]
+  hit   <- runif(length(bases)) < sub_rate
+  bases[hit] <- vapply(bases[hit], function(b) {
+    sample(setdiff(alphabet, b), 1L)
+  }, character(1))
+  paste0(bases, collapse = "")
+}
+
+true_barcodes <- vapply(1:4, function(i) random_barcode(), character(1))
+true_barcodes
+
+reads <- unlist(lapply(true_barcodes, function(b) {
+  replicate(100, mutate_seq(b, sub_rate = 0.01))
+}))
+
+# Collapse to unique-sequence counts
+input <- as.data.frame(table(reads), stringsAsFactors = FALSE)
+names(input) <- c("barcode", "counts")
+input <- input[order(-input$counts), ]
+head(input)
+```
+
+## Clustering with `super_cluster2()`
+
+`super_cluster2()` accepts either a data.frame with columns
+`barcode` and `counts`, or a path to a CSV in the same layout. Here we
+pass the data.frame directly and use a Levenshtein distance threshold of
+2.
+
+```{r cluster}
+result <- super_cluster2(
+  input,
+  distance    = 2,
+  merge_ratio = 20,
+  verbose     = FALSE
+)
+result
+```
+
+Each row is one cluster: `central_barcode` is the abundance-ranked
+representative, `all_barcodes` and `all_counts` are the member barcodes
+and their raw counts, and `sum_counts` is the summed abundance.
+
+We can check how well the clustering recovered the true barcodes:
+
+```{r recovery}
+recovered <- result$central_barcode
+sum(true_barcodes %in% recovered)     # how many true barcodes are centroids
+setdiff(true_barcodes, recovered)     # any missed
+```
+
+## Visualising a time series
+
+`barbac_ts_area()` takes a table of counts across timepoints and
+returns a stacked-area ggplot of per-timepoint frequencies. It accepts
+long-format input directly:
+
+```{r ts-long}
+tp   <- 0:20                                            # 21 timepoints
+n_tp <- length(tp)
+
+ts_long <- dplyr::bind_rows(
+  tibble(barcode = "A", time = tp,
+         counts = round(seq(1000, 200, length.out = n_tp))),    # falling
+  tibble(barcode = "B", time = tp,
+         counts = round(seq( 200, 1000, length.out = n_tp))),   # rising
+  tibble(barcode = "C", time = tp,
+         counts = ifelse(tp < 8, 0,
+                         round(seq(0, 800, length.out = n_tp - 7 + 1))[-1])), # late arrival
+  tibble(barcode = "D", time = tp, counts = 50)                 # constant
+)
+
+barbac_ts_area(ts_long, min_total_count = 0)
+```
+
+Lineage C illustrates the "late arrivals" case: it has zero counts at
+timepoints 0–7, but is carried through the full series because
+`include_late = TRUE` (the default) and missing cells are filled with a
+small ε.
+
+The same function auto-detects Bartender's wide export layout:
+
+```{r ts-wide, eval = requireNamespace("PNWColors", quietly = TRUE)}
+set.seed(11)
+
+ts_wide <- cbind(
+  tibble(
+    Cluster.ID    = sprintf("bc%02d", 1:5),
+    Center        = c("ACGT", "ACGA", "ACCA", "TGGT", "GACC"),
+    Cluster.Score = round(runif(5, 0.7, 1), 2)
+  ),
+  setNames(
+    as.data.frame(matrix(rpois(5 * 20, 100), nrow = 5)),
+    sprintf("time_point_%d", 1:20)
+  )
+)
+
+barbac_ts_area(ts_wide, min_total_count = 0)
+```
+
+If the layout is neither long nor Bartender-wide, the function stops
+with a clear error that lists the expected column names.
+
+## Styling — `theme_barbac()` is applied by default
+
+`barbac_ts_area()` returns a `ggplot` object that has already been
+styled with the package's publication-ready theme,
+[`theme_barbac()`](../reference/theme_barbac.html) — minimal grid,
+visible ticks, solid inner border, centred bold title, bottom legend.
+There is nothing to add: just call the function.
+
+```{r theme-static}
+barbac_ts_area(
+  ts_long,
+  min_total_count = 0,
+  palette         = c("#E63946", "#F1A208", "#457B9D", "#2A9D8F"),
+  title           = "Lineage trajectories"
+)
+```
+
+Pass `theme = NULL` to get a stock ggplot back, or `theme = ...` to
+swap in any other theme (including `theme_barbac(base_size = 18,
+family = "Avenir")` for slide-friendly output).
+
+```{r theme-swap, eval = FALSE}
+# Bigger font + Avenir on macOS
+barbac_ts_area(ts_long, min_total_count = 0,
+               theme = theme_barbac(base_size = 18, family = "Avenir"))
+
+# Unthemed - roll your own
+barbac_ts_area(ts_long, min_total_count = 0, theme = NULL) +
+  ggplot2::theme_classic()
+```
+
+### Fonts
+
+The theme's `family` argument defaults to `"sans"` so plots render on
+every platform without extra setup. On macOS you already have Avenir
+installed. For a similar geometric-sans look on Linux/Windows, register
+a Google Font at runtime through **showtext**:
+
+```{r theme-fonts, eval = FALSE}
+sysfonts::font_add_google("Nunito Sans", "nunito")
+showtext::showtext_auto()
+barbac_ts_area(ts_long, min_total_count = 0,
+               theme = theme_barbac(family = "nunito"))
+```
+
+Avenir is a commercial Adobe font and cannot be redistributed inside
+the package, so `theme_barbac()` never bundles a font — it just points
+at whatever family you name.
+
+## Interactive plots
+
+Set `interactive = TRUE` to get an interactive widget with hover
+tooltips revealing the barcode identifier, timepoint and frequency for
+whichever band the cursor is on. Two backends are supported:
+
+- `interactive = TRUE` (the default when interactivity is requested) or
+  `"ggiraph"` uses
+  [ggiraph](https://davidgohel.github.io/ggiraph/): preserves the exact
+  ggplot look, snappy hover on stacked areas, lightweight SVG output.
+- `interactive = "plotly"` uses [plotly](https://plotly.com/r/):
+  built-in zoom / pan / lasso, but a slightly heavier bundle and minor
+  theme drift.
+
+```{r ts-interactive, eval = requireNamespace("ggiraph", quietly = TRUE)}
+barbac_ts_area(
+  ts_long,
+  min_total_count = 0,
+  palette         = c("#E63946", "#F1A208", "#457B9D", "#2A9D8F"),
+  interactive     = TRUE
+)
+```
+
+The static and interactive paths accept exactly the same arguments;
+only the return type differs (`ggplot` versus `girafe` or `plotly`
+htmlwidget).
+
+## Multilineage
+
+The four-lineage toy above demonstrates the API. In practice
+`barbac_ts_area()` is designed to handle the many-lineage output of a
+real barcode-sequencing experiment. Here we simulate a 100-lineage
+community across 21 timepoints, with log-normal initial abundances and
+a small Gaussian fitness effect per lineage, and plot every lineage
+using the **minou** palette from the
+[`ltc`](https://github.com/loukesio/ltc_palettes) package.
+
+```{r sim-multi, fig.width = 9, fig.height = 5.5}
+set.seed(7)
+
+n_bar   <- 100
+tp      <- 0:20                       # 21 timepoints
+depth   <- 1e6
+
+barcodes  <- sprintf("bc_%03d", seq_len(n_bar))
+fitness   <- rnorm(n_bar, mean = 0, sd = 0.20)
+init_freq <- rlnorm(n_bar, meanlog = 0, sdlog = 1.5)
+init_freq <- init_freq / sum(init_freq)
+
+ts_multi <- do.call(rbind, lapply(tp, function(t) {
+  raw   <- init_freq * exp(fitness * t)
+  freq  <- raw / sum(raw)
+  tibble::tibble(
+    barcode = barcodes,
+    time    = t,
+    counts  = round(freq * depth)
+  )
+}))
+
+# One colour per barcode, interpolated from the minou seed palette
+# (same pattern as the phage.colors helper in the ltc README).
+phage_colors <- function(df) {
+  n <- dplyr::n_distinct(df$barcode)
+  pal <- if (requireNamespace("ltc", quietly = TRUE)) {
+    ltc::ltc("minou", n, type = "continuous")
+  } else {
+    viridisLite::magma(n, begin = 0.05, end = 0.95)  # fallback
+  }
+  grDevices::colorRampPalette(pal)(n)
+}
+
+barbac_ts_area(
+  ts_multi,
+  min_total_count = 0,                            # plot every lineage
+  palette         = phage_colors(ts_multi),
+  title           = "Multilineage — 100 barcodes across 21 timepoints"
+)
+```
+
+Every timepoint fills the stack to y = 1 exactly. Lineages with
+positive fitness sweep upward across the 21 timepoints; negative-fitness
+lineages shrink; neutral ones drift proportionally to their initial
+abundance.
+
+The `ltc` package is available from
+[GitHub](https://github.com/loukesio/ltc_palettes) via
+`remotes::install_github("loukesio/ltc_palettes")`. Any character
+vector of colour hex codes works as `palette`, so
+`viridisLite::magma()`, `RColorBrewer::brewer.pal()`, a manual palette,
+or any other source are equally valid.
+
+### The same plot, interactively
+
+At this diversity the static plot is useful for overall shape but
+useless for identifying individual lineages. Setting
+`interactive = TRUE` returns an interactive widget with per-band hover
+tooltips showing the barcode identifier, timepoint and frequency.
+
+`barbac_ts_area()` supports two interactive backends:
+
+- **`interactive = TRUE`** (or `"ggiraph"`, the default) — renders via
+  [`ggiraph`](https://davidgohel.github.io/ggiraph/), which preserves
+  the exact ggplot look, produces a lightweight SVG-based widget, and
+  performs well with hundreds of stacked polygons.
+- **`interactive = "plotly"`** — renders via
+  [`plotly`](https://plotly.com/r/)'s `ggplotly()`, which gives you
+  built-in zoom / pan / lasso at the cost of a slightly drifted theme
+  and a heavier HTML page.
+
+```{r sim-multi-interactive, eval = requireNamespace("ggiraph", quietly = TRUE), fig.width = 9, fig.height = 5.5}
+barbac_ts_area(
+  ts_multi,
+  min_total_count = 0,
+  palette         = phage_colors(ts_multi),
+  title           = "Multilineage — hover over a band for its barcode",
+  interactive     = TRUE                                # = "ggiraph"
+)
+```
+
+If you prefer plotly's zoom / pan controls:
+
+```{r sim-multi-plotly, eval = FALSE}
+barbac_ts_area(
+  ts_multi,
+  min_total_count = 0,
+  palette         = phage_colors(ts_multi),
+  title           = "Multilineage (plotly backend)",
+  interactive     = "plotly"
+)
+```
+
+## What is `super_cluster2()` doing?
+
+Briefly: the algorithm sorts input sequences by descending abundance,
+scans each sequence for candidate centroids within edit distance
+`distance` using a two-tier Hamming/Levenshtein index, scores candidates
+with a count-aware log-likelihood, and either merges the sequence into
+the best-scoring parent (subject to a distance-aware count-ratio guard)
+or seeds a new cluster. A post-hoc refinement pass promotes
+over-represented children of large clusters and reassigns their
+neighbours.
+
+On the Johnson *et al.* (2023) 100k-barcode benchmark `super_cluster2()`
+matches Shepherd on the four Johnson metrics (Pearson R, FN%, FP%, WS%)
+while running roughly 1.7× faster. When indel errors are added to the
+simulator — which is where Shepherd's Hamming-based index struggles —
+`super_cluster2()`'s wrong-sequence rate stays an order of magnitude
+below Shepherd's. Reproducibility scripts live in the `benchmark/`
+directory of the package repository.
+
+## Full FASTQ-to-lineage pipeline
+
+For a complete analysis starting from raw FASTQ files, `barbac` ships a
+CLI-wrapping pipeline that runs FastQC, PEAR, minimap2 and samtools,
+then extracts barcodes at fixed genomic coordinates and hands the
+result to `super_cluster2()`. See `?run_cli_pipeline`, `?barbac_xtr`
+and `?configure_environment` for details.
+
+## Session info
+
+```{r}
+sessionInfo()
+```

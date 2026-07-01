@@ -1,0 +1,50 @@
+Package: barbac
+Type: Package
+Title: End-to-end DNA barcode lineage analysis
+Version: 0.1.0
+Date: 2026-07-01
+Authors@R: person("Loukas", "Theodosiou", role = c("aut", "cre"), email
+        = "theodosiou@evolbio.mpg.de")
+Description: barbac provides an end-to-end workflow for DNA barcode
+        lineage analysis, from raw FASTQ reads through error-corrected
+        centroid clusters. The core clustering routine super_cluster2()
+        implements abundance-ranked greedy Levenshtein clustering with
+        a distance-aware count-ratio merge guard, backed by a
+        bit-parallel 64-bit edit-distance kernel written in C++.
+License: GPL (>= 2)
+Encoding: UTF-8
+URL: https://loukesio.github.io/barbac, https://github.com/loukesio/barbac
+BugReports: https://github.com/loukesio/barbac/issues
+Imports:
+    Rcpp (>= 1.1.1),
+    reticulate,
+    tibble,
+    readr,
+    dplyr,
+    stringdist,
+    rlang,
+    ggplot2,
+    gridExtra,
+    stringr,
+    GenomicAlignments,
+    GenomicRanges,
+    patchwork,
+    tidyr,
+    PNWColors
+Suggests:
+    scales,
+    RColorBrewer,
+    ggiraph,
+    plotly,
+    showtext,
+    sysfonts,
+    viridisLite,
+    ltc,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Additional_repositories: https://github.com/loukesio/ltc_palettes
+LinkingTo: Rcpp
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+RoxygenNote: 7.3.3
