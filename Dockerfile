@@ -43,7 +43,8 @@ RUN apt-get update && \
 ENV MAMBA_ROOT_PREFIX=/opt/micromamba
 ENV PATH=/opt/micromamba/envs/tools/bin:${MAMBA_ROOT_PREFIX}/bin:${PATH}
 RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest \
-        | tar -xj -C /usr/local/bin bin/micromamba && \
+        | tar -xj --strip-components=1 -C /usr/local/bin bin/micromamba && \
+    micromamba --version && \
     micromamba create -y -n tools -c bioconda -c conda-forge \
         pear=0.9.6 \
         multiqc=1.25.1 && \
