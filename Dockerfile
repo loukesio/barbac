@@ -29,23 +29,24 @@ RUN apt-get update && \
         fastqc \
         samtools \
         minimap2 \
-        python3-pip \
         curl \
         bzip2 \
         ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# MultiQC via pip (no apt package for a recent version)
-RUN pip3 install --no-cache-dir multiqc==1.25.1
-
 # -----------------------------------------------------------------------------
-# PEAR via bioconda (not in Debian repos; direct download requires registration)
+# PEAR and MultiQC via bioconda through micromamba. PEAR isn't in Debian
+# repos (direct download requires registration); the newer Debian base
+# used by bioconductor_docker blocks system-Python `pip install` under
+# PEP 668, so multiqc goes through conda too.
 # -----------------------------------------------------------------------------
 ENV MAMBA_ROOT_PREFIX=/opt/micromamba
 ENV PATH=/opt/micromamba/envs/tools/bin:${MAMBA_ROOT_PREFIX}/bin:${PATH}
 RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest \
         | tar -xj -C /usr/local/bin bin/micromamba && \
-    micromamba create -y -n tools -c bioconda -c conda-forge pear=0.9.6 && \
+    micromamba create -y -n tools -c bioconda -c conda-forge \
+        pear=0.9.6 \
+        multiqc=1.25.1 && \
     micromamba clean -a -y
 
 # -----------------------------------------------------------------------------
