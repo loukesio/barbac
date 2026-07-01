@@ -1,0 +1,24 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://loukesio.github.io/barbac/404.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/articles/barbac.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/articles/index.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/authors.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/index.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/barbac-package.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/barbac_ts_area.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/barbac_xtr.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/barbac_xtr.stats.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/check_barbac_tools.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/configure_environment.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/index.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/run_cli_pipeline.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/run_fastqc.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/run_minimap2.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/run_multiqc.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/run_pear_merge.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/summarise_bam_stats.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/super_cluster2.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/theme_barbac.html</loc></url>
+<url><loc>https://loukesio.github.io/barbac/reference/use_barbac_env.html</loc></url>
+</urlset>
+
