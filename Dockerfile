@@ -62,13 +62,22 @@ options(
   Ncpus       = parallel::detectCores(),
   install.packages.check.source = "no"
 )
-install.packages(c("remotes", "devtools"))
-remotes::install_deps(dependencies = TRUE, upgrade = "never")
-# ltc is a github-only palette package used by the vignette examples
-remotes::install_github("loukesio/ltc_palettes", upgrade = "never")
-devtools::install(quiet = TRUE, upgrade = "never")
+install.packages("remotes")
 
-# Smoke-test: fail the build if barbac cannot load or export its API
+# Deps first, then the package itself. Both go through remotes so the
+# `upgrade = "never"` idiom is accepted consistently and no version
+# already provided by the Bioconductor base image is silently replaced.
+remotes::install_deps(dependencies = TRUE, upgrade = "never")
+
+# ltc is a github-only palette package used by the vignette examples.
+remotes::install_github("loukesio/ltc_palettes", upgrade = "never")
+
+# Install barbac from the working directory. dependencies = FALSE
+# because install_deps() just handled them; skipping that check saves
+# a second solver pass.
+remotes::install_local(".", upgrade = "never", dependencies = FALSE, quiet = TRUE)
+
+# Smoke-test: fail the build if barbac cannot load or export its API.
 stopifnot(
   is.function(barbac::super_cluster2),
   is.function(barbac::barbac_ts_area),
