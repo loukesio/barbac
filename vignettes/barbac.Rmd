@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 set.seed(1)
 ```
 
-<img src="../man/figures/logo.png" align="right" height="160" alt="barbac logo"/>
+<img src="../man/figures/logo.png" align="right" height="120" alt="barbac logo"/>
 
 **barbac** (_**bar**code **b**ioinformatics **a**nalysis and
 **c**lustering_) is an R package for end-to-end DNA barcode lineage
