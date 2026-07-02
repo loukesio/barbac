@@ -1,32 +1,7 @@
-# barbac
-
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![License: GPL (\>=
-2)](https://img.shields.io/badge/License-GPL%20(%E2%89%A5%202)-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
-[![R CMD
-check](https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml)
-[![Docker
-image](https://img.shields.io/badge/docker-ghcr.io%2Floukesio%2Fbarbac-2496ed?logo=docker&logoColor=white)](https://github.com/loukesio/barbac/pkgs/container/barbac)
-[![Vignettes](https://img.shields.io/badge/docs-pkgdown-blue)](https://loukesio.github.io/barbac/)
-[![GitHub
-stars](https://img.shields.io/github/stars/loukesio/barbac?style=social)](https://github.com/loukesio/barbac/stargazers)
-
-**barbac** (***bar**code **b**ioinformatics **a**nalysis and
-**c**lustering*) is an R package for end-to-end DNA barcode lineage
-tracking. It provides both a lightweight wrapper around the
-bioinformatics pipeline used to extract barcodes from FASTQ reads
-(FastQC → PEAR → minimap2 → samtools) and a native R clustering routine,
-[`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md),
-backed by a bit-parallel 64-bit edit-distance kernel written in C++. On
-the Johnson et al. (2023) reference benchmark, barbac reaches
-statistical parity with Shepherd at ~1.7× the speed; on datasets with
-indel errors it substantially outperforms Shepherd on false-positive and
-wrong-sequence rates.
-
-------------------------------------------------------------------------
-
 ## Installation
+
+**[barbac](https://loukesio.github.io/barbac/)** is an R package for
+end-to-end DNA barcode lineage tracking. ![](reference/figures/logo.png)
 
 ``` r
 
@@ -313,23 +288,12 @@ paper and treated as future work.
 
 |  |  |
 |----|----|
-| 🐛 **Report issues** | [github.com/loukesio/barbac/issues](https://github.com/loukesio/barbac/issues) |
-| 💡 **Feature requests / discussion** | [github.com/loukesio/barbac/discussions](https://github.com/loukesio/barbac/discussions) |
-| 📧 **Email** | <theodosiou@evolbio.mpg.de> |
+| 🐛 **Issues** | [Report a bug or problem](https://github.com/loukesio/barbac/issues) |
+| 💡 **Discussions** | [Feature requests & questions](https://github.com/loukesio/barbac/discussions) |
+| 📧 **Email** | <loukesio@gmail.com> |
 | 🦋 **Bluesky** | [@bioinformatician.bsky.social](https://bsky.app/profile/bioinformatician.bsky.social) |
-
-## Citation
-
-If you use `barbac` in published work, please cite:
-
-> Theodosiou L, Farr AD, Rainey PB (2026). *barbac: A versatile tool for
-> analysing DNA barcode sequences.* Bioinformatics (in preparation).
 
 ## License
 
 GPL (≥ 2). See
 [LICENSE.md](https://loukesio.github.io/barbac/LICENSE.md).
-
-------------------------------------------------------------------------
-
-*barbac — barcode bioinformatics analysis and clustering.*
