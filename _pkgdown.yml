@@ -34,6 +34,14 @@ reference:
   - barbac_xtr
   - barbac_xtr.stats
 
+- title: QC and diagnostics
+  desc: >
+    Quick-look summaries and plots for sanity-checking each stage of the
+    pipeline.
+  contents:
+  - plot_bam_stats
+  - cluster_stats
+
 - title: End-to-end pipeline orchestrator
   contents:
   - run_cli_pipeline

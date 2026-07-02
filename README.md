@@ -97,18 +97,11 @@ Accepts either long-format or Bartender-wide input. If neither layout matches, `
 
 <div align="center">
 
-```mermaid
-flowchart TD
-    A[Raw Reads<br/>FASTQ] --> B[Quality Control<br/>FastQC]
-    B --> C[Merge paired-end<br/>PEAR]
-    C --> D[Align to Reference<br/>minimap2]
-    D --> E[BAM stats<br/>samtools]
-    E --> F[Extract barcodes<br/>barbac_xtr]
-    F --> G[Cluster<br/>super_cluster2]
-    G --> H[Time series<br/>barbac_ts_area]
-```
+<img src="man/figures/pipeline.svg" alt="barbac pipeline: samples.csv and reference.fasta flow through FastQC/MultiQC, PEAR, minimap2, BAM stats, barcode extraction, super_cluster2 clustering, and barbac_ts_area, with QC branches (plot_bam_stats, barbac_xtr.stats, cluster_stats) alongside." width="820" />
 
 </div>
+
+<sub>Diagram source: [`man/figures/pipeline.mmd`](man/figures/pipeline.mmd). To regenerate the SVG after editing, run <code>npx --yes -p @mermaid-js/mermaid-cli mmdc -i man/figures/pipeline.mmd -o man/figures/pipeline.svg -b transparent</code>.</sub>
 
 ### Define your samples
 
