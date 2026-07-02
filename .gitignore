@@ -106,3 +106,5 @@ __pycache__/
 .vscode/
 *.swp
 *.swo
+/doc/
+/Meta/
