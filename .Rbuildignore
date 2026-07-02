@@ -17,3 +17,4 @@
 ^\.dockerignore$
 ^doc$
 ^Meta$
+^LICENSE\.md$

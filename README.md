@@ -144,6 +144,7 @@ ref     <- "data/Reference_barcodes.fasta"
 
 # 1. Quality control
 run_fastqc(samples)                            # -> results/fastQC/
+run_multiqc()                                  # -> results/multiqc_report.html
 
 # 2. Merge paired-end reads
 run_pear_merge(samples)                        # -> results/merged/
@@ -152,15 +153,19 @@ run_pear_merge(samples)                        # -> results/merged/
 run_minimap2(merged_dir = "results/merged/",   # -> results/merged/bam/
              reference  = ref)
 
-# 4. Mapping statistics
-summarise_bam_stats(bam_dir = "results/merged/bam/")
+# 4. Mapping statistics (+ QC plot)
+bam_stats <- summarise_bam_stats(bam_dir = "results/merged/bam/")
+plot_bam_stats(bam_stats)                      # per-sample mapped/unmapped bars
 
-# 5. Extract barcodes at fixed coordinates
+# 5. Extract barcodes at fixed coordinates (+ QC plot)
 barbac_xtr("results/merged/bam/sample1_sorted.bam",
            start_pos = 54, end_pos = 78)       # -> sample1_barcodes.csv
+barbac_xtr.stats("sample1_barcodes.csv",
+                 barcode_length = c(20, 30))   # histograms + summary table
 
-# 6. Cluster
+# 6. Cluster (+ QC summary)
 result <- super_cluster2("sample1_barcodes.csv", distance = 3)
+cluster_stats(result)                          # n_clusters, singleton_frac, topK_frac
 
 # 7. Visualise (once joined across timepoints)
 barbac_ts_area(result_time_series)
@@ -172,16 +177,15 @@ barbac_ts_area(result_time_series)
 
 ```
 results/
-├── fastQC/                  # Quality control reports
+├── fastQC/                       # Quality control reports
 │   ├── sample1_R1_fastqc.html
 │   └── sample1_R2_fastqc.html
-├── merged/                  # PEAR merged reads
-│   ├── sample1_ANC.assembled.fastq
-│   └── bam/                 # Alignment results
-│       ├── *.bam
-│       └── *.bam.bai
-├── stats/                   # Summary statistics
-│   └── mapping_summary.tsv
+├── merged/                       # PEAR merged reads
+│   ├── sample1_ANC.assembled.fastq   # "_ANC" tag added by run_pear_merge()
+│   └── bam/                      # Alignment results
+│       ├── *_sorted.bam
+│       └── *_sorted.bam.bai
+├── bam_summary.csv               # per-sample mapped / unmapped counts
 └── pipeline.log
 ```
 
@@ -257,7 +261,7 @@ If you use `barbac` in published work, please cite:
 
 ## License
 
-GPL (≥ 2). See [LICENSE](LICENSE).
+GPL (≥ 2). See [LICENSE.md](LICENSE.md).
 
 ---
 
