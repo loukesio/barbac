@@ -2,10 +2,9 @@
 
 ![barbac logo](../reference/figures/logo.png)
 
-**barbac** (***bar**code **b**ioinformatics **a**nalysis and
-**c**lustering*) is an R package for end-to-end DNA barcode lineage
-tracking. This vignette walks through the core R-level workflow —
-clustering a count table with
+**barbac** is an R package for end-to-end DNA barcode lineage tracking.
+This vignette walks through the core R-level workflow — clustering a
+count table with
 [`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md)
 and visualising a time series with
 [`barbac_ts_area()`](https://loukesio.github.io/barbac/reference/barbac_ts_area.md)
