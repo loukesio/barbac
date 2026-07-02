@@ -24,6 +24,16 @@ Stacked-area plots of lineage frequencies over time.
 - [`barbac_xtr.stats()`](https://loukesio.github.io/barbac/reference/barbac_xtr.stats.md)
   : Generate Summary Statistics and Plots for Extracted Barcodes
 
+## QC and diagnostics
+
+Quick-look summaries and plots for sanity-checking each stage of the
+pipeline.
+
+- [`plot_bam_stats()`](https://loukesio.github.io/barbac/reference/plot_bam_stats.md)
+  : Per-sample bar plot of mapping counts
+- [`cluster_stats()`](https://loukesio.github.io/barbac/reference/cluster_stats.md)
+  : Post-clustering QC summary
+
 ## End-to-end pipeline orchestrator
 
 - [`run_cli_pipeline()`](https://loukesio.github.io/barbac/reference/run_cli_pipeline.md)

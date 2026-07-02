@@ -1,0 +1,44 @@
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#EEF2F6','primaryTextColor':'#1F2A37','primaryBorderColor':'#2C4A63','lineColor':'#5A6B7A','fontFamily':'Inter, system-ui, sans-serif'}}}%%
+flowchart TD
+    %% Inputs
+    S[/"samples.csv"/]:::io
+    R[/"reference.fasta"/]:::io
+
+    %% Stage 1: QC of raw reads
+    S --> FQ["run_fastqc()"]:::step
+    FQ --> MQ["run_multiqc()"]:::qc
+    FQ -. reports .-> FQO[/"fastQC/*.html"/]:::io
+    MQ -. report .-> MQO[/"multiqc_report.html"/]:::io
+
+    %% Stage 2: Merge paired-end reads
+    S --> PE["run_pear_merge()"]:::step
+    PE -. merged .-> MFQ[/"merged/*.assembled.fastq"/]:::io
+
+    %% Stage 3: Alignment
+    MFQ --> MM["run_minimap2()"]:::step
+    R  --> MM
+    MM -. sorted BAM .-> BAM[/"merged/bam/*_sorted.bam"/]:::io
+
+    %% Stage 4: BAM stats + QC
+    BAM --> SBS["summarise_bam_stats()"]:::step
+    SBS -. tibble .-> SBSO[/"mapping_summary.tsv"/]:::io
+    SBS --> PBS["plot_bam_stats()"]:::qc
+
+    %% Stage 5: Extract barcodes + QC
+    BAM --> BX["barbac_xtr()"]:::step
+    BX -. CSV .-> BXO[/"*_barcodes.csv"/]:::io
+    BXO --> BXS["barbac_xtr.stats()"]:::qc
+
+    %% Stage 6: Cluster + QC
+    BXO --> SC["super_cluster2()"]:::step
+    SC -. tibble .-> SCO[/"clusters.csv"/]:::io
+    SCO --> CS["cluster_stats()"]:::qc
+
+    %% Stage 7: Time-series visualisation
+    SCO --> JOIN["join across timepoints"]:::step
+    JOIN --> TS["barbac_ts_area()"]:::step
+    TS -. plot .-> TSO[/"stacked-area ggplot"/]:::io
+
+    classDef io      fill:#F8FAFC,stroke:#8A9AA8,stroke-dasharray:3 3,color:#1F2A37;
+    classDef step    fill:#2C4A63,stroke:#1F2A37,color:#FFFFFF,font-weight:bold;
+    classDef qc      fill:#FFE7B5,stroke:#B27E00,color:#1F2A37;

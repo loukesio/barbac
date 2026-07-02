@@ -135,20 +135,14 @@
 <h2 id="the-full-fastqlineage-pipeline">The full FASTQ→lineage pipeline<a class="anchor" aria-label="anchor" href="#the-full-fastqlineage-pipeline"></a>
 </h2>
 <div align="center">
-<pre class="mermaid"><code>flowchart TD
-    A[Raw Reads&lt;br/&gt;FASTQ] --&gt; B[Quality Control&lt;br/&gt;FastQC]
-    B --&gt; C[Merge paired-end&lt;br/&gt;PEAR]
-    C --&gt; D[Align to Reference&lt;br/&gt;minimap2]
-    D --&gt; E[BAM stats&lt;br/&gt;samtools]
-    E --&gt; F[Extract barcodes&lt;br/&gt;barbac_xtr]
-    F --&gt; G[Cluster&lt;br/&gt;super_cluster2]
-    G --&gt; H[Time series&lt;br/&gt;barbac_ts_area]</code></pre>
+<p><img src="reference/figures/pipeline.svg" alt="barbac pipeline: samples.csv and reference.fasta flow through FastQC/MultiQC, PEAR, minimap2, BAM stats, barcode extraction, super_cluster2 clustering, and barbac_ts_area, with QC branches (plot_bam_stats, barbac_xtr.stats, cluster_stats) alongside." width="820"></p>
 </div>
+<p><sub>Diagram source: <a href="man/figures/pipeline.mmd"><code>man/figures/pipeline.mmd</code></a>. To regenerate the SVG after editing, run <code>npx –yes -p @mermaid-js/mermaid-cli mmdc -i man/figures/pipeline.mmd -o man/figures/pipeline.svg -b transparent</code>.</sub></p>
 <div class="section level3">
 <h3 id="define-your-samples">Define your samples<a class="anchor" aria-label="anchor" href="#define-your-samples"></a>
 </h3>
 <p>Provide a <code>samples.csv</code> file listing one sample per row. <code>sample</code> and <code>R1</code> are required; <code>R2</code> is optional (single-end mode is used when it’s missing).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  sample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample1"</span>, <span class="st">"sample2"</span>, <span class="st">"sample3"</span><span class="op">)</span>,</span>
 <span>  R1     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data/sample1_R1.fastq.gz"</span>, <span class="st">"data/sample2_R1.fastq.gz"</span>, <span class="st">"data/sample3_R1.fastq.gz"</span><span class="op">)</span>,</span>
@@ -183,7 +177,7 @@
 <div class="section level3">
 <h3 id="one-command-pipeline">One-command pipeline<a class="anchor" aria-label="anchor" href="#one-command-pipeline"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/run_cli_pipeline.html">run_cli_pipeline</a></span><span class="op">(</span></span>
 <span>  sample_table <span class="op">=</span> <span class="st">"samples.csv"</span>,</span>
 <span>  reference    <span class="op">=</span> <span class="st">"data/Reference_barcodes.fasta"</span>,</span>
@@ -196,7 +190,7 @@
 </h3>
 <details><summary>
 Prefer to run each stage explicitly? Click to expand.
-</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="st">"samples.csv"</span></span>
 <span><span class="va">ref</span>     <span class="op">&lt;-</span> <span class="st">"data/Reference_barcodes.fasta"</span></span>
 <span></span>
