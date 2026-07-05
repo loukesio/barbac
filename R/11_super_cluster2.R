@@ -20,7 +20,6 @@
 #'   guard. Effective ratio increases with distance. Default: 20.
 #' @param error_rate Numeric. Approximate per-base error rate for likelihood
 #'   scoring. Default: 0.005.
-#' @param q Integer. Q-gram size for qgram/jaccard/cosine. Default: 2.
 #'
 #' @return A \code{\link[tibble]{tibble}} with columns:
 #'   cluster_id, central_barcode, all_barcodes, all_counts, sum_counts.
@@ -34,8 +33,7 @@
 #' @useDynLib barbac, .registration = TRUE
 super_cluster2 <- function(input_path,
                            distance         = 3,
-                           method           = c("lv", "hamming", "osa", "dl", "lcs",
-                                                "qgram", "cosine", "jaccard", "jw", "soundex"),
+                           method           = c("lv", "hamming"),
                            barcode_col      = "barcode",
                            counts_col       = "counts",
                            output_dir       = NULL,
@@ -46,32 +44,31 @@ super_cluster2 <- function(input_path,
                            kmer_size        = 5L,
                            min_shared_kmers = 2L,
                            merge_ratio      = 20.0,
-                           error_rate       = 0.005,
-                           q                = 2) {
-  
+                           error_rate       = 0.005) {
+
   method        <- match.arg(method)
   use_cpp_final <- use_cpp && (method %in% c("lv", "hamming"))
-  
+
   if (is.data.frame(input_path)) {
     return(.process_df(input_path, distance, method, barcode_col, counts_col,
                        output_dir, verbose, use_cpp_final, use_kmer_filter,
-                       kmer_size, min_shared_kmers, merge_ratio, error_rate, q))
+                       kmer_size, min_shared_kmers, merge_ratio, error_rate))
   }
-  
+
   if (!is.character(input_path))
     stop("input_path must be a file path or data.frame")
   if (!file.exists(input_path))
     stop("Input path does not exist: ", input_path)
-  
+
   if (file.info(input_path)$isdir) {
     .process_dir(input_path, distance, method, barcode_col, counts_col,
                  output_dir, file_pattern, verbose, use_cpp_final,
                  use_kmer_filter, kmer_size, min_shared_kmers,
-                 merge_ratio, error_rate, q)
+                 merge_ratio, error_rate)
   } else {
     .process_file(input_path, distance, method, barcode_col, counts_col,
                   output_dir, verbose, use_cpp_final, use_kmer_filter,
-                  kmer_size, min_shared_kmers, merge_ratio, error_rate, q)
+                  kmer_size, min_shared_kmers, merge_ratio, error_rate)
   }
 }
 
@@ -82,21 +79,50 @@ super_cluster2 <- function(input_path,
 #' @noRd
 .process_df <- function(data, distance, method, barcode_col, counts_col,
                         output_dir, verbose, use_cpp_final, use_kmer_filter,
-                        kmer_size, min_shared_kmers, merge_ratio, error_rate, q) {
-  
+                        kmer_size, min_shared_kmers, merge_ratio, error_rate) {
+
   if (!all(c(barcode_col, counts_col) %in% colnames(data)))
     stop(sprintf("Columns '%s' and/or '%s' not found. Available: %s",
                  barcode_col, counts_col,
                  paste(colnames(data), collapse = ", ")))
-  
+
   n_before <- nrow(data)
   data     <- data[!is.na(data[[barcode_col]]) & !is.na(data[[counts_col]]), ]
-  
+
   data[[barcode_col]] <- as.character(data[[barcode_col]])
   data[[counts_col]]  <- as.integer(data[[counts_col]])
-  
+
+  # Collapse exact-duplicate barcodes by summing their counts. The clustering
+  # kernel treats a distance of 0 as "already the same sequence" and never
+  # merges identical barcodes, so duplicate rows would otherwise be double-
+  # counted as separate singleton clusters. Only rewrite the table when
+  # duplicates actually exist, and preserve first-occurrence row order: the
+  # abundance-ranked greedy pass breaks count ties by row order, so an
+  # already-unique count table must be passed through untouched.
+  n_after_na <- nrow(data)
+  if (anyDuplicated(data[[barcode_col]])) {
+    summed <- rowsum(data[[counts_col]], group = data[[barcode_col]],
+                     reorder = FALSE)
+    data <- data[!duplicated(data[[barcode_col]]), , drop = FALSE]
+    data[[counts_col]] <- as.integer(summed[data[[barcode_col]], 1L])
+  }
+  n_collapsed <- n_after_na - nrow(data)
+
+  # Hamming mode compares sequences via 2-bit DNA packing, which only supports
+  # A/C/G/T barcodes of length <= 32. Such sequences would otherwise be left as
+  # their own singleton clusters with no diagnostic; warn instead of silently.
+  if (method == "hamming") {
+    bad <- grepl("[^ACGTacgt]", data[[barcode_col]]) |
+           nchar(data[[barcode_col]]) > 32L
+    if (any(bad))
+      warning(sum(bad), " barcode(s) contain non-ACGT characters or exceed ",
+              "32 bp; Hamming mode cannot compare these and will leave each as ",
+              "its own cluster. Use method = 'lv' for indel/N-containing data.",
+              call. = FALSE)
+  }
+
   data <- dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)))
-  
+
   mean_len <- mean(nchar(data[[barcode_col]]))
   
   if (verbose) {
@@ -112,8 +138,10 @@ super_cluster2 <- function(input_path,
     message("  min_shared_kmers : ", min_shared_kmers)
     message("  merge_ratio      : ", merge_ratio, " (distance-aware)")
     message("  error_rate       : ", error_rate)
-    if (n_before > nrow(data))
-      message("  Removed NAs      : ", n_before - nrow(data), " rows")
+    if (n_before > n_after_na)
+      message("  Removed NAs      : ", n_before - n_after_na, " rows")
+    if (n_collapsed > 0)
+      message("  Collapsed dups   : ", n_collapsed, " rows")
     message("  Sequences        : ", format(nrow(data), big.mark = ","))
     message("  Mean length      : ", round(mean_len, 1), " bp")
     message("  Top sequence     : ", data[[barcode_col]][1],
@@ -148,7 +176,7 @@ super_cluster2 <- function(input_path,
     attr(result, "method")          <- cpp$method
   } else {
     result <- .cluster_stringdist(data[[barcode_col]], data[[counts_col]],
-                                  distance, method, q)
+                                  distance, method)
   }
   
   t1    <- Sys.time()
@@ -196,17 +224,17 @@ super_cluster2 <- function(input_path,
 #' @noRd
 .process_file <- function(file_path, distance, method, barcode_col, counts_col,
                           output_dir, verbose, use_cpp_final, use_kmer_filter,
-                          kmer_size, min_shared_kmers, merge_ratio, error_rate, q) {
-  
+                          kmer_size, min_shared_kmers, merge_ratio, error_rate) {
+
   if (verbose) message("Reading: ", basename(file_path))
   data <- readr::read_csv(file_path, show_col_types = FALSE)
-  
+
   if (!all(c(barcode_col, counts_col) %in% colnames(data)))
     stop("Required columns not found in: ", file_path)
-  
+
   result <- .process_df(data, distance, method, barcode_col, counts_col,
                         NULL, verbose, use_cpp_final, use_kmer_filter,
-                        kmer_size, min_shared_kmers, merge_ratio, error_rate, q)
+                        kmer_size, min_shared_kmers, merge_ratio, error_rate)
   
   if (!is.null(output_dir)) {
     if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
@@ -230,7 +258,7 @@ super_cluster2 <- function(input_path,
 .process_dir <- function(dir_path, distance, method, barcode_col, counts_col,
                          output_dir, file_pattern, verbose, use_cpp_final,
                          use_kmer_filter, kmer_size, min_shared_kmers,
-                         merge_ratio, error_rate, q) {
+                         merge_ratio, error_rate) {
   
   files <- list.files(dir_path, pattern = file_pattern, full.names = TRUE)
   if (length(files) == 0)
@@ -245,7 +273,7 @@ super_cluster2 <- function(input_path,
                                      counts_col, output_dir, verbose,
                                      use_cpp_final, use_kmer_filter,
                                      kmer_size, min_shared_kmers,
-                                     merge_ratio, error_rate, q),
+                                     merge_ratio, error_rate),
       error = function(e) warning("Failed: ", basename(f), ": ", e$message)
     )
   }
@@ -257,7 +285,7 @@ super_cluster2 <- function(input_path,
 # =============================================================================
 #' @keywords internal
 #' @noRd
-.cluster_stringdist <- function(barcodes, counts, max_distance, method, q) {
+.cluster_stringdist <- function(barcodes, counts, max_distance, method) {
   n <- length(barcodes)
   if (n == 0) {
     return(tibble::tibble(
@@ -275,14 +303,8 @@ super_cluster2 <- function(input_path,
     cnt <- counts[i]
     hit <- NULL
     for (j in seq_along(clusters)) {
-      d <- if (method %in% c("qgram", "cosine", "jaccard")) {
-        stringdist::stringdist(bc, clusters[[j]]$central_barcode,
-                               method = method, q = q)
-      } else {
-        stringdist::stringdist(bc, clusters[[j]]$central_barcode,
-                               method = method)
-      }
-      if (method == "jw") d <- 1 - d
+      d <- stringdist::stringdist(bc, clusters[[j]]$central_barcode,
+                                  method = method)
       if (d <= max_distance) { hit <- j; break }
     }
     if (!is.null(hit)) {

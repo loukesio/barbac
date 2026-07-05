@@ -49,3 +49,35 @@ test_that("super_cluster2 preserves total counts", {
   res <- super_cluster2(input, distance = 3, verbose = FALSE)
   expect_equal(sum(res$sum_counts), sum(input$counts))
 })
+
+test_that("super_cluster2 rejects unsupported distance methods", {
+  input <- data.frame(barcode = c("AAAA", "AAAT"), counts = c(10, 5))
+  expect_error(super_cluster2(input, method = "jw",     verbose = FALSE))
+  expect_error(super_cluster2(input, method = "cosine", verbose = FALSE))
+  expect_error(super_cluster2(input, method = "qgram",  verbose = FALSE))
+})
+
+test_that("super_cluster2 collapses exact-duplicate barcodes into one cluster", {
+  input <- data.frame(
+    barcode = c("AAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAA",   # identical duplicate
+                "TTTTTTTTTTTTTTTTTTTT"),
+    counts  = c(100, 50, 30)
+  )
+  res <- super_cluster2(input, distance = 0, verbose = FALSE)
+
+  expect_equal(nrow(res), 2L)
+  a <- res[res$central_barcode == "AAAAAAAAAAAAAAAAAAAA", ]
+  expect_equal(a$sum_counts, 150L)              # 100 + 50 pooled, not double-counted
+  expect_equal(sum(res$sum_counts), 180L)
+})
+
+test_that("super_cluster2 warns on Hamming-incompatible barcodes", {
+  input <- data.frame(
+    barcode = c("AAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAN"),   # contains N, not 2-bit packable
+    counts  = c(100, 5)
+  )
+  expect_warning(super_cluster2(input, method = "hamming", verbose = FALSE),
+                 "Hamming mode cannot compare")
+})
