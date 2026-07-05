@@ -121,7 +121,13 @@ super_cluster2 <- function(input_path,
               call. = FALSE)
   }
 
-  data <- dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)))
+  # Standardise the row order so the abundance-ranked greedy pass is a pure
+  # function of the input's content, not the order it happened to arrive in.
+  # Sorting by count then barcode breaks count ties deterministically (barcodes
+  # are unique after the dedup above), making the clustering reproducible under
+  # any row permutation from upstream joins, summaries, or file merges.
+  data <- dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
+                         !!rlang::sym(barcode_col))
 
   mean_len <- mean(nchar(data[[barcode_col]]))
   

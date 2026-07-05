@@ -72,6 +72,31 @@ test_that("super_cluster2 collapses exact-duplicate barcodes into one cluster", 
   expect_equal(sum(res$sum_counts), 180L)
 })
 
+test_that("super_cluster2 output is invariant to input row order", {
+  set.seed(3)
+  ALPH  <- c("A", "C", "G", "T")
+  truth <- unique(replicate(120, paste0(sample(ALPH, 20, TRUE), collapse = "")))
+  mk <- function(s) {                       # one random substitution
+    cs <- strsplit(s, "")[[1]]; j <- sample(20, 1)
+    cs[j] <- sample(setdiff(ALPH, cs[j]), 1); paste0(cs, collapse = "")
+  }
+  bc  <- unlist(lapply(truth, function(t) c(t, replicate(2, mk(t)))))
+  tab <- aggregate(counts ~ barcode,
+                   data.frame(barcode = bc,
+                              counts  = sample(1:5, length(bc), TRUE)),
+                   sum)
+  canon <- function(d) {
+    r <- super_cluster2(d, distance = 3, verbose = FALSE)
+    sort(vapply(seq_len(nrow(r)), function(i)
+      paste(r$central_barcode[i], r$sum_counts[i],
+            paste(sort(r$all_barcodes[[i]]), collapse = "|"), sep = "~"),
+      character(1)))
+  }
+  base <- canon(tab)
+  expect_identical(base, canon(tab[sample(nrow(tab)), ]))   # rows shuffled
+  expect_identical(base, canon(tab[order(tab$counts), ]))   # count-ascending
+})
+
 test_that("super_cluster2 warns on Hamming-incompatible barcodes", {
   input <- data.frame(
     barcode = c("AAAAAAAAAAAAAAAAAAAA",
