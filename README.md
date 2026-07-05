@@ -231,6 +231,48 @@ We benchmarked barbac against Shepherd, Starcode, and Bartender on 10,000-barcod
 - **R-native**, with an in-package Rcpp binding — no shelling out to a standalone C binary and parsing text output.
 - **Integrated with the FASTQ→lineage pipeline** (`run_cli_pipeline`, `barbac_xtr`) and the time-series visualisation (`barbac_ts_area`) in the same package.
 
+### Structured (mixed-anchor) barcode designs
+
+Many real barcode libraries are not fully random: they interleave random
+positions with fixed anchor sequences (e.g. `NNNNNNNN-ATGC-NNNNNNNN-ATCGTTAA`).
+We benchmarked this case with a 28 bp template carrying 16 variable positions,
+2,000 barcodes and 200k reads, clustered at distance 3. The fixed anchors are
+the interesting stress: indels shift them out of register, which fragments
+Hamming-indexed methods. The variable region is deliberately wide enough that
+only 28 of 2,000 true barcodes fall within distance 3 of another, so the numbers
+reflect the tools, not the design.
+
+**sub_only (0% indel — representative of Illumina):**
+
+| Method    | Pearson R | FN%  | FP%  | WS%  |
+|:----------|----------:|-----:|-----:|-----:|
+| **barbac**| 1.0000    | 0.55 | 0.55 | **0.50** |
+| Shepherd  | 1.0000    | 0.75 | 0.75 | 0.70 |
+| Starcode  | 1.0000    | 1.35 | 1.25 | 1.20 |
+| Bartender | 1.0000    | 0.65 | 0.75 | 0.70 |
+
+**low_indel (0.5% ins, 0.5% del):**
+
+| Method    | Pearson R | FN%  | FP%    | WS%    |
+|:----------|----------:|-----:|-------:|-------:|
+| **barbac**| 1.0000    | 2.25 | **9.15**  | **2.50**  |
+| Shepherd  | 0.9989    | 1.70 | 101.30 | 100.35 |
+| Starcode  | 1.0000    | 3.15 | 10.10  | 3.45   |
+| Bartender | 0.9944    | 1.45 | 772.55 | 765.75 |
+
+- **barbac has the lowest wrong-sequence rate of all four tools on both
+  conditions** — the anchors don't trip it up because the Levenshtein kernel
+  realigns indel-shifted reads.
+- **Shepherd and Bartender fragment on indels**, WS jumping to 100% and 766% as
+  soon as indels appear, because Hamming-based indexing splits each
+  anchor-shifted variant into its own centroid.
+- **Starcode is barbac's closest competitor** (also Levenshtein-based), but
+  barbac edges it on every metric here.
+- FP at nonzero indel rates is inflated for every tool by harmless singleton
+  error-reads that drift more than 3 edits from any true barcode; **WS**
+  (spurious centroids *near* a true barcode) is the metric that separates safe
+  tools from fragmenting ones.
+
 Full reproducibility scripts are in [`benchmark/indel_experiment/`](benchmark/indel_experiment/). The experiment runner also produces mid- and high-indel conditions; those regimes (2%+ indels) are outside the Illumina scope of the current paper and treated as future work.
 
 ---

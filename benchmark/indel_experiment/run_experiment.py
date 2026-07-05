@@ -143,7 +143,8 @@ def run_barbac(input_csv: Path, out_csv: Path) -> tuple[float, float]:
     return wall, algo
 
 
-def run_shepherd(shepherd_input: Path, work_dir: Path) -> tuple[Path, float]:
+def run_shepherd(shepherd_input: Path, work_dir: Path,
+                 barcode_len: int = BARCODE_LEN) -> tuple[Path, float]:
     """Returns (centroids_csv, wall_seconds). Shepherd writes outputs alongside
     its input file with a fixed suffix, so we stage by copying / linking and
     then move outputs back."""
@@ -154,7 +155,7 @@ def run_shepherd(shepherd_input: Path, work_dir: Path) -> tuple[Path, float]:
     subprocess.run(
         [sys.executable, str(SHEPHERD_DIR / "shepherd_t0.py"),
          "-f", str(shepherd_input),
-         "-l", str(BARCODE_LEN),
+         "-l", str(barcode_len),
          "-eps", str(MAX_DIST)],
         check=True,
         cwd=work_dir,
@@ -242,10 +243,13 @@ def run_bartender(input_csv: Path, work_dir: Path, out_csv: Path) -> float:
 
 
 def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
-                  reuse_sim: bool = False) -> dict:
-    cond_dir = RESULTS_DIR / cond["name"]
+                  reuse_sim: bool = False, template: str | None = None,
+                  tag: str = "", barcode_len: int = BARCODE_LEN) -> dict:
+    dir_name = f"{cond['name']}_{tag}" if tag else cond["name"]
+    cond_dir = RESULTS_DIR / dir_name
     cond_dir.mkdir(parents=True, exist_ok=True)
-    print(f"\n=== {cond['name']}  sub={cond['sub_rate']}  ins={cond['ins_rate']}  del={cond['del_rate']} ===")
+    design = f" template={template}" if template else ""
+    print(f"\n=== {dir_name}  sub={cond['sub_rate']}  ins={cond['ins_rate']}  del={cond['del_rate']}{design} ===")
 
     # 1. Simulate (or reuse).
     from simulate import simulate
@@ -254,12 +258,13 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
         simulate(
             cond_dir,
             n_barcodes=n_barcodes,
-            barcode_length=BARCODE_LEN,
+            barcode_length=barcode_len,
             n_reads=n_reads,
             sub_rate=cond["sub_rate"],
             ins_rate=cond["ins_rate"],
             del_rate=cond["del_rate"],
             seed=seed,
+            template=template,
         )
         print(f"  sim:      {time.time()-t0:.1f}s")
     else:
@@ -281,7 +286,7 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
           f"WS={barbac_eval.ws} ({100*barbac_eval.ws_rate:.3f}%)")
 
     # 3. Shepherd.
-    shep_centroids, shep_t = run_shepherd(shep_input, cond_dir)
+    shep_centroids, shep_t = run_shepherd(shep_input, cond_dir, barcode_len)
     shep_out = cond_dir / "shepherd_out.csv"
     # normalize column names for downstream eval
     df = pd.read_csv(shep_centroids)
@@ -331,6 +336,11 @@ def main():
     p.add_argument("--only",       type=str, help="only run this condition name")
     p.add_argument("--reuse-sim",  action="store_true",
                    help="reuse existing input.csv if present")
+    p.add_argument("--template",   type=str, default=None,
+                   help="fixed-anchor design over {A,C,G,T,N}; N = random position")
+    p.add_argument("--tag",        type=str, default="",
+                   help="suffix for result dirs so a run never overwrites another "
+                        "(defaults to 'structured' when --template is given)")
     args = p.parse_args()
 
     conds = CONDITIONS
@@ -338,6 +348,11 @@ def main():
         conds = [c for c in conds if c["name"] == args.only]
         if not conds:
             sys.exit(f"unknown condition {args.only!r}")
+
+    # A templated run writes to tagged dirs and uses the template's length so it
+    # can never clobber the fully-random benchmark data.
+    tag = args.tag or ("structured" if args.template else "")
+    barcode_len = len(args.template) if args.template else BARCODE_LEN
 
     all_results = []
     for cond in conds:
@@ -347,6 +362,9 @@ def main():
             n_reads=args.n_reads,
             seed=args.seed,
             reuse_sim=args.reuse_sim,
+            template=args.template,
+            tag=tag,
+            barcode_len=barcode_len,
         ))
 
     # Compile summary
@@ -365,7 +383,7 @@ def main():
                                   "runtime_s", "algo_time_s")})
             rows.append(row)
     summary = pd.DataFrame(rows)
-    summary_path = RESULTS_DIR / "summary.csv"
+    summary_path = RESULTS_DIR / (f"summary_{tag}.csv" if tag else "summary.csv")
     summary.to_csv(summary_path, index=False)
     print(f"\nWrote {summary_path}")
     print("\n=== SUMMARY ===")

@@ -562,6 +562,70 @@ artefacts (lineage tracking, extinction/emergence detection,
 selection-coefficient estimation), barbac's operating point is
 Pareto-favourable against every peer method tested.
 
+**3.5 Robustness on structured (mixed-anchor) barcode designs**
+
+The benchmarks in Sections 3.3 and 3.4 use fully random barcodes. Many
+experimental barcode libraries, however, are *structured*: they
+interleave random positions with fixed anchor sequences (for example a
+design of the form NNNNNNNN-ATGC-NNNNNNNN-ATCGTTAA, where N denotes a
+random position). Fixed anchors are precisely where indel errors are
+most damaging: an insertion or deletion shifts the constant anchor out
+of register, and under Hamming-based comparison an otherwise-identical
+read then appears maximally different. To test whether the indel
+robustness observed in Section 3.4 extends to this common layout, we
+constructed a structured library of 2,000 barcodes from a 28 bp
+template with 16 variable positions and two fixed anchors, and simulated
+200,000 reads under the same error model and parameters as Section 3.4
+(0.5% substitution; 0% and 0.5% indel; maximum edit distance 3). The
+variable region was sized so the design itself is separable at distance
+3 — only 28 of the 2,000 true barcodes lie within edit distance 3 of
+another — ensuring the measured rates reflect the clustering methods
+rather than an under-provisioned design.
+
+**Table 4.** Performance on a structured mixed-anchor barcode design
+(2,000 barcodes of 28 bp with 16 variable positions; 200,000 reads;
+per-base substitution rate 0.5%). Metrics defined as in Table 2.
+
+  ---------------------------------------------------------------------
+  **Condition** **Method**    **R**      **FN (%)** **FP (%)** **WS (%)**
+  ------------- ------------- ---------- ---------- ---------- ----------
+  sub_only      **barbac**    1.0000     0.55       0.55       **0.50**
+
+                Shepherd      1.0000     0.75       0.75       0.70
+
+                Starcode      1.0000     1.35       1.25       1.20
+
+                Bartender     1.0000     0.65       0.75       0.70
+
+  low_indel     **barbac**    1.0000     2.25       **9.15**   **2.50**
+
+                Shepherd      0.9989     1.70       101.30     100.35
+
+                Starcode      1.0000     3.15       10.10      3.45
+
+                Bartender     0.9944     1.45       772.55     765.75
+  ---------------------------------------------------------------------
+
+The structured design reproduces the two-group separation seen on
+random barcodes. In the substitution-only regime all four methods again
+performed comparably (WS 0.50–1.20%; Pearson R = 1.0000). At 0.5%
+indels, barbac achieved the lowest Wrong Sequences rate of any method
+(2.50%), ahead of its Levenshtein-native peer Starcode (3.45%), while
+the Hamming-based methods fragmented: Shepherd's WS rose to 100.35% and
+Bartender's to 765.75%, as each anchor-shifted variant was split into
+its own centroid. As in Section 3.4, Shepherd and Bartender recovered
+marginally more true barcodes (FN 1.70% and 1.45% versus barbac's
+2.25%), but at the cost of one to two orders of magnitude more spurious
+near-true centroids. The elevated false-positive rates at 0.5% indels
+(9–10% for barbac and Starcode) are dominated by singleton error-reads
+that drift more than three edits from any true barcode and form isolated
+clusters; because these lie far from any true sequence they are not
+counted as Wrong Sequences and are trivially removed by an abundance
+threshold. These results confirm that barbac's native Levenshtein
+handling extends its indel robustness to structured, anchor-containing
+barcode designs — the layouts most vulnerable to the register-shifting
+failure mode of Hamming-based tools.
+
 **4 Discussion**
 
 The analysis of lineage barcoding data depends critically on accurate
@@ -657,7 +721,13 @@ sensitive to false negatives. The combination of
 Pareto-optimal indel handling, native Levenshtein clustering, and
 seamless integration with time-series analysis makes barbac a practical
 choice for lineage barcoding studies, particularly where indel errors
-are non-negligible.\
+are non-negligible. This advantage persisted on a structured,
+anchor-containing barcode design (Section 3.5), in which every indel
+shifts a fixed constant region out of register: barbac again produced
+the lowest wrong-sequence rate of any method (2.50% at 0.5% indels),
+whereas the Hamming-based tools fragmented each shifted variant into
+separate centroids (Wrong Sequences 100.35% for Shepherd and 765.75%
+for Bartender).\
 In summary, barbac provides a practical solution for processing and
 analyzing barcode sequencing data. By combining modularity, speed, and
 flexible lineage reconstruction, it addresses several gaps in existing

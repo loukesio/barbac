@@ -26,6 +26,45 @@ def random_barcodes(n: int, length: int, rng: np.random.Generator) -> list[str]:
     return ["".join(ALPHABET[row]) for row in idx]
 
 
+def structured_barcodes(n: int, template: str,
+                        rng: np.random.Generator) -> list[str]:
+    """Draw n distinct barcodes from a fixed-anchor design template.
+
+    The template is a string over {A,C,G,T,N}: each 'N' is filled with a
+    uniform random base, every other position is a fixed anchor kept constant
+    across all barcodes (e.g. 'NNNNNNNNATGCNNNNNNNNATCGTTAA'). Diversity is
+    4 ** (number of N positions), so keep enough N's that distinct barcodes
+    stay separated at the clustering distance.
+    """
+    template = template.upper()
+    bad = set(template) - set("ACGTN")
+    if bad:
+        raise ValueError(f"template may only contain A/C/G/T/N, got {sorted(bad)}")
+    var_pos = [i for i, ch in enumerate(template) if ch == "N"]
+    n_var = len(var_pos)
+    if n_var == 0:
+        raise ValueError("template has no variable (N) positions")
+    max_distinct = 4 ** n_var
+    if n > max_distinct:
+        raise ValueError(f"template has {n_var} variable positions "
+                         f"(<= {max_distinct} distinct barcodes) but {n} requested")
+    base = list(template)
+    seen: set[str] = set()
+    out: list[str] = []
+    while len(out) < n:
+        draws = rng.integers(0, 4, size=(n - len(out), n_var))
+        for row in draws:
+            for k, p in enumerate(var_pos):
+                base[p] = "ACGT"[row[k]]
+            s = "".join(base)
+            if s not in seen:
+                seen.add(s)
+                out.append(s)
+                if len(out) == n:
+                    break
+    return out
+
+
 def lognormal_abundances(n: int, total_reads: int, sigma: float,
                          rng: np.random.Generator) -> np.ndarray:
     raw = rng.lognormal(mean=0.0, sigma=sigma, size=n)
@@ -86,6 +125,7 @@ def simulate(
     del_rate: float,
     sigma: float = 1.5,
     seed: int = 0,
+    template: str | None = None,
 ) -> Path:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -94,7 +134,11 @@ def simulate(
     abund_rng = np.random.default_rng(seed + 1)
     mut_rng   = np.random.default_rng(seed + 2)
 
-    barcodes = random_barcodes(n_barcodes, barcode_length, bc_rng)
+    if template:
+        barcodes = structured_barcodes(n_barcodes, template, bc_rng)
+        barcode_length = len(template)
+    else:
+        barcodes = random_barcodes(n_barcodes, barcode_length, bc_rng)
     true_counts = lognormal_abundances(n_barcodes, n_reads, sigma, abund_rng)
 
     # Sort descending by true count so the file matches the original benchmark layout.
@@ -136,6 +180,7 @@ def simulate(
         "del_rate":       del_rate,
         "sigma":          sigma,
         "seed":           seed,
+        "template":       template,
         "n_unique_reads": len(items),
     }
     import json
@@ -155,6 +200,8 @@ if __name__ == "__main__":
     p.add_argument("--del-rate",       type=float, default=0.0)
     p.add_argument("--sigma",          type=float, default=1.5)
     p.add_argument("--seed",           type=int,   default=0)
+    p.add_argument("--template",       type=str,   default=None,
+                   help="fixed-anchor design over {A,C,G,T,N}; N = random position")
     args = p.parse_args()
     simulate(
         args.out_dir,
@@ -166,4 +213,5 @@ if __name__ == "__main__":
         del_rate=args.del_rate,
         sigma=args.sigma,
         seed=args.seed,
+        template=args.template,
     )
