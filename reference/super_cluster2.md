@@ -10,8 +10,7 @@ Levenshtein (handles indels) and Hamming distances.
 super_cluster2(
   input_path,
   distance = 3,
-  method = c("lv", "hamming", "osa", "dl", "lcs", "qgram", "cosine", "jaccard", "jw",
-    "soundex"),
+  method = c("lv", "hamming"),
   barcode_col = "barcode",
   counts_col = "counts",
   output_dir = NULL,
@@ -22,8 +21,7 @@ super_cluster2(
   kmer_size = 5L,
   min_shared_kmers = 2L,
   merge_ratio = 20,
-  error_rate = 0.005,
-  q = 2
+  error_rate = 0.005
 )
 ```
 
@@ -86,10 +84,6 @@ super_cluster2(
 
   Numeric. Approximate per-base error rate for likelihood scoring.
   Default: 0.005.
-
-- q:
-
-  Integer. Q-gram size for qgram/jaccard/cosine. Default: 2.
 
 ## Value
 

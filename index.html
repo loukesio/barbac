@@ -398,6 +398,100 @@ Prefer to run each stage explicitly? Click to expand.
 <li>
 <strong>Integrated with the FASTQ→lineage pipeline</strong> (<code>run_cli_pipeline</code>, <code>barbac_xtr</code>) and the time-series visualisation (<code>barbac_ts_area</code>) in the same package.</li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="structured-mixed-anchor-barcode-designs">Structured (mixed-anchor) barcode designs<a class="anchor" aria-label="anchor" href="#structured-mixed-anchor-barcode-designs"></a>
+</h3>
+<p>Many real barcode libraries are not fully random: they interleave random positions with fixed anchor sequences (e.g. <code>NNNNNNNN-ATGC-NNNNNNNN-ATCGTTAA</code>). We benchmarked this case with a 28 bp template carrying 16 variable positions, 2,000 barcodes and 200k reads, clustered at distance 3. The fixed anchors are the interesting stress: indels shift them out of register, which fragments Hamming-indexed methods. The variable region is deliberately wide enough that only 28 of 2,000 true barcodes fall within distance 3 of another, so the numbers reflect the tools, not the design.</p>
+<p><strong>sub_only (0% indel — representative of Illumina):</strong></p>
+<table class="table">
+<thead><tr>
+<th align="left">Method</th>
+<th align="right">Pearson R</th>
+<th align="right">FN%</th>
+<th align="right">FP%</th>
+<th align="right">WS%</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="left"><strong>barbac</strong></td>
+<td align="right">1.0000</td>
+<td align="right">0.55</td>
+<td align="right">0.55</td>
+<td align="right"><strong>0.50</strong></td>
+</tr>
+<tr>
+<td align="left">Shepherd</td>
+<td align="right">1.0000</td>
+<td align="right">0.75</td>
+<td align="right">0.75</td>
+<td align="right">0.70</td>
+</tr>
+<tr>
+<td align="left">Starcode</td>
+<td align="right">1.0000</td>
+<td align="right">1.35</td>
+<td align="right">1.25</td>
+<td align="right">1.20</td>
+</tr>
+<tr>
+<td align="left">Bartender</td>
+<td align="right">1.0000</td>
+<td align="right">0.65</td>
+<td align="right">0.75</td>
+<td align="right">0.70</td>
+</tr>
+</tbody>
+</table>
+<p><strong>low_indel (0.5% ins, 0.5% del):</strong></p>
+<table class="table">
+<thead><tr>
+<th align="left">Method</th>
+<th align="right">Pearson R</th>
+<th align="right">FN%</th>
+<th align="right">FP%</th>
+<th align="right">WS%</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="left"><strong>barbac</strong></td>
+<td align="right">1.0000</td>
+<td align="right">2.25</td>
+<td align="right"><strong>9.15</strong></td>
+<td align="right"><strong>2.50</strong></td>
+</tr>
+<tr>
+<td align="left">Shepherd</td>
+<td align="right">0.9989</td>
+<td align="right">1.70</td>
+<td align="right">101.30</td>
+<td align="right">100.35</td>
+</tr>
+<tr>
+<td align="left">Starcode</td>
+<td align="right">1.0000</td>
+<td align="right">3.15</td>
+<td align="right">10.10</td>
+<td align="right">3.45</td>
+</tr>
+<tr>
+<td align="left">Bartender</td>
+<td align="right">0.9944</td>
+<td align="right">1.45</td>
+<td align="right">772.55</td>
+<td align="right">765.75</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<strong>barbac has the lowest wrong-sequence rate of all four tools on both conditions</strong> — the anchors don’t trip it up because the Levenshtein kernel realigns indel-shifted reads.</li>
+<li>
+<strong>Shepherd and Bartender fragment on indels</strong>, WS jumping to 100% and 766% as soon as indels appear, because Hamming-based indexing splits each anchor-shifted variant into its own centroid.</li>
+<li>
+<strong>Starcode is barbac’s closest competitor</strong> (also Levenshtein-based), but barbac edges it on every metric here.</li>
+<li>FP at nonzero indel rates is inflated for every tool by harmless singleton error-reads that drift more than 3 edits from any true barcode; <strong>WS</strong> (spurious centroids <em>near</em> a true barcode) is the metric that separates safe tools from fragmenting ones.</li>
+</ul>
 <p>Full reproducibility scripts are in <a href="benchmark/indel_experiment/"><code>benchmark/indel_experiment/</code></a>. The experiment runner also produces mid- and high-indel conditions; those regimes (2%+ indels) are outside the Illumina scope of the current paper and treated as future work.</p>
 <hr>
 </div>
