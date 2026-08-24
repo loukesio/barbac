@@ -485,6 +485,12 @@ def main():
             rows.append(row)
     summary = pd.DataFrame(rows)
     summary_path = RESULTS_DIR / (f"summary_{tag}.csv" if tag else "summary.csv")
+    if summary_path.exists():
+        previous = pd.read_csv(summary_path)
+        replaced = set(zip(summary["condition"], summary["method"]))
+        keep = [pair not in replaced
+                for pair in zip(previous["condition"], previous["method"])]
+        summary = pd.concat([previous.loc[keep], summary], ignore_index=True)
     summary.to_csv(summary_path, index=False)
     print(f"\nWrote {summary_path}")
     print("\n=== SUMMARY ===")
