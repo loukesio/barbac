@@ -291,7 +291,8 @@ def run_bartender(input_csv: Path, work_dir: Path, out_csv: Path) -> float:
 
 def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
                   reuse_sim: bool = False, template: str | None = None,
-                  tag: str = "", barcode_len: int = BARCODE_LEN) -> dict:
+                  tag: str = "", barcode_len: int = BARCODE_LEN,
+                  repeats: int = 3) -> dict:
     dir_name = f"{cond['name']}_{tag}" if tag else cond["name"]
     cond_dir = RESULTS_DIR / dir_name
     cond_dir.mkdir(parents=True, exist_ok=True)
@@ -323,7 +324,13 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     # 2. barbac.
     barbac_out = cond_dir / "barbac_out.csv"
-    barbac_wall, barbac_algo, barbac_build_id = run_barbac(input_csv, barbac_out)
+    barbac_runs = [run_barbac(input_csv, barbac_out) for _ in range(repeats)]
+    barbac_wall = float(np.median([run[0] for run in barbac_runs]))
+    barbac_algo = float(np.median([run[1] for run in barbac_runs]))
+    build_ids = {run[2] for run in barbac_runs}
+    if len(build_ids) != 1:
+        raise RuntimeError(f"barbac build changed during benchmark: {build_ids}")
+    barbac_build_id = build_ids.pop()
     barbac_eval = evaluate("barbac", barbac_out, true_csv,
                            barbac_wall, algo_time_s=barbac_algo)
     print(f"  barbac:   wall={barbac_wall:.1f}s algo={barbac_algo:.1f}s  "
@@ -333,7 +340,10 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
           f"WS={barbac_eval.ws} ({100*barbac_eval.ws_rate:.3f}%)")
 
     # 3. Shepherd.
-    shep_centroids, shep_t = run_shepherd(shep_input, cond_dir, barcode_len)
+    shep_runs = [run_shepherd(shep_input, cond_dir, barcode_len)
+                 for _ in range(repeats)]
+    shep_centroids = shep_runs[-1][0]
+    shep_t = float(np.median([run[1] for run in shep_runs]))
     shep_out = cond_dir / "shepherd_out.csv"
     # normalize column names for downstream eval
     df = pd.read_csv(shep_centroids)
@@ -347,7 +357,9 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     # 4. Starcode.
     starcode_out = cond_dir / "starcode_out.csv"
-    starcode_t = run_starcode(shep_input, starcode_out)
+    starcode_t = float(np.median([
+        run_starcode(shep_input, starcode_out) for _ in range(repeats)
+    ]))
     starcode_eval = evaluate("starcode", starcode_out, true_csv, starcode_t)
     print(f"  starcode: {starcode_t:.1f}s  R={starcode_eval.pearson_r:.4f}  "
           f"FN={starcode_eval.fn} ({100*starcode_eval.fn_rate:.3f}%)  "
@@ -356,7 +368,9 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     # 5. Bartender.
     bart_out = cond_dir / "bartender_out.csv"
-    bart_t = run_bartender(input_csv, cond_dir, bart_out)
+    bart_t = float(np.median([
+        run_bartender(input_csv, cond_dir, bart_out) for _ in range(repeats)
+    ]))
     bart_eval = evaluate("bartender", bart_out, true_csv, bart_t)
     print(f"  bartender:{bart_t:.1f}s  R={bart_eval.pearson_r:.4f}  "
           f"FN={bart_eval.fn} ({100*bart_eval.fn_rate:.3f}%)  "
@@ -370,6 +384,7 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
             "n_reads": n_reads,
             "seed": seed,
             "template": template,
+            "timing_repeats": repeats,
             "input_sha256": sha256_file(input_csv),
             "truth_sha256": sha256_file(true_csv),
         },
@@ -394,6 +409,8 @@ def main():
     p.add_argument("--n-barcodes", type=int, default=10_000)
     p.add_argument("--n-reads",    type=int, default=1_000_000)
     p.add_argument("--seed",       type=int, default=42)
+    p.add_argument("--repeats",    type=int, default=3,
+                   help="timed runs per method; reports the median")
     p.add_argument("--only",       type=str, help="only run this condition name")
     p.add_argument("--reuse-sim",  action="store_true",
                    help="reuse existing input.csv if present")
@@ -409,6 +426,8 @@ def main():
     p.add_argument("--allow-dirty", action="store_true",
                    help="allow an uncommitted checkout (not for publication)")
     args = p.parse_args()
+    if args.repeats < 1:
+        p.error("--repeats must be at least 1")
 
     provenance = repository_provenance()
     if provenance["git_dirty"] and not args.allow_dirty:
@@ -464,6 +483,7 @@ def main():
             template=args.template,
             tag=tag,
             barcode_len=barcode_len,
+            repeats=args.repeats,
         ))
 
     # Compile summary
