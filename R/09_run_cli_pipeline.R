@@ -149,7 +149,8 @@ run_cli_pipeline <- function(sample_table,
     log_msg(paste("  Running:", cmd))
     exit_code <- system(cmd)
     if (exit_code != 0) {
-      log_msg(paste("  \u26A0 FastQC failed with exit code:", exit_code))
+      stop("FastQC failed for ", fq, " with exit code ", exit_code,
+           ". See ", log_file, ".")
     }
     cmd
   }, character(1))
@@ -192,7 +193,8 @@ run_cli_pipeline <- function(sample_table,
       log_msg(paste("  Merging sample:", sample))
       exit_code <- system(cmd)
       if (exit_code != 0) {
-        log_msg(paste("  \u26A0 PEAR failed with exit code:", exit_code))
+        stop("PEAR failed for sample ", sample, " with exit code ", exit_code,
+             ". See ", log_file, ".")
       }
       pear_cmds <- c(pear_cmds, cmd)
     } else {
@@ -248,6 +250,8 @@ run_cli_pipeline <- function(sample_table,
       exit_code <- system(cmd)
       if (exit_code != 0) {
         log_msg(paste("  \u26A0 Command failed with exit code:", exit_code))
+        stop("Mapping failed for ", basename(fq),
+             " with exit code ", exit_code, ". See ", log_file, ".")
       }
     }
     
@@ -275,8 +279,15 @@ run_cli_pipeline <- function(sample_table,
   } else {
     stats <- lapply(bam_files, function(bam) {
       sample <- gsub("_sorted\\.bam$", "", basename(bam))
-      mapped <- as.integer(system2("samtools", c("view", "-c", "-F", "4", bam), stdout = TRUE))
-      unmapped <- as.integer(system2("samtools", c("view", "-c", "-f", "4", bam), stdout = TRUE))
+      mapped_out <- system2("samtools", c("view", "-c", "-F", "4", shQuote(bam)),
+                            stdout = TRUE, stderr = TRUE)
+      unmapped_out <- system2("samtools", c("view", "-c", "-f", "4", shQuote(bam)),
+                              stdout = TRUE, stderr = TRUE)
+      if (!is.null(attr(mapped_out, "status")) || !is.null(attr(unmapped_out, "status"))) {
+        stop("samtools failed while summarising ", bam, ".")
+      }
+      mapped <- as.integer(mapped_out[[1L]])
+      unmapped <- as.integer(unmapped_out[[1L]])
       tibble::tibble(sample, mapped, unmapped)
     })
     stats_df <- dplyr::bind_rows(stats)
@@ -297,8 +308,12 @@ run_cli_pipeline <- function(sample_table,
     mqc_dir <- file.path(output_dir, "multiqc")
     dir.create(mqc_dir, recursive = TRUE, showWarnings = FALSE)
     mqc_cmd <- sprintf("multiqc %s -o %s", shQuote(fastqc_dir), shQuote(mqc_dir))
-    system(mqc_cmd)
-    log_msg(paste("\u2713 MultiQC report generated in:", mqc_dir))
+    mqc_status <- system(mqc_cmd)
+    if (mqc_status == 0L) {
+      log_msg(paste("\u2713 MultiQC report generated in:", mqc_dir))
+    } else {
+      log_msg(paste("\u26A0 MultiQC failed with exit code:", mqc_status))
+    }
     all_cmds <- c(all_cmds, mqc_cmd)
   } else {
     log_msg("\u26A0 MultiQC not found in PATH \u2014 skipping.")

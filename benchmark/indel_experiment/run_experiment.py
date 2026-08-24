@@ -10,8 +10,10 @@ side-by-side.
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import os
+import platform
 import subprocess
 import sys
 import time
@@ -26,7 +28,10 @@ from rapidfuzz.distance import Levenshtein
 
 HERE = Path(__file__).resolve().parent
 RESULTS_DIR = HERE / "results"
-TOOLS_DIR = Path("~/Documents/Projects/Barcodes/barbac-benchmark/tools").expanduser()
+TOOLS_DIR = Path(os.environ.get(
+    "BARBAC_BENCHMARK_TOOLS",
+    "~/Documents/Projects/Barcodes/barbac-benchmark/tools",
+)).expanduser()
 SHEPHERD_DIR   = TOOLS_DIR / "Shepherd"
 STARCODE_BIN   = TOOLS_DIR / "starcode" / "starcode"
 BARTENDER_DIR  = TOOLS_DIR / "bartender-1.1"
@@ -116,8 +121,8 @@ def evaluate(name: str, centroids_path: Path, true_counts_path: Path,
     )
 
 
-def run_barbac(input_csv: Path, out_csv: Path) -> tuple[float, float]:
-    """Returns (wall_seconds, algo_seconds).
+def run_barbac(input_csv: Path, out_csv: Path) -> tuple[float, float, str]:
+    """Returns (wall_seconds, algo_seconds, compiled_build_id).
 
     algo_seconds is measured inside the R script and excludes R boot +
     package loading. It is parsed out of the child's stdout line
@@ -134,13 +139,55 @@ def run_barbac(input_csv: Path, out_csv: Path) -> tuple[float, float]:
     )
     wall = time.time() - t0
     algo = wall
+    build_id = "unknown"
     for line in proc.stdout.decode(errors="replace").splitlines():
         if line.startswith("BARBAC_ALGO_SECONDS="):
             try:
                 algo = float(line.split("=", 1)[1])
             except ValueError:
                 pass
-    return wall, algo
+        elif line.startswith("BARBAC_BUILD_ID="):
+            build_id = line.split("=", 1)[1].strip()
+    return wall, algo, build_id
+
+
+def repository_provenance() -> dict:
+    """Record the source checkout associated with a benchmark run."""
+    repo = HERE.parents[1]
+    try:
+        commit = subprocess.run(
+            ["git", "-C", str(repo), "rev-parse", "HEAD"],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+        dirty = bool(subprocess.run(
+            ["git", "-C", str(repo), "status", "--porcelain"],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip())
+    except (OSError, subprocess.CalledProcessError):
+        commit, dirty = "unknown", None
+    return {
+        "git_commit": commit,
+        "git_dirty": dirty,
+        "python": sys.version.split()[0],
+        "platform": platform.platform(),
+    }
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def command_version(command: list[str]) -> str:
+    try:
+        proc = subprocess.run(command, capture_output=True, text=True, timeout=15)
+        output = (proc.stdout + "\n" + proc.stderr).strip().splitlines()
+        return output[0] if output else f"exit {proc.returncode}"
+    except (OSError, subprocess.SubprocessError) as exc:
+        return f"unavailable: {exc}"
 
 
 def run_shepherd(shepherd_input: Path, work_dir: Path,
@@ -276,7 +323,7 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     # 2. barbac.
     barbac_out = cond_dir / "barbac_out.csv"
-    barbac_wall, barbac_algo = run_barbac(input_csv, barbac_out)
+    barbac_wall, barbac_algo, barbac_build_id = run_barbac(input_csv, barbac_out)
     barbac_eval = evaluate("barbac", barbac_out, true_csv,
                            barbac_wall, algo_time_s=barbac_algo)
     print(f"  barbac:   wall={barbac_wall:.1f}s algo={barbac_algo:.1f}s  "
@@ -318,6 +365,18 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     eval_dict = {
         "condition": cond,
+        "simulation": {
+            "n_barcodes": n_barcodes,
+            "n_reads": n_reads,
+            "seed": seed,
+            "template": template,
+            "input_sha256": sha256_file(input_csv),
+            "truth_sha256": sha256_file(true_csv),
+        },
+        "provenance": {
+            "barbac_build_id": barbac_build_id,
+            **repository_provenance(),
+        },
         "barbac":    barbac_eval.__dict__,
         "shepherd":  shep_eval.__dict__,
         "starcode":  starcode_eval.__dict__,
@@ -328,6 +387,8 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
 
 def main():
+    global RESULTS_DIR, TOOLS_DIR, SHEPHERD_DIR, STARCODE_BIN
+    global BARTENDER_DIR, BARTENDER_BIN
     import argparse
     p = argparse.ArgumentParser()
     p.add_argument("--n-barcodes", type=int, default=10_000)
@@ -341,7 +402,45 @@ def main():
     p.add_argument("--tag",        type=str, default="",
                    help="suffix for result dirs so a run never overwrites another "
                         "(defaults to 'structured' when --template is given)")
+    p.add_argument("--results-dir", type=Path,
+                   help="new output directory (default: results/run-<commit>)")
+    p.add_argument("--tools-dir", type=Path, default=TOOLS_DIR,
+                   help="directory containing Shepherd, Starcode and Bartender")
+    p.add_argument("--allow-dirty", action="store_true",
+                   help="allow an uncommitted checkout (not for publication)")
     args = p.parse_args()
+
+    provenance = repository_provenance()
+    if provenance["git_dirty"] and not args.allow_dirty:
+        sys.exit("Refusing to benchmark a dirty checkout. Commit the exact code "
+                 "first, or use --allow-dirty for non-publication experiments.")
+    commit_label = provenance["git_commit"][:12]
+    RESULTS_DIR = (args.results_dir or
+                   (HERE / "results" / f"run-{commit_label}")).resolve()
+    if RESULTS_DIR.exists() and any(RESULTS_DIR.iterdir()) and not args.reuse_sim:
+        sys.exit(f"results directory is not empty: {RESULTS_DIR}. Choose a new "
+                 "--results-dir or explicitly use --reuse-sim.")
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    TOOLS_DIR = args.tools_dir.expanduser().resolve()
+    SHEPHERD_DIR = TOOLS_DIR / "Shepherd"
+    STARCODE_BIN = TOOLS_DIR / "starcode" / "starcode"
+    BARTENDER_DIR = TOOLS_DIR / "bartender-1.1"
+    BARTENDER_BIN = BARTENDER_DIR / "bartender_single_com"
+
+    manifest = {
+        **provenance,
+        "arguments": vars(args) | {"results_dir": str(RESULTS_DIR),
+                                    "tools_dir": str(TOOLS_DIR)},
+        "versions": {
+            "R": command_version(["Rscript", "--version"]),
+            "starcode": command_version([str(STARCODE_BIN), "--version"]),
+            "bartender": command_version([str(BARTENDER_BIN), "-h"]),
+        },
+    }
+    (RESULTS_DIR / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, default=str) + "\n"
+    )
 
     conds = CONDITIONS
     if args.only:
@@ -375,7 +474,9 @@ def main():
             if m not in r:
                 continue
             row = {"condition": c["name"], "method": m,
-                   "sub_rate": c["sub_rate"], "ins_rate": c["ins_rate"], "del_rate": c["del_rate"]}
+                   "sub_rate": c["sub_rate"], "ins_rate": c["ins_rate"], "del_rate": c["del_rate"],
+                   "git_commit": r["provenance"]["git_commit"],
+                   "barbac_build_id": r["provenance"]["barbac_build_id"]}
             row.update({k: r[m].get(k, r[m]["runtime_s"]) if k == "algo_time_s"
                         else r[m][k]
                         for k in ("n_centroids", "pearson_r", "fn", "fn_rate",

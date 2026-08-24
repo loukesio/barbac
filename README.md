@@ -205,6 +205,7 @@ Same input (100,000 true barcodes, ~1.5M unique reads), same parameters (max dis
 
 We benchmarked barbac against Shepherd, Starcode, and Bartender on 10,000-barcode / 1M-read datasets under Illumina-quality error regimes typical of experimental-evolution barcode sequencing: **0.5% per-base substitution rate**, insertion+deletion rates of **0% and 0.5%**. Higher indel rates typical of long-read platforms (PacBio, nanopore) are outside the scope of this comparison.
 
+<!-- benchmark:unstructured:start -->
 | Condition | Method   | Pearson R | FN%   | FP%     | WS%     | Wall (s) | Algo (s) |
 |:----------|:---------|----------:|------:|--------:|--------:|---------:|---------:|
 | **sub_only** (0% ins, 0% del) | barbac    | 1.0000 | 0.44 | 0.47 | 0.43 | 4.3 | **0.7** |
@@ -215,6 +216,7 @@ We benchmarked barbac against Shepherd, Starcode, and Bartender on 10,000-barcod
 | | Shepherd  | 0.9993 | 0.95 | 49.15  | 48.81  | 3.5  | 3.5 |
 | | Starcode  | 1.0000 | 1.58 | 3.38   | 1.59   | 17.2 | 17.2 |
 | | Bartender | 0.9959 | 0.94 | 511.14 | 509.41 | 2.0  | 2.0 |
+<!-- benchmark:unstructured:end -->
 
 *Wall = end-to-end wall time. Algo = pure clustering time, excluding R boot + package loading for barbac (Shepherd/Starcode/Bartender pay a negligible boot tax so wall ≈ algo for them).*
 
@@ -242,6 +244,7 @@ Hamming-indexed methods. The variable region is deliberately wide enough that
 only 28 of 2,000 true barcodes fall within distance 3 of another, so the numbers
 reflect the tools, not the design.
 
+<!-- benchmark:structured:start -->
 **sub_only (0% indel — representative of Illumina):**
 
 | Method    | Pearson R | FN%  | FP%  | WS%  |
@@ -259,6 +262,7 @@ reflect the tools, not the design.
 | Shepherd  | 0.9989    | 1.70 | 101.30 | 100.35 |
 | Starcode  | 1.0000    | 3.15 | 10.10  | 3.45   |
 | Bartender | 0.9944    | 1.45 | 772.55 | 765.75 |
+<!-- benchmark:structured:end -->
 
 - **barbac has the lowest wrong-sequence rate of all four tools on both
   conditions** — the anchors don't trip it up because the Levenshtein kernel
@@ -273,7 +277,7 @@ reflect the tools, not the design.
   (spurious centroids *near* a true barcode) is the metric that separates safe
   tools from fragmenting ones.
 
-Full reproducibility scripts are in [`benchmark/indel_experiment/`](benchmark/indel_experiment/). The experiment runner also produces mid- and high-indel conditions; those regimes (2%+ indels) are outside the Illumina scope of the current paper and treated as future work.
+Full reproducibility scripts are in [`benchmark/indel_experiment/`](benchmark/indel_experiment/). Publication runs refuse a dirty checkout and record the exact Git commit, compiled clustering build ID, input hashes, parameters, platform, and tool versions. The README tables are updated from those recorded CSV files with `update_readme.py`, rather than copied by hand. The experiment runner also produces mid- and high-indel conditions; those regimes (2%+ indels) are outside the Illumina scope of the current paper and treated as future work.
 
 ---
 
@@ -308,4 +312,3 @@ Full reproducibility scripts are in [`benchmark/indel_experiment/`](benchmark/in
 ## License
 
 GPL (≥ 2). See [LICENSE.md](LICENSE.md).
-

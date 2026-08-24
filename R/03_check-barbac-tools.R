@@ -7,22 +7,24 @@
 #' @export
 check_barbac_tools <- function(env_name = "barbac_env",
                                tools = c("fastqc", "multiqc", "pear", "minimap2", "samtools")) {
-  
+  conda_exe <- reticulate::conda_binary()
+  if (is.null(conda_exe) || !nzchar(conda_exe)) {
+    stop("Conda is not installed or could not be located.")
+  }
+
   results <- lapply(tools, function(tool) {
-    cmd <- sprintf("bash -c 'source activate %s && which %s 2>/dev/null'", env_name, tool)
-    path <- suppressWarnings(system(cmd, intern = TRUE, ignore.stderr = TRUE))
-    
-    available <- length(path) > 0 && nzchar(path[1])
-    
-    version <- NA_character_
-    if (available) {
-      version_cmd <- sprintf("bash -c 'source activate %s && %s --version 2>&1 | head -n1'", 
-                             env_name, tool)
-      version <- tryCatch(
-        system(version_cmd, intern = TRUE)[1],
-        error = function(e) NA_character_
-      )
-    }
+    output <- tryCatch(
+      suppressWarnings(system2(
+        conda_exe,
+        c("run", "--name", shQuote(env_name), shQuote(tool), "--version"),
+        stdout = TRUE, stderr = TRUE
+      )),
+      error = function(e) structure(character(), status = 1L)
+    )
+    status <- attr(output, "status")
+    if (is.null(status)) status <- 0L
+    available <- identical(as.integer(status), 0L)
+    version <- if (available && length(output)) output[[1L]] else NA_character_
     
     data.frame(
       tool = tool,

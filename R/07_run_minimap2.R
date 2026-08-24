@@ -26,14 +26,21 @@ run_minimap2 <- function(merged_dir = "merged", reference, output_dir = file.pat
     sorted_bam <- file.path(output_dir, paste0(base, "_sorted.bam"))
     
     cmds <- c(
-      sprintf("minimap2 -a %s %s > %s", reference, fq, sam),
-      sprintf("samtools view -S -b %s > %s", sam, bam),
-      sprintf("samtools sort %s -o %s", bam, sorted_bam),
-      sprintf("samtools index %s", sorted_bam)
+      sprintf("minimap2 -a %s %s > %s",
+              shQuote(reference), shQuote(fq), shQuote(sam)),
+      sprintf("samtools view -S -b %s > %s", shQuote(sam), shQuote(bam)),
+      sprintf("samtools sort %s -o %s", shQuote(bam), shQuote(sorted_bam)),
+      sprintf("samtools index %s", shQuote(sorted_bam))
     )
     
     message("Running mapping pipeline for: ", fq)
-    lapply(cmds, system)
+    for (cmd in cmds) {
+      status <- system(cmd)
+      if (status != 0L) {
+        stop("Mapping command failed with exit code ", status,
+             ": ", cmd)
+      }
+    }
     
     return(paste(cmds, collapse = " && "))
   }, character(1))

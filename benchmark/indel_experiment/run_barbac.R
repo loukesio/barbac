@@ -28,3 +28,4 @@ out <- data.frame(
 write_csv(out, out_csv)
 cat(sprintf("Wrote %d centroids to %s\n", nrow(out), out_csv))
 cat(sprintf("BARBAC_ALGO_SECONDS=%.4f\n", algo_s))
+cat(sprintf("BARBAC_BUILD_ID=%s\n", attr(result, "build_id")))

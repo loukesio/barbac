@@ -34,7 +34,7 @@ run_fastqc <- function(sample_csv) {
   }
   
   # Check if FastQC is available
-  if (Sys.which("fastqc") == "") {
+  if (.barbac_which("fastqc") == "") {
     warning("\u26A0 FastQC not found in system PATH. Please install it or patch your PATH.")
     return(invisible(character(0)))
   }
@@ -47,9 +47,12 @@ run_fastqc <- function(sample_csv) {
   
   # Run FastQC
   commands <- vapply(fastq_files, function(fq) {
-    cmd <- sprintf("fastqc %s -o %s", fq, output_dir)
+    cmd <- sprintf("fastqc %s -o %s", shQuote(fq), shQuote(output_dir))
     message("\u25B6 Running: ", cmd)
-    system(cmd)
+    status <- .barbac_system(cmd)
+    if (status != 0L) {
+      stop("FastQC failed for ", fq, " with exit code ", status, ".")
+    }
     cmd
   }, character(1))
   
@@ -57,3 +60,8 @@ run_fastqc <- function(sample_csv) {
 }
 
 #barbac::run_fastqc("path/to/samples.csv")
+
+# Small internal wrappers keep external-command behavior testable without
+# executing third-party tools during package checks.
+.barbac_which <- function(command) Sys.which(command)
+.barbac_system <- function(command) system(command)

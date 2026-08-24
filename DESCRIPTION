@@ -39,11 +39,9 @@ Suggests:
     showtext,
     sysfonts,
     viridisLite,
-    ltc,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
-Additional_repositories: https://github.com/loukesio/ltc_palettes
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 Config/testthat/edition: 3

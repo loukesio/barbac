@@ -41,9 +41,14 @@ run_pear_merge <- function(sample_csv) {
     if (has_R2 && !is.na(sample_table$R2[i]) && sample_table$R2[i] != "") {
       r2 <- sample_table$R2[i]
       output_prefix <- file.path(output_dir, paste0(sample, "_ANC"))
-      cmd <- sprintf("pear -f %s -r %s -o %s", r1, r2, output_prefix)
+      cmd <- sprintf("pear -f %s -r %s -o %s",
+                     shQuote(r1), shQuote(r2), shQuote(output_prefix))
       message("\u25B6 Merging reads for sample: ", sample)
-      system(cmd)
+      status <- system(cmd)
+      if (status != 0L) {
+        stop("PEAR failed for sample ", sample,
+             " with exit code ", status, ".")
+      }
       commands <- c(commands, cmd)
     } else {
       message("\u2139 Skipping sample ", sample, " \u2014 only R1 found (single-end mode).")

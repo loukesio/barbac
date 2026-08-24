@@ -90,7 +90,17 @@ super_cluster2 <- function(input_path,
   data     <- data[!is.na(data[[barcode_col]]) & !is.na(data[[counts_col]]), ]
 
   data[[barcode_col]] <- as.character(data[[barcode_col]])
-  data[[counts_col]]  <- as.integer(data[[counts_col]])
+  raw_counts <- data[[counts_col]]
+  numeric_counts <- suppressWarnings(as.numeric(raw_counts))
+  invalid_counts <- is.na(numeric_counts) | !is.finite(numeric_counts) |
+    numeric_counts <= 0 | numeric_counts != floor(numeric_counts) |
+    numeric_counts > .Machine$integer.max
+  if (any(invalid_counts)) {
+    stop("`", counts_col, "` must contain positive whole numbers no larger than ",
+         .Machine$integer.max, ". Invalid value(s) at row(s): ",
+         paste(which(invalid_counts), collapse = ", "), ".")
+  }
+  data[[counts_col]] <- as.integer(numeric_counts)
 
   # Collapse exact-duplicate barcodes by summing their counts. The clustering
   # kernel treats a distance of 0 as "already the same sequence" and never
@@ -101,8 +111,12 @@ super_cluster2 <- function(input_path,
   # already-unique count table must be passed through untouched.
   n_after_na <- nrow(data)
   if (anyDuplicated(data[[barcode_col]])) {
-    summed <- rowsum(data[[counts_col]], group = data[[barcode_col]],
+    summed <- rowsum(as.numeric(data[[counts_col]]), group = data[[barcode_col]],
                      reorder = FALSE)
+    if (any(summed[, 1L] > .Machine$integer.max)) {
+      stop("Summed duplicate counts exceed the supported integer maximum (",
+           .Machine$integer.max, ").")
+    }
     data <- data[!duplicated(data[[barcode_col]]), , drop = FALSE]
     data[[counts_col]] <- as.integer(summed[data[[barcode_col]], 1L])
   }

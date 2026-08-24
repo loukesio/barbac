@@ -125,3 +125,36 @@ test_that("indexed LV search considers a larger indel parent", {
   expect_equal(indexed$sum_counts[indexed$central_barcode == "CTTTTAGGGAGCG"],
                47L)
 })
+
+test_that("super_cluster2 rejects invalid counts before C++", {
+  expect_error(
+    super_cluster2(data.frame(barcode = "AAAA", counts = "not-a-count"),
+                   verbose = FALSE),
+    "positive whole numbers"
+  )
+  expect_error(
+    super_cluster2(data.frame(barcode = "AAAA", counts = 1.5),
+                   verbose = FALSE),
+    "positive whole numbers"
+  )
+  expect_error(
+    super_cluster2(data.frame(barcode = c("AAAA", "AAAT"),
+                              counts = c(1, 0)), verbose = FALSE),
+    "positive whole numbers"
+  )
+  expect_error(
+    super_cluster2(data.frame(barcode = "AAAA",
+                              counts = .Machine$integer.max + 1),
+                   verbose = FALSE),
+    "positive whole numbers"
+  )
+})
+
+test_that("super_cluster2 rejects integer overflow when pooling duplicates", {
+  input <- data.frame(
+    barcode = c("AAAA", "AAAA"),
+    counts = c(.Machine$integer.max, 1)
+  )
+  expect_error(super_cluster2(input, verbose = FALSE),
+               "Summed duplicate counts exceed")
+})

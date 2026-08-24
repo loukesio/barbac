@@ -70,7 +70,10 @@ barbac_xtr <- function(bam_file,
   bai_file <- paste0(bam_file, ".bai")
   if (!file.exists(bai_file)) {
     warning("\u26A0 BAM index (.bai) not found. Creating index...")
-    system2("samtools", c("index", shQuote(bam_file)))
+    index_status <- system2("samtools", c("index", shQuote(bam_file)))
+    if (index_status != 0L || !file.exists(bai_file)) {
+      stop("\u274C Failed to create BAM index for: ", bam_file)
+    }
   }
   
   if (!is.numeric(start_pos) || !is.numeric(end_pos) || start_pos >= end_pos) {
@@ -408,4 +411,3 @@ barbac_xtr.stats <- function(file,
   
   return(combined_plot)
 }
-

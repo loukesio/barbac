@@ -10,8 +10,15 @@ summarise_bam_stats <- function(bam_dir = "merged/bam") {
 
   stats <- lapply(bam_files, function(bam) {
     sample <- gsub("_sorted\\.bam$", "", basename(bam))
-    mapped <- as.integer(system2("samtools", c("view", "-c", "-F", "4", bam), stdout = TRUE))
-    unmapped <- as.integer(system2("samtools", c("view", "-c", "-f", "4", bam), stdout = TRUE))
+    mapped_out <- system2("samtools", c("view", "-c", "-F", "4", shQuote(bam)),
+                          stdout = TRUE, stderr = TRUE)
+    unmapped_out <- system2("samtools", c("view", "-c", "-f", "4", shQuote(bam)),
+                            stdout = TRUE, stderr = TRUE)
+    if (!is.null(attr(mapped_out, "status")) || !is.null(attr(unmapped_out, "status"))) {
+      stop("samtools failed while summarising ", bam, ".")
+    }
+    mapped <- as.integer(mapped_out[[1L]])
+    unmapped <- as.integer(unmapped_out[[1L]])
     tibble::tibble(sample = sample, mapped = mapped, unmapped = unmapped)
   })
 
