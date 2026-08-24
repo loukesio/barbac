@@ -106,3 +106,22 @@ test_that("super_cluster2 warns on Hamming-incompatible barcodes", {
   expect_warning(super_cluster2(input, method = "hamming", verbose = FALSE),
                  "Hamming mode cannot compare")
 })
+
+test_that("indexed LV search considers a larger indel parent", {
+  input <- data.frame(
+    barcode = c("CTTTTAGGGAGCG",
+                "CTTCTTAGGGAGCG",
+                "CTTTTTAGGGAGCG"),
+    counts  = c(40L, 14L, 7L)
+  )
+
+  indexed <- super_cluster2(input, distance = 3, verbose = FALSE,
+                            use_kmer_filter = TRUE)
+  full <- super_cluster2(input, distance = 3, verbose = FALSE,
+                         use_kmer_filter = FALSE)
+
+  expect_equal(indexed$central_barcode, full$central_barcode)
+  expect_equal(indexed$sum_counts, full$sum_counts)
+  expect_equal(indexed$sum_counts[indexed$central_barcode == "CTTTTAGGGAGCG"],
+               47L)
+})

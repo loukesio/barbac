@@ -212,18 +212,22 @@ run_cli_pipeline <- function(sample_table,
   bam_dir <- file.path(merged_dir, "bam")
   dir.create(bam_dir, recursive = TRUE, showWarnings = FALSE)
   
-  merged_files <- list.files(merged_dir, 
-                             pattern = "([_.])assembled\\.fastq$", 
-                             full.names = TRUE)
-  
-  if (length(merged_files) == 0) {
-    stop("\u274C No merged FASTQ files found in: ", merged_dir)
+  mapping_inputs <- .pipeline_mapping_inputs(sample_table, merged_dir)
+  merged_files <- mapping_inputs$merged_files
+  single_files <- mapping_inputs$single_files
+  mapping_files <- mapping_inputs$files
+  mapping_names <- mapping_inputs$names
+
+  if (length(mapping_files) == 0) {
+    stop("\u274C No merged paired-end or single-end FASTQ files available for mapping.")
   }
   
-  log_msg(paste("  Found", length(merged_files), "merged files to process"))
+  log_msg(paste("  Found", length(mapping_files), "FASTQ files to process (",
+                length(merged_files), "merged,", length(single_files), "single-end)"))
   
-  map_cmds <- vapply(merged_files, function(fq) {
-    base <- tools::file_path_sans_ext(basename(fq))
+  map_cmds <- vapply(seq_along(mapping_files), function(i) {
+    fq <- mapping_files[i]
+    base <- mapping_names[i]
     sam <- file.path(bam_dir, paste0(base, ".sam"))
     bam <- file.path(bam_dir, paste0(base, ".bam"))
     sorted_bam <- file.path(bam_dir, paste0(base, "_sorted.bam"))
@@ -340,3 +344,27 @@ run_cli_pipeline <- function(sample_table,
 
 # Helper operator for string repetition (for log formatting)
 `%R%` <- function(x, n) paste(rep(x, n), collapse = "")
+
+# Internal: resolve FASTQ inputs for the mapping stage. Paired-end samples are
+# represented by PEAR's assembled output; samples without R2 go straight from
+# R1 to minimap2.
+.pipeline_mapping_inputs <- function(sample_table, merged_dir) {
+  merged_files <- list.files(merged_dir,
+                             pattern = "([_.])assembled\\.fastq$",
+                             full.names = TRUE)
+  has_r2 <- if ("R2" %in% names(sample_table)) {
+    !is.na(sample_table$R2) & sample_table$R2 != ""
+  } else {
+    rep(FALSE, nrow(sample_table))
+  }
+  single_rows <- which(!has_r2 & file.exists(sample_table$R1))
+  single_files <- sample_table$R1[single_rows]
+
+  list(
+    files = c(merged_files, single_files),
+    names = c(tools::file_path_sans_ext(basename(merged_files)),
+              as.character(sample_table$sample[single_rows])),
+    merged_files = merged_files,
+    single_files = single_files
+  )
+}

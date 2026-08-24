@@ -17,7 +17,7 @@ namespace {
 // =============================================================================
 // Build marker
 // =============================================================================
-const char* BUILD_ID = "barbac-2026-05-31-two-tier-lv-v7";
+const char* BUILD_ID = "barbac-2026-08-24-bounded-lv-best-parent-v8";
 
 // =============================================================================
 // Distance routines
@@ -636,6 +636,7 @@ std::string barbac_build_id() {
    
    std::vector<Cluster> clusters;
    clusters.reserve(std::max(16, n / 8));
+   std::unordered_map<int, int> max_centroid_count_by_len;
    
    HammingPartitionIndex h_index(std::max(1, D));
    LevenshteinSeedIndex lv_index(std::max(1, D), std::max(3, kmer_size));
@@ -701,6 +702,7 @@ std::string barbac_build_id() {
      
      if (clusters.empty()) {
        add_cluster(clusters, i, sl, cnt, pv, pk);
+       max_centroid_count_by_len[sl] = cnt;
        if (use_kmer_filter) {
          h_index.add(s, sl, 0);
          if (is_lv) lv_index.add(s, sl, 0);
@@ -768,38 +770,65 @@ std::string barbac_build_id() {
      
      if (use_kmer_filter && D > 0) {
        // LV mode is deliberately hybrid: first try the lossless Hamming partition
-       // index and the packed-Hamming fast path. Most reads in fixed-length barcode
-       // simulations are exact/substitution-like, so this avoids the expensive LV
-       // seed index for the majority of observations. Only sequences that cannot
-       // be absorbed in this fast stage fall back to the broader LV seed index.
+       // index and packed-Hamming fast path. A score bound below then decides
+       // whether the broader LV seed index could possibly find a better parent.
        h_index.query(s, sl, static_cast<int>(clusters.size()), candidates);
        total_candidates_seen += static_cast<long long>(candidates.size());
        if (candidates.empty()) ++no_candidate_count;
        scan_candidates(candidates, !is_lv);
        
-       if (is_lv && best_absorb.cluster_id < 0) {
+       // Decide whether an LV-only candidate could still beat the best parent
+       // found by the lossless Hamming stage. For the same sequence length, an
+       // unseen candidate cannot be at edit distance 1 (that would be one
+       // substitution and the Hamming index would have returned it), so its
+       // optimistic distance is 2. For other lengths, the length difference is
+       // the optimistic distance. Maximum centroid abundance per length gives
+       // a safe score upper bound. If even that bound cannot win, skip the
+       // broader seed lookup without changing the selected parent.
+       bool lv_can_improve = best_absorb.cluster_id < 0;
+       if (is_lv && !lv_can_improve) {
+         const Cluster& current = clusters[best_absorb.cluster_id];
+         for (int candidate_len = std::max(0, sl - D);
+              candidate_len <= sl + D && !lv_can_improve;
+              ++candidate_len) {
+           std::unordered_map<int, int>::const_iterator count_it =
+             max_centroid_count_by_len.find(candidate_len);
+           if (count_it == max_centroid_count_by_len.end()) continue;
+
+           const int optimistic_dist = candidate_len == sl
+             ? 2
+             : std::abs(candidate_len - sl);
+           if (optimistic_dist <= 0 || optimistic_dist > D) continue;
+
+           const int max_parent_count = count_it->second;
+           if (merge_blocked_by_ratio(optimistic_dist, cnt, max_parent_count,
+                                      merge_ratio, is_lv)) continue;
+
+           const double optimistic_score = distance_log_likelihood_score(
+             optimistic_dist, max_parent_count, cnt,
+             std::max(sl, candidate_len), err, is_lv);
+           if (optimistic_score > best_absorb.score ||
+               (optimistic_score == best_absorb.score &&
+                max_parent_count > current.centroid_count)) {
+             lv_can_improve = true;
+           }
+         }
+       }
+
+       if (is_lv && lv_can_improve) {
          used_lv_seed_this_query = true;
-         
-         // Tier 1: longer, more specific seeds. This is not the sensitivity
-         // guarantee; it is a fast path to reduce the number of broad LV seed
-         // lookups and Myers verifications on common easy cases.
-         ++lv_long_seed_queries;
-         const int long_seed = std::min(sl, std::max(kmer_size + 2, kmer_size));
-         lv_index.query_specific_seed(s, sl, static_cast<int>(clusters.size()), long_seed, candidates);
-         lv_long_seed_candidates += static_cast<long long>(candidates.size());
+
+         // Always include the sensitive LV candidates before selecting the
+         // best parent. Stopping after the Hamming stage (or after a specific
+         // long-seed hit) can hide a higher-abundance parent at the same edit
+         // distance, especially when that parent differs in length because of
+         // an indel. The index limits the verification set; scoring still sees
+         // every candidate needed for the documented best-parent rule.
+         ++lv_seed_queries;
+         lv_index.query(s, sl, static_cast<int>(clusters.size()), candidates);
+         lv_seed_candidates += static_cast<long long>(candidates.size());
          total_candidates_seen += static_cast<long long>(candidates.size());
          scan_candidates(candidates, true);
-         
-         // Tier 2: sensitive fallback. Only run this broader query if the longer
-         // seed fast path did not find an absorbable parent; this preserves the
-         // strong LV result while avoiding the broadest lookup for many reads.
-         if (best_absorb.cluster_id < 0) {
-           ++lv_seed_queries;
-           lv_index.query(s, sl, static_cast<int>(clusters.size()), candidates);
-           lv_seed_candidates += static_cast<long long>(candidates.size());
-           total_candidates_seen += static_cast<long long>(candidates.size());
-           scan_candidates(candidates, true);
-         }
        }
      } else {
        candidates.resize(clusters.size());
@@ -829,6 +858,13 @@ std::string barbac_build_id() {
      if (!assigned) {
        const int new_id = static_cast<int>(clusters.size());
        add_cluster(clusters, i, sl, cnt, pv, pk);
+       std::unordered_map<int, int>::iterator max_it =
+         max_centroid_count_by_len.find(sl);
+       if (max_it == max_centroid_count_by_len.end()) {
+         max_centroid_count_by_len[sl] = cnt;
+       } else if (cnt > max_it->second) {
+         max_it->second = cnt;
+       }
        if (use_kmer_filter) {
          h_index.add(s, sl, new_id);
          if (is_lv) lv_index.add(s, sl, new_id);
