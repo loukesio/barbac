@@ -206,30 +206,32 @@ Same input (100,000 true barcodes, ~1.5M unique reads), same parameters (max dis
 We benchmarked barbac against Shepherd, Starcode, and Bartender on 10,000-barcode / 1M-read datasets under Illumina-quality error regimes typical of experimental-evolution barcode sequencing: **0.5% per-base substitution rate**, insertion+deletion rates of **0% and 0.5%**. Higher indel rates typical of long-read platforms (PacBio, nanopore) are outside the scope of this comparison.
 
 <!-- benchmark:unstructured:start -->
-| Condition | Method   | Pearson R | FN%   | FP%     | WS%     | Wall (s) | Algo (s) |
-|:----------|:---------|----------:|------:|--------:|--------:|---------:|---------:|
-| **sub_only** (0% ins, 0% del) | barbac    | 1.0000 | 0.44 | 0.47 | 0.43 | 4.3 | **0.7** |
-| | Shepherd  | 1.0000 | 0.44 | 0.47 | 0.43 | 2.7 | 2.7 |
-| | Starcode  | 1.0000 | 0.48 | 0.51 | 0.47 | 2.8 | 2.8 |
-| | Bartender | 1.0000 | 0.48 | 0.52 | 0.48 | 1.0 | 1.0 |
-| **low_indel** (0.5% ins, 0.5% del) | **barbac** | **1.0000** | 1.55 | **3.36** | **1.57** | 5.7 | **2.4** |
-| | Shepherd  | 0.9993 | 0.95 | 49.15  | 48.81  | 3.5  | 3.5 |
-| | Starcode  | 1.0000 | 1.58 | 3.38   | 1.59   | 17.2 | 17.2 |
-| | Bartender | 0.9959 | 0.94 | 511.14 | 509.41 | 2.0  | 2.0 |
+| Condition | Method | Pearson R | FN% | FP% | WS% | Wall (s) | Algo (s) |
+|:--|:--|--:|--:|--:|--:|--:|--:|
+| **sub_only** | barbac | 1.0000 | 0.54 | 0.58 | 0.54 | 6.93 | 3.38 |
+|  | Shepherd | 1.0000 | 0.44 | 0.47 | 0.43 | 2.97 | 2.97 |
+|  | Starcode | 1.0000 | 0.48 | 0.51 | 0.47 | 2.97 | 2.97 |
+|  | Bartender | 1.0000 | 0.48 | 0.52 | 0.48 | 0.99 | 0.99 |
+| **low_indel** | barbac | 1.0000 | 1.70 | 3.50 | 1.71 | 29.96 | 26.39 |
+|  | Shepherd | 0.9993 | 0.95 | 49.15 | 48.81 | 3.58 | 3.58 |
+|  | Starcode | 1.0000 | 1.58 | 3.38 | 1.59 | 17.95 | 17.95 |
+|  | Bartender | 0.9959 | 0.94 | 511.14 | 509.41 | 3.19 | 3.19 |
+
+*Median of three timed runs; generated from Git commit `082e7536fb5c6e356f72deb2d10fbe6d8ac071cd`.*
 <!-- benchmark:unstructured:end -->
 
 *Wall = end-to-end wall time. Algo = pure clustering time, excluding R boot + package loading for barbac (Shepherd/Starcode/Bartender pay a negligible boot tax so wall ≈ algo for them).*
 
-**No-indel baseline.** All four methods are statistically indistinguishable (R = 1.0000, FN/FP/WS all within 5 barcodes out of 10,000). Confirms the four-way validity check.
+**No-indel baseline.** All four methods preserve R = 1.0000, with FN/FP/WS differing by at most 11 barcodes out of 10,000. This confirms broad four-way agreement, while retaining the exact method-level differences.
 
 **Realistic Illumina indel regime (0.5%).** Two-tier picture:
 
-- **barbac and Starcode are essentially tied for clustering accuracy** — both preserve R = 1.0000 and confine WS to ~1.6%. Both use Levenshtein natively.
-- **Shepherd and Bartender break.** Shepherd's WS rises 113-fold to 48.81% (a **31-fold** gap versus barbac); Bartender's rises to **509.41% (a 324-fold gap)**. Both rely on Hamming-based indexing that fragments indel variants into spurious centroids.
+- **barbac and Starcode have similar clustering accuracy** — both preserve R = 1.0000 and confine WS below 1.8%. Starcode is slightly lower on FN, FP, and WS in this unstructured condition. Both use Levenshtein natively.
+- **Shepherd and Bartender fragment strongly.** Shepherd's WS rises to 48.81% (about **29-fold** above barbac); Bartender's rises to **509.41% (about 298-fold above barbac)**. Both rely on Hamming-based indexing that fragments indel variants into spurious centroids.
 
-**Where barbac beats its Levenshtein peer (Starcode).**
+**Trade-off against its Levenshtein peer (Starcode).**
 
-- **~7× faster algorithm time** (2.4 s vs 17.2 s at low_indel; wall-time gap smaller because barbac pays a fixed ~3 s R-boot tax that Starcode does not).
+- **Starcode is faster on this corrected low-indel benchmark** (17.95 s versus 26.39 s algorithm time). The correctness fix deliberately expands barbac's indel parent search; speed optimization of that safe search remains future work.
 - **R-native**, with an in-package Rcpp binding — no shelling out to a standalone C binary and parsing text output.
 - **Integrated with the FASTQ→lineage pipeline** (`run_cli_pipeline`, `barbac_xtr`) and the time-series visualisation (`barbac_ts_area`) in the same package.
 
@@ -247,21 +249,21 @@ reflect the tools, not the design.
 <!-- benchmark:structured:start -->
 **sub_only (0% indel — representative of Illumina):**
 
-| Method    | Pearson R | FN%  | FP%  | WS%  |
-|:----------|----------:|-----:|-----:|-----:|
-| **barbac**| 1.0000    | 0.55 | 0.55 | **0.50** |
-| Shepherd  | 1.0000    | 0.75 | 0.75 | 0.70 |
-| Starcode  | 1.0000    | 1.35 | 1.25 | 1.20 |
-| Bartender | 1.0000    | 0.65 | 0.75 | 0.70 |
+| Method | Pearson R | FN% | FP% | WS% |
+|:--|--:|--:|--:|--:|
+| barbac | 1.0000 | 0.55 | 0.55 | 0.50 |
+| Shepherd | 1.0000 | 0.75 | 0.75 | 0.70 |
+| Starcode | 1.0000 | 1.35 | 1.25 | 1.20 |
+| Bartender | 1.0000 | 0.65 | 0.75 | 0.70 |
 
 **low_indel (0.5% ins, 0.5% del):**
 
-| Method    | Pearson R | FN%  | FP%    | WS%    |
-|:----------|----------:|-----:|-------:|-------:|
-| **barbac**| 1.0000    | 2.25 | **9.15**  | **2.50**  |
-| Shepherd  | 0.9989    | 1.70 | 101.30 | 100.35 |
-| Starcode  | 1.0000    | 3.15 | 10.10  | 3.45   |
-| Bartender | 0.9944    | 1.45 | 772.55 | 765.75 |
+| Method | Pearson R | FN% | FP% | WS% |
+|:--|--:|--:|--:|--:|
+| barbac | 1.0000 | 2.25 | 9.15 | 2.50 |
+| Shepherd | 0.9989 | 1.70 | 101.30 | 100.35 |
+| Starcode | 1.0000 | 3.15 | 10.10 | 3.45 |
+| Bartender | 0.9944 | 1.45 | 772.55 | 765.75 |
 <!-- benchmark:structured:end -->
 
 - **barbac has the lowest wrong-sequence rate of all four tools on both

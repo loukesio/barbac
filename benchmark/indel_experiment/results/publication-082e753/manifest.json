@@ -1,0 +1,24 @@
+{
+  "git_commit": "082e7536fb5c6e356f72deb2d10fbe6d8ac071cd",
+  "git_dirty": false,
+  "python": "3.12.12",
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "arguments": {
+    "n_barcodes": 2000,
+    "n_reads": 200000,
+    "seed": 42,
+    "repeats": 3,
+    "only": "low_indel",
+    "reuse_sim": true,
+    "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+    "tag": "structured",
+    "results_dir": "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/indel_experiment/results/publication-082e753",
+    "tools_dir": "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+    "allow_dirty": false
+  },
+  "versions": {
+    "R": "Rscript (R) version 4.5.1 (2025-06-13)",
+    "starcode": "starcode-v1.4",
+    "bartender": "Running bartender"
+  }
+}

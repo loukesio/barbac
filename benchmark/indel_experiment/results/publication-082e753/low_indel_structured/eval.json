@@ -1,0 +1,76 @@
+{
+  "condition": {
+    "name": "low_indel",
+    "sub_rate": 0.005,
+    "ins_rate": 0.005,
+    "del_rate": 0.005
+  },
+  "simulation": {
+    "n_barcodes": 2000,
+    "n_reads": 200000,
+    "seed": 42,
+    "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+    "timing_repeats": 3,
+    "input_sha256": "045faad3d15e4fd84ef41ce1453691e3803c43445219a224ad7f10b7cc573c53",
+    "truth_sha256": "57ea677b90370ca8dfcb627e7409bbd65930e4338c744013d31ee7d5391ab546"
+  },
+  "provenance": {
+    "barbac_build_id": "barbac-2026-08-24-bounded-lv-best-parent-v8",
+    "git_commit": "082e7536fb5c6e356f72deb2d10fbe6d8ac071cd",
+    "git_dirty": false,
+    "python": "3.12.12",
+    "platform": "macOS-15.6.1-arm64-arm-64bit"
+  },
+  "barbac": {
+    "name": "barbac",
+    "n_centroids": 2138,
+    "pearson_r": 0.9999526664210368,
+    "fn": 45,
+    "fn_rate": 0.0225,
+    "fp": 183,
+    "fp_rate": 0.0915,
+    "ws": 50,
+    "ws_rate": 0.025,
+    "runtime_s": 53.61778998374939,
+    "algo_time_s": 49.3047
+  },
+  "shepherd": {
+    "name": "shepherd",
+    "n_centroids": 3992,
+    "pearson_r": 0.9988825741247974,
+    "fn": 34,
+    "fn_rate": 0.017,
+    "fp": 2026,
+    "fp_rate": 1.013,
+    "ws": 2007,
+    "ws_rate": 1.0035,
+    "runtime_s": 5.2851808071136475,
+    "algo_time_s": 5.2851808071136475
+  },
+  "starcode": {
+    "name": "starcode",
+    "n_centroids": 2139,
+    "pearson_r": 0.9999591381472458,
+    "fn": 63,
+    "fn_rate": 0.0315,
+    "fp": 202,
+    "fp_rate": 0.101,
+    "ws": 69,
+    "ws_rate": 0.0345,
+    "runtime_s": 2.7504823207855225,
+    "algo_time_s": 2.7504823207855225
+  },
+  "bartender": {
+    "name": "bartender",
+    "n_centroids": 17422,
+    "pearson_r": 0.9944029489168091,
+    "fn": 29,
+    "fn_rate": 0.0145,
+    "fp": 15451,
+    "fp_rate": 7.7255,
+    "ws": 15315,
+    "ws_rate": 7.6575,
+    "runtime_s": 0.7798330783843994,
+    "algo_time_s": 0.7798330783843994
+  }
+}

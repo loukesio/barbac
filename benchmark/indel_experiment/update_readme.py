@@ -29,6 +29,7 @@ def pct(value: float) -> str:
 
 
 def unstructured_table(frame: pd.DataFrame) -> str:
+    commit = frame["git_commit"].dropna().iloc[0]
     rows = [
         "| Condition | Method | Pearson R | FN% | FP% | WS% | Wall (s) | Algo (s) |",
         "|:--|:--|--:|--:|--:|--:|--:|--:|",
@@ -43,6 +44,7 @@ def unstructured_table(frame: pd.DataFrame) -> str:
                 f"{pct(row.fn_rate)} | {pct(row.fp_rate)} | {pct(row.ws_rate)} | "
                 f"{row.runtime_s:.2f} | {row.algo_time_s:.2f} |"
             )
+    rows.extend(["", f"*Median of three timed runs; generated from Git commit `{commit}`.*"])
     return "\n".join(rows)
 
 
