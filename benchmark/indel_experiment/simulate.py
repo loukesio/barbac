@@ -65,6 +65,38 @@ def structured_barcodes(n: int, template: str,
     return out
 
 
+def johnson_abundances(n: int, total_reads: int,
+                       rng: np.random.Generator) -> np.ndarray:
+    """Abundances shaped like the benchmark library of Johnson et al. (2023).
+
+    That library mixes three exponential components -- the bulk at mean 1, a
+    hundredth of a percent at mean 10, and a handful at mean 1000 -- which
+    gives a much heavier head and a lighter low-count tail than a lognormal of
+    the same median. The tail is what decides how many barcodes land in the
+    range where no method can recover them, so matching its shape matters when
+    the simulation is meant to stand in for a real library.
+
+    Reference: Johnson MS, Venkataram S, Kryazhimskiy S (2023) J Mol Evol
+    91:263-280, doi:10.1007/s00239-022-10083-z; data doi:10.5281/zenodo.7052124
+    """
+    n_high = max(1, round(n * 5e-5))          # 5 in 100,000
+    n_mid = max(1, round(n * 1e-3))           # 100 in 100,000
+    n_low = n - n_mid - n_high
+    if n_low <= 0:
+        raise ValueError(f"n={n} is too small for the Johnson abundance mixture")
+    raw = np.concatenate([
+        rng.exponential(scale=1.0, size=n_low),
+        rng.exponential(scale=10.0, size=n_mid),
+        rng.exponential(scale=1000.0, size=n_high),
+    ])
+    rng.shuffle(raw)
+    raw = raw / raw.sum() * total_reads
+    counts = np.maximum(1, np.round(raw)).astype(np.int64)
+    counts[counts.argmax()] += total_reads - counts.sum()
+    assert counts.sum() == total_reads and counts.min() >= 1
+    return counts
+
+
 def lognormal_abundances(n: int, total_reads: int, sigma: float,
                          rng: np.random.Generator) -> np.ndarray:
     raw = rng.lognormal(mean=0.0, sigma=sigma, size=n)
@@ -126,6 +158,7 @@ def simulate(
     sigma: float = 1.5,
     seed: int = 0,
     template: str | None = None,
+    abundance: str = "lognormal",
 ) -> Path:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -139,7 +172,10 @@ def simulate(
         barcode_length = len(template)
     else:
         barcodes = random_barcodes(n_barcodes, barcode_length, bc_rng)
-    true_counts = lognormal_abundances(n_barcodes, n_reads, sigma, abund_rng)
+    if abundance == "johnson":
+        true_counts = johnson_abundances(n_barcodes, n_reads, abund_rng)
+    else:
+        true_counts = lognormal_abundances(n_barcodes, n_reads, sigma, abund_rng)
 
     # Sort descending by true count so the file matches the original benchmark layout.
     order = np.argsort(-true_counts)
@@ -181,6 +217,7 @@ def simulate(
         "sigma":          sigma,
         "seed":           seed,
         "template":       template,
+        "abundance":      abundance,
         "n_unique_reads": len(items),
     }
     import json
@@ -202,6 +239,10 @@ if __name__ == "__main__":
     p.add_argument("--seed",           type=int,   default=0)
     p.add_argument("--template",       type=str,   default=None,
                    help="fixed-anchor design over {A,C,G,T,N}; N = random position")
+    p.add_argument("--abundance",      type=str,   default="lognormal",
+                   choices=["lognormal", "johnson"],
+                   help="abundance model; 'johnson' matches the exponential "
+                        "mixture of the Johnson et al. (2023) benchmark library")
     args = p.parse_args()
     simulate(
         args.out_dir,
@@ -214,4 +255,5 @@ if __name__ == "__main__":
         sigma=args.sigma,
         seed=args.seed,
         template=args.template,
+        abundance=args.abundance,
     )
