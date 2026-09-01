@@ -228,3 +228,51 @@ test_that("Hamming mode warns when the data is substantially length-variable", {
                                 verbose = FALSE),
                  "differ from the modal barcode length")
 })
+
+test_that("LV mode suggests Hamming for fixed-length substitution-only data", {
+  input <- data.frame(
+    barcode = c("AAAAAAAAAAAAAAAAAAAA", "AAAAAAAAAAAAAAAAAAAT"),
+    counts = c(100L, 1L)
+  )
+  expect_message(
+    super_cluster2(input, method = "lv", verbose = TRUE),
+    'method = "hamming" is usually much faster',
+    fixed = TRUE
+  )
+})
+
+test_that("the composition lower bound safely rejects impossible LV pairs", {
+  cpp <- barbac:::barbac_cpp_centroid_cluster_optimized(
+    barcodes = c("AAAAAAAAAA", "CCCCCCCCCC"),
+    counts = c(10L, 1L),
+    max_distance = 3,
+    method = "lv",
+    use_kmer_filter = FALSE,
+    verbose = FALSE
+  )
+  expect_equal(length(cpp$central_barcode), 2L)
+  expect_equal(unname(cpp$distance_count[["lv_composition_rejects"]]), 1)
+  expect_equal(unname(cpp$distance_count[["lv_verifications"]]), 0)
+})
+
+test_that("Hamming refinement lets promoted barcodes reclaim earlier error roots", {
+  parent <- paste0(rep("A", 28), collapse = "")
+  promoted <- paste0("CCC", paste0(rep("A", 25), collapse = ""))
+  promoted_error <- paste0("CCCC", paste0(rep("A", 24), collapse = ""))
+  input <- data.frame(
+    barcode = c(parent, promoted, promoted_error),
+    counts = c(100L, 2L, 1L)
+  )
+
+  res <- super_cluster2(input, distance = 3, method = "hamming",
+                        verbose = FALSE)
+
+  # The d=3, count-2 sequence is too abundant for Shepherd's exact error
+  # model and is promoted back to a true centroid. Its d=1 singleton error
+  # was processed before that centroid existed, so the post-promotion cleanup
+  # must reclaim it instead of leaving a false root behind.
+  expect_setequal(res$central_barcode, c(parent, promoted))
+  owner <- which(res$central_barcode == promoted)
+  expect_setequal(res$all_barcodes[[owner]], c(promoted, promoted_error))
+  expect_equal(res$sum_counts[[owner]], 3L)
+})

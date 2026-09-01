@@ -116,7 +116,8 @@ def evaluate(name: str, centroids_path: Path, true_counts_path: Path,
     )
 
 
-def run_barbac(input_csv: Path, out_csv: Path) -> tuple[float, float]:
+def run_barbac(input_csv: Path, out_csv: Path, method: str = "lv",
+               library_path: Path | None = None) -> tuple[float, float]:
     """Returns (wall_seconds, algo_seconds).
 
     algo_seconds is measured inside the R script and excludes R boot +
@@ -125,9 +126,12 @@ def run_barbac(input_csv: Path, out_csv: Path) -> tuple[float, float]:
     """
     script = HERE / "run_barbac.R"
     t0 = time.time()
+    command = ["Rscript", str(script), str(input_csv), str(out_csv),
+               str(MAX_DIST), "20", method]
+    if library_path is not None:
+        command.append(str(library_path))
     proc = subprocess.run(
-        ["Rscript", str(script), str(input_csv), str(out_csv),
-         str(MAX_DIST), "20"],
+        command,
         check=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -244,7 +248,9 @@ def run_bartender(input_csv: Path, work_dir: Path, out_csv: Path) -> float:
 
 def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
                   reuse_sim: bool = False, template: str | None = None,
-                  tag: str = "", barcode_len: int = BARCODE_LEN) -> dict:
+                  tag: str = "", barcode_len: int = BARCODE_LEN,
+                  tie_order: str = "sequence",
+                  barbac_method: str = "auto") -> dict:
     dir_name = f"{cond['name']}_{tag}" if tag else cond["name"]
     cond_dir = RESULTS_DIR / dir_name
     cond_dir.mkdir(parents=True, exist_ok=True)
@@ -253,7 +259,14 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     # 1. Simulate (or reuse).
     from simulate import simulate
-    if not reuse_sim or not (cond_dir / "input.csv").exists():
+    can_reuse = reuse_sim and (cond_dir / "input.csv").exists()
+    manifest_path = cond_dir / "manifest.json"
+    if can_reuse and manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text())
+        can_reuse = manifest.get("tie_order", "generation") == tie_order
+    elif can_reuse and tie_order != "generation":
+        can_reuse = False
+    if not can_reuse:
         t0 = time.time()
         simulate(
             cond_dir,
@@ -265,6 +278,7 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
             del_rate=cond["del_rate"],
             seed=seed,
             template=template,
+            tie_order=tie_order,
         )
         print(f"  sim:      {time.time()-t0:.1f}s")
     else:
@@ -276,7 +290,14 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     # 2. barbac.
     barbac_out = cond_dir / "barbac_out.csv"
-    barbac_wall, barbac_algo = run_barbac(input_csv, barbac_out)
+    resolved_barbac_method = barbac_method
+    if resolved_barbac_method == "auto":
+        resolved_barbac_method = (
+            "hamming" if cond["ins_rate"] == 0 and cond["del_rate"] == 0 else "lv"
+        )
+    barbac_wall, barbac_algo = run_barbac(
+        input_csv, barbac_out, resolved_barbac_method
+    )
     barbac_eval = evaluate("barbac", barbac_out, true_csv,
                            barbac_wall, algo_time_s=barbac_algo)
     print(f"  barbac:   wall={barbac_wall:.1f}s algo={barbac_algo:.1f}s  "
@@ -318,6 +339,8 @@ def run_condition(cond: dict, *, n_barcodes: int, n_reads: int, seed: int,
 
     eval_dict = {
         "condition": cond,
+        "tie_order": tie_order,
+        "barbac_method": resolved_barbac_method,
         "barbac":    barbac_eval.__dict__,
         "shepherd":  shep_eval.__dict__,
         "starcode":  starcode_eval.__dict__,
@@ -341,6 +364,14 @@ def main():
     p.add_argument("--tag",        type=str, default="",
                    help="suffix for result dirs so a run never overwrites another "
                         "(defaults to 'structured' when --template is given)")
+    p.add_argument("--tie-order", type=str, default="sequence",
+                   choices=["generation", "sequence"],
+                   help="ordering for equal-count simulated reads; 'sequence' "
+                        "avoids leaking simulator construction order")
+    p.add_argument("--barbac-method", type=str, default="auto",
+                   choices=["lv", "hamming", "auto"],
+                   help="barbac distance mode; 'auto' uses Hamming only for "
+                        "substitution-only simulated conditions")
     args = p.parse_args()
 
     conds = CONDITIONS
@@ -365,6 +396,8 @@ def main():
             template=args.template,
             tag=tag,
             barcode_len=barcode_len,
+            tie_order=args.tie_order,
+            barbac_method=args.barbac_method,
         ))
 
     # Compile summary
@@ -375,6 +408,8 @@ def main():
             if m not in r:
                 continue
             row = {"condition": c["name"], "method": m,
+                   "tie_order": r.get("tie_order", "generation"),
+                   "distance_method": r.get("barbac_method") if m == "barbac" else None,
                    "sub_rate": c["sub_rate"], "ins_rate": c["ins_rate"], "del_rate": c["del_rate"]}
             row.update({k: r[m].get(k, r[m]["runtime_s"]) if k == "algo_time_s"
                         else r[m][k]

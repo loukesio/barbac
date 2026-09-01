@@ -1,11 +1,196 @@
 # Handoff: barbac clustering performance and benchmarking
 
-Branch: **`perf/clustering-improvements`** (5 commits ahead of `main`, working tree clean)
+Branch: **`perf/clustering-improvements`** (5 commits ahead of `main` at the
+start of the follow-up described below)
 
 Everything below was measured on 2026-09-01 on the author's machine. Where a
 claim is a measurement it says so; where it is a hypothesis it says that too.
 Two hypotheses in here were tested and **refuted** — please read those before
 re-deriving them.
+
+## 0. Latest result: barbac Hamming now exactly matches Shepherd
+
+The user explicitly expects Hamming barbac to have at least Shepherd's accuracy
+on Miloš's substitution-only algorithm. That expectation was reasonable, but
+before this follow-up the implementations only shared Hamming distance; their
+clustering decisions were not equivalent. This has now been corrected for the
+two Shepherd decisions that mattered.
+
+### What differed
+
+Shepherd single-time-point clustering:
+
+1. visits sequences by descending observed count;
+2. chooses the nearest existing centroid (highest-count centroid breaks a
+   distance tie);
+3. merges every distance-1 neighbor;
+4. merges singletons out to its learned `tau` (3 in this benchmark);
+5. at distance 2/3, uses an exact binomial Bayes score with threshold `-4`;
+6. preserves input order for equal counts.
+
+barbac Hamming previously used a likelihood-scored parent, a count-ratio guard,
+a conservative Poisson-style post-pass, and deterministic sequence tie order.
+Calling both algorithms “Hamming” therefore did not make them identical.
+
+### Exact diagnosis on anchored substitutions
+
+Matched condition: 10,000 true barcodes, 1,000,000 reads, seed 42, lognormal
+abundance, 0.5% substitutions/base, no indels, template
+`NNNNNNNNATGCNNNNNNNNATCGTTAA`, truth-independent sequence tie order.
+
+The old Hamming pass produced 9,975 roots. Its refinement correctly promoted
+64 true barcodes and no false barcodes, reaching 10,039 centroids. However, 44
+low-count errors had already founded roots because their correct parent did not
+exist until that promotion pass. Every one of the 44 extra barbac centroids was
+an error of a newly promoted true barcode:
+
+- 37 were Hamming distance 1 (36 count-1, one count-2);
+- six were distance 2 singletons;
+- one was a distance 3 singleton.
+
+Disabling refinement was tested and was decisively worse: FN increased from 83
+to 147 while FP stayed 122. Lowering `merge_ratio` from 20 to 1 was also worse:
+FN 84, FP 221, WS 212. Do not remove refinement or tune the global ratio.
+
+### Implemented correction (`src/clustering.cpp`, build v11)
+
+- In Hamming refinement only, replace the Poisson surrogate with Shepherd's
+  exact single-time-point binomial Bayes decision (`bft = -4`). LV retains its
+  previous rule and output.
+- After promotion, revisit pre-existing roots only against newly promoted
+  Hamming centroids. Absorb only Shepherd's unconditional safe cases: distance
+  1, or a singleton within the configured distance. This avoids a naive second
+  pass, which was shown to remove six real multi-read distance-3 barcodes.
+- Add diagnostic counter `post_promotion_absorbed` and regression coverage.
+
+Result:
+
+| anchored substitutions | centroids | FN | FP | WS | algorithm time |
+|---|---:|---:|---:|---:|---:|
+| old barbac Hamming v10 | 10,039 | 83 | 122 | 113 | 4.03s |
+| barbac Hamming v11 | **9,999** | **79** | **78** | **69** | **4.02s** |
+| Shepherd | **9,999** | **79** | **78** | **69** | 190.37s |
+
+The v11 barbac and Shepherd centroid sets are exactly equal, and every cluster
+count is exactly equal. Thus barbac now reproduces Shepherd's complete result
+about **47x faster** on this structured substitution benchmark. On random
+substitutions, v11 remains FN 54 / FP 58 / WS 54 (no accuracy regression) and
+runs in 0.65s versus Shepherd's 4.41s.
+
+This does **not** prove universal equivalence. Shepherd estimates its error rate
+(0.0049854 here), while barbac defaults to 0.005; Shepherd remains input-order
+dependent on count ties, while barbac is deterministic. On the fair sequence-
+ordered inputs used here those differences did not change the result. The dense
+100k substitution benchmark has not yet been rerun with v11 because Hamming on
+that 1.77-million-sequence input is slow; section 0.1 records the already-proven
+tie-order diagnosis for its historical gap.
+
+### Current four-condition snapshot
+
+All conditions use 10,000 truths, 1,000,000 reads, seed 42, lognormal abundance,
+0.5% substitutions/base, and sequence tie order. “Low indels” adds 0.5%
+insertions and 0.5% deletions per base. Do not run high-indel or Nanopore
+categories: the user explicitly excluded them.
+
+| condition | barbac | Shepherd | Starcode | Bartender |
+|---|---:|---:|---:|---:|
+| random substitutions | Hamming **54/58/54; 0.65s**; LV 54/58/54; 1.19s | 54/58/54; 4.41s | **48/51/47**; 4.56s | 48/52/48; 1.63s |
+| random substitutions + low indels | LV **170/350/171; 2.92s** | 103/4,924/4,890; 5.56s | **158/338/159; 30.83s** | 94/51,102/50,925; 4.33s |
+| anchored substitutions | Hamming **79/78/69; 4.02s**; LV 80/78/69; 12.92s | **79/78/69; 190.37s** | 319/266/257; 6.80s | 105/108/100; 2.23s |
+| anchored substitutions + low indels | LV **266/957/271; 38.99s** | 177/10,340/10,199; 163.73s | 476/1,180/494; 39.80s | 206/77,608/76,934; 10.65s |
+
+Each cell is `FN / FP / WS; algorithm seconds`; lower is better. The code,
+configuration, tool revisions, and compact CSV are under
+`benchmark/four_condition_comparison/`. The orchestrator clean-builds barbac,
+checks build v11, generates all data deterministically, and writes large raw
+outputs under ignored `generated/`.
+
+### Bottom line and next work for Claude
+
+What succeeded:
+
+- lossless LV A/C/G/T composition prefilter: 1.23x on `deep_sub_only`, 1.11x
+  on `dense_sub_only`, byte-identical output;
+- Hamming indel rescue on trace off-length reads: Johnson FP 647 -> 92;
+- uninformative LV seed skipping: 4.8x on anchored designs, byte-identical;
+- vectorized simulator: 4.8x faster with identical generated read multisets;
+- Hamming Bayes promotion plus post-promotion cleanup: exact Shepherd output on
+  anchored substitutions at ~47x its speed;
+- fair sequence-based tie ordering exposed the old dense Shepherd advantage as
+  simulator leakage rather than model accuracy.
+
+What failed or should not be repeated:
+
+- switching dense substitution data from LV to Hamming did not explain the old
+  gap (FN 117 -> 113 only);
+- removing refinement made anchored Hamming FN 147;
+- `merge_ratio = 1` made anchored Hamming FP/WS explode to 221/212;
+- tuning tie order or constants to the simulator's truth-first generation order
+  is benchmark overfitting;
+- marginal low-count truths are often absent or statistically indistinguishable
+  from errors, so no clustering rule can recover all of them reliably.
+
+Recommended next steps:
+
+1. Claude owns the remaining speed work. Preserve byte-identical results while
+   testing an absolute/sublinear LV posting-list cap, anchor-entropy-aware seeds,
+   or a trie dynamic-programming search inspired by Starcode's `poucet` code.
+2. Rerun dense substitution-only Hamming with v11 when runtime permits and check
+   exact centroid sets against Shepherd under sequence tie order. Do not use the
+   leaked generation-order score as a target.
+3. For accuracy beyond Shepherd, use information Shepherd does not use: learned
+   position/base/edit-specific error rates, actual alignment-path likelihoods,
+   base qualities, joint replicate/time-point evidence, and reported uncertainty
+   across deterministic tie seeds. Validate across multiple seeds and library
+   densities; do not accept a change from one favorable benchmark.
+4. User-facing method guidance should now be: random fixed-length substitutions
+   -> Hamming; structured anchored substitutions -> Hamming v11 (now exact
+   Shepherd accuracy and much faster); any real indels -> LV.
+
+---
+
+## 0.1 Earlier follow-up: dense gap resolved and lossless LV speedup
+
+The apparent Shepherd accuracy advantage on `dense_sub_only` was a **simulator
+tie-order leak**, not a Bayesian-model advantage. The simulator inserted each
+true sequence into its `Counter` before its derived error variants and sorted
+observations only by count. Shepherd preserves input order within count ties;
+barbac deliberately uses a content-derived deterministic tie order.
+
+Of the 40 true barcodes found by Shepherd but missed by barbac Hamming, 39 were
+tied with the competing neighbor. The simulator put truth first in 39 of the 40
+cases overall (38 of 39 tied cases), while barbac's lexicographic order put the
+other sequence first in all 40. Randomizing the input before Shepherd's stable
+abundance sort changed its result as follows:
+
+| dense 100k result | FN | FP | WS |
+|---|---:|---:|---:|
+| Shepherd, simulator generation order | 73 | 134 | 73 |
+| Shepherd, deterministic shuffled tie order | 112 | 173 | 112 |
+| barbac Hamming, deterministic sequence order | 113 | 179 | 118 |
+
+The dramatic 40-FN gap therefore collapses to one under a truth-independent tie
+order. Do not tune barbac's merge guard or copy Shepherd's Bayes score to chase
+the original number. `benchmark/indel_experiment/analyze_disagreements.py`
+reproduces the set-level diagnosis. The simulator and runner now accept
+`tie_order="sequence"` / `--tie-order sequence`; historical generation order
+remains the simulator API default so old simulations still reproduce. The
+comparison runner defaults to sequence order because its purpose is a fair
+cross-method benchmark. It also defaults to `--barbac-method auto`, selecting
+Hamming only when the simulated condition has zero insertions and deletions.
+
+A lossless A/C/G/T-composition lower bound was also added before Levenshtein
+verification. If the composition-vector L1 distance exceeds `2 * D`, edit
+distance must exceed `D`. Measured results, with centroid CSVs byte-identical:
+
+| dataset | old LV | composition prefilter | speedup | LV calls removed |
+|---|---:|---:|---:|---:|
+| `deep_sub_only` (176k sequences) | 3.84s | 3.12s | 1.23x | 52.1% |
+| `dense_sub_only` (1.77m sequences) | 251.8s | 227.2s | 1.11x | 51.8% |
+
+LV verbose output now recommends Hamming when every observed barcode has the
+same length, explicitly conditional on indels and shifted alignments being
+excluded. The default and clustering results are unchanged.
 
 ---
 
@@ -28,10 +213,10 @@ and a correctness bug.
 
 ---
 
-## 2. The open problem — this is the interesting one
+## 2. Resolved historical problem — Shepherd on dense substitution data
 
-**barbac loses to Shepherd on dense, substitution-only libraries, and nobody
-knows why.**
+The table below motivated the investigation. Section 0.1 now explains why its
+largest gap is not an algorithmic accuracy difference.
 
 | dataset | collisions* | indels | Shepherd FN | barbac FN | gap |
 |---|---|---|---|---|---|
@@ -51,13 +236,12 @@ near-neighbour true barcodes where Hamming would not. Tested directly —
 same as LV's 117, nowhere near Shepherd's 73. The distance metric is not the
 cause.
 
-**Where to look instead:** the merge guard (`effective_merge_ratio` /
-`effective_count_floor` in `src/clustering.cpp`) or the likelihood best-parent
-scoring, specifically their behaviour when two *true* barcodes are near
-neighbours. That is the only condition that distinguishes the three rows above.
-Shepherd uses a Bayesian abundance test rather than a count-ratio rule; the
-difference in how the two decide "is this a new barcode or an error of that one"
-is the likeliest source.
+**Refuted follow-up hypothesis:** the merge guard or Shepherd's Bayesian score
+causes the 44-FN gap. Source inspection and set-level diagnostics show that the
+gap consists almost entirely of equal-count orientation choices. Shepherd's
+single-time-point implementation also merges distance-1 neighbors
+unconditionally; its Bayes score only decides distance-2/3 cases below its
+frequency threshold.
 
 ---
 
@@ -154,22 +338,19 @@ per read, and it is why LV cost scales with **cluster count**, not input size:
 176k sequences producing 10k clusters takes 4.9s; 176k sequences producing
 174k clusters takes 798s.
 
-**Untried ideas, in order of expected value:**
-1. **Diagnostic when all input lengths are equal** — recommend `method="hamming"`.
-   The length histogram is already computed in `clustering.cpp` (added in
-   `cfb8763` for the Hamming indel warning). Cheap, safe, ~80x for affected users.
-2. **Composition prefilter** — compare A/C/G/T counts before the Myers DP; if the
-   count difference exceeds 2*D the edit distance must too. Lossless, a few
-   instructions instead of a full DP. Should cut roughly half the distance
-   computations.
-3. **Tighten the uninformative-seed threshold.** `query_specific_seed` currently
+**Remaining ideas, in order of expected value:**
+1. **Tighten the uninformative-seed threshold.** `query_specific_seed` currently
    skips buckets larger than `n_centroids / 8`. That *loosens* as the table grows
    — at 174k centroids it only skips buckets over 21,750. An absolute cap or a
    sublinear function is likely better. (Suspected but **not** measured.)
-4. **Learn the design's constant positions.** Per-position base entropy would
+2. **Learn the design's constant positions.** Per-position base entropy would
    identify fixed anchors; seeding only on variable positions would make seeds
    far more discriminative on anchored designs. Bigger change, interacts with
    indels shifting positions.
+3. **Trie-based LV search.** Starcode's exact “poucet” search performs dynamic
+   programming over trie nodes and is the strongest source-backed candidate for
+   replacing broad short-seed posting lists. This is a larger architectural
+   experiment; preserve the byte-identical LV invariant while evaluating it.
 
 ---
 

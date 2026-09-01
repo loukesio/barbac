@@ -46,6 +46,7 @@ pkgdown/
 # but drop the ~700 MB of simulation output. Regenerate any time with:
 #   python3 benchmark/indel_experiment/run_experiment.py --reuse-sim
 benchmark/indel_experiment/results/
+benchmark/four_condition_comparison/generated/
 benchmark/**/*.bam
 benchmark/**/*.bam.bai
 benchmark/**/*.fastq

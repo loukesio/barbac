@@ -156,7 +156,9 @@ super_cluster2 <- function(input_path,
                    !!rlang::sym(barcode_col))
   }
 
-  mean_len <- mean(nchar(data[[barcode_col]]))
+  barcode_lengths <- nchar(data[[barcode_col]])
+  mean_len <- mean(barcode_lengths)
+  fixed_length <- length(unique(barcode_lengths)) == 1L
   
   if (verbose) {
     message("========================================")
@@ -177,6 +179,11 @@ super_cluster2 <- function(input_path,
       message("  Collapsed dups   : ", n_collapsed, " rows")
     message("  Sequences        : ", format(nrow(data), big.mark = ","))
     message("  Mean length      : ", round(mean_len, 1), " bp")
+    if (method == "lv" && fixed_length) {
+      message("  Speed note       : all barcodes have the same length. If the ",
+              "data are known to exclude indels and shifted alignments, ",
+              "method = \"hamming\" is usually much faster.")
+    }
     message("  Top sequence     : ", data[[barcode_col]][1],
             " (count: ", format(data[[counts_col]][1], big.mark = ","), ")")
     message("Running...")

@@ -174,6 +174,7 @@ def simulate(
     seed: int = 0,
     template: str | None = None,
     abundance: str = "lognormal",
+    tie_order: str = "generation",
 ) -> Path:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -210,8 +211,17 @@ def simulate(
             bc, int(c), sub_rate, ins_rate, del_rate, mut_rng,
         ))
 
-    # Write input.csv (sorted desc by count) and shepherd_input.txt (same data, TSV).
-    items = sorted(all_reads.items(), key=lambda kv: -kv[1])
+    # Counter preserves insertion order. Because the unmutated true sequence is
+    # normally inserted before its error variants, retaining that order leaks
+    # ground truth to clustering tools that use input order to break count ties.
+    # Keep it as the default for reproduction of historical simulations, while
+    # offering sequence order for fair comparisons with deterministic methods.
+    if tie_order == "generation":
+        items = sorted(all_reads.items(), key=lambda kv: -kv[1])
+    elif tie_order == "sequence":
+        items = sorted(all_reads.items(), key=lambda kv: (-kv[1], kv[0]))
+    else:
+        raise ValueError("tie_order must be 'generation' or 'sequence'")
     with (out_dir / "input.csv").open("w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["barcode", "counts"])
@@ -235,6 +245,8 @@ def simulate(
         "abundance":      abundance,
         "n_unique_reads": len(items),
     }
+    if tie_order != "generation":
+        manifest["tie_order"] = tie_order
     import json
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
     return out_dir
@@ -258,6 +270,11 @@ if __name__ == "__main__":
                    choices=["lognormal", "johnson"],
                    help="abundance model; 'johnson' matches the exponential "
                         "mixture of the Johnson et al. (2023) benchmark library")
+    p.add_argument("--tie-order", type=str, default="generation",
+                   choices=["generation", "sequence"],
+                   help="ordering for equal-count reads; 'generation' reproduces "
+                        "historical files, while 'sequence' avoids leaking the "
+                        "simulator's truth-first construction order")
     args = p.parse_args()
     simulate(
         args.out_dir,
@@ -271,4 +288,5 @@ if __name__ == "__main__":
         seed=args.seed,
         template=args.template,
         abundance=args.abundance,
+        tie_order=args.tie_order,
     )

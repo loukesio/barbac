@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cmath>
 #include <cstdint>
@@ -17,7 +18,7 @@ namespace {
 // =============================================================================
 // Build marker
 // =============================================================================
-const char* BUILD_ID = "barbac-2026-09-01-hamming-indel-rescue-v9";
+const char* BUILD_ID = "barbac-2026-09-01-hamming-refinement-v11";
 
 // =============================================================================
 // Distance routines
@@ -186,6 +187,27 @@ inline bool hamming_bit_prefilter(uint64_t a, uint64_t b, int max_dist) {
   // Safe only for Hamming rejection. If more than 2D packed bits differ,
   // more than D bases must differ.
   return __builtin_popcountll(a ^ b) <= 2 * max_dist;
+}
+
+// Every edit changes the A/C/G/T composition vector by an L1 distance of at
+// most two: two for a substitution and one for an insertion or deletion.
+// Therefore composition_l1 > 2D proves that Levenshtein distance is > D.
+// Counting only A/C/G/T remains safe for sequences containing other symbols;
+// it can make the bound weaker, never reject a reachable sequence.
+using BaseComposition = std::array<int, 4>;
+
+inline BaseComposition base_composition(const char* seq, int len) {
+  BaseComposition out = {{0, 0, 0, 0}};
+  for (int i = 0; i < len; ++i) {
+    const int base = dna_base(seq[i]);
+    if (base >= 0) ++out[base];
+  }
+  return out;
+}
+
+inline int composition_l1(const BaseComposition& a, const BaseComposition& b) {
+  return std::abs(a[0] - b[0]) + std::abs(a[1] - b[1]) +
+    std::abs(a[2] - b[2]) + std::abs(a[3] - b[3]);
 }
 
 // =============================================================================
@@ -514,9 +536,9 @@ inline double edit_sequence_probability(int dist, int len, double error_rate) {
     std::pow(std::max(1e-12, 1.0 - e), static_cast<double>(std::max(0, len - dist)));
 }
 
-inline bool shepherd_style_emerging_barcode(int dist, int child_count,
-                                            int parent_count, int len,
-                                            double error_rate) {
+inline bool local_error_expectation_promotes(int dist, int child_count,
+                                             int parent_count, int len,
+                                             double error_rate) {
   if (dist <= 1) return false;
   
   const int floor = (dist == 2) ? 5 : 2;
@@ -525,15 +547,50 @@ inline bool shepherd_style_emerging_barcode(int dist, int child_count,
   const double p_err = edit_sequence_probability(dist, len, error_rate);
   const double expected = std::max(1e-12, static_cast<double>(parent_count) * p_err);
   
-  // Conservative Poisson upper-tail surrogate for Shepherd's binomial Bayes
+  // Conservative local Poisson-style rule, not Shepherd's exact binomial Bayes
   // factor: promote only when the observed child count is far above the number
-  // expected from this exact edit path. This catches nearby true barcodes at d=3
-  // without promoting the many singleton errors.
+  // expected from this exact edit path. This catches nearby true barcodes at
+  // d=3 without promoting the many singleton errors.
   if (static_cast<double>(child_count) >= std::max(2.0, 25.0 * expected + 2.0)) {
     return true;
   }
   
   return false;
+}
+
+inline double log_binomial_pmf(int observed, int trials, double probability) {
+  if (observed < 0 || trials < observed || probability <= 0.0 || probability >= 1.0) {
+    return -std::numeric_limits<double>::infinity();
+  }
+  return std::lgamma(static_cast<double>(trials) + 1.0) -
+    std::lgamma(static_cast<double>(observed) + 1.0) -
+    std::lgamma(static_cast<double>(trials - observed) + 1.0) +
+    static_cast<double>(observed) * std::log(probability) +
+    static_cast<double>(trials - observed) * std::log1p(-probability);
+}
+
+inline bool shepherd_hamming_bayes_promotes(int dist, int child_count,
+                                            int parent_count, int len,
+                                            int highest_count,
+                                            double error_rate) {
+  // Shepherd merges every distance-1 neighbor. At d>=2 it merges only when
+  // its single-time-point Bayes score exceeds -4; the complementary decision
+  // here promotes an already-absorbed sequence back to a centroid. Keeping the
+  // exact score makes Hamming refinement faithful to the published algorithm,
+  // while barbac's later cleanup can still improve on its one-pass ordering.
+  if (dist <= 1) return false;
+
+  const double e = clamp_error_rate(error_rate);
+  const double p_no_error = std::pow(1.0 - e, static_cast<double>(len));
+  const int inferred_reads = static_cast<int>(static_cast<double>(parent_count) / p_no_error);
+  const int trials = std::max(inferred_reads, parent_count + child_count);
+  const double p_exact = std::pow(e / 3.0, static_cast<double>(dist)) *
+    std::pow(1.0 - e, static_cast<double>(std::max(0, len - dist)));
+  const double log_denom = static_cast<double>(len) * std::log(4.0) +
+    std::log(static_cast<double>(std::max(1, highest_count)));
+  const double log_k = log_binomial_pmf(child_count, trials, p_exact) +
+    std::log(p_exact) + log_denom;
+  return log_k <= -4.0;
 }
 
 void add_cluster(std::vector<Cluster>& clusters,
@@ -644,6 +701,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    std::vector<int> slen(n);
    std::vector<uint64_t> packed(n, 0);
    std::vector<bool> packable(n, false);
+   std::vector<BaseComposition> composition(n);
    
    for (int i = 0; i < n; ++i) {
      if (barcodes[i] == NA_STRING) stop("`barcodes` contains NA at position %d.", i + 1);
@@ -652,6 +710,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
      uint64_t p = 0;
      packable[i] = pack_seq(ptr[i], slen[i], p);
      packed[i] = packable[i] ? p : 0;
+     composition[i] = base_composition(ptr[i], slen[i]);
    }
 
    // Hamming mode assumes one barcode length. Reads carrying an indel break
@@ -731,6 +790,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    std::vector<int> best_by_dist(D + 1, 0);
    long long total_candidates_seen = 0;
    long long lv_verifications = 0;
+   long long lv_composition_rejects = 0;
    long long lv_fast_accepts = 0;
    long long hamming_prefilter_rejects = 0;
    long long lv_seed_queries = 0;
@@ -741,6 +801,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    long long lv_hamming_stage_assignments = 0;
    long long shepherd_promoted = 0;
    long long shepherd_reassigned = 0;
+   long long post_promotion_absorbed = 0;
    int no_candidate_count = 0;
    
    if (verbose) {
@@ -820,6 +881,10 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
                dist = ham;
                ++lv_fast_accepts;
              } else if (allow_lv_verify) {
+               if (composition_l1(composition[i], composition[cl.centroid_idx]) > 2 * D) {
+                 ++lv_composition_rejects;
+                 continue;
+               }
                ++lv_verifications;
                dist = levenshtein_fast(s, sl, ptr[cl.centroid_idx], cl.centroid_len, D);
              } else {
@@ -831,6 +896,10 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
            // modes measure this pair by edit distance. In Hamming mode this is
            // reached only from the cross-length rescue below, where the pair
            // differs in length precisely because one of them carries an indel.
+           if (composition_l1(composition[i], composition[cl.centroid_idx]) > 2 * D) {
+             ++lv_composition_rejects;
+             continue;
+           }
            ++lv_verifications;
            dist = levenshtein_fast(s, sl, ptr[cl.centroid_idx], cl.centroid_len, D);
          } else {
@@ -962,15 +1031,16 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    }
    
    
-   // Shepherd-style local refinement: greedy centroid assignment is good at
+   // Local statistical refinement: greedy centroid assignment is good at
    // absorbing errors, but it can hide real nearby barcodes inside a larger
-   // parent. Shepherd fixes this with a statistical "separate emerging" pass.
-   // Here we conservatively promote only d>=2 children whose counts are far above
-   // the exact-edit error expectation, then let those promoted barcodes reclaim
-   // better-explained later members from the same local cluster.
+   // parent. Conservatively promote only d>=2 children whose counts are far
+   // above the exact-edit error expectation, then let those promoted barcodes
+   // reclaim better-explained later members from the same local cluster.
    if (D > 1) {
      std::vector<Cluster> refined;
      refined.reserve(clusters.size() + 256);
+     std::vector<bool> is_promoted;
+     is_promoted.reserve(clusters.size() + 256);
      
      for (const Cluster& cl : clusters) {
        if (cl.members.empty()) continue;
@@ -979,16 +1049,23 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
        const int root_cluster = static_cast<int>(refined.size());
        add_cluster(refined, root_seq, cl.centroid_len, cl.centroid_count,
                    cl.centroid_pack, cl.centroid_packable);
+       is_promoted.push_back(false);
        
        std::vector<int> promoted_cluster_for_pos(cl.members.size(), -1);
        for (int pos = 1; pos < static_cast<int>(cl.members.size()); ++pos) {
          const int seq_id = cl.members[pos];
          const int dist = pos < static_cast<int>(cl.member_dists.size()) ? cl.member_dists[pos] : D + 1;
          const int child_count = counts[seq_id];
-         if (shepherd_style_emerging_barcode(dist, child_count, cl.centroid_count,
-                                             std::max(slen[seq_id], cl.centroid_len), err)) {
+         const int comparison_len = std::max(slen[seq_id], cl.centroid_len);
+         const bool promote = is_lv
+           ? local_error_expectation_promotes(dist, child_count, cl.centroid_count,
+                                              comparison_len, err)
+           : shepherd_hamming_bayes_promotes(dist, child_count, cl.centroid_count,
+                                             comparison_len, counts[0], err);
+         if (promote) {
            const int new_cluster = static_cast<int>(refined.size());
            add_cluster(refined, seq_id, slen[seq_id], counts[seq_id], packed[seq_id], packable[seq_id]);
+           is_promoted.push_back(true);
            promoted_cluster_for_pos[pos] = new_cluster;
            ++shepherd_promoted;
          }
@@ -1044,6 +1121,67 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
          if (best_cluster != root_cluster) ++shepherd_reassigned;
        }
      }
+
+     // A promoted barcode was not available as a parent during pass 1. Its
+     // low-count error variants may therefore already have founded separate
+     // clusters. Revisit only those pre-existing roots and only against newly
+     // promoted Hamming centroids. Shepherd's conservative unconditional cases
+     // are used here: distance 1, or a singleton within the requested radius.
+     // This closes the ordering hole without re-merging protected d>=2
+     // multi-read barcodes or changing LV behavior.
+     if (!is_lv && shepherd_promoted > 0) {
+       std::vector<int> promoted_ids;
+       promoted_ids.reserve(static_cast<size_t>(shepherd_promoted));
+       for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+         if (is_promoted[cid]) promoted_ids.push_back(cid);
+       }
+
+       std::vector<int> absorb_into(refined.size(), -1);
+       for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+         if (is_promoted[cid]) continue;
+         const Cluster& child = refined[cid];
+         int best_parent = -1;
+         int best_dist = D + 1;
+         int best_parent_count = -1;
+         for (int pid : promoted_ids) {
+           const Cluster& parent = refined[pid];
+           if (child.centroid_len != parent.centroid_len ||
+               !child.centroid_packable || !parent.centroid_packable) continue;
+           if (!hamming_bit_prefilter(child.centroid_pack, parent.centroid_pack, D)) continue;
+           const int dist = hamming_packed(child.centroid_pack, parent.centroid_pack);
+           if (dist <= 0 || dist > D) continue;
+           if (dist != 1 && child.centroid_count != 1) continue;
+           if (dist < best_dist ||
+               (dist == best_dist && parent.centroid_count > best_parent_count)) {
+             best_parent = pid;
+             best_dist = dist;
+             best_parent_count = parent.centroid_count;
+           }
+         }
+         absorb_into[cid] = best_parent;
+       }
+
+       for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+         const int pid = absorb_into[cid];
+         if (pid < 0) continue;
+         Cluster& parent = refined[pid];
+         Cluster& child = refined[cid];
+         parent.members.insert(parent.members.end(), child.members.begin(), child.members.end());
+         parent.member_dists.insert(parent.member_dists.end(),
+                                    child.member_dists.begin(), child.member_dists.end());
+         parent.sum_counts += child.sum_counts;
+         ++post_promotion_absorbed;
+       }
+
+       if (post_promotion_absorbed > 0) {
+         std::vector<Cluster> cleaned;
+         cleaned.reserve(refined.size() - static_cast<size_t>(post_promotion_absorbed));
+         for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+           if (absorb_into[cid] < 0) cleaned.push_back(std::move(refined[cid]));
+         }
+         refined.swap(cleaned);
+       }
+     }
      
      clusters.swap(refined);
    }
@@ -1059,6 +1197,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
            << " no_cand=" << no_candidate_count
            << " avg_cand=" << (n > 0 ? static_cast<double>(total_candidates_seen) / n : 0.0)
            << " lv_dp=" << lv_verifications
+           << " lv_comp_reject=" << lv_composition_rejects
            << " lv_fast=" << lv_fast_accepts
            << " lv_seed_q=" << lv_seed_queries
            << " lv_seed_cand=" << lv_seed_candidates
@@ -1066,6 +1205,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
            << " lv_long_cand=" << lv_long_seed_candidates
            << " promoted=" << shepherd_promoted
            << " reassigned=" << shepherd_reassigned
+           << " post_promote_absorb=" << post_promotion_absorbed
            << " ham_reject=" << hamming_prefilter_rejects
            << " blocked[";
      for (int d = 1; d <= D; ++d) {
@@ -1125,6 +1265,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
        Named("no_candidate") = no_candidate_count),
        Named("distance_count") = NumericVector::create(
          Named("lv_verifications") = static_cast<double>(lv_verifications),
+         Named("lv_composition_rejects") = static_cast<double>(lv_composition_rejects),
          Named("lv_fast_accepts") = static_cast<double>(lv_fast_accepts),
          Named("lv_seed_queries") = static_cast<double>(lv_seed_queries),
          Named("lv_seed_candidates") = static_cast<double>(lv_seed_candidates),
@@ -1134,7 +1275,8 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
          Named("hamming_prefilter_rejects") = static_cast<double>(hamming_prefilter_rejects)),
          Named("refinement_count") = NumericVector::create(
            Named("shepherd_promoted") = static_cast<double>(shepherd_promoted),
-           Named("shepherd_reassigned") = static_cast<double>(shepherd_reassigned)),
+           Named("shepherd_reassigned") = static_cast<double>(shepherd_reassigned),
+           Named("post_promotion_absorbed") = static_cast<double>(post_promotion_absorbed)),
            Named("method") = is_lv ? "levenshtein" : "hamming",
            Named("build_id") = barbac_build_id());
  }

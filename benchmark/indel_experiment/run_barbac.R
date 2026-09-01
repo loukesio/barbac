@@ -1,12 +1,17 @@
 # Parameterised barbac runner.
-# Usage: Rscript run_barbac.R <input.csv> <out_centroids.csv> [distance] [merge_ratio]
+# Usage: Rscript run_barbac.R <input.csv> <out_centroids.csv> [distance]
+#        [merge_ratio] [method] [library_path]
 
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 2) stop("usage: run_barbac.R <input.csv> <out.csv> [distance] [merge_ratio]")
+if (length(args) < 2) stop("usage: run_barbac.R <input.csv> <out.csv> [distance] [merge_ratio] [method] [library_path]")
 input_csv   <- args[[1]]
 out_csv     <- args[[2]]
 distance    <- if (length(args) >= 3) as.numeric(args[[3]]) else 3
 merge_ratio <- if (length(args) >= 4) as.numeric(args[[4]]) else 20
+method      <- if (length(args) >= 5) args[[5]] else "lv"
+library_path <- if (length(args) >= 6) args[[6]] else ""
+
+if (nzchar(library_path)) .libPaths(c(library_path, .libPaths()))
 
 suppressPackageStartupMessages({
   library(barbac)
@@ -18,7 +23,8 @@ suppressPackageStartupMessages({
 # isolates the algorithm itself so the small-dataset benchmark isn't
 # dominated by ~4 s of R startup.
 t0 <- Sys.time()
-result <- super_cluster2(input_csv, distance = distance, merge_ratio = merge_ratio)
+result <- super_cluster2(input_csv, distance = distance, method = method,
+                         merge_ratio = merge_ratio)
 algo_s <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
 
 out <- data.frame(
