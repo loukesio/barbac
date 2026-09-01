@@ -128,8 +128,23 @@ def _mutate_one_barcode(bc: str, n_reads: int, sub_rate: float,
 
     bc_idx = np.array(["ACGT".index(c) for c in bc])  # original base index per position
 
+    # At realistic error rates most reads carry no error at all, and every one
+    # of them is the same string. Counting those directly leaves the per-base
+    # assembly loop to the minority that actually needs it, which is what makes
+    # simulations of tens of millions of reads tractable. The draws above are
+    # untouched, so a given seed still yields exactly the same reads.
+    dirty = subs.any(axis=1) | dels.any(axis=1) | inss.any(axis=1)
+    n_clean = int(n_reads - int(dirty.sum()))
+
     out = Counter()
-    for r in range(n_reads):
+    if n_clean:
+        out[bc] += n_clean
+
+    # Substituted bases depend only on (position, offset), so resolve them once
+    # instead of recomputing a modulo and a string index per base per read.
+    sub_char = [["ACGT"[(bc_idx[j] + o) % 4] for o in range(4)] for j in range(L)]
+
+    for r in np.flatnonzero(dirty):
         parts = []
         for j in range(L):
             if inss[r, j]:
@@ -137,7 +152,7 @@ def _mutate_one_barcode(bc: str, n_reads: int, sub_rate: float,
             if dels[r, j]:
                 continue
             if subs[r, j]:
-                parts.append("ACGT"[(bc_idx[j] + sub_offset[r, j]) % 4])
+                parts.append(sub_char[j][sub_offset[r, j]])
             else:
                 parts.append(bc[j])
         if inss[r, L]:
