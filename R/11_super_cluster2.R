@@ -28,6 +28,14 @@
 #'   may seed a cluster, re-running across several \code{tie_seed} values
 #'   measures how much of a result depends on that arbitrary choice.
 #' @param tie_seed Integer. Salt for \code{tie_break = "hash"}. Default: 0.
+#' @param use_design Logical. Exploit the barcode design. A library that fixes
+#'   some positions and randomises others carries identity only at the random
+#'   ones, so a read differing from a centroid solely at a fixed position cannot
+#'   be a different barcode and is absorbed without consulting the abundance
+#'   guard. The fixed positions are read off the data (a position where one base
+#'   covers at least 90% of reads), so no template has to be supplied. Has no
+#'   effect on fully random libraries, where every position varies.
+#'   Default: FALSE.
 #'
 #' @return A \code{\link[tibble]{tibble}} with columns:
 #'   cluster_id, central_barcode, all_barcodes, all_counts, sum_counts.
@@ -54,7 +62,8 @@ super_cluster2 <- function(input_path,
                            merge_ratio      = 20.0,
                            error_rate       = 0.005,
                            tie_break        = c("sequence", "hash"),
-                           tie_seed         = 0L) {
+                           tie_seed         = 0L,
+                           use_design       = FALSE) {
 
   method        <- match.arg(method)
   tie_break     <- match.arg(tie_break)
@@ -64,7 +73,7 @@ super_cluster2 <- function(input_path,
     return(.process_df(input_path, distance, method, barcode_col, counts_col,
                        output_dir, verbose, use_cpp_final, use_kmer_filter,
                        kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                       tie_break, tie_seed))
+                       tie_break, tie_seed, use_design))
   }
 
   if (!is.character(input_path))
@@ -76,12 +85,12 @@ super_cluster2 <- function(input_path,
     .process_dir(input_path, distance, method, barcode_col, counts_col,
                  output_dir, file_pattern, verbose, use_cpp_final,
                  use_kmer_filter, kmer_size, min_shared_kmers,
-                 merge_ratio, error_rate, tie_break, tie_seed)
+                 merge_ratio, error_rate, tie_break, tie_seed, use_design)
   } else {
     .process_file(input_path, distance, method, barcode_col, counts_col,
                   output_dir, verbose, use_cpp_final, use_kmer_filter,
                   kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                  tie_break, tie_seed)
+                  tie_break, tie_seed, use_design)
   }
 }
 
@@ -93,7 +102,8 @@ super_cluster2 <- function(input_path,
 .process_df <- function(data, distance, method, barcode_col, counts_col,
                         output_dir, verbose, use_cpp_final, use_kmer_filter,
                         kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                        tie_break = "sequence", tie_seed = 0L) {
+                        tie_break = "sequence", tie_seed = 0L,
+                        use_design = FALSE) {
 
   if (!all(c(barcode_col, counts_col) %in% colnames(data)))
     stop(sprintf("Columns '%s' and/or '%s' not found. Available: %s",
@@ -202,7 +212,8 @@ super_cluster2 <- function(input_path,
       use_kmer_filter  = use_kmer_filter,
       merge_ratio      = merge_ratio,
       error_rate       = error_rate,
-      verbose          = verbose
+      verbose          = verbose,
+      use_design       = use_design
     )
     result <- tibble::tibble(
       cluster_id      = cpp$cluster_id,
@@ -265,7 +276,8 @@ super_cluster2 <- function(input_path,
 .process_file <- function(file_path, distance, method, barcode_col, counts_col,
                           output_dir, verbose, use_cpp_final, use_kmer_filter,
                           kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                          tie_break = "sequence", tie_seed = 0L) {
+                          tie_break = "sequence", tie_seed = 0L,
+                          use_design = FALSE) {
 
   if (verbose) message("Reading: ", basename(file_path))
   data <- readr::read_csv(file_path, show_col_types = FALSE)
@@ -276,7 +288,7 @@ super_cluster2 <- function(input_path,
   result <- .process_df(data, distance, method, barcode_col, counts_col,
                         NULL, verbose, use_cpp_final, use_kmer_filter,
                         kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                        tie_break, tie_seed)
+                        tie_break, tie_seed, use_design)
   
   if (!is.null(output_dir)) {
     if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
@@ -301,7 +313,8 @@ super_cluster2 <- function(input_path,
                          output_dir, file_pattern, verbose, use_cpp_final,
                          use_kmer_filter, kmer_size, min_shared_kmers,
                          merge_ratio, error_rate,
-                         tie_break = "sequence", tie_seed = 0L) {
+                         tie_break = "sequence", tie_seed = 0L,
+                         use_design = FALSE) {
   
   files <- list.files(dir_path, pattern = file_pattern, full.names = TRUE)
   if (length(files) == 0)
@@ -317,7 +330,7 @@ super_cluster2 <- function(input_path,
                                      use_cpp_final, use_kmer_filter,
                                      kmer_size, min_shared_kmers,
                                      merge_ratio, error_rate,
-                                     tie_break, tie_seed),
+                                     tie_break, tie_seed, use_design),
       error = function(e) warning("Failed: ", basename(f), ": ", e$message)
     )
   }

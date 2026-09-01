@@ -492,6 +492,82 @@ inline double distance_log_likelihood_score(int dist, int parent_count,
     0.15 * std::log1p(static_cast<double>(child_count));
 }
 
+// =============================================================================
+// Barcode design
+// =============================================================================
+// A designed library fixes some positions and randomises others. A read that
+// differs from a centroid only at a fixed position cannot be a different
+// barcode -- no barcode varies there -- so the difference is a sequencing
+// error and the read belongs to that centroid. A read differing at a random
+// position may genuinely be another barcode.
+//
+// Edit distance cannot express that: it counts both mismatches as one. Knowing
+// which positions carry identity is information the distance metric does not
+// have, and it is recoverable from the library itself, because a fixed
+// position shows one base in nearly every read while a random one shows four.
+struct DesignMask {
+  uint64_t variable_bits;   // packed layout, low bit of each 2-bit lane
+  int len;
+  int n_variable;
+  bool usable;
+};
+
+// A position counts as fixed when one base covers at least this share of reads.
+// Sequencing error puts a designed anchor near 1 - error_rate; a randomised
+// position sits near 0.25, so the two are far apart and the threshold is not
+// delicate.
+const double DESIGN_FIXED_SHARE = 0.90;
+
+DesignMask learn_design(const std::vector<const char*>& ptr,
+                        const std::vector<int>& slen,
+                        const IntegerVector& counts,
+                        int n, int modal_len) {
+  DesignMask m;
+  m.variable_bits = 0;
+  m.len = modal_len;
+  m.n_variable = 0;
+  m.usable = false;
+  if (modal_len <= 0 || modal_len > 32) return m;
+
+  std::vector<std::array<double, 4> > freq(modal_len, {{0.0, 0.0, 0.0, 0.0}});
+  std::vector<double> total(modal_len, 0.0);
+  for (int i = 0; i < n; ++i) {
+    if (slen[i] != modal_len) continue;
+    const double w = static_cast<double>(std::max(1, counts[i]));
+    for (int p = 0; p < modal_len; ++p) {
+      const int b = dna_base(ptr[i][p]);
+      if (b < 0) continue;
+      freq[p][b] += w;
+      total[p] += w;
+    }
+  }
+
+  for (int p = 0; p < modal_len; ++p) {
+    if (total[p] <= 0.0) continue;
+    double best = 0.0;
+    for (int b = 0; b < 4; ++b) best = std::max(best, freq[p][b]);
+    if (best / total[p] < DESIGN_FIXED_SHARE) {
+      // pack_seq writes position 0 into the highest lane
+      m.variable_bits |= (1ULL << (2 * (modal_len - 1 - p)));
+      ++m.n_variable;
+    }
+  }
+
+  // Only meaningful when the design actually fixes something. An all-random
+  // library has nothing to exploit, and treating it as designed would be a
+  // licence to merge on noise.
+  m.usable = (m.n_variable > 0 && m.n_variable < modal_len);
+  return m;
+}
+
+// Mismatches that fall on identity-carrying positions. The rest are errors by
+// construction, so they should not count towards "these may be two barcodes".
+inline int variable_mismatches(const DesignMask& m, uint64_t a, uint64_t b) {
+  uint64_t x = a ^ b;
+  x = (x | (x >> 1)) & 0x5555555555555555ULL;   // one low bit per differing base
+  return __builtin_popcountll(x & m.variable_bits);
+}
+
 inline double effective_merge_ratio(int dist, double base_ratio, bool is_lv) {
   if (dist <= 0) return 0.0;
   
@@ -675,7 +751,8 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
      bool use_kmer_filter = true,
      double merge_ratio = 20.0,
      double error_rate = 0.005,
-     bool verbose = true) {
+     bool verbose = true,
+     bool use_design = false) {
    
    const int n = barcodes.size();
    if (counts.size() != n) stop("`barcodes` and `counts` must have the same length.");
@@ -721,15 +798,32 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    // wants Levenshtein, and scanning every length from every read would be both
    // slower and less accurate than simply asking for it.
    double off_length_fraction = 0.0;
-   if (!is_lv && n > 0) {
+   int modal_len = 0;
+   if (n > 0) {
      std::unordered_map<int, int> len_hist;
      for (int i = 0; i < n; ++i) ++len_hist[slen[i]];
      int modal_count = 0;
      for (std::unordered_map<int, int>::const_iterator it = len_hist.begin();
           it != len_hist.end(); ++it) {
-       if (it->second > modal_count) modal_count = it->second;
+       if (it->second > modal_count) { modal_count = it->second; modal_len = it->first; }
      }
      off_length_fraction = 1.0 - static_cast<double>(modal_count) / static_cast<double>(n);
+   }
+
+   // Which positions carry barcode identity, read off the library itself.
+   DesignMask design;
+   design.usable = false;
+   if (use_design) {
+     design = learn_design(ptr, slen, counts, n, modal_len);
+   }
+   if (verbose && use_design) {
+     if (design.usable) {
+       Rcout << "  Design            : " << design.n_variable << " of "
+             << design.len << " positions carry identity ("
+             << (design.len - design.n_variable) << " fixed)\n";
+     } else {
+       Rcout << "  Design            : no fixed positions found; scoring unchanged\n";
+     }
    }
    const double off_length_limit = 0.02;
    const bool hamming_rescue_indels = !is_lv && off_length_fraction > 0.0 &&
@@ -795,6 +889,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    long long hamming_prefilter_rejects = 0;
    long long lv_seed_queries = 0;
    long long cross_len_queries = 0;
+   long long design_anchor_only_absorbs = 0;
    long long lv_seed_candidates = 0;
    long long lv_long_seed_queries = 0;
    long long lv_long_seed_candidates = 0;
@@ -911,7 +1006,21 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
          const double score = distance_log_likelihood_score(
            dist, cl.centroid_count, cnt, std::max(sl, cl.centroid_len), err, is_lv);
          
-         CandidateChoice& target = merge_blocked_by_ratio(dist, cnt, cl.centroid_count, merge_ratio, is_lv)
+         // With a known design, a mismatch on a fixed position is a sequencing
+         // error rather than evidence of a second barcode, so only mismatches
+         // on identity-carrying positions argue against absorbing. When none
+         // of them do, the pair cannot be two different barcodes and the
+         // abundance guard has nothing to protect.
+         int guard_dist = dist;
+         if (design.usable && pk && cl.centroid_packable &&
+             sl == design.len && cl.centroid_len == design.len) {
+           guard_dist = variable_mismatches(design, pv, cl.centroid_pack);
+           if (guard_dist == 0) ++design_anchor_only_absorbs;
+         }
+
+         CandidateChoice& target =
+           (guard_dist > 0 &&
+            merge_blocked_by_ratio(guard_dist, cnt, cl.centroid_count, merge_ratio, is_lv))
            ? best_blocked
          : best_absorb;
          

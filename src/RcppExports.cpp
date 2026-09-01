@@ -33,8 +33,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // barbac_cpp_centroid_cluster_optimized
-List barbac_cpp_centroid_cluster_optimized(CharacterVector barcodes, IntegerVector counts, double max_distance, std::string method, int kmer_size, int min_shared_kmers, bool use_kmer_filter, double merge_ratio, double error_rate, bool verbose);
-RcppExport SEXP _barbac_barbac_cpp_centroid_cluster_optimized(SEXP barcodesSEXP, SEXP countsSEXP, SEXP max_distanceSEXP, SEXP methodSEXP, SEXP kmer_sizeSEXP, SEXP min_shared_kmersSEXP, SEXP use_kmer_filterSEXP, SEXP merge_ratioSEXP, SEXP error_rateSEXP, SEXP verboseSEXP) {
+List barbac_cpp_centroid_cluster_optimized(CharacterVector barcodes, IntegerVector counts, double max_distance, std::string method, int kmer_size, int min_shared_kmers, bool use_kmer_filter, double merge_ratio, double error_rate, bool verbose, bool use_design);
+RcppExport SEXP _barbac_barbac_cpp_centroid_cluster_optimized(SEXP barcodesSEXP, SEXP countsSEXP, SEXP max_distanceSEXP, SEXP methodSEXP, SEXP kmer_sizeSEXP, SEXP min_shared_kmersSEXP, SEXP use_kmer_filterSEXP, SEXP merge_ratioSEXP, SEXP error_rateSEXP, SEXP verboseSEXP, SEXP use_designSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,7 +48,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type merge_ratio(merge_ratioSEXP);
     Rcpp::traits::input_parameter< double >::type error_rate(error_rateSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(barbac_cpp_centroid_cluster_optimized(barcodes, counts, max_distance, method, kmer_size, min_shared_kmers, use_kmer_filter, merge_ratio, error_rate, verbose));
+    Rcpp::traits::input_parameter< bool >::type use_design(use_designSEXP);
+    rcpp_result_gen = Rcpp::wrap(barbac_cpp_centroid_cluster_optimized(barcodes, counts, max_distance, method, kmer_size, min_shared_kmers, use_kmer_filter, merge_ratio, error_rate, verbose, use_design));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -56,7 +57,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_barbac_barbac_build_id", (DL_FUNC) &_barbac_barbac_build_id, 0},
     {"_barbac_barbac_seq_order_key", (DL_FUNC) &_barbac_barbac_seq_order_key, 2},
-    {"_barbac_barbac_cpp_centroid_cluster_optimized", (DL_FUNC) &_barbac_barbac_cpp_centroid_cluster_optimized, 10},
+    {"_barbac_barbac_cpp_centroid_cluster_optimized", (DL_FUNC) &_barbac_barbac_cpp_centroid_cluster_optimized, 11},
     {NULL, NULL, 0}
 };
 
