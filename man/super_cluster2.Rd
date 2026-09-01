@@ -20,7 +20,8 @@ super_cluster2(
   merge_ratio = 20,
   error_rate = 0.005,
   tie_break = c("sequence", "hash"),
-  tie_seed = 0L
+  tie_seed = 0L,
+  use_design = FALSE
 )
 }
 \arguments{
@@ -63,6 +64,15 @@ may seed a cluster, re-running across several \code{tie_seed} values
 measures how much of a result depends on that arbitrary choice.}
 
 \item{tie_seed}{Integer. Salt for \code{tie_break = "hash"}. Default: 0.}
+
+\item{use_design}{Logical. Exploit the barcode design. A library that fixes
+some positions and randomises others carries identity only at the random
+ones, so a read differing from a centroid solely at a fixed position cannot
+be a different barcode and is absorbed without consulting the abundance
+guard. The fixed positions are read off the data (a position where one base
+covers at least 90% of reads), so no template has to be supplied. Has no
+effect on fully random libraries, where every position varies.
+Default: FALSE.}
 }
 \value{
 A \code{\link[tibble]{tibble}} with columns:

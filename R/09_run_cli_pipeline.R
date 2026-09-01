@@ -40,6 +40,17 @@ run_cli_pipeline <- function(sample_table,
                              log_file = NULL,
                              create_output_dir = TRUE) {
   
+  # Resolve the external tools before doing any work. They may live in the
+  # conda environment configure_environment() creates rather than on PATH, so
+  # each is run by full path; and a missing tool is reported here, by name,
+  # instead of surfacing several steps later as an empty output directory.
+  .tools <- .barbac_require_tools(c("fastqc", "pear", "minimap2", "samtools"))
+  fastqc_bin   <- .tools[["fastqc"]]
+  pear_bin     <- .tools[["pear"]]
+  minimap2_bin <- .tools[["minimap2"]]
+  samtools_bin <- .tools[["samtools"]]
+  multiqc_bin  <- .barbac_tool("multiqc")
+
   # -----------------------------
   # Validate and create output directory
   # -----------------------------
@@ -145,7 +156,7 @@ run_cli_pipeline <- function(sample_table,
       log_msg(paste("\u26A0 Warning: FASTQ file not found:", fq))
       return("")
     }
-    cmd <- sprintf("fastqc %s -o %s", shQuote(fq), shQuote(fastqc_dir))
+    cmd <- sprintf("%s %s -o %s", shQuote(fastqc_bin), shQuote(fq), shQuote(fastqc_dir))
     log_msg(paste("  Running:", cmd))
     exit_code <- system(cmd)
     if (exit_code != 0) {
@@ -187,7 +198,7 @@ run_cli_pipeline <- function(sample_table,
       }
       
       out_pref <- file.path(merged_dir, paste0(sample, "_ANC"))
-      cmd <- sprintf("pear -f %s -r %s -o %s", 
+      cmd <- sprintf("%s -f %s -r %s -o %s", shQuote(pear_bin), 
                      shQuote(r1), shQuote(r2), shQuote(out_pref))
       log_msg(paste("  Merging sample:", sample))
       exit_code <- system(cmd)
@@ -229,13 +240,13 @@ run_cli_pipeline <- function(sample_table,
     sorted_bam <- file.path(bam_dir, paste0(base, "_sorted.bam"))
     
     cmds <- c(
-      sprintf("minimap2 -a %s %s > %s", 
+      sprintf("%s -a %s %s > %s", shQuote(minimap2_bin), 
               shQuote(reference), shQuote(fq), shQuote(sam)),
-      sprintf("samtools view -S -b %s > %s", 
+      sprintf("%s view -S -b %s > %s", shQuote(samtools_bin), 
               shQuote(sam), shQuote(bam)),
-      sprintf("samtools sort %s -o %s", 
+      sprintf("%s sort %s -o %s", shQuote(samtools_bin), 
               shQuote(bam), shQuote(sorted_bam)),
-      sprintf("samtools index %s", 
+      sprintf("%s index %s", shQuote(samtools_bin), 
               shQuote(sorted_bam))
     )
     
@@ -271,8 +282,8 @@ run_cli_pipeline <- function(sample_table,
   } else {
     stats <- lapply(bam_files, function(bam) {
       sample <- gsub("_sorted\\.bam$", "", basename(bam))
-      mapped <- as.integer(system2("samtools", c("view", "-c", "-F", "4", bam), stdout = TRUE))
-      unmapped <- as.integer(system2("samtools", c("view", "-c", "-f", "4", bam), stdout = TRUE))
+      mapped <- as.integer(system2(samtools_bin, c("view", "-c", "-F", "4", bam), stdout = TRUE))
+      unmapped <- as.integer(system2(samtools_bin, c("view", "-c", "-f", "4", bam), stdout = TRUE))
       tibble::tibble(sample, mapped, unmapped)
     })
     stats_df <- dplyr::bind_rows(stats)
@@ -288,11 +299,11 @@ run_cli_pipeline <- function(sample_table,
   # -----------------------------
   # Step 5: MultiQC (optional)
   # -----------------------------
-  if (Sys.which("multiqc") != "") {
+  if (nzchar(multiqc_bin)) {
     log_msg("\u25B6 Running MultiQC on FastQC results...")
     mqc_dir <- file.path(output_dir, "multiqc")
     dir.create(mqc_dir, recursive = TRUE, showWarnings = FALSE)
-    mqc_cmd <- sprintf("multiqc %s -o %s", shQuote(fastqc_dir), shQuote(mqc_dir))
+    mqc_cmd <- sprintf("%s %s -o %s", shQuote(multiqc_bin), shQuote(fastqc_dir), shQuote(mqc_dir))
     system(mqc_cmd)
     log_msg(paste("\u2713 MultiQC report generated in:", mqc_dir))
     all_cmds <- c(all_cmds, mqc_cmd)
