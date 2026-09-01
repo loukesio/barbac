@@ -5,6 +5,10 @@ barbac_build_id <- function() {
     .Call(`_barbac_barbac_build_id`)
 }
 
+barbac_seq_order_key <- function(seqs, salt) {
+    .Call(`_barbac_barbac_seq_order_key`, seqs, salt)
+}
+
 barbac_cpp_centroid_cluster_optimized <- function(barcodes, counts, max_distance, method, kmer_size = 5L, min_shared_kmers = 2L, use_kmer_filter = TRUE, merge_ratio = 20.0, error_rate = 0.005, verbose = TRUE) {
     .Call(`_barbac_barbac_cpp_centroid_cluster_optimized`, barcodes, counts, max_distance, method, kmer_size, min_shared_kmers, use_kmer_filter, merge_ratio, error_rate, verbose)
 }

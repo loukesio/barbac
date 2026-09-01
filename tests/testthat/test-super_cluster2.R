@@ -149,3 +149,37 @@ test_that("indexed LV clustering matches the full scan on fixed-anchor designs",
 
   expect_identical(canon(TRUE), canon(FALSE))
 })
+
+test_that("tie_break = 'hash' stays deterministic and order-invariant", {
+  set.seed(7)
+  ALPH <- c("A", "C", "G", "T")
+  truth <- replicate(40, paste0(sample(ALPH, 20, replace = TRUE), collapse = ""))
+  mk <- function(s) {
+    cs <- strsplit(s, "")[[1]]; j <- sample(20, 1)
+    cs[j] <- sample(setdiff(ALPH, cs[j]), 1); paste0(cs, collapse = "")
+  }
+  bc  <- unlist(lapply(truth, function(t) c(t, mk(t))))
+  tab <- aggregate(counts ~ barcode,
+                   data.frame(barcode = bc,
+                              counts  = sample(1:6, length(bc), TRUE)),
+                   sum)
+
+  canon <- function(d, ...) {
+    r <- super_cluster2(d, distance = 3, verbose = FALSE, ...)
+    sort(paste(r$central_barcode, r$sum_counts, sep = "~"))
+  }
+
+  # A seed is reproducible, and still independent of input row order.
+  a <- canon(tab,                      tie_break = "hash", tie_seed = 3L)
+  expect_identical(a, canon(tab,       tie_break = "hash", tie_seed = 3L))
+  expect_identical(a, canon(tab[sample(nrow(tab)), ],
+                                       tie_break = "hash", tie_seed = 3L))
+
+  # The default is unchanged by the option's existence.
+  expect_identical(canon(tab), canon(tab, tie_break = "sequence"))
+
+  # Seeds are genuinely different orderings, not the same one relabelled.
+  keys <- barbac:::barbac_seq_order_key(tab$barcode, 1L)
+  expect_false(identical(keys, barbac:::barbac_seq_order_key(tab$barcode, 2L)))
+  expect_identical(keys, barbac:::barbac_seq_order_key(tab$barcode, 1L))
+})

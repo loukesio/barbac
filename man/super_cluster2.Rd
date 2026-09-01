@@ -18,7 +18,9 @@ super_cluster2(
   kmer_size = 5L,
   min_shared_kmers = 2L,
   merge_ratio = 20,
-  error_rate = 0.005
+  error_rate = 0.005,
+  tie_break = c("sequence", "hash"),
+  tie_seed = 0L
 )
 }
 \arguments{
@@ -51,6 +53,16 @@ guard. Effective ratio increases with distance. Default: 20.}
 
 \item{error_rate}{Numeric. Approximate per-base error rate for likelihood
 scoring. Default: 0.005.}
+
+\item{tie_break}{Character string. How to order barcodes that share a count:
+\code{"sequence"} (default) orders them by the barcode itself;
+\code{"hash"} orders them by a salted hash of the barcode, drawn from
+\code{tie_seed}. Both are deterministic and independent of input row
+order. Because any tie order is arbitrary and decides which tied barcode
+may seed a cluster, re-running across several \code{tie_seed} values
+measures how much of a result depends on that arbitrary choice.}
+
+\item{tie_seed}{Integer. Salt for \code{tie_break = "hash"}. Default: 0.}
 }
 \value{
 A \code{\link[tibble]{tibble}} with columns:

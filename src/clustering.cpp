@@ -562,6 +562,33 @@ std::string barbac_build_id() {
   return std::string(BUILD_ID);
 }
 
+// Deterministic salted FNV-1a hash of each sequence, as a non-negative integer.
+//
+// super_cluster2() uses this to place count-tied barcodes in an order that does
+// not depend on their bases. Any tie order is arbitrary, so varying `salt`
+// resamples that arbitrary choice and lets a caller measure how much of a
+// result rests on it. The value is a pure function of the sequence and the
+// salt, so each salt still gives a fully reproducible clustering.
+// [[Rcpp::export]]
+IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
+  const R_xlen_t n = seqs.size();
+  IntegerVector out(n);
+  const uint64_t basis = 1469598103934665603ULL ^
+    (static_cast<uint64_t>(static_cast<uint32_t>(salt)) * 1099511628211ULL);
+  for (R_xlen_t i = 0; i < n; ++i) {
+    if (seqs[i] == NA_STRING) { out[i] = NA_INTEGER; continue; }
+    const char* p = CHAR(STRING_ELT(seqs, i));
+    uint64_t h = basis;
+    while (*p) {
+      h ^= static_cast<unsigned char>(*p++);
+      h *= 1099511628211ULL;
+    }
+    // Fold to 31 bits so the result is a valid non-negative R integer.
+    out[i] = static_cast<int>((h ^ (h >> 32)) & 0x7FFFFFFFULL);
+  }
+  return out;
+}
+
 // Fast abundance-ranked barcode centroid clustering.
  //
  // Internal Rcpp export -- not part of the user-facing R API.

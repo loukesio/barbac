@@ -20,6 +20,14 @@
 #'   guard. Effective ratio increases with distance. Default: 20.
 #' @param error_rate Numeric. Approximate per-base error rate for likelihood
 #'   scoring. Default: 0.005.
+#' @param tie_break Character string. How to order barcodes that share a count:
+#'   \code{"sequence"} (default) orders them by the barcode itself;
+#'   \code{"hash"} orders them by a salted hash of the barcode, drawn from
+#'   \code{tie_seed}. Both are deterministic and independent of input row
+#'   order. Because any tie order is arbitrary and decides which tied barcode
+#'   may seed a cluster, re-running across several \code{tie_seed} values
+#'   measures how much of a result depends on that arbitrary choice.
+#' @param tie_seed Integer. Salt for \code{tie_break = "hash"}. Default: 0.
 #'
 #' @return A \code{\link[tibble]{tibble}} with columns:
 #'   cluster_id, central_barcode, all_barcodes, all_counts, sum_counts.
@@ -44,15 +52,19 @@ super_cluster2 <- function(input_path,
                            kmer_size        = 5L,
                            min_shared_kmers = 2L,
                            merge_ratio      = 20.0,
-                           error_rate       = 0.005) {
+                           error_rate       = 0.005,
+                           tie_break        = c("sequence", "hash"),
+                           tie_seed         = 0L) {
 
   method        <- match.arg(method)
+  tie_break     <- match.arg(tie_break)
   use_cpp_final <- use_cpp && (method %in% c("lv", "hamming"))
 
   if (is.data.frame(input_path)) {
     return(.process_df(input_path, distance, method, barcode_col, counts_col,
                        output_dir, verbose, use_cpp_final, use_kmer_filter,
-                       kmer_size, min_shared_kmers, merge_ratio, error_rate))
+                       kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                       tie_break, tie_seed))
   }
 
   if (!is.character(input_path))
@@ -64,11 +76,12 @@ super_cluster2 <- function(input_path,
     .process_dir(input_path, distance, method, barcode_col, counts_col,
                  output_dir, file_pattern, verbose, use_cpp_final,
                  use_kmer_filter, kmer_size, min_shared_kmers,
-                 merge_ratio, error_rate)
+                 merge_ratio, error_rate, tie_break, tie_seed)
   } else {
     .process_file(input_path, distance, method, barcode_col, counts_col,
                   output_dir, verbose, use_cpp_final, use_kmer_filter,
-                  kmer_size, min_shared_kmers, merge_ratio, error_rate)
+                  kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                  tie_break, tie_seed)
   }
 }
 
@@ -79,7 +92,8 @@ super_cluster2 <- function(input_path,
 #' @noRd
 .process_df <- function(data, distance, method, barcode_col, counts_col,
                         output_dir, verbose, use_cpp_final, use_kmer_filter,
-                        kmer_size, min_shared_kmers, merge_ratio, error_rate) {
+                        kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                        tie_break = "sequence", tie_seed = 0L) {
 
   if (!all(c(barcode_col, counts_col) %in% colnames(data)))
     stop(sprintf("Columns '%s' and/or '%s' not found. Available: %s",
@@ -123,11 +137,24 @@ super_cluster2 <- function(input_path,
 
   # Standardise the row order so the abundance-ranked greedy pass is a pure
   # function of the input's content, not the order it happened to arrive in.
-  # Sorting by count then barcode breaks count ties deterministically (barcodes
-  # are unique after the dedup above), making the clustering reproducible under
-  # any row permutation from upstream joins, summaries, or file merges.
-  data <- dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
-                         !!rlang::sym(barcode_col))
+  # Breaking count ties deterministically (barcodes are unique after the dedup
+  # above) makes the clustering reproducible under any row permutation from
+  # upstream joins, summaries, or file merges.
+  #
+  # Which tied barcode is visited first is nonetheless arbitrary, and it decides
+  # which of them is allowed to seed a cluster. tie_break = "hash" re-draws that
+  # arbitrary order from tie_seed without reference to the bases, so repeating a
+  # run across seeds measures how much of a result rests on the choice rather
+  # than on the data. Every seed is itself fully reproducible.
+  data <- if (tie_break == "hash") {
+    dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
+                   barbac_seq_order_key(!!rlang::sym(barcode_col),
+                                        as.integer(tie_seed)),
+                   !!rlang::sym(barcode_col))
+  } else {
+    dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
+                   !!rlang::sym(barcode_col))
+  }
 
   mean_len <- mean(nchar(data[[barcode_col]]))
   
@@ -230,7 +257,8 @@ super_cluster2 <- function(input_path,
 #' @noRd
 .process_file <- function(file_path, distance, method, barcode_col, counts_col,
                           output_dir, verbose, use_cpp_final, use_kmer_filter,
-                          kmer_size, min_shared_kmers, merge_ratio, error_rate) {
+                          kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                          tie_break = "sequence", tie_seed = 0L) {
 
   if (verbose) message("Reading: ", basename(file_path))
   data <- readr::read_csv(file_path, show_col_types = FALSE)
@@ -240,7 +268,8 @@ super_cluster2 <- function(input_path,
 
   result <- .process_df(data, distance, method, barcode_col, counts_col,
                         NULL, verbose, use_cpp_final, use_kmer_filter,
-                        kmer_size, min_shared_kmers, merge_ratio, error_rate)
+                        kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                        tie_break, tie_seed)
   
   if (!is.null(output_dir)) {
     if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
@@ -264,7 +293,8 @@ super_cluster2 <- function(input_path,
 .process_dir <- function(dir_path, distance, method, barcode_col, counts_col,
                          output_dir, file_pattern, verbose, use_cpp_final,
                          use_kmer_filter, kmer_size, min_shared_kmers,
-                         merge_ratio, error_rate) {
+                         merge_ratio, error_rate,
+                         tie_break = "sequence", tie_seed = 0L) {
   
   files <- list.files(dir_path, pattern = file_pattern, full.names = TRUE)
   if (length(files) == 0)
@@ -279,7 +309,8 @@ super_cluster2 <- function(input_path,
                                      counts_col, output_dir, verbose,
                                      use_cpp_final, use_kmer_filter,
                                      kmer_size, min_shared_kmers,
-                                     merge_ratio, error_rate),
+                                     merge_ratio, error_rate,
+                                     tie_break, tie_seed),
       error = function(e) warning("Failed: ", basename(f), ": ", e$message)
     )
   }

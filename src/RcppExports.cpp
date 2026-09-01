@@ -20,6 +20,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// barbac_seq_order_key
+IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt);
+RcppExport SEXP _barbac_barbac_seq_order_key(SEXP seqsSEXP, SEXP saltSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type seqs(seqsSEXP);
+    Rcpp::traits::input_parameter< int >::type salt(saltSEXP);
+    rcpp_result_gen = Rcpp::wrap(barbac_seq_order_key(seqs, salt));
+    return rcpp_result_gen;
+END_RCPP
+}
 // barbac_cpp_centroid_cluster_optimized
 List barbac_cpp_centroid_cluster_optimized(CharacterVector barcodes, IntegerVector counts, double max_distance, std::string method, int kmer_size, int min_shared_kmers, bool use_kmer_filter, double merge_ratio, double error_rate, bool verbose);
 RcppExport SEXP _barbac_barbac_cpp_centroid_cluster_optimized(SEXP barcodesSEXP, SEXP countsSEXP, SEXP max_distanceSEXP, SEXP methodSEXP, SEXP kmer_sizeSEXP, SEXP min_shared_kmersSEXP, SEXP use_kmer_filterSEXP, SEXP merge_ratioSEXP, SEXP error_rateSEXP, SEXP verboseSEXP) {
@@ -43,6 +55,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_barbac_barbac_build_id", (DL_FUNC) &_barbac_barbac_build_id, 0},
+    {"_barbac_barbac_seq_order_key", (DL_FUNC) &_barbac_barbac_seq_order_key, 2},
     {"_barbac_barbac_cpp_centroid_cluster_optimized", (DL_FUNC) &_barbac_barbac_cpp_centroid_cluster_optimized, 10},
     {NULL, NULL, 0}
 };

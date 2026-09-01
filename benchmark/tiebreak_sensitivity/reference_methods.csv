@@ -1,0 +1,13 @@
+condition,method,fn,fp,ws,n_true,fn_pct,fp_pct,ws_pct
+sub_only,shepherd,44,47,43,10000,0.4400,0.4700,0.4300
+sub_only,starcode,48,51,47,10000,0.4800,0.5100,0.4700
+sub_only,bartender,48,52,48,10000,0.4800,0.5200,0.4800
+low_indel,shepherd,95,4915,4881,10000,0.9500,49.1500,48.8100
+low_indel,starcode,158,338,159,10000,1.5800,3.3800,1.5900
+low_indel,bartender,94,51114,50941,10000,0.9400,511.1400,509.4100
+sub_only_structured,shepherd,15,15,14,2000,0.7500,0.7500,0.7000
+sub_only_structured,starcode,27,25,24,2000,1.3500,1.2500,1.2000
+sub_only_structured,bartender,13,15,14,2000,0.6500,0.7500,0.7000
+low_indel_structured,shepherd,34,2026,2007,2000,1.7000,101.3000,100.3500
+low_indel_structured,starcode,63,202,69,2000,3.1500,10.1000,3.4500
+low_indel_structured,bartender,29,15451,15315,2000,1.4500,772.5500,765.7500
