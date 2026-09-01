@@ -17,7 +17,7 @@ namespace {
 // =============================================================================
 // Build marker
 // =============================================================================
-const char* BUILD_ID = "barbac-2026-09-01-informative-seed-lv-v8";
+const char* BUILD_ID = "barbac-2026-09-01-hamming-indel-rescue-v9";
 
 // =============================================================================
 // Distance routines
@@ -653,7 +653,36 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
      packable[i] = pack_seq(ptr[i], slen[i], p);
      packed[i] = packable[i] ? p : 0;
    }
-   
+
+   // Hamming mode assumes one barcode length. Reads carrying an indel break
+   // that assumption, and the partition index -- keyed by length -- will never
+   // offer them their parent, so each founds a cluster of its own. Rescuing
+   // them by edit distance is worth it while they are a trace contaminant, and
+   // is the wrong thing to do once they are common: at that point the data
+   // wants Levenshtein, and scanning every length from every read would be both
+   // slower and less accurate than simply asking for it.
+   double off_length_fraction = 0.0;
+   if (!is_lv && n > 0) {
+     std::unordered_map<int, int> len_hist;
+     for (int i = 0; i < n; ++i) ++len_hist[slen[i]];
+     int modal_count = 0;
+     for (std::unordered_map<int, int>::const_iterator it = len_hist.begin();
+          it != len_hist.end(); ++it) {
+       if (it->second > modal_count) modal_count = it->second;
+     }
+     off_length_fraction = 1.0 - static_cast<double>(modal_count) / static_cast<double>(n);
+   }
+   const double off_length_limit = 0.02;
+   const bool hamming_rescue_indels = !is_lv && off_length_fraction > 0.0 &&
+     off_length_fraction <= off_length_limit;
+   if (!is_lv && off_length_fraction > off_length_limit) {
+     Rf_warning("%.1f%% of sequences differ from the modal barcode length. Hamming "
+                "distance is undefined between sequences of different lengths, so "
+                "these cannot be compared and will each form their own cluster. "
+                "Use method = \"lv\" for data containing indels.",
+                100.0 * off_length_fraction);
+   }
+
    if (verbose) {
      Rcout << "  Build ID          : " << BUILD_ID << "\n";
      Rcout << "  Assignment        : likelihood best-parent + distance-aware merge guard\n";
@@ -677,11 +706,26 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    
    std::vector<Cluster> clusters;
    clusters.reserve(std::max(16, n / 8));
+
+   // Centroid ids grouped by length, used only by Hamming mode's cross-length
+   // rescue below. The Hamming partition index is keyed by sequence length, so
+   // it can only ever propose same-length candidates; this is what lets a read
+   // carrying an indel still find the parent it came from.
+   std::unordered_map<int, std::vector<int> > centroids_by_len;
+   // A cross-length comparison is only worth making while they stay rare. On
+   // predominantly fixed-length data (what Hamming mode is for) the indel-
+   // bearing reads are a fraction of a percent and this costs almost nothing;
+   // the budget stops it degenerating into a full scan on data that is really
+   // Levenshtein's job, where the user should be in LV mode anyway.
+   const long long cross_len_budget = 400LL * 1000LL * 1000LL;
+   long long cross_len_comparisons = 0;
+   bool cross_len_budget_hit = false;
    
    HammingPartitionIndex h_index(std::max(1, D));
    LevenshteinSeedIndex lv_index(std::max(1, D), std::max(3, kmer_size));
    
    std::vector<int> candidates;
+   std::vector<int> cross_len_candidates;
    candidates.reserve(4096);
    std::vector<int> blocked_by_dist(D + 1, 0);
    std::vector<int> best_by_dist(D + 1, 0);
@@ -690,6 +734,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
    long long lv_fast_accepts = 0;
    long long hamming_prefilter_rejects = 0;
    long long lv_seed_queries = 0;
+   long long cross_len_queries = 0;
    long long lv_seed_candidates = 0;
    long long lv_long_seed_queries = 0;
    long long lv_long_seed_candidates = 0;
@@ -742,6 +787,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
      
      if (clusters.empty()) {
        add_cluster(clusters, i, sl, cnt, pv, pk);
+       centroids_by_len[sl].push_back(0);
        if (use_kmer_filter) {
          h_index.add(s, sl, 0);
          if (is_lv) lv_index.add(s, sl, 0);
@@ -780,7 +826,11 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
                continue;
              }
            }
-         } else if (is_lv && allow_lv_verify) {
+         } else if (allow_lv_verify) {
+           // Sequences of different lengths have no Hamming distance, so both
+           // modes measure this pair by edit distance. In Hamming mode this is
+           // reached only from the cross-length rescue below, where the pair
+           // differs in length precisely because one of them carries an indel.
            ++lv_verifications;
            dist = levenshtein_fast(s, sl, ptr[cl.centroid_idx], cl.centroid_len, D);
          } else {
@@ -817,7 +867,40 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
        total_candidates_seen += static_cast<long long>(candidates.size());
        if (candidates.empty()) ++no_candidate_count;
        scan_candidates(candidates, !is_lv);
-       
+
+       // Hamming mode: rescue reads carrying an indel.
+       //
+       // The partition index is keyed by sequence length, so a read one base
+       // shorter than its parent is never even offered as a candidate and ends
+       // up founding a cluster of its own -- a false positive for every indel
+       // in the data. Same-length candidates were already settled losslessly
+       // above, so only the other lengths need looking at, and on the
+       // fixed-length data this mode is meant for those centroid lists are
+       // nearly empty. Cost is therefore paid per indel-bearing read rather
+       // than per read.
+       if (hamming_rescue_indels && D > 0 && best_absorb.cluster_id < 0 &&
+           !cross_len_budget_hit) {
+         cross_len_candidates.clear();
+         for (int cand_len = sl - D; cand_len <= sl + D; ++cand_len) {
+           if (cand_len == sl || cand_len <= 0) continue;
+           std::unordered_map<int, std::vector<int> >::const_iterator it =
+             centroids_by_len.find(cand_len);
+           if (it == centroids_by_len.end()) continue;
+           cross_len_candidates.insert(cross_len_candidates.end(),
+                                       it->second.begin(), it->second.end());
+         }
+         if (!cross_len_candidates.empty()) {
+           cross_len_comparisons += static_cast<long long>(cross_len_candidates.size());
+           if (cross_len_comparisons > cross_len_budget) {
+             cross_len_budget_hit = true;
+           } else {
+             ++cross_len_queries;
+             total_candidates_seen += static_cast<long long>(cross_len_candidates.size());
+             scan_candidates(cross_len_candidates, true);
+           }
+         }
+       }
+
        if (is_lv && best_absorb.cluster_id < 0) {
          used_lv_seed_this_query = true;
          
@@ -870,6 +953,7 @@ IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
      if (!assigned) {
        const int new_id = static_cast<int>(clusters.size());
        add_cluster(clusters, i, sl, cnt, pv, pk);
+       centroids_by_len[sl].push_back(new_id);
        if (use_kmer_filter) {
          h_index.add(s, sl, new_id);
          if (is_lv) lv_index.add(s, sl, new_id);

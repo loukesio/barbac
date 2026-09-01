@@ -183,3 +183,48 @@ test_that("tie_break = 'hash' stays deterministic and order-invariant", {
   expect_false(identical(keys, barbac:::barbac_seq_order_key(tab$barcode, 2L)))
   expect_identical(keys, barbac:::barbac_seq_order_key(tab$barcode, 1L))
 })
+
+test_that("Hamming mode absorbs trace indel reads instead of splitting them off", {
+  # The Hamming partition index is keyed by sequence length, so a read carrying
+  # an indel is never offered its parent as a candidate and would found a
+  # cluster of its own. With a trace of such reads they are rescued by edit
+  # distance and land in the right cluster.
+  set.seed(3)
+  ALPH <- c("A", "C", "G", "T")
+  truth <- unique(replicate(120, paste0(sample(ALPH, 20, replace = TRUE),
+                                        collapse = "")))
+  parent <- truth[1]
+  deletion <- substr(parent, 1, 19)          # one base short: an indel read
+
+  input <- data.frame(
+    barcode = c(truth, deletion),
+    counts  = c(rep(200L, length(truth)), 1L),
+    stringsAsFactors = FALSE
+  )
+
+  res <- super_cluster2(input, distance = 3, method = "hamming", verbose = FALSE)
+
+  # The shortened read must not survive as its own centroid...
+  expect_false(deletion %in% res$central_barcode)
+  # ...it belongs to the barcode it was derived from.
+  owner <- res$all_barcodes[[which(res$central_barcode == parent)]]
+  expect_true(deletion %in% owner)
+})
+
+test_that("Hamming mode warns when the data is substantially length-variable", {
+  # Past a trace, rescuing by edit distance is the wrong answer: the data wants
+  # Levenshtein, and the user should be told so rather than handed a slow run.
+  set.seed(4)
+  ALPH <- c("A", "C", "G", "T")
+  truth <- unique(replicate(40, paste0(sample(ALPH, 20, replace = TRUE),
+                                       collapse = "")))
+  shortened <- substr(truth, 1, 19)          # half the table is length 19
+  input <- data.frame(
+    barcode = c(truth, shortened),
+    counts  = c(rep(50L, length(truth)), rep(3L, length(shortened))),
+    stringsAsFactors = FALSE
+  )
+  expect_warning(super_cluster2(input, distance = 3, method = "hamming",
+                                verbose = FALSE),
+                 "differ from the modal barcode length")
+})
