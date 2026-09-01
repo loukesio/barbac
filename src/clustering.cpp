@@ -17,7 +17,7 @@ namespace {
 // =============================================================================
 // Build marker
 // =============================================================================
-const char* BUILD_ID = "barbac-2026-05-31-two-tier-lv-v7";
+const char* BUILD_ID = "barbac-2026-09-01-informative-seed-lv-v8";
 
 // =============================================================================
 // Distance routines
@@ -356,6 +356,19 @@ public:
     if (len <= 0) return;
     
     const int k = std::max(1, std::min(seed_len, len));
+
+    // A seed shared by a large fraction of the table carries no information:
+    // it proposes almost every centroid as a candidate, so the union costs a
+    // full scan while narrowing nothing. That is the normal case for a seed
+    // sitting inside a fixed anchor of a structured barcode design, where the
+    // constant region is identical in every centroid. Skip those posting lists
+    // and keep the discriminative ones. This tier is an opportunistic fast
+    // path rather than the sensitivity guarantee -- query() still provides
+    // that -- so dropping an uninformative seed costs no recall: anything only
+    // reachable through it is found by the broad query that follows.
+    const size_t uninformative =
+      std::max<size_t>(64, static_cast<size_t>(n_centroids) / 8);
+
     for (int pos = 0; pos <= len - k; ++pos) {
       uint64_t code = 0;
       if (!encode_subseq(seq, pos, k, code)) continue;
@@ -366,10 +379,11 @@ public:
           buckets.find(seed_key(k, cpos, code));
         if (it == buckets.end()) continue;
         const std::vector<int>& bucket = it->second;
+        if (bucket.size() > uninformative) continue;
         for (int idx : bucket) acc.add_hit(idx, n_centroids);
       }
     }
-    
+
     acc.flush(1, out);
   }
   

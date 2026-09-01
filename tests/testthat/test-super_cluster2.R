@@ -106,3 +106,46 @@ test_that("super_cluster2 warns on Hamming-incompatible barcodes", {
   expect_warning(super_cluster2(input, method = "hamming", verbose = FALSE),
                  "Hamming mode cannot compare")
 })
+
+test_that("indexed LV clustering matches the full scan on fixed-anchor designs", {
+  # Structured barcode designs repeat a constant anchor in every sequence, so
+  # seeds drawn from the anchor are shared by the whole table and carry no
+  # information. The seed index skips such posting lists to stay fast; this
+  # checks that skipping them costs no recall by comparing against the
+  # exhaustive scan (use_kmer_filter = FALSE), which uses no index at all.
+  set.seed(11)
+  ALPH <- c("A", "C", "G", "T")
+  template <- c(rep("N", 8), strsplit("ATGC", "")[[1]],
+                rep("N", 8), strsplit("ATCGTTAA", "")[[1]])
+  var_pos <- which(template == "N")
+
+  draw <- function() {
+    s <- template
+    s[var_pos] <- sample(ALPH, length(var_pos), replace = TRUE)
+    paste0(s, collapse = "")
+  }
+  truth <- unique(replicate(60, draw()))
+
+  mutate1 <- function(s) {                  # one substitution in the variable part
+    cs <- strsplit(s, "")[[1]]
+    j <- sample(var_pos, 1)
+    cs[j] <- sample(setdiff(ALPH, cs[j]), 1)
+    paste0(cs, collapse = "")
+  }
+  bc  <- unlist(lapply(truth, function(t) c(t, t, mutate1(t))))
+  tab <- aggregate(counts ~ barcode,
+                   data.frame(barcode = bc,
+                              counts  = sample(1:40, length(bc), TRUE)),
+                   sum)
+
+  canon <- function(filter_on) {
+    r <- super_cluster2(tab, distance = 3, method = "lv",
+                        use_kmer_filter = filter_on, verbose = FALSE)
+    sort(vapply(seq_len(nrow(r)), function(i)
+      paste(r$central_barcode[i], r$sum_counts[i],
+            paste(sort(r$all_barcodes[[i]]), collapse = "|"), sep = "~"),
+      character(1)))
+  }
+
+  expect_identical(canon(TRUE), canon(FALSE))
+})
