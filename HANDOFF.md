@@ -1,13 +1,154 @@
 # Handoff: barbac clustering performance and benchmarking
 
-Branch: **`perf/clustering-improvements`** (5 commits ahead of `main` at the
-start of the follow-up described below)
+Branch: **`feat/design-aware-scoring`** (9 commits ahead of `main`).
+**Nothing is merged to `main` yet, deliberately.** The trade-offs in section A
+should be settled first.
 
-Everything below was measured on 2026-09-01 on the author's machine. Where a
-claim is a measurement it says so; where it is a hypothesis it says that too.
-Two hypotheses in here were tested and **refuted** — please read those before
-re-deriving them.
+---
 
+## A. Where each method actually wins and loses
+
+Written from measurements in this document, not from the papers.
+
+### barbac
+
+**For.** The only method with no catastrophic regime — every competitor has one.
+Ties the best available accuracy on the Johnson reference (FN 470, the lowest of
+any method) and on anchored substitutions, and wins anchored+indel outright.
+Fastest or near-fastest almost everywhere. Deterministic: identical input in any
+row order gives identical output. Conserves every read. The only tool that also
+does extraction, and it recovers 99.3% of reads where the previous in-house
+pipeline recovered 0.64%. The only one offering both Hamming and Levenshtein.
+
+**Against.** The default (`method="lv"`) is the wrong choice for the fixed-length
+data that alignment-based extraction always produces — 117x slower for output
+differing by 13 centroids in 174,000. Cost scales with *cluster count* rather
+than input size, so diverse libraries are disproportionately expensive.
+`merge_ratio = 20` cannot fire on unamplified libraries where nothing is 20x
+anything, silently disabling error correction. The anchored-substitution parity
+with Shepherd was obtained by implementing Shepherd's binomial criterion, so it
+is "the same decision, 47x faster" and not an independent accuracy advantage.
+Heaviest install of the four: an R package with a C++ core plus a conda
+environment for the CLI stages.
+
+### Shepherd
+
+**For.** Genuinely best-in-class accuracy on substitution-only data; barbac had
+to adopt its promotion rule to match it. Estimates its own error rate from the
+data rather than taking a constant.
+
+**Against.** Hamming only — it cannot represent an indel, and collapses when one
+appears (118% and 257% wrong-split on our indel conditions). Its output depends
+on input row order: permuting an identical file moves it between 471 and 478
+false negatives on the Johnson data, so a single reported number is one draw.
+Slow: 109s where barbac takes 23.6s, and 190s where barbac takes 4s. Loses reads
+(88 of 25M on Johnson). Requires a fixed read length.
+
+### Starcode
+
+**For.** Robust — survives indels, which only it and barbac do. Deterministic.
+A standalone C binary with no dependencies, which is the easiest thing on this
+list to install. Marginally the best on random barcodes with indels.
+
+**Against.** Four times worse on anchored designs (FN 319 against 79). On the
+Johnson reference it is 1.6x worse on false negatives and 4x worse on false
+positives than barbac. Scales badly: 3 minutes on 1.77M unique sequences,
+over 17 minutes on 4.45M. Its default message-passing mode refuses to link any
+pair unless the parent is 5x more abundant, which silently suppresses correct
+merges on flat libraries -- we run `-s` (sphere) partly for that reason.
+
+### Bartender
+
+**For.** Frequently the fastest, and deterministic.
+
+**Against.** Unusable with indels: 511%, 902% and 1486% wrong-split. Eight times
+worse than barbac on false positives even on the Johnson data. Its interface
+takes one row per *read* rather than per unique sequence, so a 25M-read
+condition becomes a ~700MB file before it can start.
+
+### The honest summary
+
+barbac loses two categories by 6-12 barcodes and wins two by 210-240. Its
+defensible claim is **"the only method that is never bad, and the fastest"** --
+not "best in every category", which rests on margins smaller than the noise from
+an arbitrary tie-breaking choice.
+
+---
+
+## B. CLI pipeline: verified end to end, two bugs fixed
+
+Run on public data (`SRR9940679`, Johnson et al. 2019 lineage tracking,
+BioProject `PRJNA559526`): FastQC, PEAR, minimap2, samtools, MultiQC,
+`barbac_xtr` and `super_cluster2` all complete. 200,000 read pairs produced
+61,006 merged reads, ~67% mapped, 17,884 full-length barcodes, clustered to
+12,561 (Hamming, 0.57s) or 12,432 (LV, 5.04s).
+
+Two bugs found and fixed (commit `6967399`):
+
+1. **The pipeline could not run the tools barbac installs.**
+   `configure_environment()` puts the tools in a conda environment;
+   `run_cli_pipeline()` invoked them as bare commands through `PATH`. Every step
+   failed with "command not found" -- and the failures were logged as warnings
+   while the step still printed success, so the run continued two more stages
+   and died with "No merged FASTQ files found", three steps from the cause.
+2. **`check_barbac_tools()` had the mirror-image bug.** It searched only the
+   conda environment (so system-wide tools were reported missing) and decided
+   availability from whether `--version` succeeded -- which PEAR does not
+   support, so an installed PEAR was reported absent.
+
+**Undocumented trap worth adding to the docs:** a reference must not use `N` at
+variable positions. A reference that was 44% `N` mapped **zero** reads; filling
+those positions with a representative base mapped **67%** of the same reads at
+the same coordinates. minimap2 cannot seed on `N`. The existing
+`Reference_barcodes.fasta` works only because it is 24% `N`.
+
+Also worth a look: PEAR merged only 61,006 of 200,000 pairs (30%). For a ~130bp
+amplicon with 150bp mates that is low and may indicate a different insert size
+than assumed.
+
+---
+
+## C. Immediate next step: a real time series
+
+`PRJNA559526` contains **two 10-point time series** from the same evolution
+experiment, which is the natural next test and the one that unlocks the only
+remaining accuracy idea:
+
+| series | library | timepoints | runs |
+|---|---|---|---|
+| C1 | `ILT_YPD_1` .. `ILT_YPD_10` | 10 | SRR9940651-60 |
+| D1 | `ILT_YPA_1` .. `ILT_YPA_10` | 10 | SRR9940677-96 |
+
+(`SRR9940679` already downloaded is D1 timepoint 4.)
+
+**Plan.** Take one series -- D1 is smaller at ~53M reads total -- and subsample
+each timepoint to ~500k read pairs, giving ~5M reads and roughly 400MB rather
+than 4GB. Run the CLI pipeline per timepoint against the derived reference,
+cluster each, then join on barcode to build trajectories.
+
+**Why this is the right next step, in order of value:**
+
+1. **It exercises `barbac_ts_area`**, the time-series half of the package, which
+   nothing in this whole benchmarking effort has touched.
+2. **It tests the one accuracy idea that adds information.** A barcode present
+   at several timepoints is real; a sequencing error is not reproduced across
+   independent library preparations. This is the only proposal that supplies
+   evidence no competitor uses -- and unlike quality scores, it needs no change
+   to extraction.
+3. **It is a real-data result with a biological check.** Trajectories should be
+   smooth and adaptive lineages should sweep. A clustering error shows up as a
+   barcode that appears from nowhere or vanishes mid-experiment, which is a
+   sanity test the single-sample benchmarks cannot provide.
+4. **It is the discriminating real dataset we lack.** The ANC library is
+   unamplified, so nothing is 20x anything and every method returns the input
+   nearly unchanged. An evolved, amplified population has the abundance
+   structure error correction actually depends on.
+
+**Caveat to plan for:** the construct here was derived from the reads, not from
+a published template. It should be re-derived per series and checked, since the
+inline index length varies between libraries.
+
+---
 ## 0. Latest result: barbac Hamming now exactly matches Shepherd
 
 The user explicitly expects Hamming barbac to have at least Shepherd's accuracy
