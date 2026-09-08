@@ -1,7 +1,17 @@
 # Handoff: barbac clustering performance and benchmarking
 
 **2026-09-08 update:** Work now continues on `feat/exact-search-clustering`.
-The latest [100,000-barcode reference comparison](benchmark/reference_comparison/README.md)
+**Latest: native v13** adds exact abundance-bound pruning and an opt-in
+`indel_model = "poisson"` for repeated-base single indels. Read the
+[LV optimization experiment](benchmark/lv_optimization/README.md): LV support
+now takes 43.4s including exports, with FN 471 / FP 83 and 131 wrong read
+assignments, versus the v12 values 192.0s, FN 471 / FP 85, and 231 wrong reads.
+Search-only v13 preserves all reference member assignments. Across four
+conditions and four seeds, the optional model adds no FN and removes six FP.
+The homopolymer-rich stress case improves but remains weak. The indel model
+stays off by default; no universal accuracy or speed claim is established.
+
+The earlier [100,000-barcode reference comparison](benchmark/reference_comparison/README.md)
 tests both current distance modes and ordering options against the previous
 version, Shepherd, both Starcode modes, and Bartender. Current Hamming with
 support ordering has FN 469 / FP 87 in 18.4s including startup and exports;

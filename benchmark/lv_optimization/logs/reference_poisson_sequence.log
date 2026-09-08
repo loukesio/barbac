@@ -1,0 +1,53 @@
+BARBAC_BUILD_ID=barbac-2026-09-08-bounded-indels-v13
+Reading: input.csv
+========================================
+barbac: Abundance-ranked centroid clustering
+  Implementation   : C++ (optimized)
+  K-mer filter     : ON
+  Method           : lv
+  Distance         : 3
+  kmer_size        : 5
+  min_shared_kmers : 2
+  merge_ratio      : 20 (distance-aware)
+  error_rate       : 0.005
+  Sequences        : 1,544,850
+  Mean length      : 20 bp
+  Top sequence     : TTGTCGCAAACGGGAAGTAC (count: 290,650)
+Running...
+  Build ID          : barbac-2026-09-08-bounded-indels-v13
+  Assignment        : likelihood best-parent + distance-aware merge guard
+  Method            : Levenshtein
+  Index             : exact information-balanced LV partitions
+  Error rate        : 0.005
+  Indel model       : repeated-indel Poisson consistency
+  Merge rules (base_ratio=20):
+    d=1 : floor=10, effective_ratio=20
+    d=2 : floor=5, effective_ratio=60
+    d=3 : floor=2, effective_ratio=100
+Pass 1: abundance-ranked centroid assignment | n=1544850 | d=3 | filter=ON
+  [6%] 100000/1544850 clusters=97423 no_cand=0 lv_dp=47988748 lv_fast=2571 lv_seed_q=97428 lv_long_q=99999 blocked[d1=0/d2=11/d3=280] 8615 seq/s ETA=2m47s
+  [12%] 200000/1544850 clusters=98742 no_cand=0 lv_dp=49425831 lv_fast=101311 lv_seed_q=111033 lv_long_q=199999 blocked[d1=0/d2=11/d3=287] 16528 seq/s ETA=1m21s
+  [19%] 300000/1544850 clusters=98914 no_cand=0 lv_dp=49651569 lv_fast=201150 lv_seed_q=135651 lv_long_q=299999 blocked[d1=0/d2=11/d3=287] 24463 seq/s ETA=0m50s
+  [25%] 400000/1544850 clusters=99097 no_cand=0 lv_dp=49891096 lv_fast=300968 lv_seed_q=160325 lv_long_q=399999 blocked[d1=0/d2=11/d3=288] 32186 seq/s ETA=0m35s
+  [32%] 500000/1544850 clusters=99160 no_cand=0 lv_dp=53380087 lv_fast=403328 lv_seed_q=209544 lv_long_q=499999 blocked[d1=0/d2=11/d3=288] 37352 seq/s ETA=0m27s
+  [38%] 600000/1544850 clusters=99208 no_cand=0 lv_dp=57825788 lv_fast=506173 lv_seed_q=263298 lv_long_q=599999 blocked[d1=0/d2=11/d3=288] 41229 seq/s ETA=0m22s
+  [45%] 700000/1544850 clusters=99250 no_cand=0 lv_dp=61995276 lv_fast=608907 lv_seed_q=317677 lv_long_q=699999 blocked[d1=0/d2=11/d3=288] 44650 seq/s ETA=0m18s
+  [51%] 800000/1544850 clusters=99288 no_cand=0 lv_dp=66184399 lv_fast=711633 lv_seed_q=370972 lv_long_q=799999 blocked[d1=0/d2=11/d3=288] 47607 seq/s ETA=0m15s
+  [58%] 900000/1544850 clusters=99330 no_cand=0 lv_dp=70228292 lv_fast=814238 lv_seed_q=425627 lv_long_q=899999 blocked[d1=0/d2=11/d3=288] 50314 seq/s ETA=0m12s
+  [64%] 1000000/1544850 clusters=99364 no_cand=0 lv_dp=74505142 lv_fast=916953 lv_seed_q=478991 lv_long_q=999999 blocked[d1=0/d2=11/d3=288] 52485 seq/s ETA=0m10s
+  [71%] 1100000/1544850 clusters=99420 no_cand=0 lv_dp=78732145 lv_fast=1019735 lv_seed_q=532761 lv_long_q=1099999 blocked[d1=0/d2=11/d3=288] 54501 seq/s ETA=0m8s
+  [77%] 1200000/1544850 clusters=99463 no_cand=0 lv_dp=82765276 lv_fast=1122384 lv_seed_q=585877 lv_long_q=1199999 blocked[d1=0/d2=11/d3=288] 56495 seq/s ETA=0m6s
+  [84%] 1300000/1544850 clusters=99508 no_cand=0 lv_dp=87068594 lv_fast=1225058 lv_seed_q=640373 lv_long_q=1299999 blocked[d1=0/d2=11/d3=288] 58153 seq/s ETA=0m4s
+  [90%] 1400000/1544850 clusters=99553 no_cand=0 lv_dp=91247627 lv_fast=1327775 lv_seed_q=694646 lv_long_q=1399999 blocked[d1=0/d2=11/d3=288] 59719 seq/s ETA=0m2s
+  [97%] 1500000/1544850 clusters=99596 no_cand=0 lv_dp=95416611 lv_fast=1430420 lv_seed_q=749006 lv_long_q=1499999 blocked[d1=0/d2=11/d3=288] 61141 seq/s ETA=0m0s
+  [100%] done in 0m25s clusters=99612 no_cand=0 avg_cand=133.55 lv_dp=97427451 lv_comp_reject=107410304 lv_fast=1476693 lv_seed_q=774635 lv_seed_cand=204338830 lv_long_q=1544849 lv_long_cand=1975618 indel_guard_passes=2 promoted=0 reassigned=0 post_promote_absorb=0 ham_reject=0 blocked[d1=0/d2=11/d3=288] total=299 61434 seq/s
+✓ Done in 26.4s (0.4 min)
+  Clusters found   : 99,612
+  Compression      : 15.51:1
+  Rate             : 58,524 seq/s
+  Build ID         : barbac-2026-09-08-bounded-indels-v13
+  Blocked at d=2  : 11
+  Blocked at d=3  : 288
+========================================
+
+BARBAC_ALGO_SECONDS=28.539000

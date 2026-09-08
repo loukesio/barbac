@@ -21,7 +21,8 @@ super_cluster2(
   error_rate = 0.005,
   tie_break = c("sequence", "hash", "support"),
   tie_seed = 0L,
-  use_design = FALSE
+  use_design = FALSE,
+  indel_model = c("none", "poisson")
 )
 }
 \arguments{
@@ -77,6 +78,16 @@ guard. The fixed positions are read off the data (a position where one base
 covers at least 90% of reads), so no template has to be supplied. Has no
 effect on fully random libraries, where every position varies.
 Default: FALSE.}
+
+\item{indel_model}{Character string. Experimental LV merge-guard exception:
+\code{"none"} (default) or \code{"poisson"}. The latter allows a
+repeated-base single insertion/deletion to pass a blocked ratio guard if
+its count is consistent with a Poisson error expectation (upper tail at
+least 0.01). Uses \code{error_rate} as a deletion-rate upper-bound proxy,
+and one fourth of that rate for a specific inserted base, multiplied by
+equivalent gap positions. This is not an estimated platform-specific
+error rate or posterior probability. It may merge genuine length variants;
+validate on independent controls. Requires the C++ LV method.}
 }
 \value{
 A \code{\link[tibble]{tibble}} with columns:

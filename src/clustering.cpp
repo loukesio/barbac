@@ -18,7 +18,7 @@ namespace {
 // =============================================================================
 // Build marker
 // =============================================================================
-const char* BUILD_ID = "barbac-2026-09-08-exact-partitions-v12";
+const char* BUILD_ID = "barbac-2026-09-08-bounded-indels-v13";
 
 // =============================================================================
 // Distance routines
@@ -248,6 +248,8 @@ class ExactPartitionIndex {
   struct Plan { std::vector<Block> blocks; };
   std::vector<Plan> plans;
   std::vector<int> fallback;
+  std::vector<int> abundance;
+  bool abundance_descending = true;
   int D;
   bool lv;
   mutable CandidateAccumulator acc;
@@ -334,7 +336,12 @@ public:
     }
   }
 
-  void add(const char* seq, int len, int id) {
+  void add(const char* seq, int len, int id, int count = 0) {
+    // Posting lists follow insertion order. Abundance-ranked centroids let a
+    // bounded query stop at the first ineligible count, without visiting the
+    // rest of a long list. Unsorted native callers retain exact filtering.
+    if (!abundance.empty() && count > abundance.back()) abundance_descending = false;
+    abundance.push_back(count);
     if (!supported(seq, len)) { fallback.push_back(id); return; }
     int first = lv ? std::max(1, len-D) : len;
     int last = lv ? std::min(64, len+D) : len;
@@ -351,18 +358,38 @@ public:
     }
   }
 
-  void query(const char* seq, int len, int n_centroids, std::vector<int>& out) const {
+  void query(const char* seq, int len, int n_centroids, std::vector<int>& out,
+             int minimum_count = 0) const {
     if (!supported(seq, len) || plans[len].blocks.empty()) {
-      out.resize(n_centroids);
-      std::iota(out.begin(), out.end(), 0);
+      out.clear();
+      for (int id = 0; id < n_centroids; ++id) {
+        if (abundance[id] < minimum_count) {
+          if (abundance_descending) break;
+          continue;
+        }
+        out.push_back(id);
+      }
       return;
     }
     for (const Block& block : plans[len].blocks) {
       auto it = block.buckets.find(code_at(seq, block));
-      if (it != block.buckets.end())
-        for (int id : it->second) acc.add_hit(id, n_centroids);
+      if (it != block.buckets.end()) {
+        for (int id : it->second) {
+          if (abundance[id] < minimum_count) {
+            if (abundance_descending) break;
+            continue;
+          }
+          acc.add_hit(id, n_centroids);
+        }
+      }
     }
-    for (int id : fallback) acc.add_hit(id, n_centroids);
+    for (int id : fallback) {
+      if (abundance[id] < minimum_count) {
+        if (abundance_descending) break;
+        continue;
+      }
+      acc.add_hit(id, n_centroids);
+    }
     acc.flush(1, out);
 
   }
@@ -414,6 +441,64 @@ inline double distance_log_likelihood_score(int dist, int parent_count,
     static_cast<double>(dist) * edit_penalty +
     static_cast<double>(std::max(0, len - dist)) * noedit_bonus -
     0.15 * std::log1p(static_cast<double>(child_count));
+}
+
+// All distance-1 candidates have already been inspected. For any remaining
+// parent, distance >= 2 and comparison length >= query length, so this is an
+// upper bound on its score. Invert the monotone bound with integer bisection
+// rather than exp/rounding: equal-score candidates must remain eligible for
+// the count/id tie break. No absorbing parent means no pruning is allowed.
+inline int minimum_competitive_count(double best_score, int highest_count,
+                                     int child_count, int query_length,
+                                     double error_rate) {
+  int lo = 0, hi = highest_count;
+  while (lo < hi) {
+    const int mid = lo + (hi - lo) / 2;
+    if (distance_log_likelihood_score(2, mid, child_count, query_length,
+                                       error_rate, true) < best_score) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo;
+}
+
+// Number of single-base deletion positions producing exactly `shorter`.
+// Identical adjacent bases are multiple error opportunities yielding the
+// same observed variant. For insertions, these are the equivalent insertion
+// gaps in the shorter parent. No alignment matrix or truth labels are needed.
+inline int single_gap_multiplicity(const char* longer, int n,
+                                    const char* shorter, int m) {
+  if (n != m + 1 || m < 0) return 0;
+  int gap = 0;
+  while (gap < m && longer[gap] == shorter[gap]) ++gap;
+  for (int p = gap; p < m; ++p)
+    if (longer[p + 1] != shorter[p]) return 0;
+  int left = gap, right = gap;
+  while (left > 0 && longer[left - 1] == longer[gap]) --left;
+  while (right + 1 < n && longer[right + 1] == longer[gap]) ++right;
+  return right - left + 1;
+}
+
+inline bool repeated_indel_consistent(const char* parent, int parent_len,
+                                       int parent_count, const char* child,
+                                       int child_len, int child_count,
+                                       double error_rate) {
+  if (parent_count <= child_count || child_count <= 0 ||
+      std::abs(parent_len - child_len) != 1) return false;
+  const bool deletion = parent_len > child_len;
+  const int ways = deletion
+    ? single_gap_multiplicity(parent, parent_len, child, child_len)
+    : single_gap_multiplicity(child, child_len, parent, parent_len);
+  if (ways < 2) return false; // Only repeated-base single indels in this model.
+  const double e = clamp_error_rate(error_rate);
+  // Configured per-base error rate is an upper-bound proxy for a deletion
+  // event; an inserted specific base receives one fourth of that rate.
+  // This is a model assumption, not an inferred platform-specific indel rate.
+  const double relative_rate = ways * e / (1.0 - e) / (deletion ? 1.0 : 4.0);
+  const double expected = parent_count * relative_rate;
+  // Reject an error explanation when the upper Poisson tail is below 1%.
+  // This predictive consistency check is not a posterior probability or a
+  // multiple-testing guarantee. It only relaxes an otherwise blocked merge.
+  return R::ppois(child_count - 1.0, expected, false, false) >= 0.01;
 }
 
 // =============================================================================
@@ -668,7 +753,7 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
     ++count_frequency[counts[i]];
   }
   ExactPartitionIndex index(1, lv, ptr, len, counts);
-  for (int i = 0; i < n; ++i) index.add(ptr[i], len[i], i);
+  for (int i = 0; i < n; ++i) index.add(ptr[i], len[i], i, counts[i]);
   NumericVector support(n);
   std::vector<int> candidates;
   for (int i = 0; i < n; ++i) {
@@ -720,7 +805,8 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
      double merge_ratio = 20.0,
      double error_rate = 0.005,
      bool verbose = true,
-     bool use_design = false) {
+     bool use_design = false,
+     bool use_indel_model = false) {
    
    const int n = barcodes.size();
    if (counts.size() != n) stop("`barcodes` and `counts` must have the same length.");
@@ -742,6 +828,7 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
        Named("build_id") = barbac_build_id());
    }
    
+   const int highest_count = *std::max_element(counts.begin(), counts.end());
    std::vector<const char*> ptr(n);
    std::vector<int> slen(n);
    std::vector<uint64_t> packed(n, 0);
@@ -819,6 +906,7 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
            << (use_kmer_filter ? (is_lv ? "exact information-balanced LV partitions" : "exact information-balanced Hamming partitions") : "OFF/full scan")
            << "\n";
      Rcout << "  Error rate        : " << err << "\n";
+     Rcout << "  Indel model       : " << (is_lv && use_indel_model ? "repeated-indel Poisson consistency" : "off") << "\n";
      Rcout << "  Merge rules (base_ratio=" << merge_ratio << "):\n";
      for (int d = 1; d <= D; ++d) {
        Rcout << "    d=" << d
@@ -868,6 +956,7 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
    long long lv_hamming_stage_assignments = 0;
    long long shepherd_promoted = 0;
    long long shepherd_reassigned = 0;
+   long long indel_guard_passes = 0;
    long long post_promotion_absorbed = 0;
    int no_candidate_count = 0;
    
@@ -918,8 +1007,8 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
        add_cluster(clusters, i, sl, cnt, pv, pk);
        centroids_by_len[sl].push_back(0);
        if (use_kmer_filter && D > 0) {
-         index.add(s, sl, 0);
-         if (is_lv && D > 1) lv_near_index.add(s, sl, 0);
+         index.add(s, sl, 0, cnt);
+         if (is_lv && D > 1) lv_near_index.add(s, sl, 0, cnt);
        }
        continue;
      }
@@ -991,11 +1080,15 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
            if (guard_dist == 0) ++design_anchor_only_absorbs;
          }
 
-         CandidateChoice& target =
-           (guard_dist > 0 &&
-            merge_blocked_by_ratio(guard_dist, cnt, cl.centroid_count, merge_ratio, is_lv))
-           ? best_blocked
-         : best_absorb;
+         bool blocked = guard_dist > 0 &&
+           merge_blocked_by_ratio(guard_dist, cnt, cl.centroid_count, merge_ratio, is_lv);
+         if (blocked && is_lv && use_indel_model && dist == 1 &&
+             repeated_indel_consistent(ptr[cl.centroid_idx], cl.centroid_len,
+                                       cl.centroid_count, s, sl, cnt, err)) {
+           blocked = false;
+           ++indel_guard_passes;
+         }
+         CandidateChoice& target = blocked ? best_blocked : best_absorb;
          
          if (target.cluster_id < 0 || score > target.score ||
              (score == target.score &&
@@ -1065,11 +1158,13 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
            scan_candidates(candidates, true);
          }
          const double unseen_upper = distance_log_likelihood_score(
-           2, counts[0], cnt, sl, err, true);
+           2, highest_count, cnt, sl, err, true);
          if (D <= 1 || best_absorb.cluster_id < 0 || best_absorb.score <= unseen_upper) {
            used_lv_seed_this_query = true;
            ++lv_seed_queries;
-           index.query(s, sl, static_cast<int>(clusters.size()), candidates);
+           const int minimum_count = D > 1 && best_absorb.cluster_id >= 0
+             ? minimum_competitive_count(best_absorb.score, highest_count, cnt, sl, err) : 0;
+           index.query(s, sl, static_cast<int>(clusters.size()), candidates, minimum_count);
            lv_seed_candidates += static_cast<long long>(candidates.size());
            total_candidates_seen += static_cast<long long>(candidates.size());
            scan_candidates(candidates, true);
@@ -1105,8 +1200,8 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
        add_cluster(clusters, i, sl, cnt, pv, pk);
        centroids_by_len[sl].push_back(new_id);
        if (use_kmer_filter && D > 0) {
-         index.add(s, sl, new_id);
-         if (is_lv && D > 1) lv_near_index.add(s, sl, new_id);
+         index.add(s, sl, new_id, cnt);
+         if (is_lv && D > 1) lv_near_index.add(s, sl, new_id, cnt);
        }
      }
    }
@@ -1286,7 +1381,8 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
            << " lv_seed_cand=" << lv_seed_candidates
            << " lv_long_q=" << lv_long_seed_queries
            << " lv_long_cand=" << lv_long_seed_candidates
-           << " promoted=" << shepherd_promoted
+           << " indel_guard_passes=" << indel_guard_passes
+             << " promoted=" << shepherd_promoted
            << " reassigned=" << shepherd_reassigned
            << " post_promote_absorb=" << post_promotion_absorbed
            << " ham_reject=" << hamming_prefilter_rejects

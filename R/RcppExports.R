@@ -13,7 +13,7 @@ barbac_support_order_key <- function(seqs, counts, method) {
     .Call(`_barbac_barbac_support_order_key`, seqs, counts, method)
 }
 
-barbac_cpp_centroid_cluster_optimized <- function(barcodes, counts, max_distance, method, kmer_size = 5L, min_shared_kmers = 2L, use_kmer_filter = TRUE, merge_ratio = 20.0, error_rate = 0.005, verbose = TRUE, use_design = FALSE) {
-    .Call(`_barbac_barbac_cpp_centroid_cluster_optimized`, barcodes, counts, max_distance, method, kmer_size, min_shared_kmers, use_kmer_filter, merge_ratio, error_rate, verbose, use_design)
+barbac_cpp_centroid_cluster_optimized <- function(barcodes, counts, max_distance, method, kmer_size = 5L, min_shared_kmers = 2L, use_kmer_filter = TRUE, merge_ratio = 20.0, error_rate = 0.005, verbose = TRUE, use_design = FALSE, use_indel_model = FALSE) {
+    .Call(`_barbac_barbac_cpp_centroid_cluster_optimized`, barcodes, counts, max_distance, method, kmer_size, min_shared_kmers, use_kmer_filter, merge_ratio, error_rate, verbose, use_design, use_indel_model)
 }
 

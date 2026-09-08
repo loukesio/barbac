@@ -1,0 +1,41 @@
+Could not detect number of cores, defaulting to 1.
+barbac_ts_area: ........
+lv-indel-model: ...........................................................
+super_cluster2: ............................========================================
+barbac: Abundance-ranked centroid clustering
+  Implementation   : C++ (optimized)
+  K-mer filter     : ON
+  Method           : lv
+  Distance         : 3
+  kmer_size        : 5
+  min_shared_kmers : 2
+  merge_ratio      : 20 (distance-aware)
+  error_rate       : 0.005
+  Sequences        : 2
+  Mean length      : 20 bp
+  Top sequence     : AAAAAAAAAAAAAAAAAAAA (count: 100)
+Running...
+  Build ID          : barbac-2026-09-08-bounded-indels-v13
+  Assignment        : likelihood best-parent + distance-aware merge guard
+  Method            : Levenshtein
+  Index             : exact information-balanced LV partitions
+  Error rate        : 0.005
+  Indel model       : off
+  Merge rules (base_ratio=20):
+    d=1 : floor=10, effective_ratio=20
+    d=2 : floor=5, effective_ratio=60
+    d=3 : floor=2, effective_ratio=100
+Pass 1: abundance-ranked centroid assignment | n=2 | d=3 | filter=ON
+  [100%] done in 0m0s clusters=1 no_cand=0 avg_cand=0.5 lv_dp=0 lv_comp_reject=0 lv_fast=1 lv_seed_q=0 lv_seed_cand=0 lv_long_q=1 lv_long_cand=1 indel_guard_passes=0 promoted=0 reassigned=0 post_promote_absorb=0 ham_reject=0 blocked[d1=0/d2=0/d3=0] total=0 489715 seq/s
+✓ Done in 0s (0 min)
+  Clusters found   : 1
+  Compression      : 2:1
+  Rate             : 2,179 seq/s
+  Build ID         : barbac-2026-09-08-bounded-indels-v13
+========================================
+
+.................................................................................................................................................................
+
+══ DONE ════════════════════════════════════════════════════════════════════════
+Warning message:
+package ‘testthat’ was built under R version 4.5.2 

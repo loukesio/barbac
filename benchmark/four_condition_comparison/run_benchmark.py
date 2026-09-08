@@ -245,7 +245,7 @@ def main() -> None:
     temporary, library = install_current_barbac()
     try:
         build_id = barbac_build_id(library)
-        if "exact-partitions-v12" not in build_id:
+        if "bounded-indels-v13" not in build_id:
             raise RuntimeError(f"unexpected barbac native build: {build_id}")
 
         rows: list[dict] = []

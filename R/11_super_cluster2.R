@@ -41,6 +41,16 @@
 #'   effect on fully random libraries, where every position varies.
 #'   Default: FALSE.
 #'
+#' @param indel_model Character string. Experimental LV merge-guard exception:
+#'   \code{"none"} (default) or \code{"poisson"}. The latter allows a
+#'   repeated-base single insertion/deletion to pass a blocked ratio guard if
+#'   its count is consistent with a Poisson error expectation (upper tail at
+#'   least 0.01). Uses \code{error_rate} as a deletion-rate upper-bound proxy,
+#'   and one fourth of that rate for a specific inserted base, multiplied by
+#'   equivalent gap positions. This is not an estimated platform-specific
+#'   error rate or posterior probability. It may merge genuine length variants;
+#'   validate on independent controls. Requires the C++ LV method.
+#'
 #' @return A \code{\link[tibble]{tibble}} with columns:
 #'   cluster_id, central_barcode, all_barcodes, all_counts, sum_counts.
 #'
@@ -67,17 +77,21 @@ super_cluster2 <- function(input_path,
                            error_rate       = 0.005,
                            tie_break        = c("sequence", "hash", "support"),
                            tie_seed         = 0L,
-                           use_design       = FALSE) {
+                           use_design       = FALSE,
+                           indel_model      = c("none", "poisson")) {
 
   method        <- match.arg(method)
   tie_break     <- match.arg(tie_break)
+  indel_model   <- match.arg(indel_model)
+  if (indel_model != "none" && (!use_cpp || method != "lv"))
+    stop("indel_model requires method = 'lv' and use_cpp = TRUE")
   use_cpp_final <- use_cpp && (method %in% c("lv", "hamming"))
 
   if (is.data.frame(input_path)) {
     return(.process_df(input_path, distance, method, barcode_col, counts_col,
                        output_dir, verbose, use_cpp_final, use_kmer_filter,
                        kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                       tie_break, tie_seed, use_design))
+                       tie_break, tie_seed, use_design, indel_model))
   }
 
   if (!is.character(input_path))
@@ -89,12 +103,12 @@ super_cluster2 <- function(input_path,
     .process_dir(input_path, distance, method, barcode_col, counts_col,
                  output_dir, file_pattern, verbose, use_cpp_final,
                  use_kmer_filter, kmer_size, min_shared_kmers,
-                 merge_ratio, error_rate, tie_break, tie_seed, use_design)
+                 merge_ratio, error_rate, tie_break, tie_seed, use_design, indel_model)
   } else {
     .process_file(input_path, distance, method, barcode_col, counts_col,
                   output_dir, verbose, use_cpp_final, use_kmer_filter,
                   kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                  tie_break, tie_seed, use_design)
+                  tie_break, tie_seed, use_design, indel_model)
   }
 }
 
@@ -107,7 +121,7 @@ super_cluster2 <- function(input_path,
                         output_dir, verbose, use_cpp_final, use_kmer_filter,
                         kmer_size, min_shared_kmers, merge_ratio, error_rate,
                         tie_break = "sequence", tie_seed = 0L,
-                        use_design = FALSE) {
+                        use_design = FALSE, indel_model = "none") {
 
   if (!all(c(barcode_col, counts_col) %in% colnames(data)))
     stop(sprintf("Columns '%s' and/or '%s' not found. Available: %s",
@@ -221,7 +235,8 @@ super_cluster2 <- function(input_path,
       merge_ratio      = merge_ratio,
       error_rate       = error_rate,
       verbose          = verbose,
-      use_design       = use_design
+      use_design       = use_design,
+      use_indel_model  = indel_model == "poisson"
     )
     result <- tibble::tibble(
       cluster_id      = cpp$cluster_id,
@@ -285,7 +300,7 @@ super_cluster2 <- function(input_path,
                           output_dir, verbose, use_cpp_final, use_kmer_filter,
                           kmer_size, min_shared_kmers, merge_ratio, error_rate,
                           tie_break = "sequence", tie_seed = 0L,
-                          use_design = FALSE) {
+                          use_design = FALSE, indel_model = "none") {
 
   if (verbose) message("Reading: ", basename(file_path))
   data <- readr::read_csv(file_path, show_col_types = FALSE)
@@ -296,7 +311,7 @@ super_cluster2 <- function(input_path,
   result <- .process_df(data, distance, method, barcode_col, counts_col,
                         NULL, verbose, use_cpp_final, use_kmer_filter,
                         kmer_size, min_shared_kmers, merge_ratio, error_rate,
-                        tie_break, tie_seed, use_design)
+                        tie_break, tie_seed, use_design, indel_model)
   
   if (!is.null(output_dir)) {
     if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
@@ -322,7 +337,7 @@ super_cluster2 <- function(input_path,
                          use_kmer_filter, kmer_size, min_shared_kmers,
                          merge_ratio, error_rate,
                          tie_break = "sequence", tie_seed = 0L,
-                         use_design = FALSE) {
+                         use_design = FALSE, indel_model = "none") {
   
   files <- list.files(dir_path, pattern = file_pattern, full.names = TRUE)
   if (length(files) == 0)
@@ -338,7 +353,7 @@ super_cluster2 <- function(input_path,
                                      use_cpp_final, use_kmer_filter,
                                      kmer_size, min_shared_kmers,
                                      merge_ratio, error_rate,
-                                     tie_break, tie_seed, use_design),
+                                     tie_break, tie_seed, use_design, indel_model),
       error = function(e) warning("Failed: ", basename(f), ": ", e$message)
     )
   }

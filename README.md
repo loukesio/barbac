@@ -81,8 +81,11 @@ equal-abundance barcodes; the default remains `"sequence"`. See the
 [exact-search experiment](benchmark/four_condition_comparison/EXACT_SEARCH.md)
 for the algorithm, measured results, and limitations.
 The [100,000-barcode reference comparison](benchmark/reference_comparison/README.md)
-adds read-assignment checks and a larger-library runtime test: Hamming is fast,
-while exact LV has a substantial runtime regression on that dataset.
+records the earlier baseline. The [LV optimization experiment](benchmark/lv_optimization/README.md)
+reduces LV with support ordering from 192.0s to 43.4s on that input and improves
+read assignments with the opt-in `indel_model = "poisson"`. The new model uses
+`error_rate` to assess repeated-base indel variants; validate it on independent
+controls, especially for libraries with genuine length variation.
 
 ## Quick start — time-series visualisation
 
