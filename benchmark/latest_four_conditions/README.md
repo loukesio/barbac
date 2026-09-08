@@ -25,6 +25,10 @@ confidence intervals or statistical significance for small accuracy gaps.
 
 ## Paper deliverables
 
+- [Compact accuracy/time summary](paper_summary_accuracy_time.md): F1 and
+  workflow seconds side by side for every method and dataset.
+- [Five-dataset schematic](../../manuscript/media/benchmark_datasets.png),
+  also available as editable SVG and vector PDF in the same directory.
 - [Table with caption](paper_table.md), [CSV](paper_table.csv), and
   [LaTeX](paper_table.tex).
 - [Replacement results section](paper_results_section.md).
@@ -67,12 +71,13 @@ and the paper builder selects only the requested distance-three comparison:
 python3 benchmark/latest_four_conditions/run_comparison.py --resume
 python3 benchmark/latest_four_conditions/time_peers.py
 python3 benchmark/latest_four_conditions/complete_paper_comparison.py
+python3 benchmark/latest_four_conditions/render_dataset_schematic.py
 python3 benchmark/latest_four_conditions/build_paper_table.py
 python3 benchmark/latest_four_conditions/render_manuscript.py
 ```
 
-To rebuild just the paper and Word document from saved measurements, run the
-last two commands. The Word exporter verifies every table cell and all seven
-original figure images, preserves the base document's embedded fonts, and
+To rebuild the schematic, paper and Word document from saved measurements,
+run the last three commands. The Word exporter verifies every table cell,
+all seven original images and the new schematic, preserves the embedded fonts, and
 applies repeatable table headers. No clustering code changes were made for
 this comparison.

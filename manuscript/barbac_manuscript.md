@@ -441,6 +441,14 @@ outputs conserved the supplied reads. Per-read parent labels were not retained f
 four smaller simulations, so no read-assignment accuracy is inferred from their centroid
 F1 values.
 
+![](media/benchmark_datasets.png)
+
+**Figure 5. Designs and scale of the five comparison datasets.** Blue blocks contain
+variable bases and grey blocks contain fixed sequence. The block widths follow designed
+sequence lengths. Error probabilities for the four smaller simulations are per
+opportunity; Milos length differences are measured observations, not an estimated indel
+error rate.
+
 **Table 2. Latest barcode clustering performance at distance three.** R-S: random
 barcodes with substitutions; R-I: random barcodes with substitutions and indels; A-S and
 A-I: the corresponding anchored designs. Milos denotes the Johnson et al. (2023)

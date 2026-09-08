@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "run": "SRR22757105",
+  "sample": "hBFA1-YPD-R1-Time8",
+  "scope": "First 50,000 paired FASTQ records only; not a random sample or a full experiment.",
+  "stats": {
+    "total_pairs": 50000,
+    "short_reads": 0,
+    "quality_failed": 421,
+    "regex_failed": 614,
+    "umi_duplicates": 11,
+    "umi_conflicts": 1,
+    "retained_molecules": 48954,
+    "non_acgt_molecules": 0
+  },
+  "barbac_input_molecules": 48954,
+  "unique_pairs": 4766,
+  "diverse_unique": 3746,
+  "environment_unique": 873,
+  "diverse_lengths": {
+    "24": 60,
+    "25": 1002,
+    "26": 47325,
+    "27": 490,
+    "28": 77
+  },
+  "observed_read_length": 125,
+  "extraction_seconds": 1.3466304170142394,
+  "author_parser_exact_pair_counts_match": true,
+  "author_parser_sha256": "88520e75d4a5d7e2d516a85e23d70db6f9fd599eda0588f914cb3cbaac04ef9a",
+  "extractor_sha256": "993fe8090a5b9c2cf7a9e0b2c59f4516228002915d80984740ff728c370be143",
+  "outputs": {
+    "barcode_pairs.csv": "f4afd6f22cf1836e2d21d800877c1d1f3cd417f973bab380a217ab54819d0b7e",
+    "diverse_barbac.csv": "508cced64e8b4e5ff54248ac79ddeef838797da37e01e346008ecff007f20cd3",
+    "environment_barbac.csv": "a8985bdb75f3b1d78af1ee74e5cbdddebcfc59155170b3f08fa89e31c0f07580",
+    "pairs_barbac.csv": "f4afd6f22cf1836e2d21d800877c1d1f3cd417f973bab380a217ab54819d0b7e"
+  },
+  "inline_indices_match_all_50000": true,
+  "cluster_execution": "not run",
+  "method_comparison": "not run; no accuracy claim from extraction yield"
+}

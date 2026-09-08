@@ -97,6 +97,19 @@ def main():
                              mean_unassigned_reads=sample.unassigned_reads.mean()))
     table=pd.DataFrame(rows)
     table.to_csv(HERE/'paper_table.csv',index=False)
+    compact=['Each cell is **centroid F1 (%) / workflow time (seconds)**. '
+             'Accuracy is averaged over three seeds for the four smaller simulations; '
+             'time is one serial observation per method and dataset. Milos uses one fixed input.\n',
+             '| Method | R-S | R-I | A-S | A-I | Milos |',
+             '|---|---:|---:|---:|---:|---:|']
+    for method in METHODS:
+        cells=[NAMES[method]]
+        for dataset in CONDITIONS+['milos']:
+            row=table[(table.method==method)&(table.dataset==dataset)].iloc[0]
+            digits=5 if dataset=='milos' else 3
+            cells.append(f'{row.f1_percent:.{digits}f} / {row.workflow_seconds:.2f}')
+        compact.append('| '+' | '.join(cells)+' |')
+    (HERE/'paper_summary_accuracy_time.md').write_text('\n'.join(compact)+'\n')
     columns=['Dataset','Method','FN','FP','F1 (%)','Time (s)']
     md=['| '+' | '.join(columns)+' |','|---|---|---:|---:|---:|---:|']
     tex=['% Requires booktabs and longtable. Values are generated from paper_table.csv.',
@@ -182,7 +195,12 @@ def main():
         'Shepherd includes separate correction of simple single insertions and deletions around a supplied barcode length; its poorer performance in mixed-error simulations should not be described as complete absence of indel support. '
         'The Poisson option can merge real length variants with error-like counts, and its configured error rate is not a learned platform-specific indel rate. '
         'Independent labeled experimental controls, additional abundance distributions and repeated timings are needed before broader accuracy or speed claims.')
-    section='**3.3 Comparison with established error-correction methods**\n\n'+methods+'\n\n'+markdown+'\n'+results+'\n\n**3.4 Runtime and operational cost**\n\n'+timing+'\n\n**3.5 Scope and limitations of the comparison**\n\n'+limitations+'\n\n'
+    schematic=('![](media/benchmark_datasets.png)\n\n'
+               '**Figure 5. Designs and scale of the five comparison datasets.** '
+               'Blue blocks contain variable bases and grey blocks contain fixed sequence. '
+               'The block widths follow designed sequence lengths. Error probabilities for the four smaller simulations are per opportunity; '
+               'Milos length differences are measured observations, not an estimated indel error rate.\n\n')
+    section='**3.3 Comparison with established error-correction methods**\n\n'+methods+'\n\n'+schematic+markdown+'\n'+results+'\n\n**3.4 Runtime and operational cost**\n\n'+timing+'\n\n**3.5 Scope and limitations of the comparison**\n\n'+limitations+'\n\n'
     section='\n\n'.join(block if block.startswith('|') else textwrap.fill(block,width=88,break_long_words=False,break_on_hyphens=False) for block in section.strip().split('\n\n'))+'\n\n'
     (HERE/'paper_results_section.md').write_text(section)
     discussion=(

@@ -1,0 +1,11 @@
+name: barbac-extract
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - fastqc=0.12.1
+  - multiqc=1.25.1
+  - curl
+# Extraction uses the Python standard library. This environment stops at
+# extraction; install the barbac R package separately for the next stage.

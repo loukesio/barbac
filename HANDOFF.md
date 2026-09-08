@@ -1,5 +1,22 @@
 # Handoff: barbac clustering performance and benchmarking
 
+**Time-series preparation completed:**
+[Chen 2023 cluster workflow](benchmark/time_series_chen2023/README.md) selects
+hBFA1 YPD, generations 8/16/24/40 in two replicates (eight runs, 16 FASTQs,
+1.25 GB compressed). ENA download URLs/MD5s are joined to pinned author primer
+metadata and processed counts. A 50,000-pair local prefix pilot retained
+48,954 UMI-deduplicated molecules and exactly matched the author's extraction
+counts. The helper preserves both barcode components and lengths 24–28; it
+does not use the existing fixed-coordinate BAM extractor. Six meaningful
+extraction tests and local SLURM submission checks pass. Cluster settings have
+been requested but not supplied; no real SLURM jobs or full time-series method
+comparison have run. Use the provided pilot before full cluster extraction.
+Published counts measure reference agreement, not true FP/FN labels.
+
+The five-dataset comparison now also has a compact F1/time summary and a
+publication schematic in PNG/SVG/PDF, embedded as Figure 5 in the regenerated
+Word manuscript. Numerical benchmark measurements are unchanged.
+
 **Latest paper update:** See
 [the five-dataset comparison](benchmark/latest_four_conditions/README.md).
 The requested comparison uses distance three, both current barbac modes,

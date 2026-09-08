@@ -47,6 +47,7 @@ pkgdown/
 #   python3 benchmark/indel_experiment/run_experiment.py --reuse-sim
 benchmark/indel_experiment/results/
 benchmark/four_condition_comparison/generated/
+benchmark/time_series_chen2023/generated/
 benchmark/**/*.bam
 benchmark/**/*.bam.bai
 benchmark/**/*.fastq

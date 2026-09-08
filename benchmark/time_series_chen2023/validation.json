@@ -1,0 +1,30 @@
+{
+  "status": "local_validation_passed",
+  "extraction_tests_passed": 6,
+  "submission_tests_passed": 2,
+  "paired_pilot_records": 50000,
+  "author_counts_exact_match": true,
+  "selected_runs": 8,
+  "cluster_jobs_submitted": false,
+  "full_time_series_method_comparison_run": false,
+  "fastqc_execution_tested": false,
+  "limitations": [
+    "The cluster account, partition, scratch path and environment setup are not yet supplied.",
+    "No full FASTQ files were downloaded locally; the pilot uses two 2 MiB archive prefixes.",
+    "Published processed counts are a comparison reference, not ground truth."
+  ],
+  "sha256": {
+    "build_manifest.py": "098c964901c27971a7e8a5218963a6b708cdb1c8acb3ad65dbd6767b66fa9769",
+    "cluster_config.example.sh": "90da0276f8f5bdfa31556f300c6d2c9fc98f5ee8b131d57a9cdc4baf95d78198",
+    "environment.yml": "eb05894a6a5c32622cc3924ca14d82a690152ba402e7636e78104a56032b67ca",
+    "extract_barcodes.py": "993fe8090a5b9c2cf7a9e0b2c59f4516228002915d80984740ff728c370be143",
+    "fetch_sources.py": "db721dabec8798ca50efa90793fbad01aa588b399fd6c50ebe0b8073feb843d3",
+    "reproduce_pilot.py": "d25f00adf0495b04b66ab975255042de213d95bfd6a9f57489aa7562947d72b2",
+    "run_sample.py": "7877c87c376b36735bafe08ba3e2ef9a6a7404d1936d8b9c66ec2b342004d119",
+    "samples.tsv": "77caff90bd21c2fea7bfc8f24f8aaf99fcf801471ae75585e7e3df573a4f1bad",
+    "submit.sh": "8a4ea00df7ea730be2883f9665127b8669de5ce2ab81e7505132fb531bcf9cb4",
+    "task.sbatch": "51e64b8ec2de9c0d0cf1656aa182cb795b328adc0fed77d5efb15b59676069d5",
+    "test_extraction.py": "e6e8935d3cab298af3da33da19d44b64ef80a02bf5d0d9251b41cfc1920b15e3",
+    "test_workflow.py": "689b41f8647bea26333f9fd4a8dd4483c98b417e12f11a7ac3f27b681fada4ea"
+  }
+}

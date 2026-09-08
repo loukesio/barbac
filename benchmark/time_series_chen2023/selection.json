@@ -1,0 +1,19 @@
+{
+  "status": "validated",
+  "selected_runs": 8,
+  "paired_fastq_files": 16,
+  "compressed_bytes": 1248297814,
+  "generations": [
+    8,
+    16,
+    24,
+    40
+  ],
+  "replicates": [
+    "R1",
+    "R2"
+  ],
+  "published_distinct_barcode_pairs": 2314,
+  "published_rows": 18512,
+  "note": "Published counts are processed reference measurements, not biological ground truth."
+}

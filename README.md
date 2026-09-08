@@ -207,9 +207,16 @@ results/
 The [latest v13 paper comparison](benchmark/latest_four_conditions/README.md)
 reports both barbac modes against Shepherd, both Starcode modes, and Bartender
 across the four simulated conditions and the Milos/Johnson reference dataset.
-It includes FN, FP, centroid F1, and serial workflow timings. Barbac leads F1
+It includes FN, FP, centroid F1, and serial workflow timings, plus a
+[compact F1/time table](benchmark/latest_four_conditions/paper_summary_accuracy_time.md)
+and a [dataset schematic](manuscript/media/benchmark_datasets.png). Barbac leads F1
 in three simulated conditions and on the reference; Bartender narrowly leads
 random substitution-only data. The tables below retain earlier snapshots.
+
+The [Chen 2023 time-series workflow](benchmark/time_series_chen2023/README.md)
+provides a verified eight-sample FASTQ manifest, paired-barcode/UMI extraction,
+and configurable SLURM scripts. The local extraction pilot matches the author's
+parser; full cluster execution and method comparison are pending.
 
 ### Parity with Shepherd on the Johnson et al. (2023) reference dataset
 

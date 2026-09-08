@@ -71,12 +71,12 @@ def main():
         rid=blip.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed')
         image_hashes.append(hashlib.sha256(reopened.part.rels[rid].target_part.blob).hexdigest())
     source_hashes=[sha(source.parent/path) for path in re.findall(r'!\[\]\(([^)]+)\)',source.read_text())]
-    assert sorted(image_hashes)==sorted(source_hashes) and len(image_hashes)==7
+    assert sorted(image_hashes)==sorted(source_hashes) and len(image_hashes)==8
     receipt=dict(status='passed',table_data_rows=len(expected)-1,table_columns=len(expected[0]),
                  all_cells_match_markdown=True,embedded_figures=len(image_hashes),
                  restored_reference_content_types=restored,
                  source_sha256=sha(source),output_sha256=sha(output),
-                 validation='DOCX opens successfully; all 180 data cells match the paper table; repeated headers and fixed column widths applied. Seven existing figures retained. No visual Word/PDF rendering performed.')
+                 validation='DOCX opens successfully; all 180 data cells match the paper table; repeated headers and fixed column widths applied. Seven existing images and the new dataset schematic retained. No visual Word/PDF rendering performed.')
     (HERE/'manuscript_validation.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print(json.dumps(receipt,indent=2))
 
