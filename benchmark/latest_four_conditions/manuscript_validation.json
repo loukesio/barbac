@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "table_data_rows": 30,
+  "table_columns": 6,
+  "all_cells_match_markdown": true,
+  "embedded_figures": 7,
+  "restored_reference_content_types": [
+    "ttf",
+    "png"
+  ],
+  "source_sha256": "f34c9f9bd86f95d05cc68ad8da51cb90c3a92ea6a745625702cac8d3fb66f544",
+  "output_sha256": "ee1c37f39621954f1c5baa4fd8c72647b0e599c3858074f52f60a80d2604a4f1",
+  "validation": "DOCX opens successfully; all 180 data cells match the paper table; repeated headers and fixed column widths applied. Seven existing figures retained. No visual Word/PDF rendering performed."
+}

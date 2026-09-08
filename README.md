@@ -204,6 +204,13 @@ results/
 
 ## Benchmarks
 
+The [latest v13 paper comparison](benchmark/latest_four_conditions/README.md)
+reports both barbac modes against Shepherd, both Starcode modes, and Bartender
+across the four simulated conditions and the Milos/Johnson reference dataset.
+It includes FN, FP, centroid F1, and serial workflow timings. Barbac leads F1
+in three simulated conditions and on the reference; Bartender narrowly leads
+random substitution-only data. The tables below retain earlier snapshots.
+
 ### Parity with Shepherd on the Johnson et al. (2023) reference dataset
 
 Same input (100,000 true barcodes, ~1.5M unique reads), same parameters (max distance 3), same evaluation protocol.

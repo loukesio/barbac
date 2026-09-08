@@ -402,229 +402,146 @@ synthetic benchmarking results.\
 \
 **3.3 Comparison with established error-correction methods**
 
-To position barbac within the landscape of existing barcode
-error-correction tools, we benchmarked its performance against six
-published methods using the simulated dataset from Johnson et al.
-(2023). This dataset comprises 100,000 true barcodes (20 bp) with
-approximately 25 million reads, simulated with 0.4% per-base
-substitution errors and indel errors in homopolymer regions, resulting
-in 1,544,850 unique observed sequences.
+We compared barbac Hamming and Levenshtein (LV) clustering with Shepherd, Starcode
+sphere, Starcode default message passing, and Bartender using four simulation conditions
+and the Johnson et al. (2023) reference dataset, referred to here as Milos (Table 2).
+The four conditions crossed fully random 20-base barcodes with anchored 28-base barcodes
+containing 16 variable positions, and substitutions alone with substitutions plus
+indels. Each condition used 10,000 true barcodes and one million reads with lognormal
+abundances (sigma = 1.5), independently generated with seeds 42, 43 and 44. The
+substitution probability was 0.005 per base; indel conditions additionally used
+insertion and deletion probabilities of 0.005 per opportunity each. These simulations
+evaluate specified error regimes rather than representing every sequencing platform. The
+Milos input contains 1,544,850 unique observed sequences and 24,996,128 reads for
+100,000 listed true barcode sequences.
 
-We ran barbac's core clustering routine, `super_cluster2()`, with a
-Levenshtein distance threshold of 3 and a merge-ratio of 20 — matching
-the distance threshold used for the published methods. Clustering
-completed in 1.4 minutes, roughly 1.7-fold faster than Shepherd (2.4
-minutes) on the same hardware. This efficiency reflects the C++/Rcpp
-implementation of a bit-parallel 64-bit Levenshtein kernel with a
-two-tier Hamming/Levenshtein seed index for candidate retrieval.
+All comparisons used maximum distance three. Both barbac modes used `super_cluster2()`,
+native build v13, merge ratio 20, configured error rate 0.005, support ordering for
+equal-count sequences, and the design option disabled. LV additionally enabled
+`indel_model = "poisson"`, an experimental exception for repeated-base single indels
+whose abundance is consistent with an expected-error model. This option is disabled by
+default; the table explicitly evaluates the enabled configuration. The error rate was
+supplied, not fitted to true labels. Shepherd and Bartender used their remaining default
+parameters, with Shepherd estimating its substitution error rate automatically. Starcode
+sphere and default message passing were tested separately. Timed Starcode and Bartender
+runs each requested one thread. Input sequences were ordered by decreasing observed
+count and then sequence, without using parent labels. The v13 LV search optimization
+excludes candidate parents whose best possible likelihood score cannot improve the
+current assignment; the indexed results were checked against existing outputs and
+full-scan tests. Hamming refinement incorporates the binomial criterion described for
+Shepherd (Tavakolian et al., 2022).
 
-**Table 2.** Performance comparison of barcode error-correction methods
-on the Johnson et al. (2023) simulated dataset. R: Pearson correlation
-coefficient between log-transformed true and inferred abundances. WS:
-Wrong Sequences rate (fraction of barcodes assigned to incorrect
-clusters). FN: False Negative rate (true barcodes not recovered). FP:
-False Positive rate (spurious clusters not matching any true barcode).
+For this comparison, a true positive (TP) is an output centroid string present in the
+true barcode set; FN counts missing true strings and FP counts extra centroid strings.
+Centroid F1 is `2 TP / (2 TP + FN + FP)`. All listed truth sequences remain in the
+denominator, including those whose exact sequence does not occur in the noisy input. For
+the Milos simulation this includes 409 truth barcodes with zero reads. Input identity,
+output uniqueness and count reconciliation were checked before scoring. All barbac
+outputs conserved the supplied reads. Per-read parent labels were not retained for the
+four smaller simulations, so no read-assignment accuracy is inferred from their centroid
+F1 values.
 
-  -------------------------------------------------------------------------------
-  **Method**         **R**      **WS (%)** **FN (%)** **FP (%)** **Clusters**
-  ------------------ ---------- ---------- ---------- ---------- ----------------
-  Starcode           1.00       0.33       0.04       0.03       99,581
+**Table 2. Latest barcode clustering performance at distance three.** R-S: random
+barcodes with substitutions; R-I: random barcodes with substitutions and indels; A-S and
+A-I: the corresponding anchored designs. Milos denotes the Johnson et al. (2023)
+reference simulation. FN and FP are absolute barcode counts; for R-S, R-I, A-S and A-I,
+counts and centroid F1 are means across seeds 42, 43 and 44 (10,000 true barcodes and
+one million reads per seed). The Milos row for each method uses one fixed dataset of
+100,000 true barcodes and 24,996,128 reads. Bold F1 values identify the highest score
+within a dataset. F1 measures exact centroid recovery and differs from the cluster-label
+F1 used in Section 3.1. Time is one serial workflow observation in seconds on the same
+development machine: seed 42 for the four smaller simulations and the full dataset for
+Milos. It includes program startup, required format conversion, clustering, and
+centroid/member exports; shared input staging and scoring are excluded. These timings
+have no confidence intervals. Both barbac modes use native v13 and support ordering; LV
+additionally enables the experimental Poisson indel option. Starcode sphere and default
+message passing (MP) are reported separately. All methods use distance three, with its
+method-specific Hamming or Levenshtein interpretation.
 
-  Bartender          1.00       2.74       0.08       0.75       100,257
+| Dataset | Method | FN | FP | F1 (%) | Time (s) |
+|---|---|---:|---:|---:|---:|
+| R-S | barbac Hamming | 44.7 | 47.7 | 99.538 | 4.98 |
+| R-S | barbac LV + Poisson | 44.7 | 47.7 | 99.538 | 4.14 |
+| R-S | Shepherd | 48.3 | 51.3 | 99.502 | 3.47 |
+| R-S | Starcode sphere | 51.3 | 53.7 | 99.475 | 2.94 |
+| R-S | Starcode MP | 25.7 | 430.0 | 97.767 | 3.12 |
+| R-S | Bartender | 44.3 | 46.3 | **99.547** | 1.57 |
+| R-I | barbac Hamming | 98.7 | 55,318.7 | 26.326 | 4.78 |
+| R-I | barbac LV + Poisson | 134.7 | 322.3 | **97.736** | 5.96 |
+| R-I | Shepherd | 104.0 | 4,953.3 | 79.648 | 3.74 |
+| R-I | Starcode sphere | 163.3 | 350.3 | 97.456 | 17.52 |
+| R-I | Starcode MP | 72.7 | 1,880.7 | 91.044 | 18.84 |
+| R-I | Bartender | 98.3 | 51,037.7 | 27.916 | 3.05 |
+| A-S | barbac Hamming | 72.3 | 78.0 | **99.249** | 4.05 |
+| A-S | barbac LV + Poisson | 73.0 | 78.3 | 99.244 | 4.63 |
+| A-S | Shepherd | 81.0 | 86.7 | 99.162 | 117.94 |
+| A-S | Starcode sphere | 320.0 | 270.7 | 97.039 | 4.44 |
+| A-S | Starcode MP | 146.0 | 621.7 | 96.251 | 5.32 |
+| A-S | Bartender | 115.0 | 118.7 | 98.832 | 2.17 |
+| A-I | barbac Hamming | 159.7 | 81,554.3 | 19.410 | 5.77 |
+| A-I | barbac LV + Poisson | 193.7 | 882.0 | **94.801** | 8.50 |
+| A-I | Shepherd | 170.7 | 10,327.7 | 65.188 | 105.08 |
+| A-I | Starcode sphere | 476.0 | 1,189.0 | 91.962 | 26.24 |
+| A-I | Starcode MP | 223.0 | 3,272.0 | 84.837 | 26.51 |
+| A-I | Bartender | 207.3 | 77,390.7 | 20.153 | 7.90 |
+| Milos | barbac Hamming | 469 | 87 | 99.72147 | 20.81 |
+| Milos | barbac LV + Poisson | 471 | 83 | **99.72246** | 43.40 |
+| Milos | Shepherd | 470 | 85 | 99.72196 | 110.95 |
+| Milos | Starcode sphere | 771 | 353 | 99.43682 | 155.30 |
+| Milos | Starcode MP | 532 | 560 | 99.45408 | 150.22 |
+| Milos | Bartender | 494 | 725 | 99.39120 | 36.52 |
 
-  Shepherd           1.00       0.06       0.00       0.03       99,615
+The highest-scoring barbac configuration achieved the highest mean centroid F1 in 3 of
+the four simulation conditions, and LV achieved the highest centroid F1 on Milos (Table
+2). Bartender narrowly led the random substitution-only condition. On random
+substitution-only data, Hamming and LV had identical centroid recovery, while Hamming
+slightly outperformed LV on anchored substitution-only data. The main distinction
+emerged in indel-containing data: LV produced far fewer false clusters than Hamming,
+Shepherd, and Bartender. For random indel data, LV yielded mean FN 134.7 and FP 322.3,
+with F1 97.736%. For anchored indel data, the corresponding values were FN 193.7, FP
+882.0, and F1 94.801%. Hundreds of false clusters remained in the latter condition, so
+relative superiority does not imply error-free reconstruction. The Poisson exception
+removed five false clusters across these 12 smaller datasets without changing FN; most
+of the observed difference from competitors reflects the broader LV clustering strategy
+and support ordering.
 
-  Deletion-Correct   1.00       0.00       0.47       0.03       99,152
+On Milos, LV returned FN 471 and FP 83, giving centroid F1 99.72246%, compared with
+Shepherd's FN 470, FP 85, and F1 99.72196%. This F1 difference is very small and is
+reported descriptively. With the supplied read-parent labels, LV made 131 wrong
+assignments and left no reads unassigned; Shepherd made 129 wrong assignments and left
+88 reads unassigned. Thus the combined wrong-or-unassigned count was 131 for LV and 217
+for Shepherd. The reference labels contain four discrepancies in per-parent totals,
+spanning six reads in absolute difference; these source inconsistencies were retained
+and audited.
 
-  CD-Hit             0.91       5.29       2.11       1.79       ---
+**3.4 Runtime and operational cost**
 
-  DNAClust           0.99       0.39       0.25       4.70       ---
+Runtime depended on dataset size, sequence design and the reported boundary. On Milos,
+the LV workflow took 43.4 s, compared with 111.0 s for Shepherd (2.56-fold shorter).
+Hamming took 20.8 s and was the fastest tested workflow on that dataset. On the smaller
+simulations, interpreter/package startup contributed several seconds to barbac
+workflows, and native competitors were sometimes faster end to end despite poorer
+recovery. The table therefore reports complete measured workflows rather than comparing
+barbac core time against another method's total runtime. Times for the four simulations
+are fresh serial seed-42 observations; accuracy additionally includes seeds 43 and 44.
+Previously recorded peer accuracy outputs were reused only after verifying identical
+inputs and output hashes. Earlier overlapping benchmark timings were excluded. Timing
+repetitions sufficient for confidence intervals were not collected.
 
-  **barbac**         **1.00**   **0.06**   **0.47**   **0.09**   **99,614**
-  -------------------------------------------------------------------------------
+**3.5 Scope and limitations of the comparison**
 
-barbac achieved perfect correlation (R = 1.00) between true and inferred
-barcode abundances, matching the performance of all bespoke barcode
-clustering tools and substantially outperforming generic clustering
-methods (CD-Hit: R = 0.91; DNAClust: R = 0.99). On the three error
-categories barbac was statistically indistinguishable from Shepherd
-(WS 0.06% vs 0.06%; FN 0.47% vs 0.47%; FP 0.09% vs 0.09%). Direct set
-comparison of the false negatives confirmed that 470 of the 471 misses
-are shared between the two algorithms — both fail on the same hard
-cases, dominated by true barcodes that were never captured in the input
-sequencing reads (count = 0 in the input file), and by singletons and
-doubletons at the detection limit. The Wrong Sequences and False
-Positive counts differ by a single barcode on this dataset. Compared to
-the other tools, barbac's WS (0.06%) was below Starcode (0.33%) and
-Bartender (2.74%). The false positive rate (0.09%) was substantially
-lower than DNAClust (4.70%) and CD-Hit (1.79%).\
-A key advantage of barbac over Shepherd lies in its handling of
-insertion and deletion errors. Shepherd applies strict length filtering
-and, apart from a post-hoc single-base indel correction pass, treats
-sequences of unexpected length as noise. This caused it to miss
-thousands of barcodes in empirical datasets from Levy et al. (2015),
-Johnson et al. (2019), and Borchert et al. (2022) (Johnson et al., 2023).
-In contrast, barbac uses Levenshtein distance natively via a
-bit-parallel 64-bit kernel, which accommodates insertions and deletions
-of any size up to the specified threshold in a single pass, without
-requiring explicit length filtering. Because the Johnson et al. (2023)
-simulator introduces indel errors only in homopolymer regions, this
-distinction is not stressed by the benchmark in Table 2; we therefore
-constructed an explicit indel-titration experiment to quantify it
-(Section 3.4). In the benchmark of Section 3.3, barbac successfully
-clustered sequences ranging from 18 to 22 bp, demonstrating robustness
-to length variation.
-
-**3.4 Robustness under Illumina-quality indel errors**
-
-To directly quantify the effect of indel errors on barbac and the three
-peer methods (Shepherd, Starcode, Bartender), we simulated barcode
-datasets under Illumina-quality error regimes typical of
-experimental-evolution barcode sequencing. The per-base substitution
-rate was held at 0.5%; the insertion and deletion rates were set to 0%
-(sub_only) and 0.5% (low_indel). Higher indel rates characteristic of
-long-read platforms are outside the scope of this comparison. Each
-dataset consisted of 10,000 true barcodes of length 20 bp and
-1,000,000 total reads, with abundances drawn from a log-normal
-distribution (σ = 1.5). Reads were generated by applying independent
-per-base substitution, insertion (before the position), and deletion
-events under the specified rates. All four tools were run with their
-default parameters and a maximum edit distance of 3.
-
-**Table 3.** Effect of indel error rate on the four clustering methods
-on simulated 10,000-barcode datasets (1M reads each; per-base
-substitution rate 0.5%). R, Pearson correlation of log-transformed
-counts; FN/FP/WS defined as in Table 2. Wall = end-to-end wall time.
-Algo = pure clustering time excluding R boot + package loading for
-barbac; the other three methods pay a negligible boot tax so wall
-equals algo.
-
-  -----------------------------------------------------------------------------------------------------
-  **Condition** **Method**    **R**      **FN (%)** **FP (%)** **WS (%)** **Wall (s)** **Algo (s)**
-  ------------- ------------- ---------- ---------- ---------- ---------- ------------ -------------
-  sub_only      barbac        1.0000     0.44       0.47       0.43       4.3          **0.7**
-
-                Shepherd      1.0000     0.44       0.47       0.43       2.7          2.7
-
-                Starcode      1.0000     0.48       0.51       0.47       2.8          2.8
-
-                Bartender     1.0000     0.48       0.52       0.48       1.0          1.0
-
-  low_indel     **barbac**    **1.0000** **1.55**   **3.36**   **1.57**   **5.7**      **2.4**
-
-                Shepherd      0.9993     0.95       49.15      48.81      3.5          3.5
-
-                Starcode      1.0000     1.58       3.38       1.59       17.2         17.2
-
-                Bartender     0.9959     0.94       511.14     509.41     2.0          2.0
-  -----------------------------------------------------------------------------------------------------
-
-When errors were purely substitutional (sub_only), all four methods
-produced numerically indistinguishable FN, FP and WS rates
-(FN 0.44–0.48%, WS 0.43–0.48%; every method achieved Pearson R =
-1.0000), confirming their statistical equivalence in the substitution
-regime. This provides a four-way validity check for the evaluation
-protocol.
-
-Introducing a low indel rate of 0.5% per base (low_indel) —
-representative of high-quality Illumina data containing homopolymer
-stretches or long amplicons — cleanly separates the four methods into
-two groups. **barbac and Starcode**, both of which use Levenshtein
-distance natively, maintained near-perfect performance: Pearson R =
-1.0000, WS = 1.57% and 1.59% respectively (a 3.7-fold rise from
-sub_only), FP = 3.36% and 3.38%. **Shepherd and Bartender**, which
-both rely on Hamming-based indexing, degraded sharply. Shepherd's WS
-rate rose from 0.43% to 48.81%, a 113-fold increase, and its FP rate
-from 0.47% to 49.15% (105-fold), while its Pearson R fell to 0.9993.
-Bartender's WS rate rose from 0.48% to 509.41%, a 1,061-fold increase,
-with its FP rate at 511.14% (983-fold) — the highest of any tested
-method. In absolute terms, barbac's WS rate at the low_indel regime
-was 31-fold lower than Shepherd's and 324-fold lower than Bartender's.
-
-Runtime and Pareto positioning across the two Levenshtein-native
-methods differ substantially. barbac's pure clustering time was 2.4 s
-at low_indel versus Starcode's 17.2 s — a 7.2-fold speed advantage in
-the algorithm itself, driven by the bit-parallel 64-bit Levenshtein
-kernel and the two-tier Hamming/Levenshtein seed index. barbac's
-end-to-end wall time (5.7 s) includes a fixed ~3 s R boot and package
-load; Starcode is a native C binary that pays no equivalent tax. On
-the Pareto frontier of accuracy against speed, barbac dominates
-Starcode: equal accuracy in 30% of the pure-algorithm time. On the
-FN/WS trade-off, Shepherd achieves a marginally lower false negative
-rate (0.95% vs 1.55% at 0.5% indels; approximately 60 additional true
-barcodes recovered per 10,000 sequenced) at the cost of emitting
-approximately 4,700 additional wrong-sequence artefacts per 10,000
-barcodes. Bartender records a similarly low false negative rate
-(0.94%) but pays for it with approximately 50,900 wrong-sequence
-artefacts per 10,000 — an operating point unusable for downstream
-lineage analysis. For any application that treats spurious clusters as
-artefacts (lineage tracking, extinction/emergence detection,
-selection-coefficient estimation), barbac's operating point is
-Pareto-favourable against every peer method tested.
-
-**3.5 Robustness on structured (mixed-anchor) barcode designs**
-
-The benchmarks in Sections 3.3 and 3.4 use fully random barcodes. Many
-experimental barcode libraries, however, are *structured*: they
-interleave random positions with fixed anchor sequences (for example a
-design of the form NNNNNNNN-ATGC-NNNNNNNN-ATCGTTAA, where N denotes a
-random position). Fixed anchors are precisely where indel errors are
-most damaging: an insertion or deletion shifts the constant anchor out
-of register, and under Hamming-based comparison an otherwise-identical
-read then appears maximally different. To test whether the indel
-robustness observed in Section 3.4 extends to this common layout, we
-constructed a structured library of 2,000 barcodes from a 28 bp
-template with 16 variable positions and two fixed anchors, and simulated
-200,000 reads under the same error model and parameters as Section 3.4
-(0.5% substitution; 0% and 0.5% indel; maximum edit distance 3). The
-variable region was sized so the design itself is separable at distance
-3 — only 28 of the 2,000 true barcodes lie within edit distance 3 of
-another — ensuring the measured rates reflect the clustering methods
-rather than an under-provisioned design.
-
-**Table 4.** Performance on a structured mixed-anchor barcode design
-(2,000 barcodes of 28 bp with 16 variable positions; 200,000 reads;
-per-base substitution rate 0.5%). Metrics defined as in Table 2.
-
-  ---------------------------------------------------------------------
-  **Condition** **Method**    **R**      **FN (%)** **FP (%)** **WS (%)**
-  ------------- ------------- ---------- ---------- ---------- ----------
-  sub_only      **barbac**    1.0000     0.55       0.55       **0.50**
-
-                Shepherd      1.0000     0.75       0.75       0.70
-
-                Starcode      1.0000     1.35       1.25       1.20
-
-                Bartender     1.0000     0.65       0.75       0.70
-
-  low_indel     **barbac**    1.0000     2.25       **9.15**   **2.50**
-
-                Shepherd      0.9989     1.70       101.30     100.35
-
-                Starcode      1.0000     3.15       10.10      3.45
-
-                Bartender     0.9944     1.45       772.55     765.75
-  ---------------------------------------------------------------------
-
-The structured design reproduces the two-group separation seen on
-random barcodes. In the substitution-only regime all four methods again
-performed comparably (WS 0.50–1.20%; Pearson R = 1.0000). At 0.5%
-indels, barbac achieved the lowest Wrong Sequences rate of any method
-(2.50%), ahead of its Levenshtein-native peer Starcode (3.45%), while
-the Hamming-based methods fragmented: Shepherd's WS rose to 100.35% and
-Bartender's to 765.75%, as each anchor-shifted variant was split into
-its own centroid. As in Section 3.4, Shepherd and Bartender recovered
-marginally more true barcodes (FN 1.70% and 1.45% versus barbac's
-2.25%), but at the cost of one to two orders of magnitude more spurious
-near-true centroids. The elevated false-positive rates at 0.5% indels
-(9–10% for barbac and Starcode) are dominated by singleton error-reads
-that drift more than three edits from any true barcode and form isolated
-clusters; because these lie far from any true sequence they are not
-counted as Wrong Sequences and are trivially removed by an abundance
-threshold. These results confirm that barbac's native Levenshtein
-handling extends its indel robustness to structured, anchor-containing
-barcode designs — the layouts most vulnerable to the register-shifting
-failure mode of Hamming-based tools.
+The results support an accuracy advantage for the tested LV configuration in the
+indel-containing simulations, with Hamming useful for substitution-only inputs. They do
+not establish universal superiority across libraries or sequencing platforms. The Milos
+dataset has only 1,001 reads whose lengths differ from their supplied parents, whereas
+the four-condition experiment explicitly includes broader mixed indel errors. Shepherd
+includes separate correction of simple single insertions and deletions around a supplied
+barcode length; its poorer performance in mixed-error simulations should not be
+described as complete absence of indel support. The Poisson option can merge real length
+variants with error-like counts, and its configured error rate is not a learned
+platform-specific indel rate. Independent labeled experimental controls, additional
+abundance distributions and repeated timings are needed before broader accuracy or speed
+claims.
 
 **4 Discussion**
 
@@ -656,78 +573,31 @@ accuracy of clustering depends on appropriate parameterization of
 distance thresholds, which in turn is influenced by sequencing quality.
 Although synthetic benchmarks provide useful guidance, empirical
 datasets may present additional sources of error not captured by the
-simulations. Furthermore, while barbac efficiently integrates barcode
-clustering with time-series reconstruction, it does not implement
-explicit probabilistic models of error, as in Shepherd, which may limit
-sensitivity in datasets with unusual error distributions.\
-On the Johnson et al. (2023) simulated benchmark, barbac reaches
-statistical parity with Shepherd — the current reference
-implementation — while completing clustering in roughly 60% of
-Shepherd's wall time. On Illumina-quality data containing 0.5%
-insertion+deletion errors, barbac and Starcode form a two-method
-Pareto-optimal frontier on accuracy, both dramatically outperforming
-Shepherd (31-fold lower WS) and Bartender (324-fold lower WS). Among
-the two Pareto-optimal methods, barbac's algorithm runs 7.2-fold
-faster than Starcode's, is a native R package rather than a standalone
-C binary, and is the only tool in the comparison that ships an
-integrated FASTQ-to-lineage workflow with time-series visualisation.
-To our knowledge, this is the first R-native package to reach the
-accuracy envelope of specialised C-language barcode-clustering tools.
+simulations. The current clustering routine uses abundance- and error-rate-based scoring, with an
+optional Poisson consistency rule for repeated-base single indels. Its parameters remain
+configurable and require validation for each experimental setting.
 
-Set comparison of the false negatives on the Johnson et al. benchmark
-revealed that 470 of the 471 misses are shared between barbac and
-Shepherd, and are dominated by true barcodes never captured in the
-input sequencing reads; on a substitution-dominant benchmark the two
-methods are therefore statistically indistinguishable.
+The highest-scoring barbac configuration achieved the highest mean centroid F1 in 3 of
+the four simulation conditions, and LV achieved the highest centroid F1 on Milos (Table
+2). Bartender narrowly led the random substitution-only condition. The strongest
+practical distinction is the substantially lower false-cluster burden of LV in the
+simulated indel conditions. Hamming remains useful when errors are predominantly
+substitutions, but its low FN count in indel-containing data is accompanied by many
+extra centroids. The narrow Milos F1 advantage and the remaining errors on anchored
+indel data argue for reporting FN, FP and F1 together. Workflow runtime also matters:
+barbac is substantially faster than Shepherd on Milos and the anchored benchmarks, while
+other native workflows can be faster on small inputs. These findings support the tested
+barbac configurations as competitive choices for lineage analysis, with a demonstrated
+advantage in defined indel regimes, rather than establishing a universal ranking.
 
-The advantage of barbac emerges when indel errors are present in the
-input, as they are in most real Illumina barcode datasets containing
-homopolymer stretches or long amplicons. In a four-way indel comparison
-(Section 3.4), the four methods separated cleanly into two groups
-according to their distance metric. **barbac and Starcode**, both of
-which use Levenshtein distance natively, maintained near-perfect
-performance at 0.5% indel rate (Pearson R = 1.0000; WS = 1.57% and
-1.59% respectively). **Shepherd and Bartender**, both Hamming-based,
-degraded sharply: Shepherd's Wrong Sequences rate rose 113-fold to
-48.81%, while Bartender's rose 1,061-fold to 509.41%. In absolute
-terms, barbac's WS rate was 31-fold lower than Shepherd's and 324-fold
-lower than Bartender's. Mechanistically, this reflects the two
-Hamming-based indexing schemes — Shepherd's positional q-gram index
-paired with post-hoc single-base indel correction, and Bartender's
-fixed-length seed index — struggling with sequences that shift in
-length when insertions or deletions are introduced. barbac uses a
-bit-parallel 64-bit Levenshtein kernel with a two-tier
-Hamming/Levenshtein seed index that admits indels natively into the
-merge decision. Its distance-aware, count-ratio merge guard (with
-scaling factor increasing with distance) then decides whether an indel
-variant should be absorbed by a candidate parent, and a
-likelihood-based best-parent selector chooses among competing parents
-when several pass the guard.
+The choice between missing a rare true barcode and retaining a spurious centroid depends
+on the downstream analysis. False clusters can inflate inferred lineage diversity,
+whereas missed barcodes can obscure rare lineages. The comparison was limited to three
+seeds per smaller simulation and one fixed reference dataset, and it did not measure
+per-read assignment accuracy for the smaller simulations. Additional labeled
+experimental controls and broader error and abundance regimes remain necessary to assess
+generalization.
 
-The FN/WS trade-off between barbac and the two Hamming-based methods
-is heavily asymmetric. Shepherd
-achieves a marginally lower FN rate (0.95% versus 1.55%; approximately
-60 additional true barcodes recovered per 10,000 sequenced) at the
-cost of emitting approximately 4,700 additional wrong-sequence
-artefacts per 10,000; Bartender's 0.94% FN comes at a cost of
-approximately 50,900 additional wrong-sequence artefacts per 10,000 —
-an operating point unusable for lineage analysis. In practice, whether
-one prefers a missed low-abundance barcode or a plausible-looking
-spurious call depends on the downstream analysis: studies that infer
-selection coefficients or track lineage extinctions are more sensitive
-to spurious centroids (they inflate the apparent number of surviving
-lineages), whereas studies that estimate library diversity are more
-sensitive to false negatives. The combination of
-Pareto-optimal indel handling, native Levenshtein clustering, and
-seamless integration with time-series analysis makes barbac a practical
-choice for lineage barcoding studies, particularly where indel errors
-are non-negligible. This advantage persisted on a structured,
-anchor-containing barcode design (Section 3.5), in which every indel
-shifts a fixed constant region out of register: barbac again produced
-the lowest wrong-sequence rate of any method (2.50% at 0.5% indels),
-whereas the Hamming-based tools fragmented each shifted variant into
-separate centroids (Wrong Sequences 100.35% for Shepherd and 765.75%
-for Bartender).\
 In summary, barbac provides a practical solution for processing and
 analyzing barcode sequencing data. By combining modularity, speed, and
 flexible lineage reconstruction, it addresses several gaps in existing

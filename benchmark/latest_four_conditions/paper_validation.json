@@ -1,0 +1,25 @@
+{
+  "status": "complete",
+  "source_rows": 78,
+  "paper_rows": 30,
+  "distance": 3,
+  "accuracy_seeds": [
+    42,
+    43,
+    44
+  ],
+  "timing_seed": 42,
+  "lv_f1_exceeds_external_comparators_in_all_five": false,
+  "simulation_categories_with_best_barbac_f1": 3,
+  "simulation_accuracy": "Mean of three seed-level FN/FP/F1 values; no read-parent score available.",
+  "timing": "One complete serial workflow observation per table cell; no timing confidence intervals.",
+  "manuscript_scope": "Replaces Sections 3.3\u20133.5 and dependent comparison discussion; other manuscript sections retained.",
+  "source_sha256": {
+    "benchmark/latest_four_conditions/results.csv": "57a2bc2fe990b1d29b654942a24e2c4f4eb66e3b1e102e71a30d296cf442ca74",
+    "benchmark/latest_four_conditions/fresh_peers.csv": "34830db701524658952a4a438000cba8ad1257183c92b97e72813303baf2efd5",
+    "benchmark/latest_four_conditions/additional_peers.csv": "6331bdc9daf2a9635ba32823f9c255a2e0fb42ec8de8ad6cfa2799e328873587",
+    "benchmark/latest_four_conditions/milos_hamming.json": "b1143203e168571080d3120e58f1c4843241ae3889a46ab6d6f08935ef57b80e",
+    "benchmark/reference_comparison/results.csv": "b5b47eebe89dcecee196c4ca7c99377f608122d6b0e8fd604c07723a6316d4fe",
+    "benchmark/latest_four_conditions/build_paper_table.py": "36a3344a196d186a926f1fef4dc20685f03d051deddebe2ea2adfc50c9c4cc63"
+  }
+}

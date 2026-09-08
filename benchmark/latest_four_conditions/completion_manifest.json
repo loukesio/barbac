@@ -1,0 +1,601 @@
+{
+  "status": "complete",
+  "source_sha256": {
+    "benchmark/latest_four_conditions/complete_paper_comparison.py": "a4270ca35e8f6efe0d04e1f64b307d6967efe7ff4fb1acb63db132bb4d54ac56",
+    "benchmark/reference_comparison/run_comparison.py": "b87cc3083c45eb71acc24274e659756506f8bfb5ed452d6859e1090deacbecc1",
+    "benchmark/reference_comparison/run_barbac.R": "c2677b99761cc365484823178cf8355d2dc1e966b92c1dfb60a736f9c581335a"
+  },
+  "tool_sha256": {
+    "starcode/starcode": "37f4eb89544f5efa08ba12111f8dfd554d4b667d0a1b1da0e578b5c7f8064e5a",
+    "bartender-1.1/bartender_single_com": "ad71e1c4164fe4c46a86fc364783f68d082b991dc1de9c91ea01061303a912f1",
+    "bartender-1.1/bartender_single": "73944552457812f34e324fe7e94d53f1d2e0f17e57b5e5057c61b33a942e8da8"
+  },
+  "runs": {
+    "42/random_substitutions/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 3.01317616700544,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 3.116012332990067,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_substitutions/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_substitutions/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "04f33d341265970b51b173093e00e899df624a129da174c786022e6f214ee6b8",
+        "members.csv": "b444da0a8c561dbaeee3f198e30e2338dd0614ce0d3959da0c899cc58d3c9879"
+      }
+    },
+    "42/random_substitutions/bartender": {
+      "method": "bartender",
+      "process_seconds": 1.2042415000032634,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.2653947919898201,
+      "pipeline_seconds": 1.5729352920025121,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_substitutions/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_substitutions/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "e53f242185fed78b5d0ad86601e03f1af2cb77b741de35e53c674f70daf2fce4",
+        "members.csv": "8edf6594ed797b895fe86ea8883b598196feea5a5e6749e28fb1271b86512f81"
+      }
+    },
+    "42/random_low_indels/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 18.602018750010757,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 18.840993707999587,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_low_indels/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_low_indels/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "e0fb0e7a45332ed41554eca5e7c74388f093c2c11c2edc93c02ff6d1044b2afb",
+        "members.csv": "dc08757b3d6ac665bb75a631d895f193cf5c845a2680499d963db483f274f5ae"
+      }
+    },
+    "42/random_low_indels/bartender": {
+      "method": "bartender",
+      "process_seconds": 2.4573107920004986,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.31522379198577255,
+      "pipeline_seconds": 3.048648374999175,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_low_indels/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/random_low_indels/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "98bd2542476adc3ba64aa44cbcec17ad9cb5e368f07d8988c0d956cc84f75ac9",
+        "members.csv": "8b534097ad26098201d67e4416d8ff6a4de5a015ae33b7c93481606cfcbb31ca"
+      }
+    },
+    "42/anchored_substitutions/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 5.13429662497947,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 5.317000832990743,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_substitutions/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_substitutions/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "e176a33dc4e204ec22691ecb3fbb794a082494eeea0ee18c9a80cec9becb1ec1",
+        "members.csv": "dfd9912ffc697263e2cc566156a37d30694e065422e3203bbeb2553f941d9218"
+      }
+    },
+    "42/anchored_substitutions/bartender": {
+      "method": "bartender",
+      "process_seconds": 1.6618484579958022,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.3279999580117874,
+      "pipeline_seconds": 2.1679655839980114,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_substitutions/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_substitutions/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "f0c79b7a65c09e4ef5923371d92743143f6238d24ddaf7d2e70f7fcef385a898",
+        "members.csv": "9132764d73b5ae3f0adb7ca436a01ef7e4d827185ef1d67cf4b0b5125416455a"
+      }
+    },
+    "42/anchored_low_indels/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 26.119784499984235,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 26.50784208398545,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_low_indels/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_low_indels/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "409bcf8df7e15f7fefe58b7aa5c35d05472d7939c7b415025fa174454d49e955",
+        "members.csv": "53538820367818e6ad7f06049821f9bbe919a5201ea36e7cbadc2a18bbfb1286"
+      }
+    },
+    "42/anchored_low_indels/bartender": {
+      "method": "bartender",
+      "process_seconds": 7.085336500022095,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.33698679198278114,
+      "pipeline_seconds": 7.90235908300383,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_low_indels/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/42/anchored_low_indels/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "f7e11bf7fe29de7658d5875767a832e8e125381a716df0660e335abd2895db5b",
+        "members.csv": "6d11b02b816270522ea880fa9a4259f89cac82b42e3b34f369e993cc066d9d5e"
+      }
+    },
+    "43/random_substitutions/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 2.8006113749870565,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 2.900977084005717,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_substitutions/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_substitutions/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "3871aea31c0747aae8d6bf15e53a82853bbca5a813c365d96e636dbeb7b562e3",
+        "members.csv": "774ad4babfa51e589a98c4fa87e54b0817f8f13634de5e06f208516493c27fd1"
+      }
+    },
+    "43/random_substitutions/bartender": {
+      "method": "bartender",
+      "process_seconds": 1.0917515000037383,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.22140412498265505,
+      "pipeline_seconds": 1.4131796669971664,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_substitutions/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_substitutions/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "f986275c224518151130a724bfbf7459b7ba43c2e1d04eec29d9fb98325e208a",
+        "members.csv": "5b43622cca8bc68f288c200e04040578c24dec5c39623682781233e7e542f3ca"
+      }
+    },
+    "43/random_low_indels/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 17.277385041990783,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 17.50466750000487,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_low_indels/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_low_indels/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "967d3b77f34d50ba3baad2e3ca07e9e23f10dbc99b2c69e7a6f7d63c2f69ddfe",
+        "members.csv": "bc1c8f93b3f550df16adc7dc0fe86fd74a9d9e723beade23bd3616304f25157b"
+      }
+    },
+    "43/random_low_indels/bartender": {
+      "method": "bartender",
+      "process_seconds": 2.267976292001549,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.2844710419885814,
+      "pipeline_seconds": 2.8152248340193182,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_low_indels/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/random_low_indels/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "af763447840714136721901c872ba4afabf29efc29148593b11e5e08592bb7c3",
+        "members.csv": "4b736b1df59cad1b01660c8fb7926cb43ee2bdee6d0b6ae2ce4616476e8fb212"
+      }
+    },
+    "43/anchored_substitutions/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 4.331619417003822,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 4.488437874999363,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_substitutions/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_substitutions/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "01d68901645e0272c72dc77f7fafe5464c2d14dfe090f2987e7eb02898c2b1c9",
+        "members.csv": "4980c380305739165fafe04013a758102ba96ec2cd6fa6150c7e93ee33a5d271"
+      }
+    },
+    "43/anchored_substitutions/bartender": {
+      "method": "bartender",
+      "process_seconds": 1.5600355839997064,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.2432708749838639,
+      "pipeline_seconds": 1.9679380830202717,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_substitutions/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_substitutions/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "818d8c40056a91f483cbb1f236f5b425c2840a780020975da168076f5887fc3b",
+        "members.csv": "7ab353e7d17cfddba59f9ae0b215bdebfc31f4e1312461ef60745283898747e7"
+      }
+    },
+    "43/anchored_low_indels/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 26.248108333005803,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 26.669484167010523,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_low_indels/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_low_indels/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "580f00f0fdf45c3594d6a36344238f652ec78734f2bb1655b4fed62f46ec42c4",
+        "members.csv": "c9e1f4c39b1b5ce7fa80f0046f672390e10a042120b291829e7d3a13d535338f"
+      }
+    },
+    "43/anchored_low_indels/bartender": {
+      "method": "bartender",
+      "process_seconds": 6.889303417003248,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.34244383400073275,
+      "pipeline_seconds": 7.695071374997497,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_low_indels/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/43/anchored_low_indels/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "19fcbf8f5b69753aa19ed3a48dd7181115e6c835e2a913d01f5813ed06123891",
+        "members.csv": "af79ebcecd7bc48cf45296b966fd0af21a3707508e3f9ea3b26d79ce7ab12eba"
+      }
+    },
+    "44/random_substitutions/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 2.804065874981461,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 2.9119927499850746,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_substitutions/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_substitutions/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "11540c1d433dea58a7d760c40e0b662c27817e399c5927be1ab46c36d54ada14",
+        "members.csv": "1e3d5662b8eeaf81b09c944ba24840ceee0ecf18663e86da236287ddb598e82f"
+      }
+    },
+    "44/random_substitutions/bartender": {
+      "method": "bartender",
+      "process_seconds": 1.0643575419962872,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.20767508298740722,
+      "pipeline_seconds": 1.370809833984822,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_substitutions/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_substitutions/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "5f1723d263609fca1788217892d4386b8058e0f1659c5dd7873db0a8cc2b49ba",
+        "members.csv": "fef73bab79f129ab008c717d909d7b9936e6bf0cdf92ea95171ca3bab1e2cff8"
+      }
+    },
+    "44/random_low_indels/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 17.57339437500923,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 17.812254707998363,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_low_indels/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_low_indels/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "988909d7dc2b727079c14495b30946f4a76f471e3d5c7463f722dbd48d432182",
+        "members.csv": "19d867dc5d663ecad0619f0578ba55adb56fffb0a04a43623e4e6b217c20f806"
+      }
+    },
+    "44/random_low_indels/bartender": {
+      "method": "bartender",
+      "process_seconds": 2.26015504199313,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.2960945829981938,
+      "pipeline_seconds": 2.8331486670067534,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_low_indels/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/random_low_indels/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "01cf655404f19ed945a0012076571945f88c5ac05f14e2d365a28904e5cbea15",
+        "members.csv": "29f7728bb95f6789ad9938424cd81f39817b62ac753b0acfe1d2d07f265fda6a"
+      }
+    },
+    "44/anchored_substitutions/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 4.298946833005175,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 4.4692830000130925,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_substitutions/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_substitutions/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "b5d1ada66fb02a4d5a80d25616fe0b5a60ee821ee6193f609cb5ecddbba63b8e",
+        "members.csv": "b7e10a7e5ce75f7b0bdeb997f46c66f6a7e1f2d72acf19ddaa895bef6cc9c5b9"
+      }
+    },
+    "44/anchored_substitutions/bartender": {
+      "method": "bartender",
+      "process_seconds": 1.5265444590186235,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.2375862080079969,
+      "pipeline_seconds": 1.937639667012263,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_substitutions/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_substitutions/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "6d72f171fa1d0047dcdce389fdf4c0ecd16e80ef6fe8693603435b1c11419cc0",
+        "members.csv": "a1d4d426dffc7d46fbf9db3f0a71e8ca86921423682138ebe3c5bbfc3d76bace"
+      }
+    },
+    "44/anchored_low_indels/starcode_mp": {
+      "method": "starcode_mp",
+      "process_seconds": 26.345747000013944,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 26.73203400001512,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/starcode/starcode",
+        "-d",
+        "3",
+        "-t",
+        "1",
+        "--print-clusters",
+        "-i",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_low_indels/input.tsv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_low_indels/starcode_mp/clusters.tsv"
+      ],
+      "output_sha256": {
+        "centroids.csv": "b4cee30ae076b1ccba8b695ea36944236ccc8bfa83b38c6452ee461edeaeb20f",
+        "members.csv": "5346aac1eea574e93911351bb364cdf426c25095d267aba39e386f9ef6378049"
+      }
+    },
+    "44/anchored_low_indels/bartender": {
+      "method": "bartender",
+      "process_seconds": 7.057771125022555,
+      "core_seconds": null,
+      "input_preparation_seconds": 0.3373999159957748,
+      "pipeline_seconds": 7.861881666991394,
+      "build_id": null,
+      "command": [
+        "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/bartender-1.1/bartender_single_com",
+        "-f",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_low_indels/bartender/expanded.csv",
+        "-o",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/44/anchored_low_indels/bartender/bartender",
+        "-d",
+        "3",
+        "-t",
+        "1"
+      ],
+      "output_sha256": {
+        "centroids.csv": "c461fefdcc86b06e054a757d56e4ccbc575608107f57f4b375384a39dd5afac0",
+        "members.csv": "a0465fdd6aef0ecb1cffce505f92aa19d0e94ea8e2fd55c87519cf11ce85f866"
+      }
+    },
+    "milos/barbac_hamming_support": {
+      "method": "barbac_hamming_support",
+      "process_seconds": 20.80999195901677,
+      "core_seconds": 16.481,
+      "input_preparation_seconds": 0.0,
+      "pipeline_seconds": 20.811001124995528,
+      "build_id": "barbac-2026-09-08-bounded-indels-v13",
+      "command": [
+        "Rscript",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/reference_comparison/run_barbac.R",
+        "/private/tmp/barbac-lv-v13",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/milos/input.csv",
+        "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/latest-four-v13/paper-completion/milos/barbac_hamming_support",
+        "hamming",
+        "support"
+      ],
+      "output_sha256": {
+        "centroids.csv": "8bdd2480c2612e142ac1c40fe534f405031face33826bd532d373a999cbabb69",
+        "members.csv": "e28f37a7be8a7d3fe7818df58da7f86636ae98c8cfe8fe8b2c74a1a2f62e6b3d"
+      }
+    }
+  },
+  "protocol": "Serial distance-three runs; one thread for Starcode/Bartender; workflow includes required format conversion and both centroid/member exports. Same original simulation inputs, no labels used in clustering."
+}

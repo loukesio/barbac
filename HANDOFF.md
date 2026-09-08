@@ -1,5 +1,17 @@
 # Handoff: barbac clustering performance and benchmarking
 
+**Latest paper update:** See
+[the five-dataset comparison](benchmark/latest_four_conditions/README.md).
+The requested comparison uses distance three, both current barbac modes,
+Shepherd, Starcode sphere and message passing, and Bartender. Table 2 in the
+manuscript now contains all 30 dataset/configuration rows, with three-seed
+accuracy means for the four simulations and fresh serial seed-42 workflow
+timings. Milos uses the full validated reference dataset; Hamming was rerun
+with v13 (20.81s). Barbac leads centroid F1 in three simulation conditions and
+on Milos; Bartender narrowly leads random substitutions. The Word manuscript
+is regenerated locally from the tracked Markdown. The user explicitly wants
+this method comparison, not a distance-two-versus-three report.
+
 **2026-09-08 update:** Work now continues on `feat/exact-search-clustering`.
 **Latest: native v13** adds exact abundance-bound pruning and an opt-in
 `indel_model = "poisson"` for repeated-base single indels. Read the
