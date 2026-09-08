@@ -80,6 +80,9 @@ alignments, including shifts that leave the sequence length unchanged.
 equal-abundance barcodes; the default remains `"sequence"`. See the
 [exact-search experiment](benchmark/four_condition_comparison/EXACT_SEARCH.md)
 for the algorithm, measured results, and limitations.
+The [100,000-barcode reference comparison](benchmark/reference_comparison/README.md)
+adds read-assignment checks and a larger-library runtime test: Hamming is fast,
+while exact LV has a substantial runtime regression on that dataset.
 
 ## Quick start — time-series visualisation
 
@@ -316,4 +319,3 @@ Full reproducibility scripts are in [`benchmark/indel_experiment/`](benchmark/in
 ## License
 
 GPL (≥ 2). See [LICENSE.md](LICENSE.md).
-

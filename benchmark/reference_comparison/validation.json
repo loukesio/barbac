@@ -1,0 +1,18 @@
+{
+  "verified_at": "2026-09-08T17:26:10.920161+00:00",
+  "metric_unit_tests": {
+    "passed": 4,
+    "failed": 0
+  },
+  "method_outputs": 10,
+  "output_hashes_verified": 20,
+  "member_count_reconciliation": "passed for every method",
+  "read_denominator_and_conservation_identities": "passed for every method",
+  "independent_sql_metric_recalculation": "passed, tolerance 1e-14",
+  "report": {
+    "validation": "passed",
+    "package": "passed",
+    "verification": "structural_only",
+    "browser_limitation": "No installed Chromium headless-shell; layout and source-dialog interaction not verified."
+  }
+}

@@ -1,0 +1,658 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "barbac on the 100,000-barcode reference simulation",
+    "generatedAt": "2026-09-08T17:24:16.629739+00:00",
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# barbac on the 100,000-barcode reference simulation"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "body": "## The result on this dataset\n\n**Shepherd has the highest centroid F1 (99.72196%).** barbac Hamming / sequence has the shortest measured workflow time (16.1 seconds). Updated Hamming with support ordering takes 18.4 seconds versus Shepherd's 111.0 seconds (6.0 times faster in this run), with FN 469 / FP 87 versus Shepherd's FN 470 / FP 85. Its 228 wrong or unassigned reads compare with 217 for Shepherd, out of nearly 25 million. **The accuracy differences are very small; this is not evidence of universal superiority.** These are descriptive results from one supplied simulation and one retained serial timing observation per configuration.",
+        "sourceId": "results"
+      },
+      {
+        "id": "definitions",
+        "type": "markdown",
+        "body": "## Barcode recovery and read assignment answer different questions\n\n**FN** counts true barcode sequences missing from the output; **FP** counts extra output centroid sequences. **F1 = 2 TP / (2 TP + FN + FP)**, where TP is the number of recovered true sequences. The historical score uses all 100,000 truth entries. A second score uses only the 99,591 truth entries with positive read counts.\n\n**Read assignment** is the count-weighted fraction of all 24,996,128 reads whose output centroid exactly equals the supplied parent label. Wrong and unassigned reads both reduce this fraction. This measures agreement with supplied labels, which contain small inconsistencies described below."
+      },
+      {
+        "id": "accuracy",
+        "type": "markdown",
+        "body": "## Support ordering changes only a few recovery decisions\n\nHamming changes from FN 470 / FP 88 with sequence ordering to FN 469 / FP 87 with support ordering. LV changes from FN 472 / FP 86 to FN 471 / FP 85. These small differences should be read as counts, rather than rounded percentages that would hide them. The table retains all configurations, including the previous implementation and both Starcode modes.",
+        "sourceId": "results"
+      },
+      {
+        "id": "accuracy-table",
+        "type": "table",
+        "tableId": "accuracy"
+      },
+      {
+        "id": "timing",
+        "type": "markdown",
+        "body": "## Runtime depends strongly on the distance mode\n\nUpdated Hamming with sequence ordering takes 11.1 seconds inside barbac versus 15.0 seconds for the previous implementation. Updated LV takes 162.8 seconds versus 37.7 seconds previously. Support ordering adds preprocessing, bringing current Hamming to 14.4 seconds and LV to 187.4 seconds.\n\nThe bars compare complete measured workflows in seconds; shorter is faster. They include method-specific format conversion and output of cluster membership, including read expansion for Bartender. Shared input staging and scoring are excluded. Each configuration ran once, sequentially, on the same machine; these are observations without timing confidence intervals.",
+        "sourceId": "results"
+      },
+      {
+        "id": "runtime-chart",
+        "type": "chart",
+        "chartId": "runtime"
+      },
+      {
+        "id": "boundaries",
+        "type": "markdown",
+        "body": "## Separate clustering time from operational time\n\nCore time is available only for barbac and includes reading the CSV, ordering, clustering, and building the returned result. Process time includes startup and native outputs. Workflow time additionally includes required method-specific input preparation and conversion of outputs to common centroid and membership tables. Compare workflow time across tools; use core time to compare barbac implementations."
+      },
+      {
+        "id": "timing-table",
+        "type": "table",
+        "tableId": "timings"
+      },
+      {
+        "id": "assignment",
+        "type": "markdown",
+        "body": "## Most reads agree with the supplied parent labels\n\nUpdated Hamming with support ordering assigns 99.999088% of reads to their supplied parents. Shepherd has 129 wrongly assigned reads and 88 unassigned reads. The table separates these outcomes, so a method cannot improve its reported accuracy by dropping difficult reads. Every output was checked: member assignments are unique, and their summed counts reproduce the reported centroid counts.",
+        "sourceId": "results"
+      },
+      {
+        "id": "assignment-table",
+        "type": "table",
+        "tableId": "assignments"
+      },
+      {
+        "id": "quality",
+        "type": "markdown",
+        "body": "## Zero-read barcodes dominate the historical false negatives\n\nThe three input files contain 1,544,850 unique observed sequences, 100,000 true barcodes, and 24,996,128 reads. All observed counts and sequences match between the input and labeled source; keys are unique and nonnull, and every parent label appears in the truth table.\n\n**409 true barcodes have zero reads.** Another 30 true sequences are absent in exact form despite having reads. A method choosing centroids from observed strings therefore cannot recover those 439 exact sequences. A consensus method could reconstruct an absent sequence. Positive-count and observed-only FN metrics distinguish these cases.\n\n**Four parent barcode totals disagree across files**, with a summed absolute difference of six reads. Grand totals still agree. The source is retained unchanged. This is a small but real limitation on label-based accuracy; the CSV includes a sensitivity score excluding all 2,116 reads assigned to those four parents. The source does not establish a hard upper bound on hidden read-label errors. No temporal analysis applies to this static simulation.",
+        "sourceId": "quality"
+      },
+      {
+        "id": "methods",
+        "type": "markdown",
+        "body": "## Fixed settings and label-blind inputs\n\nAll methods use the same observed sequences and counts, sorted by decreasing count with sequence ordering for ties. Truth labels are used only after clustering. Maximum distance is three. barbac uses merge ratio 20 and error rate 0.005, with its default design option disabled. Hamming retains its existing trace-indel rescue. Shepherd uses barcode length 20 and epsilon three. Starcode is evaluated with sphere clustering and with its default message-passing mode. Bartender uses distance three and its other defaults, including unique read identifiers after expansion.\n\nRuns are sequential; Starcode and Bartender explicitly request one thread, and the environment limits BLAS/OpenMP threads to one. Exact tool commands, platform, source hashes, installed libraries, and output hashes are saved alongside the runner. Historical timings and scores used different input ordering or measurement boundaries and are not interchangeable with this run."
+      },
+      {
+        "id": "next",
+        "type": "markdown",
+        "body": "## Keep the claim specific and investigate the LV cost\n\nThis comparison establishes recovery, label agreement, count conservation, and observed runtime for the supplied dataset and settings. It does not establish universal superiority or accuracy on real sequencing data. Preserve both barbac ordering options: support ordering trades extra time for a small change in accuracy here. Profile LV candidate enumeration on this large library before promising a general speed improvement.\n\nThe next requested stage is time-series download guidance and a configurable SLURM workflow. Real time-series data can test scaling and reproducibility, but will need independent controls or replicate agreement to assess accuracy without simulated parent labels."
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "body": "## What could change the conclusion?\n\nIndependent simulations with different barcode densities and error models, repeated timing runs, and labeled spike-ins or real-data controls could change the ranking. How the methods behave at high indel rates is a separate question: this dataset has only 602 off-length observed sequences. The support-ordering rule and clustering parameters were fixed before this comparison; no thresholds were tuned to improve these results."
+      }
+    ],
+    "tables": [
+      {
+        "id": "accuracy",
+        "title": "Centroid recovery",
+        "dataset": "results",
+        "sourceId": "results",
+        "defaultSort": {
+          "field": "f1_display",
+          "direction": "desc"
+        },
+        "columns": [
+          {
+            "field": "label",
+            "label": "Method"
+          },
+          {
+            "field": "fn",
+            "label": "FN"
+          },
+          {
+            "field": "fp",
+            "label": "FP"
+          },
+          {
+            "field": "f1_display",
+            "label": "F1, all truth"
+          },
+          {
+            "field": "positive_truth_fn",
+            "label": "FN, positive truth"
+          },
+          {
+            "field": "positive_f1_display",
+            "label": "F1, positive truth"
+          }
+        ]
+      },
+      {
+        "id": "timings",
+        "title": "Timing components, seconds",
+        "dataset": "results",
+        "sourceId": "results",
+        "defaultSort": {
+          "field": "pipeline_seconds",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "label",
+            "label": "Method"
+          },
+          {
+            "field": "core_seconds",
+            "label": "barbac core"
+          },
+          {
+            "field": "process_seconds",
+            "label": "Process"
+          },
+          {
+            "field": "input_preparation_seconds",
+            "label": "Input preparation"
+          },
+          {
+            "field": "pipeline_seconds",
+            "label": "Workflow"
+          }
+        ]
+      },
+      {
+        "id": "assignments",
+        "title": "Read assignment and conservation",
+        "dataset": "results",
+        "sourceId": "results",
+        "defaultSort": {
+          "field": "misassigned_reads",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "label",
+            "label": "Method"
+          },
+          {
+            "field": "assignment_display",
+            "label": "Correct label"
+          },
+          {
+            "field": "misassigned_reads",
+            "label": "Wrong"
+          },
+          {
+            "field": "unassigned_reads",
+            "label": "Unassigned"
+          },
+          {
+            "field": "output_reads",
+            "label": "Output reads"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "runtime",
+        "title": "Workflow runtime by method",
+        "subtitle": "Seconds; one serial run per configuration, including required format conversion",
+        "showDescription": true,
+        "type": "bar",
+        "dataset": "results",
+        "sourceId": "results",
+        "encodings": {
+          "x": {
+            "field": "label",
+            "type": "nominal",
+            "label": "Method"
+          },
+          "y": {
+            "field": "pipeline_seconds",
+            "type": "quantitative",
+            "label": "Seconds"
+          }
+        },
+        "options": {
+          "orientation": "horizontal"
+        },
+        "source": {
+          "id": "results",
+          "label": "Fresh serial benchmark results, 8 September 2026",
+          "path": "benchmark/reference_comparison/results.csv",
+          "query": {
+            "language": "sql",
+            "engine": "SQLite",
+            "sql": "-- Independent report-side metric calculation from observed benchmark counts.\n-- reference_runs is loaded from results.csv by build_report.py.\nSELECT method, process_seconds, core_seconds, input_preparation_seconds,\n       pipeline_seconds, build_id, centroids, unique_centroids,\n       tp, fn, fp, observed_fn, absent_truth_recovered, ws,\n       1.0 * tp / (tp + fp) AS precision,\n       1.0 * tp / (tp + fn) AS recall,\n       2.0 * tp / (2 * tp + fn + fp) AS f1,\n       positive_truth_fn, positive_truth_fp,\n       2.0 * (99591 - positive_truth_fn) /\n           (2 * (99591 - positive_truth_fn) + positive_truth_fn + positive_truth_fp)\n           AS positive_truth_f1,\n       correct_reads, misassigned_reads, unassigned_reads,\n       1.0 * correct_reads / input_reads AS read_assignment_accuracy,\n       output_reads, consistent_parent_reads, consistent_parent_accuracy,\n       input_reads, mapping_counts_reconcile\nFROM reference_runs\nORDER BY pipeline_seconds ASC;\n",
+            "description": "Independently recomputes F1, precision, recall, and read-assignment accuracy from benchmark counts produced by run_comparison.py. The in-memory reference_runs table is loaded from results.csv; process and workflow timings are measured values, unchanged by SQL.",
+            "tables_used": [
+              "reference_runs (loaded from benchmark/reference_comparison/results.csv)"
+            ],
+            "metric_definitions": {
+              "F1": "2TP/(2TP+FN+FP), all 100000 truth barcode strings",
+              "read_assignment_accuracy": "sum Count where predicted centroid equals true_BC / sum all input Count",
+              "pipeline_seconds": "serial tool process plus method-specific input and output conversion; excludes common staging/scoring"
+            }
+          }
+        }
+      }
+    ],
+    "sources": [
+      {
+        "id": "results",
+        "label": "Fresh serial benchmark results, 8 September 2026",
+        "path": "benchmark/reference_comparison/results.csv",
+        "query": {
+          "language": "sql",
+          "engine": "SQLite",
+          "sql": "-- Independent report-side metric calculation from observed benchmark counts.\n-- reference_runs is loaded from results.csv by build_report.py.\nSELECT method, process_seconds, core_seconds, input_preparation_seconds,\n       pipeline_seconds, build_id, centroids, unique_centroids,\n       tp, fn, fp, observed_fn, absent_truth_recovered, ws,\n       1.0 * tp / (tp + fp) AS precision,\n       1.0 * tp / (tp + fn) AS recall,\n       2.0 * tp / (2 * tp + fn + fp) AS f1,\n       positive_truth_fn, positive_truth_fp,\n       2.0 * (99591 - positive_truth_fn) /\n           (2 * (99591 - positive_truth_fn) + positive_truth_fn + positive_truth_fp)\n           AS positive_truth_f1,\n       correct_reads, misassigned_reads, unassigned_reads,\n       1.0 * correct_reads / input_reads AS read_assignment_accuracy,\n       output_reads, consistent_parent_reads, consistent_parent_accuracy,\n       input_reads, mapping_counts_reconcile\nFROM reference_runs\nORDER BY pipeline_seconds ASC;\n",
+          "description": "Independently recomputes F1, precision, recall, and read-assignment accuracy from benchmark counts produced by run_comparison.py. The in-memory reference_runs table is loaded from results.csv; process and workflow timings are measured values, unchanged by SQL.",
+          "tables_used": [
+            "reference_runs (loaded from benchmark/reference_comparison/results.csv)"
+          ],
+          "metric_definitions": {
+            "F1": "2TP/(2TP+FN+FP), all 100000 truth barcode strings",
+            "read_assignment_accuracy": "sum Count where predicted centroid equals true_BC / sum all input Count",
+            "pipeline_seconds": "serial tool process plus method-specific input and output conversion; excludes common staging/scoring"
+          }
+        }
+      },
+      {
+        "id": "quality",
+        "label": "Validated input profile",
+        "path": "benchmark/reference_comparison/data_quality.json"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "datasets": {
+      "results": [
+        {
+          "method": "barbac_hamming_sequence",
+          "process_seconds": 16.06541875,
+          "core_seconds": 11.069,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 16.065902125,
+          "build_id": "barbac-2026-09-08-exact-partitions-v12",
+          "centroids": 99618,
+          "unique_centroids": 99618,
+          "tp": 99530,
+          "fn": 470,
+          "fp": 88,
+          "observed_fn": 31,
+          "absent_truth_recovered": 0,
+          "ws": 63,
+          "precision": 0.9991166255,
+          "recall": 0.9953,
+          "f1": 0.9972046609,
+          "positive_truth_fn": 61,
+          "positive_truth_fp": 88,
+          "positive_truth_f1": 0.9992520418,
+          "correct_reads": 24995897,
+          "misassigned_reads": 231,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9999907586,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9999908778,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "barbac Hamming / sequence",
+          "f1_display": "99.72047%",
+          "positive_f1_display": "99.92520%",
+          "assignment_display": "99.999076%",
+          "errors": 231
+        },
+        {
+          "method": "barbac_hamming_support",
+          "process_seconds": 18.370169417,
+          "core_seconds": 14.359,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 18.37083225,
+          "build_id": "barbac-2026-09-08-exact-partitions-v12",
+          "centroids": 99618,
+          "unique_centroids": 99618,
+          "tp": 99531,
+          "fn": 469,
+          "fp": 87,
+          "observed_fn": 30,
+          "absent_truth_recovered": 0,
+          "ws": 62,
+          "precision": 0.9991266639,
+          "recall": 0.99531,
+          "f1": 0.99721468,
+          "positive_truth_fn": 60,
+          "positive_truth_fp": 87,
+          "positive_truth_f1": 0.9992620815,
+          "correct_reads": 24995900,
+          "misassigned_reads": 228,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9999908786,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9999909978,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "barbac Hamming / support",
+          "f1_display": "99.72147%",
+          "positive_f1_display": "99.92621%",
+          "assignment_display": "99.999088%",
+          "errors": 228
+        },
+        {
+          "method": "previous_hamming_sequence",
+          "process_seconds": 19.54324675,
+          "core_seconds": 14.977,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 19.544051958,
+          "build_id": "barbac-2026-09-01-hamming-refinement-v11",
+          "centroids": 99618,
+          "unique_centroids": 99618,
+          "tp": 99530,
+          "fn": 470,
+          "fp": 88,
+          "observed_fn": 31,
+          "absent_truth_recovered": 0,
+          "ws": 63,
+          "precision": 0.9991166255,
+          "recall": 0.9953,
+          "f1": 0.9972046609,
+          "positive_truth_fn": 61,
+          "positive_truth_fp": 88,
+          "positive_truth_f1": 0.9992520418,
+          "correct_reads": 24995897,
+          "misassigned_reads": 231,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9999907586,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9999908778,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "Previous Hamming / sequence",
+          "f1_display": "99.72047%",
+          "positive_f1_display": "99.92520%",
+          "assignment_display": "99.999076%",
+          "errors": 231
+        },
+        {
+          "method": "bartender",
+          "process_seconds": 29.498948291,
+          "core_seconds": null,
+          "input_preparation_seconds": 5.294120583,
+          "pipeline_seconds": 36.524321,
+          "build_id": null,
+          "centroids": 100231,
+          "unique_centroids": 100231,
+          "tp": 99506,
+          "fn": 494,
+          "fp": 725,
+          "observed_fn": 56,
+          "absent_truth_recovered": 1,
+          "ws": 700,
+          "precision": 0.9927667089,
+          "recall": 0.99506,
+          "f1": 0.9939120316,
+          "positive_truth_fn": 85,
+          "positive_truth_fp": 725,
+          "positive_truth_f1": 0.9959463923,
+          "correct_reads": 24993044,
+          "misassigned_reads": 3084,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9998766209,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9998768105,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "Bartender",
+          "f1_display": "99.39120%",
+          "positive_f1_display": "99.59464%",
+          "assignment_display": "99.987662%",
+          "errors": 3084
+        },
+        {
+          "method": "previous_lv_sequence",
+          "process_seconds": 41.874307625,
+          "core_seconds": 37.738,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 41.874932875,
+          "build_id": "barbac-2026-09-01-hamming-refinement-v11",
+          "centroids": 99614,
+          "unique_centroids": 99614,
+          "tp": 99528,
+          "fn": 472,
+          "fp": 86,
+          "observed_fn": 33,
+          "absent_truth_recovered": 0,
+          "ws": 61,
+          "precision": 0.9991366675,
+          "recall": 0.99528,
+          "f1": 0.9972046049,
+          "positive_truth_fn": 63,
+          "positive_truth_fp": 86,
+          "positive_truth_f1": 0.9992520268,
+          "correct_reads": 24995895,
+          "misassigned_reads": 233,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9999906786,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9999907978,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "Previous LV / sequence",
+          "f1_display": "99.72046%",
+          "positive_f1_display": "99.92520%",
+          "assignment_display": "99.999068%",
+          "errors": 233
+        },
+        {
+          "method": "shepherd",
+          "process_seconds": 109.064370834,
+          "core_seconds": null,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 110.953498,
+          "build_id": null,
+          "centroids": 99615,
+          "unique_centroids": 99615,
+          "tp": 99530,
+          "fn": 470,
+          "fp": 85,
+          "observed_fn": 31,
+          "absent_truth_recovered": 0,
+          "ws": 60,
+          "precision": 0.9991467149,
+          "recall": 0.9953,
+          "f1": 0.9972196478,
+          "positive_truth_fn": 61,
+          "positive_truth_fp": 85,
+          "positive_truth_f1": 0.9992670903,
+          "correct_reads": 24995911,
+          "misassigned_reads": 129,
+          "unassigned_reads": 88,
+          "read_assignment_accuracy": 0.9999913187,
+          "output_reads": 24996040,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9999914379,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "Shepherd",
+          "f1_display": "99.72196%",
+          "positive_f1_display": "99.92671%",
+          "assignment_display": "99.999132%",
+          "errors": 217
+        },
+        {
+          "method": "starcode_mp",
+          "process_seconds": 148.450054708,
+          "core_seconds": null,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 150.223728167,
+          "build_id": null,
+          "centroids": 100028,
+          "unique_centroids": 100028,
+          "tp": 99468,
+          "fn": 532,
+          "fp": 560,
+          "observed_fn": 93,
+          "absent_truth_recovered": 0,
+          "ws": 537,
+          "precision": 0.9944015676,
+          "recall": 0.99468,
+          "f1": 0.9945407643,
+          "positive_truth_fn": 123,
+          "positive_truth_fp": 560,
+          "positive_truth_f1": 0.996578482,
+          "correct_reads": 24991576,
+          "misassigned_reads": 4552,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9998178918,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.999824558,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "Starcode / message passing",
+          "f1_display": "99.45408%",
+          "positive_f1_display": "99.65785%",
+          "assignment_display": "99.981789%",
+          "errors": 4552
+        },
+        {
+          "method": "starcode_sphere",
+          "process_seconds": 153.48727975,
+          "core_seconds": null,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 155.301596083,
+          "build_id": null,
+          "centroids": 99582,
+          "unique_centroids": 99582,
+          "tp": 99229,
+          "fn": 771,
+          "fp": 353,
+          "observed_fn": 332,
+          "absent_truth_recovered": 0,
+          "ws": 328,
+          "precision": 0.9964551827,
+          "recall": 0.99229,
+          "f1": 0.9943682296,
+          "positive_truth_fn": 362,
+          "positive_truth_fp": 353,
+          "positive_truth_f1": 0.996410156,
+          "correct_reads": 24958104,
+          "misassigned_reads": 38024,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9984788044,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9984936392,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "Starcode / sphere",
+          "f1_display": "99.43682%",
+          "positive_f1_display": "99.64102%",
+          "assignment_display": "99.847880%",
+          "errors": 38024
+        },
+        {
+          "method": "barbac_lv_sequence",
+          "process_seconds": 167.02523875,
+          "core_seconds": 162.816,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 167.025835625,
+          "build_id": "barbac-2026-09-08-exact-partitions-v12",
+          "centroids": 99614,
+          "unique_centroids": 99614,
+          "tp": 99528,
+          "fn": 472,
+          "fp": 86,
+          "observed_fn": 33,
+          "absent_truth_recovered": 0,
+          "ws": 61,
+          "precision": 0.9991366675,
+          "recall": 0.99528,
+          "f1": 0.9972046049,
+          "positive_truth_fn": 63,
+          "positive_truth_fp": 86,
+          "positive_truth_f1": 0.9992520268,
+          "correct_reads": 24995894,
+          "misassigned_reads": 234,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9999906386,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9999907578,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "barbac LV / sequence",
+          "f1_display": "99.72046%",
+          "positive_f1_display": "99.92520%",
+          "assignment_display": "99.999064%",
+          "errors": 234
+        },
+        {
+          "method": "barbac_lv_support",
+          "process_seconds": 192.018490875,
+          "core_seconds": 187.442,
+          "input_preparation_seconds": 0.0,
+          "pipeline_seconds": 192.019098208,
+          "build_id": "barbac-2026-09-08-exact-partitions-v12",
+          "centroids": 99614,
+          "unique_centroids": 99614,
+          "tp": 99529,
+          "fn": 471,
+          "fp": 85,
+          "observed_fn": 32,
+          "absent_truth_recovered": 0,
+          "ws": 60,
+          "precision": 0.9991467063,
+          "recall": 0.99529,
+          "f1": 0.9972146242,
+          "positive_truth_fn": 62,
+          "positive_truth_fp": 85,
+          "positive_truth_f1": 0.9992620667,
+          "correct_reads": 24995897,
+          "misassigned_reads": 231,
+          "unassigned_reads": 0,
+          "read_assignment_accuracy": 0.9999907586,
+          "output_reads": 24996128,
+          "consistent_parent_reads": 24994012,
+          "consistent_parent_accuracy": 0.9999908778,
+          "input_reads": 24996128,
+          "mapping_counts_reconcile": 1,
+          "label": "barbac LV / support",
+          "f1_display": "99.72146%",
+          "positive_f1_display": "99.92621%",
+          "assignment_display": "99.999076%",
+          "errors": 231
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "results",
+      "label": "Fresh serial benchmark results, 8 September 2026",
+      "path": "benchmark/reference_comparison/results.csv",
+      "query": {
+        "language": "sql",
+        "engine": "SQLite",
+        "sql": "-- Independent report-side metric calculation from observed benchmark counts.\n-- reference_runs is loaded from results.csv by build_report.py.\nSELECT method, process_seconds, core_seconds, input_preparation_seconds,\n       pipeline_seconds, build_id, centroids, unique_centroids,\n       tp, fn, fp, observed_fn, absent_truth_recovered, ws,\n       1.0 * tp / (tp + fp) AS precision,\n       1.0 * tp / (tp + fn) AS recall,\n       2.0 * tp / (2 * tp + fn + fp) AS f1,\n       positive_truth_fn, positive_truth_fp,\n       2.0 * (99591 - positive_truth_fn) /\n           (2 * (99591 - positive_truth_fn) + positive_truth_fn + positive_truth_fp)\n           AS positive_truth_f1,\n       correct_reads, misassigned_reads, unassigned_reads,\n       1.0 * correct_reads / input_reads AS read_assignment_accuracy,\n       output_reads, consistent_parent_reads, consistent_parent_accuracy,\n       input_reads, mapping_counts_reconcile\nFROM reference_runs\nORDER BY pipeline_seconds ASC;\n",
+        "description": "Independently recomputes F1, precision, recall, and read-assignment accuracy from benchmark counts produced by run_comparison.py. The in-memory reference_runs table is loaded from results.csv; process and workflow timings are measured values, unchanged by SQL.",
+        "tables_used": [
+          "reference_runs (loaded from benchmark/reference_comparison/results.csv)"
+        ],
+        "metric_definitions": {
+          "F1": "2TP/(2TP+FN+FP), all 100000 truth barcode strings",
+          "read_assignment_accuracy": "sum Count where predicted centroid equals true_BC / sum all input Count",
+          "pipeline_seconds": "serial tool process plus method-specific input and output conversion; excludes common staging/scoring"
+        }
+      }
+    },
+    {
+      "id": "quality",
+      "label": "Validated input profile",
+      "path": "benchmark/reference_comparison/data_quality.json"
+    }
+  ]
+}

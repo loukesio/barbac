@@ -1,6 +1,17 @@
 # Handoff: barbac clustering performance and benchmarking
 
 **2026-09-08 update:** Work now continues on `feat/exact-search-clustering`.
+The latest [100,000-barcode reference comparison](benchmark/reference_comparison/README.md)
+tests both current distance modes and ordering options against the previous
+version, Shepherd, both Starcode modes, and Bartender. Current Hamming with
+support ordering has FN 469 / FP 87 in 18.4s including startup and exports;
+Shepherd has FN 470 / FP 85 in 111.0s including output conversion and narrowly
+better F1 and supplied-label agreement. Current LV with sequence ordering has
+the same FN/FP as its predecessor but core time regresses from 37.7s to 162.8s.
+The truth table contains 409 zero-read barcodes and four inconsistent parent
+totals; the report separates these from observed-barcode errors. Do not claim
+universal accuracy or speed superiority from these experiments.
+
 Read [the exact-search experiment](benchmark/four_condition_comparison/EXACT_SEARCH.md)
 for the current implementation and validation. The remainder of this document
 is the historical handoff for the parent branch; its speed figures and

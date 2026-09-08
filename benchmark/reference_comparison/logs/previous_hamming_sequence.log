@@ -1,0 +1,54 @@
+BARBAC_BUILD_ID=barbac-2026-09-01-hamming-refinement-v11
+Reading: input.csv
+========================================
+barbac: Abundance-ranked centroid clustering
+  Implementation   : C++ (optimized)
+  K-mer filter     : ON
+  Method           : hamming
+  Distance         : 3
+  kmer_size        : 5
+  min_shared_kmers : 2
+  merge_ratio      : 20 (distance-aware)
+  error_rate       : 0.005
+  Sequences        : 1,544,850
+  Mean length      : 20 bp
+  Top sequence     : TTGTCGCAAACGGGAAGTAC (count: 290,650)
+Running...
+  Build ID          : barbac-2026-09-01-hamming-refinement-v11
+  Assignment        : likelihood best-parent + distance-aware merge guard
+  Method            : Hamming
+  Note              : Hamming mode is substitution-only; use LV for indel/shift-sensitive benchmarks
+  Index             : lossless Hamming partition index
+  Error rate        : 0.005
+  Merge rules (base_ratio=20):
+    d=1 : floor=10, effective_ratio=20
+    d=2 : floor=10, effective_ratio=20
+    d=3 : floor=10, effective_ratio=20
+Pass 1: abundance-ranked centroid assignment | n=1544850 | d=3 | filter=ON
+  [6%] 100000/1544850 clusters=97415 no_cand=6633 lv_dp=90261 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 278823 seq/s ETA=0m5s
+  [12%] 200000/1544850 clusters=98731 no_cand=6671 lv_dp=449305 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 194500 seq/s ETA=0m6s
+  [19%] 300000/1544850 clusters=98903 no_cand=6693 lv_dp=741613 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 179035 seq/s ETA=0m6s
+  [25%] 400000/1544850 clusters=99085 no_cand=6718 lv_dp=1002091 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 170106 seq/s ETA=0m6s
+  [32%] 500000/1544850 clusters=99148 no_cand=6759 lv_dp=1634659 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 162117 seq/s ETA=0m6s
+  [38%] 600000/1544850 clusters=99197 no_cand=6797 lv_dp=2303416 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 157603 seq/s ETA=0m5s
+  [45%] 700000/1544850 clusters=99239 no_cand=6841 lv_dp=3136031 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 154002 seq/s ETA=0m5s
+  [51%] 800000/1544850 clusters=99277 no_cand=6895 lv_dp=4298273 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 149634 seq/s ETA=0m4s
+  [58%] 900000/1544850 clusters=99320 no_cand=6940 lv_dp=5059770 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 147486 seq/s ETA=0m4s
+  [64%] 1000000/1544850 clusters=99354 no_cand=6992 lv_dp=5791871 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 146430 seq/s ETA=0m3s
+  [71%] 1100000/1544850 clusters=99410 no_cand=7031 lv_dp=6525868 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 145697 seq/s ETA=0m3s
+  [77%] 1200000/1544850 clusters=99453 no_cand=7074 lv_dp=7404403 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 144738 seq/s ETA=0m2s
+  [84%] 1300000/1544850 clusters=99498 no_cand=7104 lv_dp=7846200 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 139801 seq/s ETA=0m1s
+  [90%] 1400000/1544850 clusters=99545 no_cand=7138 lv_dp=8315141 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 139722 seq/s ETA=0m1s
+  [97%] 1500000/1544850 clusters=99590 no_cand=7186 lv_dp=9226256 lv_fast=0 lv_seed_q=0 lv_long_q=0 blocked[d1=2/d2=7/d3=114] 139181 seq/s ETA=0m0s
+  [100%] done in 0m11s clusters=99618 no_cand=7209 avg_cand=53.7144 lv_dp=9773876 lv_comp_reject=49301557 lv_fast=0 lv_seed_q=0 lv_seed_cand=0 lv_long_q=0 lv_long_cand=0 promoted=17 reassigned=0 post_promote_absorb=5 ham_reject=22243922 blocked[d1=2/d2=7/d3=114] total=123 136995 seq/s
+✓ Done in 11.8s (0.2 min)
+  Clusters found   : 99,618
+  Compression      : 15.51:1
+  Rate             : 131,209 seq/s
+  Build ID         : barbac-2026-09-01-hamming-refinement-v11
+  Blocked at d=1  : 2
+  Blocked at d=2  : 7
+  Blocked at d=3  : 114
+========================================
+
+BARBAC_ALGO_SECONDS=14.977000

@@ -1,0 +1,15 @@
+Substitution Error Rate Estimate: 0.0039942877460596715
+Shepherd Single Parameters:
+	
+Sequence length: 20
+Substitution Error Rate Estimate: 0.0039942877460596715
+epsilon: 3
+tau: 3
+f: 550
+Bayes Factor Threshold: -4
+Substring Length: 4
+Number of Partitions: 5
+	
+k-mer Index creation time: 14.578428745269775
+Clustering time: 85.45103120803833
+Total time: 1.7306494871775309

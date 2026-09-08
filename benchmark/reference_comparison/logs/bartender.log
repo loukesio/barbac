@@ -1,0 +1,62 @@
+Loading barcodes from the file
+It takes 00:00:10 to load the barcodes from /Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/reference_2026-09-08/bartender/expanded.csv
+Shortest barcode length: 18
+Longest barcode length: 22
+Start to group barcode with length 18
+Using two sample unpooled test
+Transforming the barcodes into seed clusters
+Initial number of unique reads:  6
+The distance threshold is 3
+Clustering iteration 1
+Clustering iteration 2
+Clustering iteration 3
+Clustering iteration 4
+Identified 6 barcodes with length 18
+Start to group barcode with length 19
+Using two sample unpooled test
+Transforming the barcodes into seed clusters
+Initial number of unique reads:  490
+The distance threshold is 3
+Clustering iteration 1
+Clustering iteration 2
+Clustering iteration 3
+Clustering iteration 4
+Identified 458 barcodes with length 19
+Start to group barcode with length 20
+Using two sample unpooled test
+Transforming the barcodes into seed clusters
+Initial number of unique reads:  1544248
+The distance threshold is 3
+Clustering iteration 1
+Clustering iteration 2
+Clustering iteration 3
+Clustering iteration 4
+Identified 99674 barcodes with length 20
+Start to group barcode with length 21
+Using two sample unpooled test
+Transforming the barcodes into seed clusters
+Initial number of unique reads:  104
+The distance threshold is 3
+Clustering iteration 1
+Clustering iteration 2
+Clustering iteration 3
+Clustering iteration 4
+Clustering iteration 5
+Identified 91 barcodes with length 21
+Start to group barcode with length 22
+Using two sample unpooled test
+Transforming the barcodes into seed clusters
+Initial number of unique reads:  2
+The distance threshold is 3
+Clustering iteration 1
+Clustering iteration 2
+Clustering iteration 3
+Identified 2 barcodes with length 22
+The clustering process takes 00:00:09
+Start to dump clusters to file with prefix /Users/theodosiou/Documents/Projects/test_barbac/benchmark/four_condition_comparison/generated/reference_2026-09-08/bartender/bartender
+Start to remove pcr effects
+***(Overall error rate estimated from the clustering result)***
+Total number of clusters after removing PCR effects: 100231
+The estimated error rate is 0.00398078
+The overall running time 00:00:30 seconds.
+Running bartender

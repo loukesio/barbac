@@ -1,0 +1,53 @@
+BARBAC_BUILD_ID=barbac-2026-09-08-exact-partitions-v12
+Reading: input.csv
+========================================
+barbac: Abundance-ranked centroid clustering
+  Implementation   : C++ (optimized)
+  K-mer filter     : ON
+  Method           : lv
+  Distance         : 3
+  kmer_size        : 5
+  min_shared_kmers : 2
+  merge_ratio      : 20 (distance-aware)
+  error_rate       : 0.005
+  Sequences        : 1,544,850
+  Mean length      : 20 bp
+  Top sequence     : TTGTCGCAAACGGGAAGTAC (count: 290,650)
+Running...
+  Build ID          : barbac-2026-09-08-exact-partitions-v12
+  Assignment        : likelihood best-parent + distance-aware merge guard
+  Method            : Levenshtein
+  Index             : exact information-balanced LV partitions
+  Error rate        : 0.005
+  Merge rules (base_ratio=20):
+    d=1 : floor=10, effective_ratio=20
+    d=2 : floor=5, effective_ratio=60
+    d=3 : floor=2, effective_ratio=100
+Pass 1: abundance-ranked centroid assignment | n=1544850 | d=3 | filter=ON
+  [6%] 100000/1544850 clusters=97357 no_cand=0 lv_dp=47925525 lv_fast=2634 lv_seed_q=97362 lv_long_q=99999 blocked[d1=2/d2=10/d3=280] 8769 seq/s ETA=2m44s
+  [12%] 200000/1544850 clusters=98688 no_cand=0 lv_dp=56076316 lv_fast=107973 lv_seed_q=105541 lv_long_q=199999 blocked[d1=2/d2=11/d3=287] 14940 seq/s ETA=1m30s
+  [19%] 300000/1544850 clusters=98750 no_cand=0 lv_dp=72348563 lv_fast=224091 lv_seed_q=121852 lv_long_q=299999 blocked[d1=2/d2=11/d3=287] 17677 seq/s ETA=1m10s
+  [25%] 400000/1544850 clusters=99059 no_cand=0 lv_dp=108103549 lv_fast=359250 lv_seed_q=157680 lv_long_q=399999 blocked[d1=2/d2=11/d3=287] 16212 seq/s ETA=1m10s
+  [32%] 500000/1544850 clusters=99128 no_cand=0 lv_dp=138519310 lv_fast=486280 lv_seed_q=188015 lv_long_q=499999 blocked[d1=2/d2=11/d3=288] 16076 seq/s ETA=1m4s
+  [38%] 600000/1544850 clusters=99140 no_cand=0 lv_dp=180802614 lv_fast=625098 lv_seed_q=230357 lv_long_q=599999 blocked[d1=2/d2=11/d3=288] 13675 seq/s ETA=1m9s
+  [45%] 700000/1544850 clusters=99155 no_cand=0 lv_dp=224625981 lv_fast=765572 lv_seed_q=274259 lv_long_q=699999 blocked[d1=2/d2=11/d3=288] 12735 seq/s ETA=1m6s
+  [51%] 800000/1544850 clusters=99169 no_cand=0 lv_dp=268170974 lv_fast=905409 lv_seed_q=317501 lv_long_q=799999 blocked[d1=2/d2=11/d3=288] 12216 seq/s ETA=1m0s
+  [58%] 900000/1544850 clusters=99180 no_cand=0 lv_dp=312774553 lv_fast=1046196 lv_seed_q=361658 lv_long_q=899999 blocked[d1=2/d2=11/d3=288] 11897 seq/s ETA=0m54s
+  [64%] 1000000/1544850 clusters=99244 no_cand=0 lv_dp=372670941 lv_fast=1203574 lv_seed_q=422903 lv_long_q=999999 blocked[d1=2/d2=11/d3=288] 11275 seq/s ETA=0m48s
+  [71%] 1100000/1544850 clusters=99310 no_cand=0 lv_dp=438142221 lv_fast=1364309 lv_seed_q=487369 lv_long_q=1099999 blocked[d1=2/d2=11/d3=288] 10700 seq/s ETA=0m41s
+  [77%] 1200000/1544850 clusters=99375 no_cand=0 lv_dp=502932750 lv_fast=1525236 lv_seed_q=552191 lv_long_q=1199999 blocked[d1=2/d2=11/d3=288] 10001 seq/s ETA=0m34s
+  [84%] 1300000/1544850 clusters=99448 no_cand=0 lv_dp=567955455 lv_fast=1685260 lv_seed_q=615949 lv_long_q=1299999 blocked[d1=2/d2=11/d3=288] 9539 seq/s ETA=0m25s
+  [90%] 1400000/1544850 clusters=99514 no_cand=0 lv_dp=631967877 lv_fast=1845778 lv_seed_q=680231 lv_long_q=1399999 blocked[d1=2/d2=11/d3=288] 9258 seq/s ETA=0m15s
+  [97%] 1500000/1544850 clusters=99588 no_cand=0 lv_dp=698660145 lv_fast=2006906 lv_seed_q=745089 lv_long_q=1499999 blocked[d1=2/d2=11/d3=288] 9006 seq/s ETA=0m4s
+  [100%] done in 2m52s clusters=99614 no_cand=0 avg_cand=992.839 lv_dp=726901780 lv_comp_reject=804806693 lv_fast=2079581 lv_seed_q=774637 lv_seed_cand=1531812937 lv_long_q=1544849 lv_long_cand=1975117 promoted=0 reassigned=0 post_promote_absorb=0 ham_reject=0 blocked[d1=2/d2=11/d3=288] total=301 8931 seq/s
+✓ Done in 174.4s (2.9 min)
+  Clusters found   : 99,614
+  Compression      : 15.51:1
+  Rate             : 8,858 seq/s
+  Build ID         : barbac-2026-09-08-exact-partitions-v12
+  Blocked at d=1  : 2
+  Blocked at d=2  : 11
+  Blocked at d=3  : 288
+========================================
+
+BARBAC_ALGO_SECONDS=187.442000
