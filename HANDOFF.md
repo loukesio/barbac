@@ -1,5 +1,12 @@
 # Handoff: barbac clustering performance and benchmarking
 
+**2026-09-08 update:** Work now continues on `feat/exact-search-clustering`.
+Read [the exact-search experiment](benchmark/four_condition_comparison/EXACT_SEARCH.md)
+for the current implementation and validation. The remainder of this document
+is the historical handoff for the parent branch; its speed figures and
+statements that remaining accuracy cannot improve are not current conclusions.
+
+
 Branch: **`feat/design-aware-scoring`** (9 commits ahead of `main`).
 **Nothing is merged to `main` yet, deliberately.** The trade-offs in section A
 should be settled first.

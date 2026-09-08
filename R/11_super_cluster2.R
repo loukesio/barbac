@@ -14,7 +14,8 @@
 #' @param verbose Logical. Default: TRUE.
 #' @param use_cpp Logical. Default: TRUE.
 #' @param use_kmer_filter Logical. Default: TRUE.
-#' @param kmer_size Integer. Seed size for LV index. Default: 5.
+#' @param kmer_size Integer. Kept for API compatibility. Search partitions are
+#'   now chosen from observed sequence information. Default: 5.
 #' @param min_shared_kmers Integer. Kept for API compatibility. Default: 2.
 #' @param merge_ratio Numeric. Base count-ratio for the distance-aware merge
 #'   guard. Effective ratio increases with distance. Default: 20.
@@ -22,11 +23,14 @@
 #'   scoring. Default: 0.005.
 #' @param tie_break Character string. How to order barcodes that share a count:
 #'   \code{"sequence"} (default) orders them by the barcode itself;
-#'   \code{"hash"} orders them by a salted hash of the barcode, drawn from
-#'   \code{tie_seed}. Both are deterministic and independent of input row
-#'   order. Because any tie order is arbitrary and decides which tied barcode
-#'   may seed a cluster, re-running across several \code{tie_seed} values
-#'   measures how much of a result depends on that arbitrary choice.
+#'   \code{"hash"} orders them by a salted hash using \code{tie_seed};
+#'   \code{"support"} first orders by the summed counts of one-edit neighbours
+#'   that are no more abundant than the barcode, then by sequence. Support
+#'   uses the selected distance method and observed reads only. It is an
+#'   optional evidence-based tie rule, not a guarantee of improved accuracy.
+#'   All three options are deterministic and independent of input row order.
+#'   Re-running the hash option across seeds measures sensitivity to arbitrary
+#'   equal-count ordering; support retains sequence order when evidence ties.
 #' @param tie_seed Integer. Salt for \code{tie_break = "hash"}. Default: 0.
 #' @param use_design Logical. Exploit the barcode design. A library that fixes
 #'   some positions and randomises others carries identity only at the random
@@ -61,7 +65,7 @@ super_cluster2 <- function(input_path,
                            min_shared_kmers = 2L,
                            merge_ratio      = 20.0,
                            error_rate       = 0.005,
-                           tie_break        = c("sequence", "hash"),
+                           tie_break        = c("sequence", "hash", "support"),
                            tie_seed         = 0L,
                            use_design       = FALSE) {
 
@@ -121,14 +125,13 @@ super_cluster2 <- function(input_path,
   # merges identical barcodes, so duplicate rows would otherwise be double-
   # counted as separate singleton clusters. Only rewrite the table when
   # duplicates actually exist, and preserve first-occurrence row order: the
-  # abundance-ranked greedy pass breaks count ties by row order, so an
-  # already-unique count table must be passed through untouched.
+  # abundance-ranked greedy pass is ordered explicitly below.
   n_after_na <- nrow(data)
   if (anyDuplicated(data[[barcode_col]])) {
     summed <- rowsum(data[[counts_col]], group = data[[barcode_col]],
                      reorder = FALSE)
     data <- data[!duplicated(data[[barcode_col]]), , drop = FALSE]
-    data[[counts_col]] <- as.integer(summed[data[[barcode_col]], 1L])
+    data[[counts_col]] <- as.integer(summed[match(data[[barcode_col]], rownames(summed)), 1L])
   }
   n_collapsed <- n_after_na - nrow(data)
 
@@ -161,6 +164,11 @@ super_cluster2 <- function(input_path,
                    barbac_seq_order_key(!!rlang::sym(barcode_col),
                                         as.integer(tie_seed)),
                    !!rlang::sym(barcode_col))
+  } else if (tie_break == "support") {
+    support <- barbac_support_order_key(data[[barcode_col]],
+                                        data[[counts_col]], method)
+    data[order(-data[[counts_col]], -support, data[[barcode_col]],
+               method = "radix"), , drop = FALSE]
   } else {
     dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
                    !!rlang::sym(barcode_col))

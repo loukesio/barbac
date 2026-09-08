@@ -32,6 +32,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// barbac_support_order_key
+NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector counts, std::string method);
+RcppExport SEXP _barbac_barbac_support_order_key(SEXP seqsSEXP, SEXP countsSEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type seqs(seqsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type counts(countsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(barbac_support_order_key(seqs, counts, method));
+    return rcpp_result_gen;
+END_RCPP
+}
 // barbac_cpp_centroid_cluster_optimized
 List barbac_cpp_centroid_cluster_optimized(CharacterVector barcodes, IntegerVector counts, double max_distance, std::string method, int kmer_size, int min_shared_kmers, bool use_kmer_filter, double merge_ratio, double error_rate, bool verbose, bool use_design);
 RcppExport SEXP _barbac_barbac_cpp_centroid_cluster_optimized(SEXP barcodesSEXP, SEXP countsSEXP, SEXP max_distanceSEXP, SEXP methodSEXP, SEXP kmer_sizeSEXP, SEXP min_shared_kmersSEXP, SEXP use_kmer_filterSEXP, SEXP merge_ratioSEXP, SEXP error_rateSEXP, SEXP verboseSEXP, SEXP use_designSEXP) {
@@ -57,6 +70,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_barbac_barbac_build_id", (DL_FUNC) &_barbac_barbac_build_id, 0},
     {"_barbac_barbac_seq_order_key", (DL_FUNC) &_barbac_barbac_seq_order_key, 2},
+    {"_barbac_barbac_support_order_key", (DL_FUNC) &_barbac_barbac_support_order_key, 3},
     {"_barbac_barbac_cpp_centroid_cluster_optimized", (DL_FUNC) &_barbac_barbac_cpp_centroid_cluster_optimized, 11},
     {NULL, NULL, 0}
 };

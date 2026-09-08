@@ -19,7 +19,7 @@ super_cluster2(
   min_shared_kmers = 2L,
   merge_ratio = 20,
   error_rate = 0.005,
-  tie_break = c("sequence", "hash"),
+  tie_break = c("sequence", "hash", "support"),
   tie_seed = 0L,
   use_design = FALSE
 )
@@ -45,7 +45,8 @@ super_cluster2(
 
 \item{use_kmer_filter}{Logical. Default: TRUE.}
 
-\item{kmer_size}{Integer. Seed size for LV index. Default: 5.}
+\item{kmer_size}{Integer. Kept for API compatibility. Search partitions are
+now chosen from observed sequence information. Default: 5.}
 
 \item{min_shared_kmers}{Integer. Kept for API compatibility. Default: 2.}
 
@@ -57,11 +58,14 @@ scoring. Default: 0.005.}
 
 \item{tie_break}{Character string. How to order barcodes that share a count:
 \code{"sequence"} (default) orders them by the barcode itself;
-\code{"hash"} orders them by a salted hash of the barcode, drawn from
-\code{tie_seed}. Both are deterministic and independent of input row
-order. Because any tie order is arbitrary and decides which tied barcode
-may seed a cluster, re-running across several \code{tie_seed} values
-measures how much of a result depends on that arbitrary choice.}
+\code{"hash"} orders them by a salted hash using \code{tie_seed};
+\code{"support"} first orders by the summed counts of one-edit neighbours
+that are no more abundant than the barcode, then by sequence. Support
+uses the selected distance method and observed reads only. It is an
+optional evidence-based tie rule, not a guarantee of improved accuracy.
+All three options are deterministic and independent of input row order.
+Re-running the hash option across seeds measures sensitivity to arbitrary
+equal-count ordering; support retains sequence order when evidence ties.}
 
 \item{tie_seed}{Integer. Salt for \code{tie_break = "hash"}. Default: 0.}
 

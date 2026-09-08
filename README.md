@@ -73,6 +73,14 @@ result
 
 `super_cluster2()` returns one row per cluster: the abundance-ranked centroid, the list of member barcodes and their counts, and the summed abundance.
 
+For fixed-length data known to contain substitutions only, use
+`method = "hamming"`. Use `method = "lv"` for insertions, deletions, or shifted
+alignments, including shifts that leave the sequence length unchanged.
+`tie_break = "support"` optionally uses one-edit neighbour counts to resolve
+equal-abundance barcodes; the default remains `"sequence"`. See the
+[exact-search experiment](benchmark/four_condition_comparison/EXACT_SEARCH.md)
+for the algorithm, measured results, and limitations.
+
 ## Quick start — time-series visualisation
 
 ```r

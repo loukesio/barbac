@@ -1,0 +1,284 @@
+{
+  "configuration": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "repeats": 1,
+    "n_barcodes": 10000,
+    "n_reads": 1000000,
+    "competitors": [],
+    "libraries": [
+      [
+        "baseline_sequence",
+        "/private/tmp/barbac-exact-baseline",
+        "sequence"
+      ],
+      [
+        "candidate_sequence",
+        "/private/tmp/barbac-exact-final",
+        "sequence"
+      ],
+      [
+        "candidate_support",
+        "/private/tmp/barbac-exact-final",
+        "support"
+      ]
+    ],
+    "conditions": [
+      {
+        "slug": "random_substitutions",
+        "design": "random",
+        "error_model": "substitutions",
+        "template": null,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0
+      },
+      {
+        "slug": "random_low_indels",
+        "design": "random",
+        "error_model": "substitutions_low_indels",
+        "template": null,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005
+      },
+      {
+        "slug": "anchored_substitutions",
+        "design": "anchored",
+        "error_model": "substitutions",
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0
+      },
+      {
+        "slug": "anchored_low_indels",
+        "design": "anchored",
+        "error_model": "substitutions_low_indels",
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005
+      }
+    ],
+    "tie_order": "sequence",
+    "abundance": "lognormal",
+    "sigma": 1.5
+  },
+  "git_revision": "0cbe94c8894670c11488e9b84f6237e7666c1249",
+  "source_sha256": {
+    "src/clustering.cpp": "d1873293a9880ca8960a25b7a926a99a49577fd55e969da4532cb4d83516e522",
+    "R/11_super_cluster2.R": "b9ac566f21d8fc14feddbddf6514803aa208bc57d6fff564fdfbc5bbd2268c6f",
+    "benchmark/indel_experiment/simulate.py": "db5fb969cce98f7a1114d5e5f2aeda6199dfa62794c3c6435e8802852a1ab873",
+    "benchmark/indel_experiment/run_experiment.py": "e229ba6e585bf66cb76829b73cd479d9e9fe9c4bda60b7aea4ef7c97ea53c918",
+    "benchmark/four_condition_comparison/compare_revisions.py": "2ebe4fb0418c1662fc8e5b0aa060b7475f60b7b2ba1a11cd8330c4540f0aff9b",
+    "benchmark/four_condition_comparison/run_revision_comparison.R": "6c39be014e7be7ad72b30666c6735b08b3b8356c4da3965418ccabe674f51435"
+  },
+  "shepherd_revision": "83ea670b929d4c3370e9f162bfdc34e6893cf5cc",
+  "starcode_revision": "8987b2eb7558bdb6e8a44823881e4e2f76f47535",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "installed_package_sha256": {
+    "baseline_sequence": {
+      "barbac/DESCRIPTION": "de6c7ad380ff2b9594f852c3bc21534024f7028534b62e7bcf8b9bdcc3234c22",
+      "barbac/INDEX": "523a242af65b20193d3a320375f0516b849072d668685ab7cf574dfdb414e66d",
+      "barbac/Meta/Rd.rds": "fd9f4a43edb8d4eb85f8fadd76fbdc4e88d419e0edbea1f330c71c035d65b7c9",
+      "barbac/Meta/features.rds": "b93acb524dc15de6489965f64f7b2f78fb786471c4b44abbed873873df97ce3d",
+      "barbac/Meta/hsearch.rds": "04113ccace040268592f3904cb6c39d67104477bd543092f85a97b22e96b205f",
+      "barbac/Meta/links.rds": "5e9a5d6868693ad6879bc2d52b2ce58a7d1f6c79c0a4794e0216d93cef44ed1e",
+      "barbac/Meta/nsInfo.rds": "dd156db18469e3a0b4ecaa3e0bd88285397ee2ba5166b0ffb3e34a42117117df",
+      "barbac/Meta/package.rds": "1f522e7ed6b9b00e23ee464ff8a1dd25bb7080c9bd0df1afe5ee9b5660c07dbc",
+      "barbac/NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405",
+      "barbac/R/barbac": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+      "barbac/R/barbac.rdb": "56e4a87619251df8a378b6cbdc12c53867567b4fc4e5f2e769fb0ac5c0a0dc33",
+      "barbac/R/barbac.rdx": "edde57f3f74003baaf98b2a5051bf8909f19f6a09e5e73ce49cc60cdd424ecd0",
+      "barbac/help/AnIndex": "9a37a5c38ea6be68fdf5557a6555ebfb33103df53b2198bbc178413a1a30de12",
+      "barbac/help/aliases.rds": "dc80b1ff4654e0cd8a612a78afb7390772f5e295be953b2d7b0d3d9d22ebf36d",
+      "barbac/help/barbac.rdb": "faf044cbb2432d403c849dbdae492d22e84e36daf52e41e4b7ea6a27846e0c42",
+      "barbac/help/barbac.rdx": "3bd561aebde45890d591e03e742095df3965863f57f47e175f56c566f8c3ab60",
+      "barbac/help/figures/logo.png": "690f525cd69a4859f3009501a91ee740e20985ae8509ce61f7e9ddce37e4051b",
+      "barbac/help/figures/pipeline.svg": "ba4f1ba788d7da73d8a923974c919c502f86ebeaa4787500b47d1bb163d1653e",
+      "barbac/help/paths.rds": "d6fb5ee0fbc74fb24f21fd1cf7b392d2a4a85620cdacd843584ed2db062699a0",
+      "barbac/html/00Index.html": "d3aa4073a83c5aa0c2566a7f19874481b55b903780ff75e709840653df9b3390",
+      "barbac/html/R.css": "52144cf4c349f7f2cf131342f81bbc43c6514ba2274556815df88918fdeb189b",
+      "barbac/libs/barbac.so": "7700c229b21cdb196cc1056175cf2074a51a8b52af00c10d219d3cbd3fb4f4b6"
+    },
+    "candidate_sequence": {
+      "barbac/DESCRIPTION": "05aaddb9b799c65e496db3eb7916262468d9e946d9c51b56dcc1be13b6feab8a",
+      "barbac/INDEX": "523a242af65b20193d3a320375f0516b849072d668685ab7cf574dfdb414e66d",
+      "barbac/Meta/Rd.rds": "fd9f4a43edb8d4eb85f8fadd76fbdc4e88d419e0edbea1f330c71c035d65b7c9",
+      "barbac/Meta/features.rds": "b93acb524dc15de6489965f64f7b2f78fb786471c4b44abbed873873df97ce3d",
+      "barbac/Meta/hsearch.rds": "04113ccace040268592f3904cb6c39d67104477bd543092f85a97b22e96b205f",
+      "barbac/Meta/links.rds": "5e9a5d6868693ad6879bc2d52b2ce58a7d1f6c79c0a4794e0216d93cef44ed1e",
+      "barbac/Meta/nsInfo.rds": "dd156db18469e3a0b4ecaa3e0bd88285397ee2ba5166b0ffb3e34a42117117df",
+      "barbac/Meta/package.rds": "3fccb8fdeaea9802c109a5740fa7f85181ebf5ab370e1e5b57fd407bca609314",
+      "barbac/NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405",
+      "barbac/R/barbac": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+      "barbac/R/barbac.rdb": "53dde033ed557fde077c5f895453becef1e6a80ab47f32acc259c660bac751d8",
+      "barbac/R/barbac.rdx": "f041fa6768ee0f210cbbfbd0b3a29ab697d0c863044752305d5d5fa8549f2619",
+      "barbac/help/AnIndex": "9a37a5c38ea6be68fdf5557a6555ebfb33103df53b2198bbc178413a1a30de12",
+      "barbac/help/aliases.rds": "dc80b1ff4654e0cd8a612a78afb7390772f5e295be953b2d7b0d3d9d22ebf36d",
+      "barbac/help/barbac.rdb": "faf044cbb2432d403c849dbdae492d22e84e36daf52e41e4b7ea6a27846e0c42",
+      "barbac/help/barbac.rdx": "3bd561aebde45890d591e03e742095df3965863f57f47e175f56c566f8c3ab60",
+      "barbac/help/figures/logo.png": "690f525cd69a4859f3009501a91ee740e20985ae8509ce61f7e9ddce37e4051b",
+      "barbac/help/figures/pipeline.svg": "ba4f1ba788d7da73d8a923974c919c502f86ebeaa4787500b47d1bb163d1653e",
+      "barbac/help/paths.rds": "d6fb5ee0fbc74fb24f21fd1cf7b392d2a4a85620cdacd843584ed2db062699a0",
+      "barbac/html/00Index.html": "d3aa4073a83c5aa0c2566a7f19874481b55b903780ff75e709840653df9b3390",
+      "barbac/html/R.css": "52144cf4c349f7f2cf131342f81bbc43c6514ba2274556815df88918fdeb189b",
+      "barbac/libs/barbac.so": "3971237fb5f86d328d6d1e9bbb22afeb52f12fbf5a23d035ce01d3ce05f3802d"
+    },
+    "candidate_support": {
+      "barbac/DESCRIPTION": "05aaddb9b799c65e496db3eb7916262468d9e946d9c51b56dcc1be13b6feab8a",
+      "barbac/INDEX": "523a242af65b20193d3a320375f0516b849072d668685ab7cf574dfdb414e66d",
+      "barbac/Meta/Rd.rds": "fd9f4a43edb8d4eb85f8fadd76fbdc4e88d419e0edbea1f330c71c035d65b7c9",
+      "barbac/Meta/features.rds": "b93acb524dc15de6489965f64f7b2f78fb786471c4b44abbed873873df97ce3d",
+      "barbac/Meta/hsearch.rds": "04113ccace040268592f3904cb6c39d67104477bd543092f85a97b22e96b205f",
+      "barbac/Meta/links.rds": "5e9a5d6868693ad6879bc2d52b2ce58a7d1f6c79c0a4794e0216d93cef44ed1e",
+      "barbac/Meta/nsInfo.rds": "dd156db18469e3a0b4ecaa3e0bd88285397ee2ba5166b0ffb3e34a42117117df",
+      "barbac/Meta/package.rds": "3fccb8fdeaea9802c109a5740fa7f85181ebf5ab370e1e5b57fd407bca609314",
+      "barbac/NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405",
+      "barbac/R/barbac": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+      "barbac/R/barbac.rdb": "53dde033ed557fde077c5f895453becef1e6a80ab47f32acc259c660bac751d8",
+      "barbac/R/barbac.rdx": "f041fa6768ee0f210cbbfbd0b3a29ab697d0c863044752305d5d5fa8549f2619",
+      "barbac/help/AnIndex": "9a37a5c38ea6be68fdf5557a6555ebfb33103df53b2198bbc178413a1a30de12",
+      "barbac/help/aliases.rds": "dc80b1ff4654e0cd8a612a78afb7390772f5e295be953b2d7b0d3d9d22ebf36d",
+      "barbac/help/barbac.rdb": "faf044cbb2432d403c849dbdae492d22e84e36daf52e41e4b7ea6a27846e0c42",
+      "barbac/help/barbac.rdx": "3bd561aebde45890d591e03e742095df3965863f57f47e175f56c566f8c3ab60",
+      "barbac/help/figures/logo.png": "690f525cd69a4859f3009501a91ee740e20985ae8509ce61f7e9ddce37e4051b",
+      "barbac/help/figures/pipeline.svg": "ba4f1ba788d7da73d8a923974c919c502f86ebeaa4787500b47d1bb163d1653e",
+      "barbac/help/paths.rds": "d6fb5ee0fbc74fb24f21fd1cf7b392d2a4a85620cdacd843584ed2db062699a0",
+      "barbac/html/00Index.html": "d3aa4073a83c5aa0c2566a7f19874481b55b903780ff75e709840653df9b3390",
+      "barbac/html/R.css": "52144cf4c349f7f2cf131342f81bbc43c6514ba2274556815df88918fdeb189b",
+      "barbac/libs/barbac.so": "3971237fb5f86d328d6d1e9bbb22afeb52f12fbf5a23d035ce01d3ce05f3802d"
+    }
+  },
+  "python_packages": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "rapidfuzz": "3.14.5",
+    "scipy": "1.15.3"
+  },
+  "timing": "Sequential processes; barbac algorithm includes CSV input and clustering; wall includes R startup. Competitor algorithm time is process wall time.",
+  "status": "complete",
+  "date": "2026-09-08",
+  "input_sha256": {
+    "42/anchored_low_indels": {
+      "input.csv": "364e842c7b372a79c5cb81f807b48e31f2a971c2226fb2976d2013907d11541b",
+      "true_counts.csv": "1b5e3da4af2a078bd253e48ddb59f1def608bc2638ffa0bb31453ba5b1edf59c",
+      "shepherd_input.txt": "1b869e496b39c0ef5fffc7f61ea9775ad1da47c7861fc308366baff27fcccd18"
+    },
+    "42/anchored_substitutions": {
+      "input.csv": "a365bd439dca129cb34cfae11f685367e721f5e56f3c697e534c17fe53b33174",
+      "true_counts.csv": "1b5e3da4af2a078bd253e48ddb59f1def608bc2638ffa0bb31453ba5b1edf59c",
+      "shepherd_input.txt": "cce84fb536f5b235dea125ab88f5cd6944bb8c44615136eab257b9aa61f500a8"
+    },
+    "42/random_low_indels": {
+      "input.csv": "8e75b678bcc5baead5309acdd3702cb51cfa068ee7b13ace82d8317f6cb93ebf",
+      "true_counts.csv": "444476291b7a20cb34ef536a890012f514f684d8039944d9f431bf4d35b82d62",
+      "shepherd_input.txt": "d1cbbcb1469325465a8de3ce1437a1ecbcfd81b6028e00a8b23d91074bbbca5b"
+    },
+    "42/random_substitutions": {
+      "input.csv": "267e88cf0ef8b98138713fc039dee54a17e2354d72e3fe6070ea289f98438fea",
+      "true_counts.csv": "444476291b7a20cb34ef536a890012f514f684d8039944d9f431bf4d35b82d62",
+      "shepherd_input.txt": "2d1fadafe861951d60a76a426d0d6bd689cc673ec9272d4ac675a393951b4219"
+    },
+    "43/anchored_low_indels": {
+      "input.csv": "59a749027a65f8a1ce33394eaf8909bb79f129597b988f8e91d4d2af237bcdfe",
+      "true_counts.csv": "021fb2cfea6a9281e8519e9698a37c8dc4966863830ca2d2be6c60a5e655e2f7",
+      "shepherd_input.txt": "ea3dca268b9abcf9763526fa75fc208308d4258cd15c9d5dc869c6949b5dc6d2"
+    },
+    "43/anchored_substitutions": {
+      "input.csv": "911f5a9b364d55ec27a872ddeded7259151b36e174de97ae93cd50d1041e2834",
+      "true_counts.csv": "021fb2cfea6a9281e8519e9698a37c8dc4966863830ca2d2be6c60a5e655e2f7",
+      "shepherd_input.txt": "62f81cd54a734d58b7e68a699baf401598e4e766daa768c1a59650ce6e187254"
+    },
+    "43/random_low_indels": {
+      "input.csv": "6050934971ef4381d059b8adc837f44226843f7d72e9bee1fea858c81917066c",
+      "true_counts.csv": "0623b22c5219ce6c90fcadebd495ac761c1bf59644e4aec7f22a9d7b7280eb24",
+      "shepherd_input.txt": "88087b36b2a2e20a5f82db20ad6d6009e91c0e40aa32b5ef87bba951f49a5c03"
+    },
+    "43/random_substitutions": {
+      "input.csv": "5df8dade2c149435e49258be6a0f5fee3bcc585834d7568d5e23aae27b61c25d",
+      "true_counts.csv": "0623b22c5219ce6c90fcadebd495ac761c1bf59644e4aec7f22a9d7b7280eb24",
+      "shepherd_input.txt": "842e54bdef6c9d49a33b6b2a08a5507080716a07c73837768f990b8983ca7a1b"
+    },
+    "44/anchored_low_indels": {
+      "input.csv": "ca729e17b50a9e53708ba59f49cb690640a870aff60d74cee203d9e8da4d233a",
+      "true_counts.csv": "79f2dde229f87de7241e01c59492b12dfa46c8c7bab86524122171ba4a9855df",
+      "shepherd_input.txt": "fd111b0bf301392b0007a1d50ed23a7057a879217a51432e99f023b2ac0d42b1"
+    },
+    "44/anchored_substitutions": {
+      "input.csv": "48d9a4521ea91c0f1e372a80501572f049b36b9c038fe195c08a07c9eab7f62b",
+      "true_counts.csv": "79f2dde229f87de7241e01c59492b12dfa46c8c7bab86524122171ba4a9855df",
+      "shepherd_input.txt": "35f682387c73f49176c91134152d666b96a7ace8a423680dd9b60a87b0f1f7fb"
+    },
+    "44/random_low_indels": {
+      "input.csv": "6b79644dde6769bae5d2e3f82b7ac270fc4815bbf3f0237eac41553248e8d813",
+      "true_counts.csv": "c2c024407ffbe26d8dd3fb4e7eadb1e365942e364c1382537488ac4db9e0c4fc",
+      "shepherd_input.txt": "a496ecb71688d2705ee02abc7533a819c9de703b00127e50143d546eeeeca985"
+    },
+    "44/random_substitutions": {
+      "input.csv": "2872a09ea7b5195498c8bf9eeef7d18cf36a68b55d7f1e372ba53731f58775bf",
+      "true_counts.csv": "c2c024407ffbe26d8dd3fb4e7eadb1e365942e364c1382537488ac4db9e0c4fc",
+      "shepherd_input.txt": "8713cc66bd7b015f19048a47847a408f07f11112bbd88b3d0d47556a8d786b50"
+    }
+  },
+  "competitor_output_sha256": {
+    "42/anchored_low_indels/starcode": "703832cb35b1bfc5aeb4c4112a87700d112a7ba775bd0c1216d239d376476022",
+    "42/anchored_low_indels/shepherd": "f3e08c827c49a014f255cdbd8deba3222055b29086c421d78b398be03ac20a54",
+    "42/anchored_substitutions/starcode": "16ac514af2df490b99ca55aa07336ef8c7571c1158ab33936acc56a704e7e1cd",
+    "42/anchored_substitutions/shepherd": "cfbc9a6ddafb8cdf0b3203194155a94775e61cff31e60f45219b00014f9ce39b",
+    "42/random_low_indels/starcode": "b4300d735c138358dfb332017b5480aecbcaf9f5e30bb1d40005ac725f9ce3db",
+    "42/random_low_indels/shepherd": "8dabb5fabc6fa11099489e8e7387c3169b562db33ddbecbceb5213a70492be10",
+    "42/random_substitutions/starcode": "7f5fe2bdc1186c677b9e3f7bccc2122c2f1517d52f6db3d32d1a0e01005c11a6",
+    "42/random_substitutions/shepherd": "fdc49b00cd45d06db3efaf99ebafcf4324ceeeb2faa4b3e6ac97ec369ffbfe2c",
+    "43/anchored_low_indels/starcode": "93a05a3229dfa443c034fd2777ef066933bb9daa1f6159a98a27bae64bad61ca",
+    "43/anchored_low_indels/shepherd": "72c76aac61be92506a55a6af445c899a02a876d4398e57e4ab2f6dc2bf55487f",
+    "43/anchored_substitutions/starcode": "083e3273d70d27a1300ad657b43be95073a1cad3bcd6f37fc2b046747111e6b9",
+    "43/anchored_substitutions/shepherd": "b248ad532c827b36ee6d9ac49b5e039f70094064252e3e004bd4f6210c5344c2",
+    "43/random_low_indels/starcode": "f6de615a8fdfd953fa6abbc1b073b8ea069980cafbf666fe1822078b3fd142a0",
+    "43/random_low_indels/shepherd": "12e78fb602a10dee1d07011befddc599e5c1aecb22ebc3e0f661e16d476b4a36",
+    "43/random_substitutions/starcode": "b10bfe30ad0c7fc1afc1905e92e593190b47b3019ee0b172dd04de502f765b63",
+    "43/random_substitutions/shepherd": "bb461fbe2873994a02ba4ed6ea0421a669f23b72388bd1932380d625e68d0f09",
+    "44/anchored_low_indels/starcode": "3b1e1c4b5fbd206f05e16e121a46fa2fdd8f47a34cb421303cbd4b81aadf74a4",
+    "44/anchored_low_indels/shepherd": "b0fde9f9b5edaf4d96c54a9d5a8cc5e92a44f27c3b2ec0aa6d645a23887515b2",
+    "44/anchored_substitutions/starcode": "2a860770d1b58fee76b2d24766dcb818b7ac50e4c9afc8a81c01c41d3f1f66f6",
+    "44/anchored_substitutions/shepherd": "75be2d3c908a49c4356112dc67db29c8febf3fed94b9a37fe7910ca6015f2b26",
+    "44/random_low_indels/starcode": "1aa68e4f974cdd2621e35f321c3c111f8ddcba8c8f3323f0334db81b8f5319aa",
+    "44/random_low_indels/shepherd": "18583db8ab3303c9a338aeada49194786bd93f6717940e018de1cccd249b9448",
+    "44/random_substitutions/starcode": "772f0360081f4831fb45de1003b441a37ab62424efa2b40b9bbdc2c5c57d9d3f",
+    "44/random_substitutions/shepherd": "cf12bb48f9a77fd79667e7ba46e02d727676f31471bc8f92899096fa4f4ace79"
+  },
+  "validation": "All 96 rows checked for unique keys, direct set-based FN/FP, input identity, F1 arithmetic, output hashes and barbac read conservation.",
+  "timing_caveat": "Accuracy campaigns ran concurrently; their timings are exploratory. See timing_2026-09-08.csv for separately repeated barbac timings after both accuracy campaigns finished.",
+  "competitors_measured": [
+    "shepherd",
+    "starcode"
+  ],
+  "timing_protocol": {
+    "seed": 42,
+    "repetitions": 3,
+    "mode": "Sequential revisions, one loaded R process per revision/tie rule; median includes CSV read and clustering, excludes R startup.",
+    "caveat": "Baseline partly overlapped package checks; candidate runs followed after checks completed."
+  },
+  "artifact_sha256": {
+    "summary_2026-09-08.csv": "b0bcd499498b7e191dc7df52b761d2606cb5fcac4c930afe6465577428325153",
+    "aggregate_2026-09-08.csv": "8811738446a84ff52bdcfe45447a37e217f3008efeb311b7a6b8bc6f1a8613fb",
+    "timing_2026-09-08.csv": "e82e3d7c667c7ca4a36e32525bf8613ead834ae29dd580c6ff772a610bef49be",
+    "time_revision.R": "d761608173029deecdfd3492c8290f6e7624035cf54f272ecbc208b4c50bb998",
+    "summarize_revision_comparison.py": "0b77023d605a3fc0b223e37a06a503de48aeda546578d67bf9bf87565c9b8014",
+    "check_2026-09-08.log": "33173d3ee54c94683092dfcf81c5a9c529e68ed8b08bbad28f5a20e7f047a79d"
+  },
+  "package_check": {
+    "command": "R CMD build --no-manual; R CMD check --no-manual",
+    "errors": 0,
+    "warnings": 1,
+    "warning": "Installed R_ext/Boolean.h requests unknown warning group -Wfixed-enum-extension under Apple clang 21.",
+    "tests": "passed",
+    "examples": "passed",
+    "vignette_rebuild": "passed",
+    "repository_connectivity": "Unavailable in sandbox; installed dependency checks passed."
+  }
+}

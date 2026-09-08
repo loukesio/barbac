@@ -1,5 +1,24 @@
 # Four-condition clustering comparison
 
+The newer [exact-search experiment](EXACT_SEARCH.md) compares separate installed
+revisions, both barbac distances, and an optional support-based tie rule over
+multiple simulation seeds. The September 1 tables below are retained as history.
+
+To run a fresh paired comparison after installing each revision in its own R
+library:
+
+```bash
+python3 benchmark/four_condition_comparison/compare_revisions.py \
+  --baseline-library /tmp/barbac-baseline \
+  --candidate-library /tmp/barbac-candidate \
+  --seeds 42 43 44 --repeats 3
+```
+
+The runner records individual timings and output hashes, verifies reused inputs,
+and supports `--resume` only for the same configuration and installed builds.
+Use `time_revision.R` for repeated timings in one loaded R session; keep those
+separate from end-to-end process time.
+
 This directory preserves the code, configuration, tool revisions, and compact
 results for the 2026-09-01 comparison of barbac, Shepherd, Starcode, and
 Bartender.
