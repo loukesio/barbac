@@ -215,8 +215,11 @@ random substitution-only data. The tables below retain earlier snapshots.
 
 The [Chen 2023 time-series workflow](benchmark/time_series_chen2023/README.md)
 provides a verified eight-sample FASTQ manifest, paired-barcode/UMI extraction,
-and configurable SLURM scripts. The local extraction pilot matches the author's
-parser; full cluster execution and method comparison are pending.
+and configurable SLURM scripts for reproducing the publication's parser.
+It reuses the existing `barbac_env`. A complete first sample ran through the
+existing FASTQ→BAM pipeline in about 4.1 minutes locally using a reconstructed
+masked cassette reference. The requested paired/UMI extraction from BAM is
+still being validated; full time-series execution and method comparison are pending.
 
 ### Parity with Shepherd on the Johnson et al. (2023) reference dataset
 

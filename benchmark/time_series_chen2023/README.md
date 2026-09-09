@@ -67,12 +67,29 @@ barcode starts are 63 in mate 1 and 49 in mate 2. The helper follows the
    extracted pairs in the audit file; exclude pairs containing non-ACGT bases
    from the method-comparison inputs, recording how many molecules this removes.
 
-This dataset uses **paired flank extraction directly into barbac input tables**.
-The existing `run_cli_pipeline()`/`barbac_xtr()` BAM route does not implement
-this paired-barcode/UMI protocol. We therefore do not merge the mates or apply
-a fixed reference-coordinate slice here. No alignment reference is required;
-the verified flank patterns and offsets specify the extraction design. The
-R package's existing extraction API and clustering algorithms are unchanged.
+The requested analysis uses **FastQC → PEAR → reference mapping → BAM → barbac
+extraction**, with the existing `barbac_env`. The direct flank extractor below
+is retained as a reproduction of the publication's parser and a validation
+baseline. Its SLURM extraction stage currently runs that baseline; it does not
+yet implement the requested BAM extraction of paired barcodes and UMIs.
+
+The Chen cassette needs its own mapping reference. The older
+`Reference_sequence_Barcdes` file in this project describes a different construct.
+Mapping and extraction must preserve both barcode components, their association,
+indels, and the sample's UMI rule before we compare clustering methods.
+
+The [masked candidate FASTA](reference/chen2023_masked_amplicon.fasta) reconstructs
+the 167-base cassette from modal fixed sequences in the pilot reads; it is not
+an author-deposited reference. [Provenance](reference/provenance.json) records
+the supporting counts and hashes. Nominal reference coordinates are BC2 50–75
+and BC1 110–135 (one-based, inclusive); BC1 must be reverse-complemented for
+the author's output orientation. These are nominal regions, not instructions
+to discard insertions or force every extracted barcode to 26 bases.
+
+The [complete-sample mapping pilot](mapping_pilot.md) ran the existing barbac
+pipeline in the existing environment in about 4.1 minutes locally. It supports
+local processing of the selected subset; it is not a full analysis runtime or
+an extraction/clustering accuracy result.
 
 The 24–28 interval deliberately matches the publication's extraction profile.
 It does not retain arbitrarily large indels. A later broader extraction study
@@ -101,7 +118,13 @@ locally; this excludes downloading, FastQC and clustering, and is not a
 cluster-runtime prediction. The prefix is not a random sample. No methods
 have yet been compared on the complete time series.
 
-## Download and run on the cluster
+## Existing environment and publication-parser reproduction on the cluster
+
+Use the [project's existing environment instructions](../../README.md#environment-setup-optional--only-for-the-fastqbam-pipeline-native-install).
+The barbac R package is installed in R; `configure_environment()` provisions
+the external tools in `barbac_env`. A second `barbac-extract` environment is
+unnecessary. The commands below currently reproduce the publication parser;
+the final BAM extraction profile is still being validated.
 
 The scripts are configurable because cluster partition/account and scratch
 details have not yet been supplied. They use one CPU per sample, initially
@@ -116,13 +139,24 @@ this subset and check `sacct` before expanding. No cluster jobs have been submit
    cd barbac
    ```
 
-2. Create an extraction environment, or load equivalent Python 3 and FastQC
-   modules supplied by the cluster:
+2. Install the working branch of barbac into the R library used on the cluster,
+   if it is not already installed. Reuse the standard setup in R:
 
-   ```bash
-   conda env create -f benchmark/time_series_chen2023/environment.yml
-   conda activate barbac-extract
+   ```r
+   # Only if this branch is not already installed:
+   remotes::install_github("loukesio/barbac@feat/exact-search-clustering")
+   library(barbac)
+   configure_environment()  # One-time creation; reuses an existing barbac_env
+   use_barbac_env()         # Adds its tools to PATH in this R session
+   check_barbac_tools()
    ```
+
+   For a shell or SLURM job, activate the same external-tool environment with
+   `conda activate barbac_env`, or load equivalent cluster modules. The batch
+   job must also be able to find `Rscript` and the R library containing barbac
+   when running the mapping/BAM workflow. Activating Conda alone does not install
+   the barbac R package. The publication-parser helper uses Python 3's standard
+   library; check `python3 --version` in the batch environment.
 
 3. Copy [cluster_config.example.sh](cluster_config.example.sh) to your own
    cluster configuration file. Set the absolute repository and scratch paths,

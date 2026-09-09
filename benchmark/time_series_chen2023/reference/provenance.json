@@ -1,0 +1,56 @@
+{
+  "status": "empirical candidate; extraction boundaries need indel-aware validation",
+  "author_deposited_reference": false,
+  "paper": "https://doi.org/10.7554/eLife.92899",
+  "construct": "fixed R1 segment + masked BC2 + shared middle + masked reverse BC1 + reverse-complement fixed R2 segment",
+  "length": 167,
+  "reference_name": "chen2023_barcode_amplicon",
+  "coordinates": "one-based inclusive",
+  "barcode_regions": [
+    {
+      "name": "BC2",
+      "start": 50,
+      "end": 75,
+      "output_orientation": "reference"
+    },
+    {
+      "name": "BC1",
+      "start": 110,
+      "end": 135,
+      "output_orientation": "reverse complement of reference"
+    }
+  ],
+  "masked_bases": 52,
+  "barcode_identities_used": false,
+  "evidence": "First 50,000 pairs of SRR22757105; modal fixed segments among nominal 26-base barcode observations",
+  "r1": {
+    "total_reads": 50000,
+    "nominal_length_observations": 47721,
+    "modal_left": [
+      "TTAATATGGACTAAAGGAGGCTTTTGTCGACGGATCCGATATCGGTACC",
+      45845
+    ],
+    "modal_middle": [
+      "ATAACTTCGTATAATGTATGCTATACGAAGTTAT",
+      46383
+    ]
+  },
+  "r2": {
+    "total_reads": 50000,
+    "nominal_length_observations": 49905,
+    "modal_left": [
+      "TCGAATTCAAGCTTAGATCTGATATCGGTACC",
+      48685
+    ],
+    "modal_middle": [
+      "ATAACTTCGTATAGCATACATTATACGAAGTTAT",
+      48392
+    ]
+  },
+  "inputs": {
+    "SRR22757105_1.fastq.gz": "d028c617e627d76498fb16449278280b7698351096c1f8717db33b830d1f49bd",
+    "SRR22757105_2.fastq.gz": "88ad9819c2e2c65477120fa95da8bf5030d2b2b5744983e04341060cfb9c205d"
+  },
+  "fasta_sha256": "c10682a5a5312e43cd1dabbb3f52f121f6959bcd05fec5e7121038296d6adf7f",
+  "builder_sha256": "29aa15938d2ac3dea53bc166b380c2fd291707119271f8adf8e659d2e25a51de"
+}

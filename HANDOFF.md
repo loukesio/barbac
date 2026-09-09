@@ -1,6 +1,17 @@
 # Handoff: barbac clustering performance and benchmarking
 
-**Time-series preparation completed:**
+**Current time-series direction (user clarification):** reference mapping → BAM
+→ barbac extraction is required. Reuse the existing `configure_environment()` /
+`use_barbac_env()` setup and `barbac_env`; do not introduce a second environment.
+The first complete Chen sample has run locally through `run_cli_pipeline()`;
+see [mapping pilot](benchmark/time_series_chen2023/mapping_pilot.md).
+The empirical masked cassette reference has 167 bases, BC2 50–75 and BC1 110–135
+(one-based inclusive; reverse-complement BC1 for the published orientation).
+The original project reference is for a different construct. The BAM extraction
+adapter still needs to preserve indels, paired identities and original UMI order;
+do not describe the direct-parser SLURM stage as satisfying this requirement.
+
+**Publication-parser preparation completed:**
 [Chen 2023 cluster workflow](benchmark/time_series_chen2023/README.md) selects
 hBFA1 YPD, generations 8/16/24/40 in two replicates (eight runs, 16 FASTQs,
 1.25 GB compressed). ENA download URLs/MD5s are joined to pinned author primer

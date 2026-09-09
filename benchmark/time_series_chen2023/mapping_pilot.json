@@ -1,0 +1,144 @@
+{
+  "status": "FASTQ-to-BAM pipeline completed; barcode extraction and clustering not run",
+  "run": "SRR22757105",
+  "sample": "hBFA1-YPD-R1-Time8",
+  "date_local": "2026-09-09",
+  "source_commit": "4c54ae9",
+  "installed_barbac_library": "/private/tmp/barbac-lv-v13",
+  "environment": "existing barbac_env",
+  "tools": {
+    "minimap2": "2.30",
+    "pear": "0.9.6",
+    "multiqc": "1.19",
+    "samtools": "1.22",
+    "fastqc": "0.12.1"
+  },
+  "input_verification": {
+    "sample": {
+      "run": "SRR22757105",
+      "sample": "hBFA1-YPD-R1-Time8",
+      "assay": "hBFA1",
+      "environment": "YPD",
+      "replicate": "R1",
+      "generation": "8",
+      "ena_sample_alias": "hBFA1_h1_hBFA1-YPD-R1-Time8",
+      "sample_accession": "SAMN32254717",
+      "offset1": "63",
+      "offset2": "49",
+      "inline1": "GGCTAC",
+      "inline2": "TATATACGC",
+      "r1_url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR227/005/SRR22757105/SRR22757105_1.fastq.gz",
+      "r1_md5": "fe1adf57f8274342474e84a88ceff119",
+      "r1_bytes": "58633205",
+      "r2_url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR227/005/SRR22757105/SRR22757105_2.fastq.gz",
+      "r2_md5": "151a70e31c7603c23af2e36cdf09c000",
+      "r2_bytes": "47274297"
+    },
+    "manifest_sha256": "77caff90bd21c2fea7bfc8f24f8aaf99fcf801471ae75585e7e3df573a4f1bad",
+    "seconds": 0.1744078749907203,
+    "files": {
+      "SRR22757105_1.fastq.gz": {
+        "md5": "fe1adf57f8274342474e84a88ceff119",
+        "bytes": 58633205
+      },
+      "SRR22757105_2.fastq.gz": {
+        "md5": "151a70e31c7603c23af2e36cdf09c000",
+        "bytes": 47274297
+      }
+    }
+  },
+  "hardware": {
+    "memory_bytes": 17179869184,
+    "physical_cpu_cores": 8,
+    "logical_cpu_cores": 8
+  },
+  "input_pairs": 1367175,
+  "merged_reads": 1365286,
+  "not_merged_pairs": 1889,
+  "primary_mapped_merged_reads": 1364530,
+  "unmapped_merged_reads": 756,
+  "mapped_percent_of_merged": 99.9446269865801,
+  "mapped_percent_of_input_pairs": 99.80653537403771,
+  "timing": {
+    "wall_seconds_including_R_startup": 248.38,
+    "stage_seconds_from_second_resolution_log": {
+      "fastqc": 13,
+      "pear": 172,
+      "mapping_and_bam": 27,
+      "bam_stats": 1,
+      "multiqc": 30
+    },
+    "minimap2_reported_wall_seconds": 14.353,
+    "excludes": [
+      "download",
+      "barcode extraction",
+      "clustering"
+    ],
+    "peak_RSS_bytes": null,
+    "resource_collection_note": "macOS time -lp printed elapsed/CPU time then exited 1 because sandbox denied sysctl kern.clockrate; full-process RSS unavailable. R pipeline completed and BAM/HTML outputs were verified.",
+    "thread_settings": "run_cli_pipeline defaults; PEAR 1, minimap2 default; serial tool stages"
+  },
+  "reference_sha256": "c10682a5a5312e43cd1dabbb3f52f121f6959bcd05fec5e7121038296d6adf7f",
+  "bam_quickcheck_exit_code": 0,
+  "flagstat": {
+    "QC-passed reads": {
+      "total": 1365286,
+      "primary": 1365286,
+      "secondary": 0,
+      "supplementary": 0,
+      "duplicates": 0,
+      "primary duplicates": 0,
+      "mapped": 1364530,
+      "mapped %": 99.94,
+      "primary mapped": 1364530,
+      "primary mapped %": 99.94,
+      "paired in sequencing": 0,
+      "read1": 0,
+      "read2": 0,
+      "properly paired": 0,
+      "properly paired %": null,
+      "with itself and mate mapped": 0,
+      "singletons": 0,
+      "singletons %": null,
+      "with mate mapped to a different chr": 0,
+      "with mate mapped to a different chr (mapQ >= 5)": 0
+    },
+    "QC-failed reads": {
+      "total": 0,
+      "primary": 0,
+      "secondary": 0,
+      "supplementary": 0,
+      "duplicates": 0,
+      "primary duplicates": 0,
+      "mapped": 0,
+      "mapped %": null,
+      "primary mapped": 0,
+      "primary mapped %": null,
+      "paired in sequencing": 0,
+      "read1": 0,
+      "read2": 0,
+      "properly paired": 0,
+      "properly paired %": null,
+      "with itself and mate mapped": 0,
+      "singletons": 0,
+      "singletons %": null,
+      "with mate mapped to a different chr": 0,
+      "with mate mapped to a different chr (mapQ >= 5)": 0
+    }
+  },
+  "files": {
+    "full_pipeline/merged/bam/SRR22757105_ANC.assembled_sorted.bam": "4066f3d53b7ea31a7c8c4501b4a049da5bfe2de6ff3abadb3160bd292ec0c0f6",
+    "full_pipeline/merged/bam/SRR22757105_ANC.assembled_sorted.bam.bai": "a8c5782c081c9912eac9a568d4eaf40d563030073c81bb20ff0a02bb83dc6caa",
+    "full_pipeline/bam_summary.csv": "6874119858919fc6053a354b784cf6c35aa122210caad622536d321825fb7461",
+    "full_pipeline/pipeline.log": "05859663361e4d1c4b8ee80f9075e09fc884962086b5adc568f14b38f9429d69",
+    "full_pipeline/multiqc/multiqc_report.html": "0fdf55e7bff27c386cf810331a1c88fc9cb1b802b6d2db8c53c881c23ebff90f",
+    "full_pipeline.console.log": "c33baf9ca5b7f52a16f1bab89449a3caed443b4d6cd7c5ece04722745af62ca4",
+    "full_pipeline.time": "d9342374296d2e1eda11be8fdfcf116a488cbc7ad4437ffc4b1ee0f46cf7074f"
+  },
+  "limitations": [
+    "A mapping retention percentage is not barcode accuracy or F1.",
+    "One sample only; full-series runtime not measured.",
+    "Reference reconstructed from this sample's prefix; not an independent validation dataset.",
+    "Nominal coordinate slices alone are not validated indel-preserving paired/UMI extraction."
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "status": "local_validation_passed",
+  "status": "local_parser_and_mapping_checks_passed",
   "extraction_tests_passed": 6,
   "submission_tests_passed": 2,
   "paired_pilot_records": 50000,
@@ -7,24 +7,34 @@
   "selected_runs": 8,
   "cluster_jobs_submitted": false,
   "full_time_series_method_comparison_run": false,
-  "fastqc_execution_tested": false,
+  "fastqc_execution_tested": true,
   "limitations": [
     "The cluster account, partition, scratch path and environment setup are not yet supplied.",
-    "No full FASTQ files were downloaded locally; the pilot uses two 2 MiB archive prefixes.",
+    "The direct-parser pilot used two 2 MiB archive prefixes; the mapping pilot used one complete sample.",
+    "The requested indel-preserving paired/UMI BAM extraction has not yet been validated; SLURM extraction still reproduces the publication parser.",
     "Published processed counts are a comparison reference, not ground truth."
   ],
   "sha256": {
     "build_manifest.py": "098c964901c27971a7e8a5218963a6b708cdb1c8acb3ad65dbd6767b66fa9769",
-    "cluster_config.example.sh": "90da0276f8f5bdfa31556f300c6d2c9fc98f5ee8b131d57a9cdc4baf95d78198",
-    "environment.yml": "eb05894a6a5c32622cc3924ca14d82a690152ba402e7636e78104a56032b67ca",
+    "build_mapping_reference.py": "29aa15938d2ac3dea53bc166b380c2fd291707119271f8adf8e659d2e25a51de",
+    "cluster_config.example.sh": "ee1fd11794c28981a06c1259c995449cc6193ec7aa3651df63e6fff9450d4af2",
     "extract_barcodes.py": "993fe8090a5b9c2cf7a9e0b2c59f4516228002915d80984740ff728c370be143",
     "fetch_sources.py": "db721dabec8798ca50efa90793fbad01aa588b399fd6c50ebe0b8073feb843d3",
+    "mapping_pilot.json": "352d25f7389f393fb1a005dcdd0fe2afde25903e310348092f244cdf1e66c4ae",
+    "reference/chen2023_masked_amplicon.fasta": "c10682a5a5312e43cd1dabbb3f52f121f6959bcd05fec5e7121038296d6adf7f",
+    "reference/provenance.json": "eb4d01087b1767a1f72ced0614dc90815899be2458d5db615fef72e3d8bb6417",
     "reproduce_pilot.py": "d25f00adf0495b04b66ab975255042de213d95bfd6a9f57489aa7562947d72b2",
+    "run_mapping_pilot.R": "efa4d2977f20d37f5cb12c076b800c86e7a30aafb7bdb40a79d909ba91b06a3a",
     "run_sample.py": "7877c87c376b36735bafe08ba3e2ef9a6a7404d1936d8b9c66ec2b342004d119",
     "samples.tsv": "77caff90bd21c2fea7bfc8f24f8aaf99fcf801471ae75585e7e3df573a4f1bad",
     "submit.sh": "8a4ea00df7ea730be2883f9665127b8669de5ce2ab81e7505132fb531bcf9cb4",
     "task.sbatch": "51e64b8ec2de9c0d0cf1656aa182cb795b328adc0fed77d5efb15b59676069d5",
     "test_extraction.py": "e6e8935d3cab298af3da33da19d44b64ef80a02bf5d0d9251b41cfc1920b15e3",
     "test_workflow.py": "689b41f8647bea26333f9fd4a8dd4483c98b417e12f11a7ac3f27b681fada4ea"
-  }
+  },
+  "full_FASTQ_samples_downloaded_and_MD5_verified": 1,
+  "existing_run_cli_pipeline_complete_sample_tested": true,
+  "mapping_reproduction_helper_syntax_checked": true,
+  "mapping_reproduction_helper_end_to_end_run": false,
+  "paired_UMI_BAM_extraction_validated": false
 }

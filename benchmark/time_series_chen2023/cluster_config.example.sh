@@ -7,8 +7,10 @@ BARBAC_PARTITION=""
 BARBAC_DOWNLOAD_PARTITION=""
 BARBAC_QOS=""
 BARBAC_ARRAY_LIMIT=2
-# Optional trusted shell file that activates Conda or loads Python/FastQC modules.
+# Optional trusted shell file that activates the existing barbac_env or loads
+# equivalent cluster modules. For the BAM workflow, also expose Rscript and
+# the R library where the working branch of barbac is installed.
 BARBAC_ENV_SETUP=""
 # For example, that setup file could contain:
 # source /path/to/miniforge3/etc/profile.d/conda.sh
-# conda activate barbac-extract
+# conda activate barbac_env
