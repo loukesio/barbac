@@ -1,0 +1,6 @@
+# Keep the final browser receipt and screenshots; omit transient diagnostic logs.
+qa/*.log
+qa/browser_inventory.json
+qa/initial_browser_state.json
+report_files/
+.quarto/

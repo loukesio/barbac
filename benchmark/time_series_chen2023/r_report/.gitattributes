@@ -1,0 +1,3 @@
+# The portable HTML embeds third-party widget libraries and all count tables.
+# Review the R/Quarto source instead of a megabyte-scale generated HTML diff.
+report.html -diff linguist-generated=true

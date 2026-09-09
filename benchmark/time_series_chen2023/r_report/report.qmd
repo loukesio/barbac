@@ -1,0 +1,375 @@
+---
+title: "barbac · Chen barcode time series"
+format:
+  html:
+    embed-resources: true
+    self-contained: true
+    toc: true
+    toc-depth: 2
+    toc-location: left
+    theme: flatly
+    page-layout: full
+    code-fold: true
+    smooth-scroll: false
+    html-math-method: plain
+engine: knitr
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup, include=FALSE}
+here <- getwd()
+root <- normalizePath(file.path(here, "..", "..", ".."))
+devtools::load_all(root, quiet = TRUE, export_all = FALSE)
+source(file.path(here, "report_helpers.R"))
+cache_file <- Sys.getenv("BARBAC_REPORT_DATA", file.path(here, "..", "generated", "r_report", "report_data.rds"))
+report <- readRDS(cache_file)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+  fig.width = 10, fig.height = 5.5, dpi = 130, dev = "ragg_png")
+fmt <- function(x) format(round(x), big.mark = ",", scientific = FALSE, trim = TRUE)
+lv <- report$summary[report$summary$method == "barbac_lv", ]
+ham <- report$summary[report$summary$method == "barbac_hamming", ]
+total <- sum(report$extraction$total_pairs)
+molecules <- sum(report$extraction$barbac_input_molecules)
+img <- function(path, alt) htmltools::tags$img(src = base64enc::dataURI(file = path, mime = "image/png"),
+  alt = alt, style = "width:100%;height:auto;")
+```
+
+<style>
+html { scroll-behavior:auto !important; }
+body { color:#263544; font-size:16px; line-height:1.65; }
+.main-container { max-width:1450px; }
+h1.title { color:#2C4A63; margin-bottom:1.2em; }
+h2 { color:#2C4A63; border-bottom:1px solid #dae1e7; padding-bottom:.4em; margin-top:2em; }
+details { border:1px solid #d8e0e7; border-radius:5px; margin:12px 0; padding:12px 16px; }
+summary { cursor:pointer; font-weight:600; color:#2C4A63; }
+.metric-grid { display:flex; flex-wrap:wrap; gap:14px; margin:24px 0; }
+.metric { flex:1; min-width:185px; padding:18px; background:#f3f6f8; border-left:4px solid #2C4A63; }
+.metric strong { display:block; font-size:1.8em; }
+.metric span { display:block; color:#52616c; font-size:.9em; }
+.dataTables_wrapper { font-size:13px; margin:20px 0 30px; }
+.nav-tabs { margin:20px 0; }
+.nav-tabs > li > a { padding:10px 16px; }
+.note { border-left:3px solid #B07D22; padding:10px 18px; background:#fcfaf4; margin:20px 0; }
+.source { color:#596b76; font-size:.88em; }
+.girafe { margin:12px 0 24px; }
+@media(max-width:768px) { body {font-size:15px;} .main-container {padding:0 14px;} }
+@media print { details {break-inside:avoid;} .tab-content>.tab-pane {display:block!important;} }
+</style>
+
+## Strong agreement with the published time series
+
+**All eight samples are complete.** The shared workflow retains
+`r fmt(molecules)` UMI-deduplicated molecules from `r fmt(total)` read pairs.
+Barbac LV + Poisson reaches median Spearman agreement **`r sprintf("%.6f", lv$spearman_median)`**
+with the published barcode counts. Both barcode components take **`r sprintf("%.2f", lv$clustering_seconds_median)` seconds**
+to cluster at the median of three serial repeats. Hamming is faster by median;
+Starcode agrees slightly more closely with the publication.
+
+**This report is produced in R using barbac's own statistics and plotting functions.**
+Use the sample panels, interactive composition tabs, searchable count tables,
+and CSV download buttons to inspect the evidence. The HTML contains its figures
+and interactive libraries and can be opened locally without an R server.
+
+```{r headline}
+htmltools::div(class = "metric-grid",
+  htmltools::div(class = "metric", htmltools::strong(sprintf("%.2f%%", 100*molecules/total)),
+    htmltools::span("Input read pairs retained as molecules")),
+  htmltools::div(class = "metric", htmltools::strong(sprintf("%.2f%%", lv$published_mass_percent_median)),
+    htmltools::span("Median LV molecule coverage on exact published pair IDs")),
+  htmltools::div(class = "metric", htmltools::strong("4 × 2"),
+    htmltools::span("Measured generations × biological replicates")))
+```
+
+The assay is **hBFA1 / YPD**, sampled at generations **8, 16, 24 and 40** in
+replicates **R1 and R2**. A lineage identifier is the ordered barcode pair
+**BC2_BC1**. Each component is normally 26 bases; observed lengths 24–28 are
+retained. Read pairs, merged alignments, distinct sequences, clusters, and
+UMI-deduplicated molecules are different units and are labeled below.
+
+<div class="note">The publication is a differently processed experimental reference,
+not a set of true barcode labels. Retention, mapping percentages, and published-ID
+coverage are not accuracy percentages. We cannot derive biological FP/FN from this comparison.</div>
+
+## Mapping retains most merged reads
+
+The mapping overview comes directly from `summarise_bam_stats()` and
+`plot_bam_stats()`. These counts concern **PEAR-merged BAM alignments**; the mapping
+percentage uses mapped plus unmapped merged alignments as its denominator.
+It excludes original pairs that PEAR did not merge. The table exposes the
+original input-pair count for comparison.
+
+```{r mapping-plot}
+mapping_data <- report$mapping
+mapping_data$sample <- factor(mapping_data$sample, levels = rev(report$manifest$sample))
+mapping_plot <- barbac::plot_bam_stats(mapping_data) + barbac::theme_barbac(base_size = 12, family = "Arial") +
+  ggplot2::labs(y = "Merged BAM alignments")
+report_plotly(mapping_plot, tooltip = c("x", "y", "fill"))
+```
+
+```{r mapping-table}
+x <- report$mapping
+names(x) <- c("Sample", "Mapped", "Unmapped", "Input pairs", "Merged alignments", "Mapped / merged (%)")
+report_table(x, "Counts recalculated from all eight completed BAMs.")
+```
+
+## Extraction retains observed barcode lengths
+
+The following are the **actual panels returned by `barbac_xtr.stats()`** for both
+components in each sample. Expand a sample to inspect barcode length, abundance,
+nucleotide-composition entropy, and the length-bin summary. The requested range
+is 24–28 bases. A regression test protects the corrected range calculation
+against changes in input row order.
+
+The histograms count **distinct extracted sequences**, each contributing once.
+In these package panels, **“Reads” means retained UMI-deduplicated molecules**.
+Sequence entropy measures nucleotide composition within a barcode, not population
+diversity or clustering accuracy. These panels describe the retained input;
+the filtering table below describes molecules removed earlier.
+
+```{r extraction-panels}
+htmltools::tagList(lapply(seq_len(nrow(report$manifest)), function(i) {
+  sample <- report$manifest$sample[i]
+  panels <- Filter(function(p) p$sample == sample, report$panels)
+  htmltools::tags$details(open = if (i == 1) "open" else NULL,
+    htmltools::tags$summary(paste(report$manifest$replicate[i], "· generation", report$manifest$generation[i], "·", sample)),
+    htmltools::tagList(lapply(panels, function(p) htmltools::tagList(
+      htmltools::tags$h4(p$component), img(p$path, paste(sample, p$component, "barbac extraction diagnostics"))))))
+}))
+```
+
+```{r extraction-losses}
+x <- report$extraction[c("sample", "total_pairs", "quality_failed", "no_complete_BAM_barcode_pair", "umi_duplicates", "barbac_input_molecules")]
+x$`Retained (%)` <- 100*x$barbac_input_molecules/x$total_pairs
+names(x)[1:6] <- c("Sample", "Input pairs", "Quality failed", "No complete BAM pair", "Repeated UMI", "Retained molecules")
+report_table(x, "Sequential filtering outcomes; columns reconcile to the original input pairs.", digits = 2)
+```
+
+## Cluster statistics describe abundance, not truth
+
+`cluster_stats()` summarizes the saved LV and Hamming cluster outputs.
+**BC2 and BC1 are clustered separately** across all eight samples, then paired
+identities are reconstructed. The component table therefore has the same pooled
+molecule total in every row: it must not be added across components or modes.
+Fewer clusters can reflect correction or over-merging; these statistics alone
+cannot distinguish the two.
+
+```{r component-clusters}
+x <- report$cluster_components
+x$method <- unname(report_labels[x$method])
+names(x)[names(x) == "total_reads"] <- "total_molecules"
+report_table(x, "Pooled component summaries from cluster_stats(). Fractions range from 0 to 1.", digits = 4)
+```
+
+For paired lineages, `cluster_stats()` is applied separately to each sample's
+**positive counts**. The complete time-series tables also contain explicit zero
+observations; these zeros are preserved for trajectories and excluded when
+counting observed clusters. “Singleton” here means a lineage supported by one molecule.
+
+```{r paired-clusters}
+x <- report$cluster_pairs
+x$method <- unname(report_labels[x$method])
+names(x)[names(x) == "total_reads"] <- "total_molecules"
+report_table(x, "Observed paired lineages per sample; fraction columns range from 0 to 1.", digits = 4, filter = "top")
+```
+
+## Major barcode pairs change across generations
+
+These interactive panels are generated by **`barbac_ts_area(interactive = "ggiraph")`**.
+Hover to identify a lineage and inspect its frequency; the toolbar supports zoom
+and image export. The same four largest pooled LV pairs are shown in every panel,
+with every other assigned pair retained in **Other**. This preserves the denominator
+and gives the same identifiers the same colors across modes and replicates.
+
+Frequencies use **all assigned molecules**, including unpublished pairs. Actual zeros
+remain zero: `min_total_count = 0`, `fill_missing = "zero"`, and no time shift.
+Areas connect only four measured generations; intermediate frequencies are visual
+interpolation, not additional observations or fitted growth. The lookup table after
+these panels gives the complete sequences behind the short labels.
+
+::: {.panel-tabset}
+### LV · R1
+
+```{r lv-r1}
+report$compositions[["barbac_lv R1"]]$widget
+```
+
+### LV · R2
+
+```{r lv-r2}
+report$compositions[["barbac_lv R2"]]$widget
+```
+
+### Hamming · R1
+
+```{r ham-r1}
+report$compositions[["barbac_hamming R1"]]$widget
+```
+
+### Hamming · R2
+
+```{r ham-r2}
+report$compositions[["barbac_hamming R2"]]$widget
+```
+
+:::
+## Every paired count remains available
+
+Search for a full barcode pair or either sequence component, sort by abundance,
+and download the filtered table as CSV. These tables contain the **complete barcode
+universe for each barbac mode**, including explicit zero counts and published IDs
+that were not observed. Each generation column contains UMI molecule counts;
+the pooled column sums the eight samples. A published-ID match identifies exact
+sequence membership, not validated biological truth.
+
+::: {.panel-tabset}
+### Plot label lookup
+
+```{r label-lookup}
+report_table(report$lookup, "Full pair identifiers used in the composition and publication figures.", digits = 0)
+```
+
+### LV counts
+
+```{r lv-explorer}
+report_table(report$explorer$barbac_lv, "Complete LV barcode-pair counts across all eight samples.", digits = 0, page_length = 8)
+```
+
+### Hamming counts
+
+```{r ham-explorer}
+report_table(report$explorer$barbac_hamming, "Complete Hamming barcode-pair counts across all eight samples.", digits = 0, page_length = 8)
+```
+
+:::
+## Publication agreement is high, with unmatched mass
+
+**LV closely reproduces the ranking of published barcode counts.** The correlation
+uses all 2,314 published pair IDs in each sample, inserting zero for absent calls.
+All 48 correlations, coverage percentages, and frequency differences were
+recalculated in R and checked against the completed comparison.
+
+The figure shows each sample's correlation. Its focused correlation range makes
+differences near one visible; it is not a percentage axis. The exact median values
+and retained molecule coverage appear in the table. Starcode is slightly closer
+to the reference on this assay; that does not establish superior biological accuracy.
+
+```{r agreement-plot}
+x <- report$agreement
+x$Method <- factor(unname(report_labels[x$method]), levels = unname(report_labels))
+p <- ggplot2::ggplot(x, ggplot2::aes(Method, spearman, text = sample)) +
+  ggplot2::geom_point(position = ggplot2::position_jitter(width = .09, height = 0, seed = 42),
+    color = report_blue, alpha = .7, size = 2) +
+  ggplot2::coord_flip() + ggplot2::labs(x = NULL, y = "Spearman correlation (focused range)",
+    title = "Count-rank agreement across eight samples") + barbac::theme_barbac(base_size = 12, family = "Arial")
+report_plotly(p, tooltip = c("text", "x", "y"))
+```
+
+```{r method-table}
+x <- report$summary[c("method", "spearman_median", "published_mass_percent_median", "clustering_seconds_median", "unassigned_molecules")]
+x$method <- unname(report_labels[x$method])
+names(x) <- c("Method", "Median Spearman", "Median published-ID molecule coverage (%)", "Median clustering (s)", "Unassigned molecules")
+report_table(x, "Agreement/coverage: medians across eight samples. Time: median of three repeats.", digits = 6)
+```
+
+The **`r sprintf("%.2f%%", lv$published_mass_percent_median)`** LV coverage value is
+the median across samples. Weighting all samples by their molecule counts instead,
+**`r sprintf("%.2f%%", report$unmatched$pooled_unmatched_percent)`** of LV molecules
+fall outside the published pair set. Two abundant absent pairs account for
+**`r sprintf("%.2f%%", report$unmatched$largest_two_percent_of_unmatched)`** of this
+unmatched mass. Both have BC2 at least seven edits from every published BC2,
+outside the distance-three correction radius. Their biological validity and the
+reason for their absence from the author reference remain unresolved.
+
+## Clustering time is separate from preprocessing
+
+Hamming has the lowest median clustering time in this run. LV has a similar
+median time to Starcode. Bars show **medians of three serial repeats**, and
+whiskers show their **minimum–maximum range**. These are observed ranges, not
+confidence intervals. All three repeats produced identical memberships.
+
+```{r timing-plot}
+x <- report$summary
+x$Method <- factor(unname(report_labels[x$method]), levels = unname(report_labels[x$method[order(-x$clustering_seconds_median)]]))
+p <- ggplot2::ggplot(x, ggplot2::aes(Method, clustering_seconds_median)) +
+  ggplot2::geom_col(fill = report_blue, width = .65) +
+  ggplot2::geom_errorbar(ggplot2::aes(ymin = clustering_seconds_min, ymax = clustering_seconds_max), width = .2) +
+  ggplot2::coord_flip() + ggplot2::labs(x = NULL, y = "Combined BC2 + BC1 workflow (seconds)",
+    title = "Clustering workflow time", subtitle = "Startup, clustering and required exports; shared preprocessing excluded") +
+  barbac::theme_barbac(base_size = 12, family = "Arial")
+report_plotly(p, tooltip = c("x", "y", "ymin", "ymax"))
+```
+
+Timing includes process startup, clustering, required format conversion and
+centroid/member exports for both pooled components. It excludes downloading,
+FastQC, PEAR, mapping, barcode extraction, trajectory reconstruction, comparison,
+and creation of this report. The benchmark ran serially on macOS ARM64 with
+16 GiB RAM; method thread settings were one. These times are not predictions
+for a different cluster or sequencing depth.
+
+## Methods and validation
+
+The workflow is FastQC → PEAR → minimap2 → indexed BAM → `barbac_xtr()` flank
+extraction → original-pair quality filtering → original-order UMI deduplication.
+Both barcode components retain their observed sequence lengths and their pair
+identity; BC1 is converted to the author's orientation. PEAR consensus can change
+the barcode relative to the original mate, which the extraction audit records.
+
+All methods receive the same molecule counts at **distance 3**. Barbac uses
+support ordering, merge ratio 20, configured error rate 0.005, and the optional
+Poisson indel model for LV only. Shepherd uses supplied error rate 0.005 after
+automatic estimation failed on BC1. That choice preceded publication comparison.
+The error-rate setting is an assumption, not an estimated error rate for these reads.
+
+The report recomputes mapping statistics, checks extracted component totals,
+calls `cluster_stats()`, and recalculates correlations and timing summaries in R.
+The saved clustering assignments and original comparison files are unchanged.
+Original FASTQ sizes/MD5s, FastQC counts, frequency denominators and repeated
+memberships passed the preceding complete-analysis validation.
+
+```{r checks}
+data <- data.frame(Check = gsub("_", " ", names(report$checks)),
+  Result = ifelse(unlist(report$checks), "Passed", "Failed"))
+knitr::kable(data, row.names = FALSE)
+```
+
+<details><summary>R functions used in this report</summary>
+
+```{r function-examples, echo=TRUE, eval=FALSE}
+mapping <- summarise_bam_stats(bam_dir)
+plot_bam_stats(mapping)
+barbac_xtr.stats(extracted_component, barcode_length = c(24, 28))
+cluster_stats(component_centroids)
+cluster_stats(data.frame(sum_counts = paired_counts[paired_counts > 0]))
+barbac_ts_area(composition_counts, min_total_count = 0,
+               fill_missing = "zero", time_zero_shift = FALSE,
+               x_breaks = c(8, 16, 24, 40), interactive = "ggiraph")
+```
+
+</details>
+
+The study source is [Chen, Johnson, Hérissant et al. (2023)](https://doi.org/10.7554/eLife.92899),
+BioProject **PRJNA912754**. Published analysis files are pinned to author repository
+revision `a375a116bf69160f634a3d6a1b0ecc53ad62d142`. The separate validation receipt
+records hashes of the exact report inputs, R source files and final HTML.
+
+## What this supports, and what remains open
+
+**The completed analysis supports fast retrospective reconstruction with very
+high agreement on the published pair set.** It does not establish that barbac is
+universally most accurate, or that every unmatched pair is an error. The author
+pipeline includes additional lane, abundance, chimera and composition filters
+that are not reproduced in this comparison.
+
+The next useful investigation is to trace the two abundant unpublished pairs
+through the author's filtering and lineage-selection steps. That could explain
+a large part of the reference mismatch. Independent labeled controls would be
+needed to turn experimental agreement into a direct accuracy measurement.
+
+Pooling all four generations makes this analysis retrospective. No fitness
+coefficients, causal effects or performance on future timepoints are inferred.
+Open questions are whether unmatched abundant pairs are biological lineages or
+artifacts, which publication filters removed them, and how stable the correction
+is in an independent assay with different abundance and error patterns.

@@ -225,6 +225,12 @@ not ground-truth accuracy. [Figures and complete counts](benchmark/time_series_c
 and [reproduction/SLURM instructions](benchmark/time_series_chen2023/README.md)
 are available; the manuscript includes Section 3.6, Table 3 and Figure 6.
 
+The [interactive Quarto report](benchmark/time_series_chen2023/r_report/report.html)
+uses barbac's R extraction panels, mapping plots, cluster statistics and interactive
+time-series plots. It includes complete searchable LV/Hamming count tables with
+CSV downloads. Open the HTML locally, or follow the
+[R reproduction instructions](benchmark/time_series_chen2023/r_report/README.md).
+
 ### Parity with Shepherd on the Johnson et al. (2023) reference dataset
 
 Same input (100,000 true barcodes, ~1.5M unique reads), same parameters (max distance 3), same evaluation protocol.

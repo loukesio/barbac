@@ -1,5 +1,23 @@
 # Handoff: barbac clustering performance and benchmarking
 
+**R / Quarto reporting update:** the portable
+[interactive report](benchmark/time_series_chen2023/r_report/report.html) now uses
+`summarise_bam_stats()`, `plot_bam_stats()`, all 16 `barbac_xtr.stats()` panels,
+`cluster_stats()`, `barbac_ts_area(interactive = "ggiraph")` and `theme_barbac()`.
+All calculations and preparation are in R; Quarto renders the single HTML file.
+Both barbac modes have complete searchable paired count tables and CSV export.
+See [report instructions and validation](benchmark/time_series_chen2023/r_report/README.md).
+The original comparison/manuscript outputs remain unchanged.
+
+A small pre-existing extraction-statistics defect was fixed: the data column
+`barcode_length` shadowed the requested length bounds inside `mutate()`.
+Explicit `.env$barcode_length` fixes the length-bin table independently of row
+order. The regression fails before the fix and passes after it; package tests
+and report adapter checks pass. The `barbac_xtr()` extraction body and statistics
+API are unchanged, as are clustering code, inputs and memberships. Historical
+analysis source hashes still refer to the original run at `bf171db`; the report
+records its own current source hashes rather than rewriting that history.
+
 **Complete Chen 2023 time series (9 September 2026):** all eight hBFA1/YPD
 samples (generations 8/16/24/40, two biological replicates) have run locally
 through FastQC → PEAR → minimap2 → BAM → indel-preserving `barbac_xtr()` →

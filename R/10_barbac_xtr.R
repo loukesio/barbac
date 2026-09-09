@@ -290,12 +290,12 @@ barbac_xtr.stats <- function(file,
   bin_data <- data %>%
     dplyr::mutate(
       bin = dplyr::case_when(
-        barcode_length < barcode_length[1] ~ 
-          sprintf("< %d bp", barcode_length[1]),
-        barcode_length >= barcode_length[1] & barcode_length <= barcode_length[2] ~ 
-          sprintf("%d - %d bp", barcode_length[1], barcode_length[2]),
+        barcode_length < .env$barcode_length[1] ~
+          sprintf("< %d bp", .env$barcode_length[1]),
+        barcode_length >= .env$barcode_length[1] & barcode_length <= .env$barcode_length[2] ~
+          sprintf("%d - %d bp", .env$barcode_length[1], .env$barcode_length[2]),
         TRUE ~ 
-          sprintf("> %d bp", barcode_length[2])
+          sprintf("> %d bp", .env$barcode_length[2])
       )
     ) %>%
     dplyr::group_by(bin) %>%

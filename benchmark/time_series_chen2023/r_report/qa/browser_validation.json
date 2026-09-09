@@ -1,0 +1,206 @@
+{
+  "status": "passed",
+  "offline_network_blocked": true,
+  "desktop": {
+    "title": "barbac · Chen barcode time series",
+    "tables": [
+      {
+        "id": "DataTables_Table_0",
+        "caption": "Counts recalculated from all eight completed BAMs.",
+        "rows": 8
+      },
+      {
+        "id": "DataTables_Table_1",
+        "caption": "Sequential filtering outcomes; columns reconcile to the original input pairs.",
+        "rows": 8
+      },
+      {
+        "id": "DataTables_Table_2",
+        "caption": "Pooled component summaries from cluster_stats(). Fractions range from 0 to 1.",
+        "rows": 4
+      },
+      {
+        "id": "DataTables_Table_3",
+        "caption": "Observed paired lineages per sample; fraction columns range from 0 to 1.",
+        "rows": 16
+      },
+      {
+        "id": "DataTables_Table_4",
+        "caption": "Full pair identifiers used in the composition and publication figures.",
+        "rows": 5
+      },
+      {
+        "id": "DataTables_Table_5",
+        "caption": "Agreement/coverage: medians across eight samples. Time: median of three repeats.",
+        "rows": 6
+      },
+      {
+        "id": "DataTables_Table_6",
+        "caption": "Complete LV barcode-pair counts across all eight samples.",
+        "rows": 13687
+      },
+      {
+        "id": "DataTables_Table_7",
+        "caption": "Complete Hamming barcode-pair counts across all eight samples.",
+        "rows": 29526
+      }
+    ],
+    "girafe": 4,
+    "girafeWithPlots": 4,
+    "plotly": 3,
+    "images": [
+      {
+        "alt": "hBFA1-YPD-R1-Time8 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R1-Time8 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R1-Time16 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R1-Time16 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R1-Time24 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R1-Time24 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R1-Time40 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R1-Time40 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time8 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time8 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time16 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time16 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time24 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time24 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time40 BC2 · diverse barcode barbac extraction diagnostics",
+        "loaded": true
+      },
+      {
+        "alt": "hBFA1-YPD-R2-Time40 BC1 · environment barcode barbac extraction diagnostics",
+        "loaded": true
+      }
+    ],
+    "horizontalOverflow": false,
+    "overflowElements": [
+      {
+        "tag": "TABLE",
+        "id": "",
+        "class": "stripe hover compact dataTable no-footer",
+        "right": 1466.8281
+      },
+      {
+        "tag": "THEAD",
+        "id": "",
+        "class": "",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TR",
+        "id": "",
+        "class": "",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TH",
+        "id": "",
+        "class": "dt-right sorting",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TABLE",
+        "id": "DataTables_Table_2",
+        "class": "stripe hover compact dataTable no-footer",
+        "right": 1466.8281
+      },
+      {
+        "tag": "THEAD",
+        "id": "",
+        "class": "",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TR",
+        "id": "",
+        "class": "",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TH",
+        "id": "",
+        "class": "dt-right sorting",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TBODY",
+        "id": "",
+        "class": "",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TR",
+        "id": "",
+        "class": "odd",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TD",
+        "id": "",
+        "class": "  dt-right",
+        "right": 1466.8281
+      },
+      {
+        "tag": "TR",
+        "id": "",
+        "class": "even",
+        "right": 1466.8281
+      }
+    ]
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390,
+    "overflow": false
+  },
+  "sample_expansion": true,
+  "composition_tab_switch": true,
+  "complete_table_row_counts": true,
+  "composition_hover_tooltip": true,
+  "barcode_search": true,
+  "CSV_download_verified": true,
+  "javascript_exceptions": 0,
+  "screenshots": ["desktop_barcode_search.png", "desktop_composition_hover.png", "desktop_composition.png", "desktop_extraction.png", "desktop_hamming_r2.png", "desktop_summary.png", "mobile_summary.png"]
+}
