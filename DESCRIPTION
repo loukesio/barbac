@@ -28,6 +28,8 @@ Imports:
     stringr,
     GenomicAlignments,
     GenomicRanges,
+    Rsamtools,
+    Biostrings,
     patchwork,
     tidyr,
     PNWColors

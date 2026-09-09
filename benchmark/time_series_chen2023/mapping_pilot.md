@@ -1,5 +1,9 @@
 # Complete-sample mapping pilot, 9 September 2026
 
+**Historical pilot:** the complete eight-sample BAM extraction and comparison
+have since finished. See [current results](results/README.md). The measurements
+and planning estimates below describe the earlier mapping-only check.
+
 The selected eight samples are practical to start locally. The first complete
 sample, **SRR22757105 / hBFA1-YPD-R1-Time8**, ran through the existing
 `run_cli_pipeline()` in **248.38 seconds (4.14 minutes)**, including R startup,

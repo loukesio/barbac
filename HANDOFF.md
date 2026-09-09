@@ -1,28 +1,42 @@
 # Handoff: barbac clustering performance and benchmarking
 
-**Current time-series direction (user clarification):** reference mapping → BAM
-→ barbac extraction is required. Reuse the existing `configure_environment()` /
-`use_barbac_env()` setup and `barbac_env`; do not introduce a second environment.
-The first complete Chen sample has run locally through `run_cli_pipeline()`;
-see [mapping pilot](benchmark/time_series_chen2023/mapping_pilot.md).
-The empirical masked cassette reference has 167 bases, BC2 50–75 and BC1 110–135
-(one-based inclusive; reverse-complement BC1 for the published orientation).
-The original project reference is for a different construct. The BAM extraction
-adapter still needs to preserve indels, paired identities and original UMI order;
-do not describe the direct-parser SLURM stage as satisfying this requirement.
+**Complete Chen 2023 time series (9 September 2026):** all eight hBFA1/YPD
+samples (generations 8/16/24/40, two biological replicates) have run locally
+through FastQC → PEAR → minimap2 → BAM → indel-preserving `barbac_xtr()` →
+original-order quality/UMI filtering → six-method clustering. Reused
+`barbac_env`; no real SLURM jobs were submitted. The empirical 167-base cassette
+reference has BC2 at 50–75 and BC1 at 110–135 (one-based; reverse-complement BC1).
+Observed 24–28-base components and paired identities are retained.
 
-**Publication-parser preparation completed:**
-[Chen 2023 cluster workflow](benchmark/time_series_chen2023/README.md) selects
-hBFA1 YPD, generations 8/16/24/40 in two replicates (eight runs, 16 FASTQs,
-1.25 GB compressed). ENA download URLs/MD5s are joined to pinned author primer
-metadata and processed counts. A 50,000-pair local prefix pilot retained
-48,954 UMI-deduplicated molecules and exactly matched the author's extraction
-counts. The helper preserves both barcode components and lengths 24–28; it
-does not use the existing fixed-coordinate BAM extractor. Six meaningful
-extraction tests and local SLURM submission checks pass. Cluster settings have
-been requested but not supplied; no real SLURM jobs or full time-series method
-comparison have run. Use the provided pilot before full cluster extraction.
-Published counts measure reference agreement, not true FP/FN labels.
+See [results and figures](benchmark/time_series_chen2023/results/README.md),
+[reproduction/SLURM instructions](benchmark/time_series_chen2023/README.md), and
+[validation](benchmark/time_series_chen2023/results/validation.json).
+All 16 complete FASTQs pass ENA MD5/size checks; FastQC reconciles 16,511,755
+input pairs. Extraction retains 16,051,344 molecules (97.21%). Both pooled
+components are clustered at distance 3; barbac uses support ordering, ratio 20,
+error rate 0.005, and Poisson for LV only. Native clustering remains v13.
+Median Spearman agreement with the 2,314 published pair IDs is 0.999968 for LV
+(14.65 s combined-component workflow) and 0.999929 for Hamming (11.97 s).
+Starcode has slightly higher reference agreement; Hamming is fastest by median.
+All memberships match across three fresh serial repeats. Timing excludes shared
+preprocessing. Shepherd automatic error estimation failed on BC1; both its
+components use documented `-e 0.005`, set before publication comparison.
+
+Median LV molecule coverage on exact published IDs is 83.09%; this is not an
+accuracy percentage. Pooled unmatched mass is 19.70%, of which two abundant
+pairs account for 69.47%; their BC2 sequences are at least seven edits from every
+published BC2. The reason the author reference omits them is unresolved.
+Publication counts are a differently processed reference, not true FP/FN labels.
+Section 3.6, Table 3 and Figure 6 document this application; Table 2 retains the
+previous five-dataset benchmark. The Word manuscript is regenerated locally.
+
+The optional flank mode in `barbac_xtr()` adds query-space extraction without
+changing default fixed-coordinate behavior. Synthetic indel/orientation tests,
+13,657-alignment real-BAM parity, and ten Python extraction/submission tests
+pass. Full `R CMD check --no-manual` has zero errors and one existing AppleClang
+warning from R's `R_ext/Boolean.h`; tests and vignettes pass. Reference-construction
+and direct-parser pilot reports are historical validation records. Cluster
+account/partition/scratch configuration remains site-specific.
 
 The five-dataset comparison now also has a compact F1/time summary and a
 publication schematic in PNG/SVG/PDF, embedded as Figure 5 in the regenerated

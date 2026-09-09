@@ -1,0 +1,21 @@
+{
+  "total_LV_molecules": 16051344,
+  "unmatched_LV_molecules": 3162118,
+  "pooled_unmatched_percent": 19.700020135385547,
+  "largest_two_unmatched_molecules": 2196844,
+  "largest_two_percent_of_unmatched": 69.47381470267713,
+  "largest_two_nearest_published_BC2_LV": [
+    7,
+    7
+  ],
+  "interpretation": "The largest differences include abundant pairs whose BC2 sequences are outside the distance-three radius of every published BC2. This does not establish their biological validity or the reason the publication omits them. No diagnostic remapping was applied.",
+  "inputs_sha256": {
+    "time_series_barbac_lv.csv.gz": "1097ccc92948620dac1c02cbb00d1444921345d8223dfa2cf7af50154825624b",
+    "time_series_barbac_hamming.csv.gz": "bc3680742e24cadb2748a86474e73d506b0fd27e04b43131060fb7c899de7c5a",
+    "time_series_shepherd.csv.gz": "e61682c0db1c461e70f9c688e44c2762d32d91af7123345b48436be973e01399",
+    "time_series_starcode_sphere.csv.gz": "469f6579b13a4eda0b2443c601cc8628987fbb789a65e129fec36b8ced226731",
+    "time_series_starcode_mp.csv.gz": "7502aa2510b2895b5d2217711055ea3b0e697038c0a222037ad280d266393a11",
+    "time_series_bartender.csv.gz": "a4388c4f6f7e68af47ff6578722cb34c0c281958884f180776b6557ee226b025"
+  },
+  "script_sha256": "da5a9be691a4c0121bde40f114c305b0703aa11adf31b18c5f5ea407c4da9fd5"
+}

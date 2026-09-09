@@ -31,13 +31,17 @@ class SubmissionTests(unittest.TestCase):
                 subprocess.run(['bash', str(HERE/'submit.sh'), str(config), mode], env=env,
                                check=True, capture_output=True, text=True)
             calls = [json.loads(line) for line in logfile.read_text().splitlines()]
-            self.assertEqual(len(calls), 4)
+            self.assertEqual(len(calls), 6)
             self.assertIn('--array=0', calls[0])
-            self.assertIn('--array=0-7%2', calls[2])
+            self.assertIn('--array=0-7%2', calls[3])
             self.assertIn('--dependency=afterok:12345', calls[1])
-            self.assertIn('--dependency=afterok:12345', calls[3])
-            self.assertEqual(calls[0][-2:], ['download', '100000'])
-            self.assertEqual(calls[3][-2:], ['extract', '0'])
+            self.assertIn('--dependency=afterok:12345', calls[2])
+            self.assertIn('--dependency=afterok:12345', calls[4])
+            self.assertIn('--dependency=afterok:12345', calls[5])
+            self.assertIn('--cpus-per-task=4', calls[1])
+            self.assertEqual(calls[0][-2:], ['download', '0'])
+            self.assertEqual(calls[1][-2:], ['map', '0'])
+            self.assertEqual(calls[5][-2:], ['extract', '0'])
             if configured:
                 self.assertIn('--partition=transfer', calls[0])
                 self.assertIn('--partition=compute', calls[1])

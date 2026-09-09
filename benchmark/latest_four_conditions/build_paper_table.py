@@ -220,6 +220,9 @@ def main():
     text=paper.read_text()
     start=text.index('**3.3 Comparison with established error-correction methods**')
     end=text.index('**4 Discussion**',start)
+    # Preserve the independent experimental time-series application when present.
+    time_series=text.find('**3.6 Barcode time-series application**',start,end)
+    if time_series!=-1:end=time_series
     before=text[:start]; after=text[end:]
     # Change only discussion text dependent on the replaced comparisons.
     if 'Furthermore, while barbac efficiently integrates' in after:

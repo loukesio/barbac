@@ -10,7 +10,7 @@ kit="$BARBAC_REPO/benchmark/time_series_chen2023"
 [[ -f $kit/samples.tsv ]] || { echo 'Sample manifest not found' >&2; exit 1; }
 [[ ${BARBAC_ARRAY_LIMIT:-2} =~ ^[1-9][0-9]*$ ]] || { echo 'Invalid array limit' >&2; exit 1; }
 case "$mode" in
-  pilot) indices=0; max_pairs=100000 ;;
+  pilot) indices=0; max_pairs=0 ;;
   full) indices="0-7%${BARBAC_ARRAY_LIMIT:-2}"; max_pairs=0 ;;
   *) echo 'Mode must be pilot or full' >&2; exit 1 ;;
 esac
@@ -27,8 +27,11 @@ partition=${BARBAC_DOWNLOAD_PARTITION:-${BARBAC_PARTITION:-}}
 download_job=$(sbatch "${download_options[@]}" --job-name=barbac-download --mem=1G --time=04:00:00 \
     "$kit/task.sbatch" "$config" download "$max_pairs")
 download_job=${download_job%%;*}
+map_job=$(sbatch "${extract_options[@]}" --job-name=barbac-map --cpus-per-task=4 \
+    --dependency="afterok:$download_job" "$kit/task.sbatch" "$config" map "$max_pairs")
+map_job=${map_job%%;*}
 extract_job=$(sbatch "${extract_options[@]}" --job-name=barbac-extract \
-    --dependency="afterok:$download_job" "$kit/task.sbatch" "$config" extract "$max_pairs")
+    --dependency="afterok:$map_job" "$kit/task.sbatch" "$config" extract "$max_pairs")
 extract_job=${extract_job%%;*}
-printf 'Download job: %s\nExtraction job: %s\nScope: %s\n' "$download_job" "$extract_job" "$mode"
+printf 'Download job: %s\nMapping job: %s\nExtraction job: %s\nScope: %s\n' "$download_job" "$map_job" "$extract_job" "$mode"
 printf 'Check usage after completion: sacct -j %s --format=JobID,State,Elapsed,MaxRSS,ExitCode\n' "$extract_job"

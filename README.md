@@ -213,13 +213,17 @@ and a [dataset schematic](manuscript/media/benchmark_datasets.png). Barbac leads
 in three simulated conditions and on the reference; Bartender narrowly leads
 random substitution-only data. The tables below retain earlier snapshots.
 
-The [Chen 2023 time-series workflow](benchmark/time_series_chen2023/README.md)
-provides a verified eight-sample FASTQ manifest, paired-barcode/UMI extraction,
-and configurable SLURM scripts for reproducing the publication's parser.
-It reuses the existing `barbac_env`. A complete first sample ran through the
-existing FASTQ→BAM pipeline in about 4.1 minutes locally using a reconstructed
-masked cassette reference. The requested paired/UMI extraction from BAM is
-still being validated; full time-series execution and method comparison are pending.
+The [Chen 2023 time-series analysis](benchmark/time_series_chen2023/results/README.md)
+processes all eight hBFA1/YPD samples through the existing FASTQ→BAM pipeline
+and indel-preserving paired/UMI extraction, reusing `barbac_env`. It retains
+16.05 million molecules from 16.51 million read pairs and compares six methods
+across generations 8, 16, 24 and 40 in two replicates. LV barbac reaches median
+Spearman agreement 0.999968 with the publication in 14.65 seconds of combined
+component clustering; Hamming takes 11.97 seconds. Starcode has slightly higher
+reference agreement. These are experimental-reference agreement measurements,
+not ground-truth accuracy. [Figures and complete counts](benchmark/time_series_chen2023/results/README.md)
+and [reproduction/SLURM instructions](benchmark/time_series_chen2023/README.md)
+are available; the manuscript includes Section 3.6, Table 3 and Figure 6.
 
 ### Parity with Shepherd on the Johnson et al. (2023) reference dataset
 

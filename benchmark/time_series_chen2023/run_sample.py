@@ -27,7 +27,7 @@ def checked(path, row, mate):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('stage', choices=['download', 'extract'])
+    parser.add_argument('stage', choices=['download', 'map', 'extract', 'extract-original'])
     parser.add_argument('--manifest', type=Path, default=Path(__file__).with_name('samples.tsv'))
     parser.add_argument('--index', type=int, required=True, help='Zero-based manifest row')
     parser.add_argument('--work-dir', type=Path, required=True)
@@ -39,6 +39,13 @@ def main():
     if not 0 <= args.index < len(rows):
         raise ValueError('Array index outside manifest')
     row = rows[args.index]
+    if args.stage in ('map','extract'):
+        if args.max_pairs:
+            raise ValueError('BAM workflow uses complete samples; choose index 0 for the pilot')
+        from mapped_workflow import run
+        receipt=run(args.stage,args.work_dir,args.index,row)
+        print(json.dumps({'status':receipt['status'],'sample':row['sample'],'stage':args.stage}))
+        return
     raw = args.work_dir/'raw'/row['run']; raw.mkdir(parents=True, exist_ok=True)
     paths = [raw/f'{row["run"]}_{i}.fastq.gz' for i in (1, 2)]
     if args.stage == 'download':

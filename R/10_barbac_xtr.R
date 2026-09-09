@@ -11,6 +11,18 @@
 #'   based on input BAM file. Default is NULL.
 #' @param min_count Numeric. Minimum count threshold to include a barcode. Default is 1.
 #' @param verbose Logical. Print progress messages. Default is TRUE.
+#' @param flank_pattern Optional PCRE pattern containing a capture group for the
+#'   observed barcode. When supplied, extract from mapped query sequences instead
+#'   of fixed-width reference strings, preserving insertions and deletions.
+#' @param barcode_group Positive integer identifying the barcode capture group.
+#' @param read_window Optional two-element, one-based inclusive query window to
+#'   search after applying `reverse_complement`. NULL searches the entire query.
+#' @param reverse_complement Reverse-complement reference-oriented BAM query
+#'   sequences before flank matching. Only available with `flank_pattern`.
+#' @param include_read_ids With flank extraction, write one row per matching
+#'   primary alignment (`read_id`, `barcode`, `barcode_length`) instead of counts.
+#'   Names need not be unique in paired BAMs; callers must preserve mate identity.
+#' @param yield_size Number of BAM records to read per chunk for flank extraction.
 #'
 #' @return A character string with the path to the generated CSV file.
 #' 
@@ -57,7 +69,22 @@ barbac_xtr <- function(bam_file,
                        end_pos = 78,
                        output_file = NULL,
                        min_count = 1,
-                       verbose = TRUE) {
+                       verbose = TRUE,
+                       flank_pattern = NULL,
+                       barcode_group = 1L,
+                       read_window = NULL,
+                       reverse_complement = FALSE,
+                       include_read_ids = FALSE,
+                       yield_size = 100000L) {
+  if (!is.null(flank_pattern)) {
+    return(invisible(.barbac_xtr_flanks(
+      bam_file, ref_name, start_pos, end_pos, output_file, min_count, verbose,
+      flank_pattern, barcode_group, read_window, reverse_complement,
+      include_read_ids, yield_size)))
+  }
+  if (include_read_ids || reverse_complement || !is.null(read_window)) {
+    stop("Read IDs, query windows and reverse-complement extraction require flank_pattern.")
+  }
   
   # -----------------------------
   # Input validation
@@ -408,4 +435,3 @@ barbac_xtr.stats <- function(file,
   
   return(combined_plot)
 }
-

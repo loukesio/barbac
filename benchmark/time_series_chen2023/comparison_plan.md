@@ -47,3 +47,10 @@ unmatched molecule summaries, a trajectory figure, resource-use measurements,
 and manuscript text distinguishing simulation truth from experimental agreement.
 No claim that barbac is universally best follows from high extraction retention
 or agreement with one published processing pipeline.
+
+Execution adjustment: Shepherd's automatic error-rate estimator failed for the
+low-diversity BC1 input. Use its documented `-e 0.005` option consistently on
+both components, matching the pre-existing barbac configured rate. This is a
+supplied assumption, not an estimated experimental rate or tuning against the
+publication's results. Retain automatic-attempt logs separately; only successful
+fixed-rate runs enter the three-repeat timing comparison.

@@ -11,6 +11,8 @@ BARBAC_ARRAY_LIMIT=2
 # equivalent cluster modules. For the BAM workflow, also expose Rscript and
 # the R library where the working branch of barbac is installed.
 BARBAC_ENV_SETUP=""
+# Optional R library containing this working branch; empty uses R's defaults.
+BARBAC_R_LIBRARY=""
 # For example, that setup file could contain:
 # source /path/to/miniforge3/etc/profile.d/conda.sh
 # conda activate barbac_env
