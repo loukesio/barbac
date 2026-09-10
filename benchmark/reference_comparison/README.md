@@ -4,7 +4,8 @@ This experiment reruns the existing 100,000-barcode simulation that the project
 previously compared with Shepherd, Starcode, and Bartender (the dataset referred
 to as “Milos” in the discussion). It does not regenerate or modify the source data.
 
-Open the [full report](report.html) or inspect the [results CSV](results.csv).
+Inspect the [results CSV](results.csv). The generated `report.html` is a local
+output; rendered reports and full data are excluded from version control.
 Hamming with support ordering takes 18.4s for the measured workflow, versus
 111.0s for Shepherd, with nearly identical recovery. Shepherd narrowly leads
 F1 and supplied-parent agreement. Current LV with sequence ordering regresses

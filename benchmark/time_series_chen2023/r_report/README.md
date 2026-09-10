@@ -1,6 +1,8 @@
 # Interactive report using barbac's R functions
 
-Open **[report.html](report.html)** in a browser. It is a self-contained Quarto
+Generate **`report.html`** locally using the instructions below, then open it
+in a browser. Rendered reports, full count tables, report images and browser QA
+outputs stay local and are excluded from version control. It is a self-contained Quarto
 report: all scripts, styles, figures and barcode count tables are embedded. No
 R server, Python process, Shiny deployment or internet connection is needed to
 read it. The complete counts make the file approximately 18 MB.
@@ -58,7 +60,6 @@ for the local run; no new environment or global package installation was needed.
 - `validation.json`: input/source hashes and numerical check receipt.
 - `qa/browser_validation.json`: browser control, offline, download and layout checks.
 - `session_info.txt`: R and package versions used to generate the report.
-- `plan.md`: function inventory, metric definitions and chart contracts.
 
 Run the small adapter checks without sequencing files:
 

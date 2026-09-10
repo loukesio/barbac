@@ -226,7 +226,7 @@ all biological calculations and report preparation are in R.
 
 ## Optional LTC palette comparison
 
-The [palette comparison](r_report/palette_comparison.html) shows every barcode
+The locally generated palette comparison (`r_report/palette_comparison.html`) shows every barcode
 from treatment replicate 1 beside control replicate 1 using `alger`, `dora` and
 `casa_natal`, plus a swatch sheet of all 32 LTC palettes built into barbac.
 Use `barbac_ts_area(counts, palette = "alger")` directly. Frequencies, barcode

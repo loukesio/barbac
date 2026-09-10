@@ -1,7 +1,8 @@
 # Reconstructed E. coli time series
 
-The [explained Quarto report](../r_report/report.html) presents the results.
+The locally generated Quarto report (`../r_report/report.html`) presents the results.
 The [analysis instructions](../README.md) describe inputs, processing and SLURM.
+Full count matrices and rendered reports stay local; the scripts reproduce them.
 
 The 75 longitudinal samples contain 350,934,958 reads, of which 305,326,997
 (87.00%) yield extracted barcodes. The three shared initial samples contain

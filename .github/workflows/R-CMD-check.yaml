@@ -37,11 +37,6 @@ jobs:
             any::remotes
           needs: check
 
-      # ltc is a GitHub-only palette used by the vignette. Install it so
-      # R CMD check --as-cran doesn't flag it as an unstated dependency.
-      - name: Install GitHub-only palette dependency
-        run: Rscript -e 'remotes::install_github("loukesio/ltc_palettes", upgrade = "never")'
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true

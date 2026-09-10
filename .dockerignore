@@ -9,6 +9,12 @@
 .RDataTmp*
 .DS_Store
 *.Rproj
+HANDOFF.md
+.codex
+.agents
+data
+raw
+private
 
 # Large private benchmark artefacts (regenerate inside the container if needed)
 benchmark

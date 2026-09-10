@@ -240,7 +240,7 @@ For the comparison, cluster the **two components separately**, preserve
 their membership maps, and reconstruct BC2/BC1 pair counts for each time point.
 Do not treat concatenated 52-base pairs as ordinary Hamming inputs; the native
 Hamming implementation supports at most 32 bases. Do not collapse the lineage
-identity to BC2 alone. See [comparison_plan.md](comparison_plan.md).
+identity to BC2 alone. See the [comparison results and definitions](results/README.md).
 
 The complete outputs are in [results/](results/README.md): frequency trajectories,
 all 48 sample/method agreement comparisons, repeated clustering timings and
