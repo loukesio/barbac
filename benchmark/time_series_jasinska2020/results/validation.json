@@ -1,0 +1,80 @@
+{
+  "status": "passed",
+  "sample_read_totals_match_publication": 75,
+  "published_dominant_barcode_entries": 120,
+  "unique_input_reads": 364267911,
+  "populations": {
+    "No drug r1": {
+      "population": "No drug r1",
+      "timepoints": 14,
+      "clusters": 212722,
+      "all_count_cells_reconciled": true,
+      "shared_baseline_extracted_reads": 10533102
+    },
+    "Low CMP r1": {
+      "population": "Low CMP r1",
+      "timepoints": 13,
+      "clusters": 203034,
+      "all_count_cells_reconciled": true,
+      "shared_baseline_extracted_reads": 10533102
+    },
+    "No drug r2": {
+      "population": "No drug r2",
+      "timepoints": 14,
+      "clusters": 218384,
+      "all_count_cells_reconciled": true,
+      "shared_baseline_extracted_reads": 10533102
+    },
+    "Low CMP r2": {
+      "population": "Low CMP r2",
+      "timepoints": 13,
+      "clusters": 203437,
+      "all_count_cells_reconciled": true,
+      "shared_baseline_extracted_reads": 10533102
+    },
+    "No drug r3": {
+      "population": "No drug r3",
+      "timepoints": 14,
+      "clusters": 218983,
+      "all_count_cells_reconciled": true,
+      "shared_baseline_extracted_reads": 10533102
+    },
+    "Low CMP r3": {
+      "population": "Low CMP r3",
+      "timepoints": 13,
+      "clusters": 192267,
+      "all_count_cells_reconciled": true,
+      "shared_baseline_extracted_reads": 10533102
+    }
+  },
+  "full_count_matrices_reconciled": true,
+  "author_final_frequency_normalization": "unresolved; both explicit denominators reported",
+  "source_hashes": {
+    "validate_results.R": "c4377bd8ea11ce6a6fd3dfe3546c3d65a2bef63e96a931803a9690a590a725c0",
+    "frequency_audit.R": "552b3697e8737f1039dc5a2f1166811541b0bd6f6eda7f3a8f42df064efb3e01",
+    "r_report/report_helpers.R": "0edf7f9e96fb31b9c0bace60bc9e8d0284fa98e1b264678e09c0e260051eca99",
+    "provenance_helpers.R": "1dfa8f0617738417b127bd9aea563c0c64201e3632ca0e850b1ef85e798509e4"
+  },
+  "result_hashes": {
+    "A1_barcode_counts.csv.gz": "dd0e8558cc6db78348564b0a0a69e465901bd2fba88313df7036884796c225f8",
+    "A3_barcode_counts.csv.gz": "9618a96a4d12216f2b9d4c72f2c56db7d33ee84a3c7f0c1bde1a69b78bff780b",
+    "B1_barcode_counts.csv.gz": "265185869aee773f5306ef4bb37114b7a0aaa4f9b5111fdee148c600a2c7a9bc",
+    "B3_barcode_counts.csv.gz": "19232520798f210b588f23e82b28d8f26293a67b38282dfb01e10c86139d012b",
+    "C1_barcode_counts.csv.gz": "6ead1db5828f6413252fd7cae1db76e6f6bd21914d76143f866eec4e8dd16e58",
+    "C3_barcode_counts.csv.gz": "b04cc68d5e3af95dc23850c2fdb20e48e85b93b3403394935ee20852cf47f823",
+    "clustering_times.csv": "cc452e9bed2e0a5fefd1a68d417b1f232914efcb32971440e256c55609bee53f",
+    "diversity.csv": "7228ae2baf3719ced6c1c619a28c4fa8b8347b0ca6a3441af4f62d3ba71a0115",
+    "extraction_summary.csv": "d9c8fcc048c1e89dbc5fc5bd27b28f7f49180c102816e89ab9cd06f1bf3cdf78",
+    "metadata_schema_migration.json": "fa3b99ce7a469d8c6b6380d7b4af52db8455a9e49575c8247edd8915aa4aa473",
+    "processing_receipts.json": "f07a1571e9b1be5cf8a51b372b5cfbacb9f04ba93c8eb8e52cb0987dad6e6217",
+    "processing_validation.json": "c404a2aaf6119607455cde0096757b551d57de8101c44b8cdfb74f1266a6265b",
+    "provenance.json": "704a5c9a683acc8310af20a01e4c823a7e66c4795ca487052a2d0247bc754318",
+    "publication_denominator_audit.csv": "833b241cfd5d2a1736c4a72212e84567e5b88a574e626b5bb1717b6b5623ef19",
+    "publication_frequency_comparison.csv": "9b3346e2f7eac800c7bf685b73cc01f18dffc2dfe7054688d475460e5a97ec92",
+    "publication_frequency_summary.csv": "077b20fbd732551277ab6580fb0f2d08afa0b1a41a81c38d42ea63498657c004",
+    "publication_sample_comparison.csv": "5d0a15689bef88553a00c0b72f6b4fbdbd9dff647016eda86da353b0ff5a0dd7",
+    "publication_top_barcodes.csv": "718df9684f4a47ce0f37d4fe2a75e7bd57294c0a1855b9b1c72016bea24dea8d",
+    "release_clustering_times.csv": "f705bac0ec763b2524814978835d1eee13fd353fd1a421d87b289c1f9bc76b9f",
+    "release_validation.json": "194f10d8f2c8ddee5edf37d851ba5c9d7a7cb8209795f47276f0c82b8fb4ec2c"
+  }
+}

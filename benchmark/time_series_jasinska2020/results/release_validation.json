@@ -1,0 +1,178 @@
+{
+  "status": "passed",
+  "build": {
+    "status": "release_build",
+    "built_at_utc": "2026-09-10 11:26:21 UTC",
+    "compile_command": "clang++ -arch arm64 -std=gnu++17 -I\"/Library/Frameworks/R.framework/Resources/include\" -DNDEBUG  -I'/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/Rcpp/include' -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2   -c clustering.cpp -o clustering.o",
+    "binary_sha256": "acd52cee11063793a70888d2f164a392b25aab14d99d5d90edd43b63a247aea2",
+    "install_log_sha256": "d3c693d2c30e904aa9237e5b15566c4087b630e359837079f78482a0d4fc207e",
+    "source_hashes": {
+      "R/01_configure_environment.R": "eb61e4673c680bd4d3743047a5c92a22f569f32362fe652cf0533973dc2f91b7",
+      "R/02_use_barbac_env.R": "f5c678444cccbce23c463ef3bc572bed63b48808a6a16cae150464ce907ce202",
+      "R/03_check-barbac-tools.R": "25d2a6f9fb167364d12754b82fd68e611c8700010c656279c613c532128f3e1d",
+      "R/04_run_fastqc.R": "27de29bb0478b9a301e6801c0bf2dd08e15b7e146a53bfdf0e435362a8a658f3",
+      "R/05_run_multiqc.R": "e7ede42a2ff6a473c1f5224133bec411319aaf1139f7dec0142ffeecb3e32c6a",
+      "R/06_run_pear.R": "1f0cbf42223a7f6b1ba23e80229efeccbaa460f3baee8ec4a168e9b79b71bf80",
+      "R/07_run_minimap2.R": "2c26d01a8ad89a8eb71a2faff4ad3722495863768c3805d33512316eaff28ccf",
+      "R/08_summarise_bam_stats.R": "974f357b2f654310f25f3196344608b4eb7ac88241b0046e372c52919f10b7e5",
+      "R/09_run_cli_pipeline.R": "8bd7993f6a11e115fddc700c1897f3a215410fcb520ff5936991f856bf6ba780",
+      "R/10_barbac_xtr.R": "d15597a4541b4d6cc5dd487e07f91cb14b4ac06df8c6113b0f5daf4ffc69371c",
+      "R/10a_extract_flanked_bam.R": "7fd6e98001d8de236fc9f1aad1623ea3068864550810a502d685f849520baa88",
+      "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+      "R/12_barbac_ts_area.R": "8b142bf6c58b335cd8d810b4cc31a3fa69f84c0d37e4951c749e80a0541de1dd",
+      "R/13_theme_barbac.R": "c71d0b2674a592a2a1d47022a9c432cbfef9835fa7c0770c6b521bab63d61a33",
+      "R/14_cluster_stats.R": "08fd00a0c74462e255e239682c4cdf40638bbf4169f44b0f1535f2a68bf11212",
+      "R/barbac-package.R": "db5aa4bdd19c4f581864fe41322ac238253b5d2ab4d0c788555f76e8011377a6",
+      "R/RcppExports.R": "c46d8468ba91e7db9cb22d450034ea65ebea57c83d16ac516c8f15e47c592e83",
+      "src/clustering.cpp": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+      "src/RcppExports.cpp": "480e2a802534003f3af01e8ce86feb6ab18fae35bccfe62d45ac789419f51c61",
+      "DESCRIPTION": "e80f958b80d17ddab6aa56e2137fd0ebeae665f0e9a542b494dcad5f4343a38f",
+      "NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405"
+    },
+    "R": "R version 4.5.1 (2025-06-13)",
+    "platform": "aarch64-apple-darwin20"
+  },
+  "workers": 3,
+  "source_hashes": {
+    "benchmark_release.R": "ba1278c2c631ee8cd415995dd73450fe25db5a26a9dac37f546451566224205d",
+    "load_release.R": "2904a0e92ff876d9fb75b82a708538e5f0d7c52d4b079b7ca933035890555ed5",
+    "build_release.R": "5881ad16c4542f37fb9d9cd44f55f7fc3769e44f61a81dc7a827c06b8998e5d8",
+    "provenance_helpers.R": "1dfa8f0617738417b127bd9aea563c0c64201e3632ca0e850b1ef85e798509e4"
+  },
+  "all_memberships_and_centroid_counts_identical": true,
+  "populations": [
+    {
+      "signature": "f1fd522b732a64e37b2cbc8a895b4e6b2a6a5af4cbf584a53f0a457e27c903d6",
+      "well": "A3",
+      "status": "passed",
+      "mode": "Release rerun: every membership and centroid count matched development results",
+      "input_hashes": {
+        "input.csv": "260bc100487a38446e94693d71320c27059ba540c304c7a6132986bd61487c39",
+        "members.csv": "d69cee24928fcec46eae7fed4827311ae67a22f9dbdefddd31d78632c782e1a4",
+        "centroids.csv": "0b8de87813ac0c7baf6266f6226f47f95cc9ebc7c62fc856f4a3ab5881b36afa",
+        "completed.rds": "1a782abf21c55db6a88798acdc494cace017ed244c8af1604bddf5f3b54cbbaa"
+      },
+      "timing": [
+        {
+          "population": "Low CMP r1",
+          "unique_input_sequences": 1185394,
+          "clusters": 203034,
+          "clustering_seconds": 1238.237,
+          "clustering_cpu_seconds": 1220.242,
+          "input_read_observations": 54143804
+        }
+      ]
+    },
+    {
+      "signature": "b0a0ffd64f95745099231d2f212432337a4e9820c55793596c3d0a63ededf3b5",
+      "well": "B3",
+      "status": "passed",
+      "mode": "Release rerun: every membership and centroid count matched development results",
+      "input_hashes": {
+        "input.csv": "4bf7ff6d03e224ce6f6fc7fcc2a9ba9e2aa4ca34c3e0ccbf778854032367746e",
+        "members.csv": "f68566ae4facf3ba0b5bcf3851cea218f4b660c5f94af58d91f8748ef39ff2c1",
+        "centroids.csv": "771daf9027b979672882b80cfc4655bda8255c8248661122c959bc7a96e6c7c9",
+        "completed.rds": "c192987c9b5e0b98bf781dd76a1957a3ba10e0e732216cdd3c8b496a0762b315"
+      },
+      "timing": [
+        {
+          "population": "Low CMP r2",
+          "unique_input_sequences": 1306601,
+          "clusters": 203437,
+          "clustering_seconds": 1359.411,
+          "clustering_cpu_seconds": 1340.821,
+          "input_read_observations": 63262684
+        }
+      ]
+    },
+    {
+      "signature": "a6e012defc73273e509073e8dc5453312711c8e4294e9c335e624d92daeca99a",
+      "well": "C3",
+      "status": "passed",
+      "mode": "Release rerun: every membership and centroid count matched development results",
+      "input_hashes": {
+        "input.csv": "33528e5460fe26251ab3ea59c2ed78238d8999e85e6e72ca9be163dcaf3e1b81",
+        "members.csv": "8104f2072e75d42ce26a81e31c5dcaf42e2985ffd70bd716b051a642da24b031",
+        "centroids.csv": "56d11403bd00440bbf9d747378640aa40f39f72998efa4f58b782b4472c1283e",
+        "completed.rds": "1c892ea6fc55af450e009825f12a833f837ea0dc7ab2545e5c5a6988fc6b2325"
+      },
+      "timing": [
+        {
+          "population": "Low CMP r3",
+          "unique_input_sequences": 1261673,
+          "clusters": 192267,
+          "clustering_seconds": 1268.784,
+          "clustering_cpu_seconds": 1250.749,
+          "input_read_observations": 62288463
+        }
+      ]
+    },
+    {
+      "signature": "5b0d9cf84b08da00efbfdd2b43c22c49734cdfcb35e1fef5124dd7a027ebc15a",
+      "well": "A1",
+      "status": "passed",
+      "mode": "Release rerun: every membership and centroid count matched development results",
+      "input_hashes": {
+        "input.csv": "e5621974b590d417cf753b8f2cb6301645a939602d4d1753ed54a3bc66699675",
+        "members.csv": "fd039bd8c41a1f7a04de3fa23060be0454717f2bb85632249915e7148e42cfd4",
+        "centroids.csv": "c674330e754a1ed211e3331203cefdfaf46f487cb11a4c7f452c3096a15148a2",
+        "completed.rds": "7517c0c967d98663647a6e20fb615615ee3fdccd5910cc6d0abeab1d64976775"
+      },
+      "timing": [
+        {
+          "population": "No drug r1",
+          "unique_input_sequences": 1504230,
+          "clusters": 212722,
+          "clustering_seconds": 1366.681,
+          "clustering_cpu_seconds": 1345.774,
+          "input_read_observations": 59526355
+        }
+      ]
+    },
+    {
+      "signature": "c6aed8b7b0edfa19e4750c8f0b92deb6ac6bddda1e2d82988f75e4a83bad6fc5",
+      "well": "B1",
+      "status": "passed",
+      "mode": "Release rerun: every membership and centroid count matched development results",
+      "input_hashes": {
+        "input.csv": "a6fc09a389f308e1ab5554377ac4fe14cbae3cdefc6f711e31d229de1b8172e7",
+        "members.csv": "99bbf28f01b03b9ab878fd0ea876f0aa2ad68504a1f7d0a590fd1a055cba9b90",
+        "centroids.csv": "7049c94864dd780b472bca0a2e20c44a8174cc5a512751e35b285ddef31179ca",
+        "completed.rds": "b11759d0c2db18d853b46a6f15d70234e4f461a8110c9986c49db964633f7fcb"
+      },
+      "timing": [
+        {
+          "population": "No drug r2",
+          "unique_input_sequences": 1533301,
+          "clusters": 218384,
+          "clustering_seconds": 1517.868,
+          "clustering_cpu_seconds": 1497.021,
+          "input_read_observations": 64377654
+        }
+      ]
+    },
+    {
+      "signature": "c316ff5df517148d0afca17b69319931ed84e7e33938a41957899909175e4a33",
+      "well": "C1",
+      "status": "passed",
+      "mode": "Release rerun: every membership and centroid count matched development results",
+      "input_hashes": {
+        "input.csv": "7c06b8d7e3da462a638f28f5d3e6b9093a386de04bd14a35f806c1a0810c01f7",
+        "members.csv": "b1b4440bc63ee6143b8411ad59269db0b35f32b1ede7a7438900b4e4709b37ae",
+        "centroids.csv": "f065640cd5cfc570cfb3e918ed2b71a46beeb1f5e1cf32df75ea62c3a1f4cf06",
+        "completed.rds": "cf42d242c09da2a5433b93ae64ce4648fce2ab0e073170b4990e2db35fded4b5"
+      },
+      "timing": [
+        {
+          "population": "No drug r3",
+          "unique_input_sequences": 1566596,
+          "clusters": 218983,
+          "clustering_seconds": 1436.526,
+          "clustering_cpu_seconds": 1416.288,
+          "input_read_observations": 64926649
+        }
+      ]
+    }
+  ],
+  "timing_sha256": "f705bac0ec763b2524814978835d1eee13fd353fd1a421d87b289c1f9bc76b9f"
+}

@@ -1,0 +1,71 @@
+{
+  "status": "passed",
+  "reason": "Retain filename keys in JSON checksum maps; strengthen numerical cache identity",
+  "numerical_package_sources_unchanged": true,
+  "all_six_original_cache_signatures_verified": true,
+  "timings_unchanged": true,
+  "timing_csv_sha256": "f705bac0ec763b2524814978835d1eee13fd353fd1a421d87b289c1f9bc76b9f",
+  "before_script_hashes": {
+    "build_release.R": "950a00d92ce050a60e5641801acb68e7082f83b43ca458c9317e85ed6d8e3b3c",
+    "benchmark_release.R": "7d1e42f10518788bd0d7938bd1196741c1bdd4c6ec58157ba580ec0b3ced5310",
+    "load_release.R": "132a90e4d8492405f506d3aca51420aae9a0f110de9df1c47f215243346d5a02",
+    "cluster_time_series.R": "6fe3a5153846255ae6f73a5d8e12b2962aac4ea464a9550d2c757d4868a30cd2",
+    "validate_results.R": "9187d4ac71d6a19c27ea5bf8cdd0692d4fc754100ef822ff1ea8c53982b81659",
+    "validate_processing.R": "83b3e87df58db0090bcb63dfac3101f1234d548fb09a394c17462462aa24f6f9",
+    "r_report/report_helpers.R": "5c4e3e22a0150ac35ca1f4ddf99735f3dc26851dc528aecefd3d22f1f2d1efb9",
+    "r_report/build_report.R": "cc741eed118ced2ba320112b979066f1a83c42560564c171ae6372688854c3b8",
+    "r_report/browser_checks.R": "eb22a22799a2e3aeaa77230b5c172516d72e3a8bea2738f8403d925b7d407213"
+  },
+  "after_script_hashes": {
+    "build_release.R": "5881ad16c4542f37fb9d9cd44f55f7fc3769e44f61a81dc7a827c06b8998e5d8",
+    "benchmark_release.R": "ba1278c2c631ee8cd415995dd73450fe25db5a26a9dac37f546451566224205d",
+    "load_release.R": "2904a0e92ff876d9fb75b82a708538e5f0d7c52d4b079b7ca933035890555ed5",
+    "cluster_time_series.R": "bde8b62766d41bf923f7417bd944e6fe73c00258f06483db463b0c6598d987e0",
+    "validate_results.R": "c4377bd8ea11ce6a6fd3dfe3546c3d65a2bef63e96a931803a9690a590a725c0",
+    "validate_processing.R": "4233ba607852001eb4edcc6489bb13639770ff99fdc98812d213cde895f3a9c7",
+    "r_report/report_helpers.R": "0edf7f9e96fb31b9c0bace60bc9e8d0284fa98e1b264678e09c0e260051eca99",
+    "r_report/build_report.R": "9393bd788278eba3f5738cd05454c251ed1e8bd51055a98906e63b94f111aed8",
+    "r_report/browser_checks.R": "c167ccb9fd404ff3fb58106e59be40f937d5d63f029f3727651512ca852dab2c"
+  },
+  "settings": {
+    "method": "lv",
+    "distance": 3,
+    "tie_break": "support",
+    "merge_ratio": 20,
+    "error_rate": 0.005,
+    "indel_model": "poisson",
+    "use_design": false
+  },
+  "populations": {
+    "A3": {
+      "original_signature": "dc5809f9344f60108320793371fb5a0b6f5732bfa2092e5714ba3b51cea430d9",
+      "new_signature": "f1fd522b732a64e37b2cbc8a895b4e6b2a6a5af4cbf584a53f0a457e27c903d6",
+      "all_non_signature_fields_identical": true
+    },
+    "B3": {
+      "original_signature": "715ba68313a6879fcc79a7879ef568e6d7f28af837c2cd92067f26197d36f3c1",
+      "new_signature": "b0a0ffd64f95745099231d2f212432337a4e9820c55793596c3d0a63ededf3b5",
+      "all_non_signature_fields_identical": true
+    },
+    "C3": {
+      "original_signature": "f914fb96212a9a7b8893d4f0b33d0d70b344fdae58518373903b09848664ef2f",
+      "new_signature": "a6e012defc73273e509073e8dc5453312711c8e4294e9c335e624d92daeca99a",
+      "all_non_signature_fields_identical": true
+    },
+    "A1": {
+      "original_signature": "5ee37f52e4da540fc2f8b648c503bbdf55a5e07ad88ae5772c48ef81efb4b770",
+      "new_signature": "5b0d9cf84b08da00efbfdd2b43c22c49734cdfcb35e1fef5124dd7a027ebc15a",
+      "all_non_signature_fields_identical": true
+    },
+    "B1": {
+      "original_signature": "d14d3b922e40c37699a8b4f4e7f15a64f598bfe0726d3387611480c486bd845b",
+      "new_signature": "c6aed8b7b0edfa19e4750c8f0b92deb6ac6bddda1e2d82988f75e4a83bad6fc5",
+      "all_non_signature_fields_identical": true
+    },
+    "C1": {
+      "original_signature": "3c68835bdbf10b8cc2172ffc8f3a489c894363e7db57a050010b8947c9f1a622",
+      "new_signature": "c316ff5df517148d0afca17b69319931ed84e7e33938a41957899909175e4a33",
+      "all_non_signature_fields_identical": true
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "sequences": 12000,
+  "memberships_identical": true,
+  "centroids_and_counts_identical": true,
+  "before_build": "barbac-2026-09-08-bounded-indels-v13",
+  "after_build": "barbac-2026-09-10-eligible-parent-v14",
+  "before_cpu_seconds": 2.135,
+  "after_cpu_seconds": 2.59,
+  "before_elapsed_seconds": 2.172,
+  "after_elapsed_seconds": 2.594
+}

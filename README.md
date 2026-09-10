@@ -231,6 +231,21 @@ time-series plots. It includes complete searchable LV/Hamming count tables with
 CSV downloads. Open the HTML locally, or follow the
 [R reproduction instructions](benchmark/time_series_chen2023/r_report/README.md).
 
+The [Jasinska 2020 E. coli application](benchmark/time_series_jasinska2020/README.md)
+focuses on constant chloramphenicol versus no antibiotic, retaining all three
+biological replicates and their 75 sampled timepoints. Its
+[explained Quarto report](benchmark/time_series_jasinska2020/r_report/report.html)
+uses barbac LV, native R diagnostics, gt tables and labelled A–D extraction
+panels. It compares the selected study measurements with the publication and
+explains the meanings of entropy, lineage diversity and frequency denominators.
+The folder includes the published barcode-cassette reference, raw-read manifests,
+complete count matrices, validation records and a reusable SLURM script.
+
+Native v14 adds an exact LV search bound for parents excluded by the existing
+abundance guard. Scoring and merge rules are unchanged; exhaustive-search tests
+and a 12,000-sequence real-data comparison preserve assignments. The historical
+v13 method benchmarks above remain measurements of their recorded build.
+
 ### Parity with Shepherd on the Johnson et al. (2023) reference dataset
 
 Same input (100,000 true barcodes, ~1.5M unique reads), same parameters (max distance 3), same evaluation protocol.

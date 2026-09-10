@@ -1,5 +1,67 @@
 # Handoff: barbac clustering performance and benchmarking
 
+**Jasinska 2020 application (10 September 2026):** the new
+[E. coli analysis](benchmark/time_series_jasinska2020/README.md) selects constant
+chloramphenicol 1 µg/mL and no antibiotic, all three biological replicates of
+each, 75 longitudinal samples plus three pooled initial samples. All 312 FASTQs
+were downloaded and checked; independent FastQC totals and 78 processing
+receipts reconcile 364,267,911 unique input reads. The cassette is the published
+288-base Methods reference with a nominal 15-base barcode at positions 11–25.
+Flank extraction retains observed 10–20-base sequences from mapped queries.
+
+The [R/Quarto report](benchmark/time_series_jasinska2020/r_report/report.html)
+is a focused biological application using barbac LV distance 3, support ordering,
+ratio 20, error rate 0.005 and the Poisson indel option. It uses barbac extraction
+plots with A–C labels, native gt length summaries labelled D, cluster statistics,
+six interactive trajectories and explained diversity panels. Publication checks
+use Supplementary Tables 1c and 4b, including all 120 selected dominant-barcode
+entries. The author tables do not provide every per-timepoint barcode count.
+The final-frequency denominator is also unresolved: Low CMP r1's top-20 sum
+is 86.94%, exceeding its reported extraction yield of 80.24% at passage 30.
+The report audits this inconsistency and shows both all-input and extracted-read
+normalizations. Neither is silently treated as a confirmed author convention.
+No new competitor runs or SLURM submissions are part of this application.
+
+For the 120 published dominant-barcode entries, median population-level Spearman
+agreement is 0.9985. Mean absolute differences are 0.548 percentage points for
+all-input normalization and 0.066 for extracted-read normalization. Final median
+Shannon effective diversity is 19.5 versus 97.5 lineages (treated/control), with
+substantial overlap among biological replicates. These are publication-agreement
+and descriptive biological results, not known-truth accuracy or a formal rate test.
+
+**Native v14:** the dense 15-base library exposed expensive wide LV searches.
+After the complete distance-one search, parents unable to meet the existing
+distance-two abundance guard can be skipped for children of count at least five
+when no usable design override is active. This changes only candidate search
+and diagnostic blocked-candidate counts. Full package tests pass, including
+indexed/exhaustive assignments around guard boundaries, and the 12,000-sequence
+v13/v14 real-data check preserves centroids, memberships and counts. The small
+check is not a speed benchmark; the interrupted full v13 run is not a complete
+timing baseline. Application timings record both CPU and elapsed time.
+The default `devtools::load_all()` compiler flags disable optimization (`-O0`).
+The E. coli workflow now builds an isolated release installation and checks its
+source/binary hashes. The report uses fresh `-O2` timings, with every membership
+and centroid count checked against the development results. Original debug
+timings remain archived and are not presented as normal release performance.
+All six full release reruns match every membership and centroid count. Elapsed
+clustering time is 20.6–25.3 minutes per population (1.19–1.57 million distinct
+input sequences), including support ordering and excluding shared preprocessing.
+
+The report passes offline browser checks: 19 native gt tables, 36 extraction
+panels, six trajectory tabs, five Plotly widgets, 1,620 searchable observations,
+CSV download with full numeric precision, panel expansion and mobile layout.
+Diagnostics use native Quarto collapsible panels to retain the document layout.
+Provenance readers now reject empty or unnamed checksum maps; JSON maps retain
+filename keys. The metadata migration verifies original timing-cache signatures
+and preserves every measured value. Numerical cache identity includes the binary,
+package sources, inputs and settings, independently of JSON formatting.
+
+`barbac_xtr.stats()` now optionally returns plot components and the numeric
+length summary (`return_details=TRUE`) and adds panel labels
+(`panel_labels=TRUE`). Both defaults preserve the existing patchwork return.
+This permits a native gt table in the report without adding gt to the package's
+dependencies. Extraction and prior Chen analysis artifacts are unchanged.
+
 **R / Quarto reporting update:** the portable
 [interactive report](benchmark/time_series_chen2023/r_report/report.html) now uses
 `summarise_bam_stats()`, `plot_bam_stats()`, all 16 `barbac_xtr.stats()` panels,

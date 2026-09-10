@@ -18,7 +18,7 @@ namespace {
 // =============================================================================
 // Build marker
 // =============================================================================
-const char* BUILD_ID = "barbac-2026-09-08-bounded-indels-v13";
+const char* BUILD_ID = "barbac-2026-09-10-eligible-parent-v14";
 
 // =============================================================================
 // Distance routines
@@ -953,6 +953,7 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
    long long lv_seed_candidates = 0;
    long long lv_long_seed_queries = 0;
    long long lv_long_seed_candidates = 0;
+   long long lv_guard_bounded_queries = 0;
    long long lv_hamming_stage_assignments = 0;
    long long shepherd_promoted = 0;
    long long shepherd_reassigned = 0;
@@ -1162,8 +1163,24 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
          if (D <= 1 || best_absorb.cluster_id < 0 || best_absorb.score <= unseen_upper) {
            used_lv_seed_this_query = true;
            ++lv_seed_queries;
-           const int minimum_count = D > 1 && best_absorb.cluster_id >= 0
+           int minimum_count = D > 1 && best_absorb.cluster_id >= 0
              ? minimum_competitive_count(best_absorb.score, highest_count, cnt, sl, err) : 0;
+           // Every distance-1 parent was already covered by lv_near_index,
+           // including the Poisson indel exception. For count >= 5 and no
+           // design override, every still-unseen parent (d >= 2) must satisfy
+           // at least the distance-2 abundance guard. Larger distances have
+           // lower count floors and stronger ratios, so this is a necessary
+           // condition, not a heuristic. Ineligible parents cannot change an
+           // assignment; omitted blocked candidates only affect diagnostics.
+           if (D > 1 && !design.usable && cnt >= effective_count_floor(2, true)) {
+             const double required = effective_merge_ratio(2, merge_ratio, true) *
+               static_cast<double>(cnt);
+             if (std::isfinite(required) && required > minimum_count) {
+               minimum_count = static_cast<int>(std::min(
+                 std::ceil(required), static_cast<double>(std::numeric_limits<int>::max())));
+               ++lv_guard_bounded_queries;
+             }
+           }
            index.query(s, sl, static_cast<int>(clusters.size()), candidates, minimum_count);
            lv_seed_candidates += static_cast<long long>(candidates.size());
            total_candidates_seen += static_cast<long long>(candidates.size());
@@ -1381,6 +1398,7 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
            << " lv_seed_cand=" << lv_seed_candidates
            << " lv_long_q=" << lv_long_seed_queries
            << " lv_long_cand=" << lv_long_seed_candidates
+           << " lv_guard_bound_q=" << lv_guard_bounded_queries
            << " indel_guard_passes=" << indel_guard_passes
              << " promoted=" << shepherd_promoted
            << " reassigned=" << shepherd_reassigned
@@ -1450,6 +1468,7 @@ NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector count
          Named("lv_seed_candidates") = static_cast<double>(lv_seed_candidates),
          Named("lv_long_seed_queries") = static_cast<double>(lv_long_seed_queries),
          Named("lv_long_seed_candidates") = static_cast<double>(lv_long_seed_candidates),
+         Named("lv_guard_bounded_queries") = static_cast<double>(lv_guard_bounded_queries),
          Named("lv_hamming_stage_assignments") = static_cast<double>(lv_hamming_stage_assignments),
          Named("hamming_prefilter_rejects") = static_cast<double>(hamming_prefilter_rejects),
          Named("cross_length_queries") = static_cast<double>(cross_len_queries)),

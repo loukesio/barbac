@@ -215,8 +215,15 @@ barbac_xtr <- function(bam_file,
 #' @param plot_width Numeric. Width of saved plot in inches. Default is 12.
 #' @param plot_height Numeric. Height of saved plot in inches. Default is 8.
 #' @param verbose Logical. Print summary statistics. Default is TRUE.
+#' @param panel_labels Logical. Add A, B, C, D labels to the combined diagnostic.
+#' @param return_details Logical. Return the combined plot, individual histogram
+#'   plots, numeric length summary and per-sequence entropy for report composition.
+#'   The default preserves the patchwork return value.
 #' 
-#' @return Patchwork plot object with histograms and summary table
+#' @return A patchwork plot, or with `return_details = TRUE`, a list containing
+#'   `plot`, `plots`, `length_summary` and `sequence_entropy`. The numeric summary
+#'   can be passed to `gt::gt()` for an HTML report. Entropy is measured in bits
+#'   across nucleotide frequencies within each sequence, not across lineages.
 #'
 #' @import dplyr
 #' @import ggplot2
@@ -231,7 +238,9 @@ barbac_xtr.stats <- function(file,
                              save_plot = FALSE,
                              plot_width = 12,
                              plot_height = 8,
-                             verbose = TRUE) {
+                             verbose = TRUE,
+                             panel_labels = FALSE,
+                             return_details = FALSE) {
   
   # Load patchwork if not already loaded
   if (!requireNamespace("patchwork", quietly = TRUE)) {
@@ -404,6 +413,9 @@ barbac_xtr.stats <- function(file,
   # Combine plots using patchwork
   # -----------------------------
   combined_plot <- (p1 | p2) / (p3 | patchwork::wrap_elements(t1))
+  if (isTRUE(panel_labels)) {
+    combined_plot <- combined_plot + patchwork::plot_annotation(tag_levels = "A")
+  }
   
   # -----------------------------
   # Save plot if requested
@@ -433,5 +445,9 @@ barbac_xtr.stats <- function(file,
   
   if (verbose) message("\n\u2705 Analysis complete!\n")
   
+  if (isTRUE(return_details)) {
+    return(list(plot = combined_plot, plots = list(length = p1, abundance = p2, entropy = p3),
+                length_summary = bin_data, sequence_entropy = data_with_entropy))
+  }
   return(combined_plot)
 }

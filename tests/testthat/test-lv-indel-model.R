@@ -90,6 +90,22 @@ test_that('bounded posting lists remain exact for unsorted native inputs', {
   }
 })
 
+test_that('wide LV guard pruning retains near parents and floor-boundary assignments', {
+  set.seed(20200910)
+  roots <- replicate(120,paste(sample(c('A','C','G','T'),15,TRUE),collapse=''))
+  variants <- unique(c(roots,paste0('A',substr(roots,2,15)),
+    paste0('AA',substr(roots,3,15)),substr(roots,1,14),
+    'GTAAAAAAAAAACTG','GTAAAAAAAAACTG'))
+  tab <- data.frame(barcode=variants,counts=sample(c(1L,2L,4L,5L,9L,10L,99L,100L,299L,300L,10000L),length(variants),TRUE))
+  for(model in c('none','poisson')) for(d in 2:4) for(ratio in c(1,20,20.01)) {
+    indexed <- super_cluster2(tab,distance=d,method='lv',merge_ratio=ratio,
+      indel_model=model,tie_break='support',verbose=FALSE)
+    exhaustive <- super_cluster2(tab,distance=d,method='lv',merge_ratio=ratio,
+      indel_model=model,tie_break='support',verbose=FALSE,use_kmer_filter=FALSE)
+    expect_identical(canonical_members(indexed),canonical_members(exhaustive),info=paste(model,d,ratio))
+  }
+})
+
 test_that('Poisson exception excludes nonrepeated gaps and permits plausible insertions', {
   tab <- data.frame(barcode = c('ACGTACGTACGT', 'ACTACGTACGT'), counts=c(1000L,65L))
   r <- super_cluster2(tab, distance=1, indel_model='poisson', verbose=FALSE)

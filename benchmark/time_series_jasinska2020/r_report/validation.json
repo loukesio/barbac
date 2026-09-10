@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "browser_validation": "passed",
+  "hashes": {
+    "report.qmd": "3c2d8a99170f12abbb98b027e4146c6421067009db415d2aa93722f53fd5fb49",
+    "report_helpers.R": "0edf7f9e96fb31b9c0bace60bc9e8d0284fa98e1b264678e09c0e260051eca99",
+    "build_report.R": "9393bd788278eba3f5738cd05454c251ed1e8bd51055a98906e63b94f111aed8",
+    "report.html": "139e5c6bfbc3906efd328874a6945ada6b1b4178980412b434c725ce73d6670f",
+    "session_info.txt": "b38d6a09b696e7882076ef2c720febb63a9cebe6a2dd2954ba20cfbf898ff4f8"
+  },
+  "no_competitor_runs": true,
+  "publication_comparison": "Sample summaries and published dominant-barcode final frequencies",
+  "publication_normalization_resolved": false,
+  "explicit_comparison_denominators": [
+    "All input reads",
+    "Extracted barcode reads"
+  ],
+  "samples": 75,
+  "biological_populations": 6,
+  "published_dominant_barcodes": 120,
+  "browser_checks_sha256": "c37b5611a937a10969865e80c9235808c330d0624a664f5b7d784ccc5fd62d2b",
+  "browser_receipt_sha256": "0b060c99d31fbf13f1daeeca3e02550a3a1637eef084e8ff32fd5495778c6678"
+}
