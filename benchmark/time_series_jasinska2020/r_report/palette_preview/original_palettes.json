@@ -1,13 +1,6 @@
 {
-  "source": "barbac::barbac_palettes()",
-  "package_version": "0.1.0",
-  "source_hashes": {
-    "R/12_barbac_ts_area.R": "6a8d174a3f078d897b011246dec5ed160355927d119296f5ac19394a19689d8b",
-    "R/13_theme_barbac.R": "c71d0b2674a592a2a1d47022a9c432cbfef9835fa7c0770c6b521bab63d61a33",
-    "R/14_barbac_palettes.R": "9ed56e3e48d8f54a503c66644c4aaf7b4a12d1bbf53cf5bc0846838f016cf245",
-    "NAMESPACE": "66f9e1e0980cbb55147265563ab6c615620de16c7b0f4822e9b342fb398df5d8",
-    "DESCRIPTION": "8dca3bb7f8da6b1595da8eaa493625b07141af361d4e29374ca2a96ee26e9579"
-  },
+  "source": "https://github.com/loukesio/ggvmap",
+  "package_version": "0.3.0",
   "palettes": {
     "paloma": ["#83AF9B", "#C8C8A9", "#f8da8a", "#f7bf95", "#fe8ca1"],
     "maya": ["#3d5a80", "#98c1d9", "#ee6c4d", "#293241"],
@@ -42,9 +35,6 @@
     "heatmap3": ["#d7191c", "#fdae61", "#ffffbf", "#abd9e9", "#2c7bb6"],
     "casa_natal": ["#245E55", "#ED773C", "#808BC5", "#C63F3E", "#EAC119", "#EAA7C7", "#9ED6DF"]
   },
-  "all_32_interpolations_match_original": true,
-  "shared_preview_colour_vectors_identical": true,
-  "shared_barcodes": 393108,
-  "preview_geometry_and_images_retained": true,
+  "all_32_interpolations_match_ggvmap": true,
   "curated_fills": true
 }

@@ -228,16 +228,19 @@ all biological calculations and report preparation are in R.
 
 The [palette comparison](r_report/palette_comparison.html) shows every barcode
 from treatment replicate 1 beside control replicate 1 using `alger`, `dora` and
-`casa_natal`, plus a swatch sheet of all 32 palettes exposed by
-[`ggvmap::vm_palettes()`](https://github.com/loukesio/ggvmap). Frequencies, barcode
+`casa_natal`, plus a swatch sheet of all 32 LTC palettes built into barbac.
+Use `barbac_ts_area(counts, palette = "alger")` directly. Frequencies, barcode
 order and polygon geometry are identical across choices. The palette mapping is
 shared between treatment and control. The main report retains plasma while these
 alternatives are reviewed. No palette is claimed to make hundreds of thousands
 of adjacent bands visually distinguishable.
 
-The optional comparison uses the installed `ggvmap` package (recorded version
-0.3.0); barbac itself already accepts its colour vectors through `palette=`.
-To rebuild the previews after building the main report assets:
+The comparison uses the current barbac source via `pkgload::load_all()`; no
+other palette package is required. `barbac_palettes()` lists the base colours
+and `barbac_palette("alger", n)` interpolates them for shared colour mappings.
+The native colours match the original preview mappings exactly; the full-data
+images and their numerical receipts are retained. To rebuild the previews
+after building the main report assets:
 
 ```bash
 Rscript benchmark/time_series_jasinska2020/r_report/palette_preview.R swatches
@@ -246,6 +249,13 @@ Rscript benchmark/time_series_jasinska2020/r_report/palette_preview.R A1
 Rscript benchmark/time_series_jasinska2020/r_report/build_palette_comparison.R
 Rscript benchmark/time_series_jasinska2020/r_report/browser_checks.R
 ```
+
+The main biological report and clustering timings remain tied to the source
+hashes recorded at commit `9e04067` (before the native palette API). Rebuilding
+that frozen analysis requires that revision and its matching installed release;
+`load_release.R` intentionally rejects changes to the recorded sources. The
+palette preview script loads the current plotting API separately and records
+its hashes without relabelling the historical timings.
 
 Main-report figures use separate R processes for parallel rendering. Forked
 rendering can fail during macOS font initialization; failed workers must stop

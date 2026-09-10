@@ -1,5 +1,21 @@
 # Handoff: barbac clustering performance and benchmarking
 
+**Native LTC palettes (10 September 2026):** `barbac_ts_area(..., palette = "alger")`
+now accepts all 32 of Loukas Theodosiou's LTC palettes directly. The curated colour
+data are bundled in `R/14_barbac_palettes.R`, with attribution in `inst/COPYRIGHTS`.
+`barbac_palettes()` lists base colours and `barbac_palette(name, n)` interpolates
+them. Aliases ignore case, spaces, underscores and hyphens. The existing default,
+custom vectors and single R colours retain their behaviour. Vignette and palette
+report examples use the native API; the unused `ltc` suggestion was removed.
+The updated gallery verifies exact agreement with the archived original colours,
+including the full shared treatment/control mappings, and retains the six validated
+full-data images. The frozen main biological analysis remains at its recorded
+source hashes (revision `9e04067`); the palette gallery loads current plotting code
+separately, records its hashes, and does not replace historical release timings.
+The full package test suite passes, including palette-name, interpolation,
+custom-colour and frequency-preservation tests. Both reports pass the offline
+browser checks, including desktop pairing and mobile stacking.
+
 **Jasinska 2020 application (10 September 2026):** the new
 [E. coli analysis](benchmark/time_series_jasinska2020/README.md) selects constant
 chloramphenicol 1 µg/mL and no antibiotic, all three biological replicates of
@@ -33,7 +49,7 @@ No new competitor runs or SLURM submissions are part of this application.
 The mapping-reference link is now explicit in the report: the 288-base cassette
 at `benchmark/time_series_jasinska2020/reference/cassette.fasta`, with barcode
 positions 11–25 masked by 15 Ns. A separate
-[`ggvmap`/LTC palette comparison](benchmark/time_series_jasinska2020/r_report/palette_comparison.html)
+[LTC palette comparison](benchmark/time_series_jasinska2020/r_report/palette_comparison.html)
 shows `alger`, `dora` and `casa_natal` on the full treatment/control replicate-1
 data, with all 32 palette swatches. Exact frequencies and polygon geometry are
 held fixed. Main-report plots retain plasma pending a palette choice. The report

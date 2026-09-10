@@ -195,5 +195,5 @@
   "CSV_download_verified": true,
   "javascript_exceptions": 0,
   "report_sha256": "72f8f3814211876fdd6c27f6529926f34f8458bd6dcebf67969d9bfa93c72c66",
-  "screenshots": ["composition_pair_1.png", "composition_pair_2.png", "composition_pair_3.png", "desktop_agreement.png", "desktop_barcode_search.png", "desktop_composition.png", "desktop_control_replicate3.png", "desktop_diagnostics.png", "desktop_diversity.png", "desktop_frequency_comparison.png", "desktop_richness_comparison.png", "desktop_summary.png", "mobile_composition_plot.png", "mobile_composition.png", "mobile_summary.png"]
+  "screenshots": ["composition_pair_1.png", "composition_pair_2.png", "composition_pair_3.png", "desktop_agreement.png", "desktop_barcode_search.png", "desktop_composition.png", "desktop_control_replicate3.png", "desktop_diagnostics.png", "desktop_diversity.png", "desktop_frequency_comparison.png", "desktop_richness_comparison.png", "desktop_summary.png", "mobile_composition_plot.png", "mobile_composition.png", "mobile_summary.png", "palette_alger.png", "palette_casa_natal.png", "palette_dora.png", "palette_mobile.png"]
 }

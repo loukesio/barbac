@@ -2,7 +2,9 @@
 here <- normalizePath('benchmark/time_series_jasinska2020/r_report')
 source(file.path(here,'../provenance_helpers.R'))
 snapshot <- jsonlite::read_json(file.path(here,'palette_preview/palettes.json'))
-stopifnot(snapshot$all_32_interpolations_match_ggvmap,length(snapshot$palettes)==32)
+stopifnot(snapshot$all_32_interpolations_match_original,
+  snapshot$shared_preview_colour_vectors_identical,length(snapshot$palettes)==32)
+assert_hash_map(snapshot$source_hashes,file.path(here,'../../..'))
 for(well in c('A3','A1')) {
   z <- jsonlite::read_json(file.path(here,'palette_preview',paste0(well,'_validation.json')))
   stopifnot(z$all_barcodes_individual,z$full_frequencies_verified,z$geometry_unchanged)

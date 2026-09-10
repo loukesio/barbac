@@ -14,6 +14,10 @@ execute:
 
 ```{r validate}
 source('../provenance_helpers.R')
+snapshot <- jsonlite::read_json('palette_preview/palettes.json')
+assert_hash_map(snapshot$source_hashes,'../../..')
+stopifnot(snapshot$all_32_interpolations_match_original,
+  snapshot$shared_preview_colour_vectors_identical)
 for(well in c('A3','A1')) {
   z <- jsonlite::read_json(file.path('palette_preview',paste0(well,'_validation.json')))
   stopifnot(z$all_barcodes_individual,z$full_frequencies_verified,z$geometry_unchanged)
@@ -28,8 +32,9 @@ extracted-read denominator are identical across palette choices. The same
 barcode receives the same colour in the treatment and control within each choice.
 No barcodes are combined or filtered out.
 
-The palettes come from [`ggvmap::vm_palettes()`](https://github.com/loukesio/ggvmap#vm_palettes--the-built-in-colours),
-which includes 32 LTC palettes and curates some fills for a white background.
+All **32 LTC palettes by Loukas Theodosiou are built directly into barbac**.
+Choose one with `palette = "alger"`; no additional palette package is needed.
+These use the curated fills, with selected black and near-white colours omitted.
 We interpolate each selected palette end to end to obtain a colour for every
 barcode. Colour identifies a barcode; neither brightness nor hue represents its
 frequency. Many thin bands and neighbouring colours remain indistinguishable at
@@ -89,7 +94,7 @@ screen resolution with this many lineages.
 
 ## All 32 available palettes
 
-The sheet below shows the interpolated options available from `ggvmap`. The
+The sheet below shows the interpolated options available in barbac. The
 `heatmap0`–`heatmap3` palettes are ordered ramps; their diverging shapes should
 not be interpreted as low/high barcode abundance when used for barcode identity.
 
@@ -97,24 +102,37 @@ not be interpreted as low/high barcode abundance when used for barcode identity.
 
 ## Use a palette with barbac
 
-`barbac_ts_area()` already accepts a colour vector, so no clustering changes or
-new barbac package dependency are needed:
+Pass the palette name directly:
 
 ```r
-ids <- sort(unique(as.character(counts$barcode)))
-base <- ggvmap::vm_palettes()$alger
-colours <- grDevices::colorRampPalette(base)(length(ids))
-
+library(barbac)
 barbac_ts_area(
   counts, min_total_count = 0, fill_missing = "zero",
-  palette = colours, show_legend = FALSE
+  palette = "alger", show_legend = FALSE
 )
+
+names(barbac_palettes())  # list all 32 choices
 ```
 
-For multiple populations, generate the colours once using the union of barcode
-identifiers, then pass the matching colours in each plot's barcode order.
+For multiple populations, colours must be assigned over a shared set of barcode
+identifiers to keep the same barcode colour across panels, as in these previews:
 
-Previews use ggvmap `r as.character(utils::packageVersion('ggvmap'))`.
-The R script, exact palette snapshot and numerical validation receipts are in
+```r
+ids <- sort(unique(c(as.character(treatment$barcode), as.character(control$barcode))))
+colours <- setNames(barbac_palette("alger", length(ids)), ids)
+
+plot_population <- function(counts) {
+  local_ids <- sort(unique(as.character(counts$barcode)))
+  counts$barcode <- factor(counts$barcode, levels = local_ids)
+  barbac_ts_area(counts, min_total_count = 0, fill_missing = "zero",
+                 palette = unname(colours[local_ids]))
+}
+plot_population(treatment)
+plot_population(control)
+```
+
+The existing treatment/control images are retained: barbac's native palette
+vectors were checked to be identical to their original colour mappings.
+The R script, exact original and native palette snapshots, source hashes and numerical validation receipts are in
 `palette_preview.R` and `palette_preview/`. Click a plot for its full-size image
 when the accompanying folder is available.

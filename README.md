@@ -98,9 +98,18 @@ barbac_ts_area(reads_long,
 
 # Bartender-wide format is auto-detected
 barbac_ts_area("path/to/cluster_output.csv")
+
+# All 32 of Loukas Theodosiou's LTC palettes are built into barbac
+barbac_ts_area(reads_long, palette = "alger")
+names(barbac_palettes())  # available names, including minou, dora and casa_natal
 ```
 
 Accepts either long-format or Bartender-wide input. If neither layout matches, `barbac_ts_area()` errors with the expected schema. Late-appearing lineages are carried through the full series with missing cells filled by ε (default `1e-6`) or by zero.
+
+Named LTC palettes are interpolated across the lineages; no additional palette
+package is required. Custom colour vectors and the existing Sailboat default
+are also supported. `barbac_palette("alger", n = 100)` generates a colour vector
+for use in other plots. See the [treatment/control palette previews](benchmark/time_series_jasinska2020/r_report/palette_comparison.html).
 
 ---
 
