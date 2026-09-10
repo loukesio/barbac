@@ -1,0 +1,25 @@
+{
+  "population": "No drug r1",
+  "well": "A1",
+  "lineages": 212722,
+  "all_barcodes_individual": true,
+  "min_total_count": 0,
+  "denominator": "All extracted barcode reads",
+  "full_frequencies_verified": true,
+  "geometry_sha256": "cb2977325ca3f6c34d669012214f8d9a0601c6f792bcefd97a9d611134fb01a7",
+  "images": {
+    "alger": {
+      "path": "A1_alger.png",
+      "sha256": "c3286ba5dbd26cee6f22b90a4227067c5dfa6c215cc3ae8c3f800fa6cf8e8fb9"
+    },
+    "dora": {
+      "path": "A1_dora.png",
+      "sha256": "1ba6b82dd802442b3c4c3c23533f8f20c8b71a4f6a3c6c25e1718be817d0b813"
+    },
+    "casa_natal": {
+      "path": "A1_casa_natal.png",
+      "sha256": "755a9c230e7ab0bc9841f61605a56741393d53dcb7e86e4d4053eda4b3fdb252"
+    }
+  },
+  "geometry_unchanged": true
+}

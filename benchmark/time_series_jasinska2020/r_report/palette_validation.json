@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "browser_validation": "passed",
+  "hashes": {
+    "palette_preview.R": "0064568d851e72a81e68f2c2600a088da26ca65f53667aa1a2e0325425325dc8",
+    "composition_helpers.R": "4ef40107a6102433f1ac69f469ea8147c36f6e0f0edb53a380982ec936bb0801",
+    "build_palette_comparison.R": "23bee7cf781121d1882f9fe745b0cc7e5fbcadc2b51d2edb6ff170023bf48db0",
+    "palette_comparison.qmd": "f638299c34d1d4649081f80fa93a6f1606515adf5d87842655b99f45b96e3dd8",
+    "palette_comparison.html": "7de5458771b3c4c09e297181e26337c0e928322fea05ca97a5b6e3c0f7cc9af3",
+    "palette_preview/A1_alger.png": "c3286ba5dbd26cee6f22b90a4227067c5dfa6c215cc3ae8c3f800fa6cf8e8fb9",
+    "palette_preview/A1_casa_natal.png": "755a9c230e7ab0bc9841f61605a56741393d53dcb7e86e4d4053eda4b3fdb252",
+    "palette_preview/A1_dora.png": "1ba6b82dd802442b3c4c3c23533f8f20c8b71a4f6a3c6c25e1718be817d0b813",
+    "palette_preview/A1_validation.json": "c331920ddb1ac3f151ec4ca4263512b802b5c076da976c9136634a0c484c672a",
+    "palette_preview/A3_alger.png": "1ff4b828d5aacf86e518ea5a9da6b692d67f7c2e82d27bab352d35681d262245",
+    "palette_preview/A3_casa_natal.png": "2a49661b44eca6de16d4748f054baa6bdd546b2995ae0e5c69fd3905b0a8b94a",
+    "palette_preview/A3_dora.png": "6dd76ef0fd90b53a434780172f0798d5eab67e26e1eac9c33fffa88bc3d67c1e",
+    "palette_preview/A3_validation.json": "4f208a847938b00b50e3d518b2ece67971e4c658e999de8b62515c802ab79eb6",
+    "palette_preview/all_palettes.png": "3b86aa58e9faec3c7fd54d70ac7138556c17dc820c8f365e74a0320fd8d47cae",
+    "palette_preview/palettes.json": "49c0b07dbedd92b72f6e0c6750a7aeefe9ce46c99f97e4a2ec4c325853634715"
+  },
+  "counts_and_order_identical_across_palettes": true,
+  "all_barcodes_individual": true,
+  "populations": [
+    "Low CMP r1",
+    "No drug r1"
+  ],
+  "preview_palettes": [
+    "alger",
+    "dora",
+    "casa_natal"
+  ],
+  "browser_checks_sha256": "fb2dd9ca6e49b739ed8701a8be07c61fb1152c4f15ecf8aa346d2c2c3a0911c7",
+  "browser_receipt_sha256": "0702a7f452e30bc463782ec43397a78425c17fc8bad38519a54422d15a9a0545"
+}

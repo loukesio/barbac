@@ -52,7 +52,7 @@
   "source_hashes": {
     "validate_results.R": "c4377bd8ea11ce6a6fd3dfe3546c3d65a2bef63e96a931803a9690a590a725c0",
     "frequency_audit.R": "552b3697e8737f1039dc5a2f1166811541b0bd6f6eda7f3a8f42df064efb3e01",
-    "r_report/report_helpers.R": "0edf7f9e96fb31b9c0bace60bc9e8d0284fa98e1b264678e09c0e260051eca99",
+    "r_report/report_helpers.R": "f8ce4e4c058866c775e7a51b4e99b293213465c03aa80025de42b95c83f5faad",
     "provenance_helpers.R": "1dfa8f0617738417b127bd9aea563c0c64201e3632ca0e850b1ef85e798509e4"
   },
   "result_hashes": {

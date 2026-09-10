@@ -5,8 +5,8 @@
     "title": "E. coli lineages under antibiotic exposure",
     "gt": 19,
     "tableRows": 1620,
-    "girafe": 6,
-    "girafeWithPlots": 6,
+    "girafe": 0,
+    "girafeWithPlots": 0,
     "plotly": 5,
     "images": [
       {
@@ -152,6 +152,30 @@
       {
         "alt": "",
         "loaded": true
+      },
+      {
+        "alt": "Every barcode separately, chloramphenicol replicate 1",
+        "loaded": true
+      },
+      {
+        "alt": "Every barcode separately, no-antibiotic replicate 1",
+        "loaded": true
+      },
+      {
+        "alt": "Every barcode separately, chloramphenicol replicate 2",
+        "loaded": true
+      },
+      {
+        "alt": "Every barcode separately, no-antibiotic replicate 2",
+        "loaded": true
+      },
+      {
+        "alt": "Every barcode separately, chloramphenicol replicate 3",
+        "loaded": true
+      },
+      {
+        "alt": "Every barcode separately, no-antibiotic replicate 3",
+        "loaded": true
       }
     ],
     "overflow": false
@@ -163,10 +187,13 @@
   },
   "sample_expansion": true,
   "composition_tab_switch": true,
-  "composition_hover_tooltip": true,
+  "all_barcode_bands_verified": true,
+  "treatment_control_side_by_side": true,
+  "mobile_composition_stacks": true,
+  "composition_hover_tooltip": false,
   "barcode_search": true,
   "CSV_download_verified": true,
   "javascript_exceptions": 0,
-  "report_sha256": "139e5c6bfbc3906efd328874a6945ada6b1b4178980412b434c725ce73d6670f",
-  "screenshots": ["desktop_agreement.png", "desktop_barcode_search.png", "desktop_composition_hover.png", "desktop_composition.png", "desktop_control_replicate3.png", "desktop_diagnostics.png", "desktop_diversity.png", "desktop_frequency_comparison.png", "desktop_richness_comparison.png", "desktop_summary.png", "mobile_summary.png"]
+  "report_sha256": "72f8f3814211876fdd6c27f6529926f34f8458bd6dcebf67969d9bfa93c72c66",
+  "screenshots": ["composition_pair_1.png", "composition_pair_2.png", "composition_pair_3.png", "desktop_agreement.png", "desktop_barcode_search.png", "desktop_composition.png", "desktop_control_replicate3.png", "desktop_diagnostics.png", "desktop_diversity.png", "desktop_frequency_comparison.png", "desktop_richness_comparison.png", "desktop_summary.png", "mobile_composition_plot.png", "mobile_composition.png", "mobile_summary.png"]
 }

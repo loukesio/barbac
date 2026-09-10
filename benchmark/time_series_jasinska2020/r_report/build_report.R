@@ -8,13 +8,15 @@ validation <- jsonlite::read_json(file.path(kit,'results/validation.json'),simpl
 stopifnot(validation$status=='passed')
 assert_hash_map(validation$source_hashes,kit)
 assert_hash_map(validation$result_hashes,file.path(kit,'results'))
+sys.source(file.path(here,'validate_composition.R'),envir=new.env(parent=globalenv()))
 report <- make_report_assets(read_report(kit),kit,here)
 saveRDS(report,file.path(kit,'generated/report_data.rds'))
 writeLines(trimws(capture.output(sessionInfo()),which='right'),file.path(here,'session_info.txt'))
 setwd(here)
 status <- system2('quarto',c('render','report.qmd','--to','html','--output','report.html','--self-contained','--quiet'))
 stopifnot(status==0L)
-files <- c('report.qmd','report_helpers.R','build_report.R','report.html','session_info.txt')
+files <- c('report.qmd','report_helpers.R','composition_helpers.R','validate_composition.R','build_report.R',
+  'composition_validation.json','barcode_colours.csv.gz','report.html','session_info.txt')
 jsonlite::write_json(list(status='numerical_checks_passed',browser_validation='pending',
   hashes=as.list(setNames(vapply(files,function(f)digest::digest(file=f,algo='sha256'),character(1)),files)),
   no_competitor_runs=TRUE,publication_comparison='Sample summaries and published dominant-barcode final frequencies',

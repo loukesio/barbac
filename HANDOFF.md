@@ -13,7 +13,15 @@ The [R/Quarto report](benchmark/time_series_jasinska2020/r_report/report.html)
 is a focused biological application using barbac LV distance 3, support ordering,
 ratio 20, error rate 0.005 and the Poisson indel option. It uses barbac extraction
 plots with A–C labels, native gt length summaries labelled D, cluster statistics,
-six interactive trajectories and explained diversity panels. Publication checks
+six full-barcode area plots and explained diversity panels. Each inferred barcode
+has its own band, with no abundance cutoff or combined remainder. A plasma colour
+mapping is shared across time and populations. Frequencies use all extracted
+barcode reads as the denominator. These dense area panels are R-generated images;
+the other report charts and tables remain interactive. `barbac_ts_area()` already
+preserves individual barcodes; the report's earlier four-barcode grouping was
+removed. A vectorised grid drawing adapter reuses its prepared frequencies and
+scales, with every band width checked against the complete count matrix and a
+small independent comparison against native ggplot stacking. Publication checks
 use Supplementary Tables 1c and 4b, including all 120 selected dominant-barcode
 entries. The author tables do not provide every per-timepoint barcode count.
 The final-frequency denominator is also unresolved: Low CMP r1's top-20 sum
@@ -21,6 +29,16 @@ is 86.94%, exceeding its reported extraction yield of 80.24% at passage 30.
 The report audits this inconsistency and shows both all-input and extracted-read
 normalizations. Neither is silently treated as a confirmed author convention.
 No new competitor runs or SLURM submissions are part of this application.
+
+The mapping-reference link is now explicit in the report: the 288-base cassette
+at `benchmark/time_series_jasinska2020/reference/cassette.fasta`, with barcode
+positions 11–25 masked by 15 Ns. A separate
+[`ggvmap`/LTC palette comparison](benchmark/time_series_jasinska2020/r_report/palette_comparison.html)
+shows `alger`, `dora` and `casa_natal` on the full treatment/control replicate-1
+data, with all 32 palette swatches. Exact frequencies and polygon geometry are
+held fixed. Main-report plots retain plasma pending a palette choice. The report
+renderer uses PSOCK workers to avoid macOS font initialization failures after
+forking, and explicitly rejects missing or failed worker results.
 
 For the 120 published dominant-barcode entries, median population-level Spearman
 agreement is 0.9985. Mean absolute differences are 0.548 percentage points for
@@ -48,7 +66,8 @@ clustering time is 20.6–25.3 minutes per population (1.19–1.57 million disti
 input sequences), including support ordering and excluding shared preprocessing.
 
 The report passes offline browser checks: 19 native gt tables, 36 extraction
-panels, six trajectory tabs, five Plotly widgets, 1,620 searchable observations,
+panels, three replicate tabs with treatment and control side by side, five Plotly
+widgets, 1,620 searchable observations,
 CSV download with full numeric precision, panel expansion and mobile layout.
 Diagnostics use native Quarto collapsible panels to retain the document layout.
 Provenance readers now reject empty or unnamed checksum maps; JSON maps retain

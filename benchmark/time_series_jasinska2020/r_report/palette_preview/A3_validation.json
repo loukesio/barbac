@@ -1,0 +1,25 @@
+{
+  "population": "Low CMP r1",
+  "well": "A3",
+  "lineages": 203034,
+  "all_barcodes_individual": true,
+  "min_total_count": 0,
+  "denominator": "All extracted barcode reads",
+  "full_frequencies_verified": true,
+  "geometry_sha256": "2154acc45778aba9b9ce0bacbe3ee177e5a80fa94ec66641f03a8b59db615610",
+  "images": {
+    "alger": {
+      "path": "A3_alger.png",
+      "sha256": "1ff4b828d5aacf86e518ea5a9da6b692d67f7c2e82d27bab352d35681d262245"
+    },
+    "dora": {
+      "path": "A3_dora.png",
+      "sha256": "6dd76ef0fd90b53a434780172f0798d5eab67e26e1eac9c33fffa88bc3d67c1e"
+    },
+    "casa_natal": {
+      "path": "A3_casa_natal.png",
+      "sha256": "2a49661b44eca6de16d4748f054baa6bdd546b2995ae0e5c69fd3905b0a8b94a"
+    }
+  },
+  "geometry_unchanged": true
+}

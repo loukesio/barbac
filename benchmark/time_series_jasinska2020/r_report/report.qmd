@@ -54,7 +54,9 @@ summary { cursor:pointer; font-weight:600; }
 .diagnostic-grid > div { overflow-x:auto; }
 .gt_table { margin:0!important; }
 .diagnostic-columns .column { min-width:0; }
-@media(max-width:700px) { .diagnostic-columns { flex-direction:column; } .diagnostic-columns > .column { width:100%!important; margin-left:0!important; } }
+.composition-pair .column { min-width:0; }
+.composition-pair img { width:100%; }
+@media(max-width:700px) { .diagnostic-columns, .composition-pair { flex-direction:column; } .diagnostic-columns > .column, .composition-pair > .column { width:100%!important; margin-left:0!important; } }
 </style>
 ```
 
@@ -142,7 +144,10 @@ to the barcode cassette → barbac extraction → barbac LV clustering → count
 These are single-end reads; there is no paired-read merging or UMI deduplication.
 Every count in this report is a sequencing-read count, not a direct cell count.
 
-The reference contains 15 placeholder bases at the barcode position. Actual
+The mapping reference is the **288-base barcode cassette transcribed from the
+study's Methods**, stored in [`reference/cassette.fasta`](../reference/cassette.fasta).
+Its FASTA identifier is `Jasinska2020_barcode_cassette`, and positions **11–25**
+contain the 15 `N` placeholders for the variable barcode. Actual
 barcodes are extracted from the observed read sequence, preserving variable
 lengths. Because these reads begin near the barcode, mapping identifies the
 downstream constant sequence and extraction captures the barcode immediately
@@ -544,55 +549,101 @@ different questions and must not be compared as though they were the same score.
 
 ## Following the mixture over time
 
-The following plots show the same four barcode identities in every panel, chosen
-from the authors' dominant-barcode table using summed published mean frequencies
-across the six selected populations. Their colours stay fixed. A barcode label is
-its DNA identifier, not a treatment name or an inferred mutation.
+**Every inferred barcode lineage has its own band.** All barcodes are included,
+without an abundance cutoff or a combined remainder. Colours are sampled from
+the **plasma** palette in barcode order, with one shared colour mapping across
+all six populations and all passages. Colour identifies a barcode; it does not
+encode its abundance, treatment or a mutation.
 
-Read the **thickness of a coloured band** as that group's fraction of all reads.
-**All remaining barcodes** adds together every extracted lineage other than the
-four displayed separately. **No extracted barcode** represents input reads without
-an accepted extracted barcode. These groups are kept separate, and every vertical
-slice adds to 100%. Neither group is automatically classified as sequencing errors.
-This is our explicit read-accounting denominator. The denominator used for the
-publication's final-frequency table is examined separately below.
+Read the **thickness of a coloured band** as that barcode's count divided by
+**all extracted barcode reads at that passage**. Thus each vertical slice sums
+to 100%. Reads without an extracted barcode are accounted for in the extraction
+section above. Zero counts stay zero. The publication's final-frequency
+denominator is examined separately below.
 
-::: {.panel-tabset}
-### Chloramphenicol · replicate 1
-```{r composition-c1}
-r$composition[['Low CMP r1']]
+Treatment and control are shown side by side, starting with **replicate 1**.
+The tabs compare the same replicate number. Click a plot to open its full-size
+image from the accompanying figures folder.
+
+:::::: {.panel-tabset}
+### Replicate 1
+::::: {.columns .composition-pair}
+:::: {.column width="50%"}
+**Chloramphenicol · replicate 1**
+
+[![Every barcode separately, chloramphenicol replicate 1](figures/A3_composition.png)](figures/A3_composition.png)
+::::
+:::: {.column width="50%"}
+**No antibiotic · replicate 1**
+
+[![Every barcode separately, no-antibiotic replicate 1](figures/A1_composition.png)](figures/A1_composition.png)
+::::
+:::::
+### Replicate 2
+::::: {.columns .composition-pair}
+:::: {.column width="50%"}
+**Chloramphenicol · replicate 2**
+
+[![Every barcode separately, chloramphenicol replicate 2](figures/B3_composition.png)](figures/B3_composition.png)
+::::
+:::: {.column width="50%"}
+**No antibiotic · replicate 2**
+
+[![Every barcode separately, no-antibiotic replicate 2](figures/B1_composition.png)](figures/B1_composition.png)
+::::
+:::::
+### Replicate 3
+::::: {.columns .composition-pair}
+:::: {.column width="50%"}
+**Chloramphenicol · replicate 3**
+
+[![Every barcode separately, chloramphenicol replicate 3](figures/C3_composition.png)](figures/C3_composition.png)
+::::
+:::: {.column width="50%"}
+**No antibiotic · replicate 3**
+
+[![Every barcode separately, no-antibiotic replicate 3](figures/C1_composition.png)](figures/C1_composition.png)
+::::
+:::::
+::::::
+
+Each population contains approximately 192,000–219,000 inferred lineages across
+its full series. These panels render every band as an R figure; very thin bands
+and neighbouring plasma colours cannot all be distinguished at screen resolution.
+The panels have no individual-band hover. The other charts and the comparison
+table remain interactive. The [barcode colour mapping](barcode_colours.csv.gz)
+and full count matrices linked below retain the individual identifiers.
+
+[Compare LTC palette options from ggvmap](palette_comparison.html) using these
+same full barcode counts, with treatment and control shown side by side.
+
+The areas interpolate between measured passages; they do not imply observations
+at every intervening generation. A rise means an increasing share of extracted
+barcode reads. Inferring resistance or assigning a causal mutation would require
+additional evidence.
+
+::: {.callout-note collapse="true" title="Reproduce the barcode colours with barbac_ts_area"}
+`barbac_ts_area()` already keeps each supplied barcode separate. Its `palette`
+argument accepts colours sampled from a continuous palette. For a count table
+with columns `barcode`, `time` and `counts`:
+
+```r
+ids <- sort(unique(as.character(counts$barcode)))
+barbac_ts_area(
+  counts, min_total_count = 0, fill_missing = "zero",
+  palette = viridisLite::plasma(length(ids)), show_legend = FALSE
+)
 ```
-### Chloramphenicol · replicate 2
-```{r composition-c2}
-r$composition[['Low CMP r2']]
-```
-### Chloramphenicol · replicate 3
-```{r composition-c3}
-r$composition[['Low CMP r3']]
-```
-### No antibiotic · replicate 1
-```{r composition-n1}
-r$composition[['No drug r1']]
-```
-### No antibiotic · replicate 2
-```{r composition-n2}
-r$composition[['No drug r2']]
-```
-### No antibiotic · replicate 3
-```{r composition-n3}
-r$composition[['No drug r3']]
-```
+
+This includes every barcode. To reproduce a strict `sum(count) > 10` filter for
+integer read counts, use `min_total_count = 11`; frequencies would then be
+normalised among the retained barcodes. The figures above use no such filter.
 :::
-
-Hover to identify a band. The areas interpolate between measured passages; they
-do not imply observations at every intervening generation. A rise means an
-increasing share of measured reads. Inferring resistance or assigning a causal
-mutation would require additional evidence.
 
 ## Diversity asks how many lineages contribute
 
-All diversity calculations use the **complete lineage counts**, before any
-display grouping into “All remaining barcodes”. The three panels answer different
+All diversity calculations use the **complete lineage counts**, also used in
+the individual-barcode area plots. The three panels answer different
 questions: how many lineages are detected; how many equally abundant lineages
 would give the observed Shannon diversity; and how strongly one lineage dominates.
 For example, four equally abundant lineages give a value of four for all three.

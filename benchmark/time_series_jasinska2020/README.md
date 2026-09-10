@@ -81,8 +81,11 @@ is mapped back to each sample and read totals must be conserved. This is retrosp
 reconstruction. The baseline is reused for clustering but is counted once in unique
 sequencing totals. No competitor executable is run by this application.
 
-Trajectory frequencies divide barcode reads by all sample FASTQ reads for
-explicit read accounting. The author final-frequency denominator is unresolved:
+Area-plot frequencies divide each barcode count by all extracted barcode reads
+at that passage. Every inferred barcode is drawn separately, with no abundance
+cutoff or combined remainder. A shared plasma palette assigns colours by barcode
+order across all six populations. Explicit zero counts stay zero. Read-accounting
+tables retain all-input denominators. The author final-frequency denominator is unresolved:
 Low CMP r1's 20 published final frequencies sum to 86.94%, exceeding the 80.24%
 of reads identified as barcodes in Table 1c at passage 30. Both cannot use all
 input reads. This could reflect different normalizations or a mismatch between
@@ -91,10 +94,13 @@ source tables; it is not resolved by the available custom-code description.
 normalizations, with both absolute differences and the scale-invariant rank
 correlation. No normalization is chosen solely for favorable agreement.
 
-Barbac area plots
-therefore include both “All remaining barcodes” and a separate “No extracted
-barcode” group. The area chart denominator is preserved without hiding missing
-extraction mass. Explicit zero counts remain zero.
+The six area panels are R-generated images, with one polygon per lineage.
+`barbac_ts_area()` prepares all frequencies and colours; a vectorised grid draw
+renders the same completed stack efficiently for roughly 200,000 bands per plot.
+Every band's width is checked against the source count matrix. Individual-band
+hover is unavailable at this scale; the report's other interactive charts and
+comparison table remain available. `r_report/barcode_colours.csv.gz` records the
+shared mapping; full barcode count matrices remain in `results/`.
 
 Population diversity uses full counts, never top-N display categories. Exports
 contain richness, exponential Shannon and inverse maximum frequency under both
@@ -108,7 +114,7 @@ in the extraction panels, or with the paper's per-position library entropy.
 Run from the repository root with the existing R dependencies and `barbac_env`.
 The analysis code is R; minimap2, samtools and FastQC are external command-line
 tools already used by barbac. The report additionally needs gt, readxl, xml2,
-digest, jsonlite, ggiraph, plotly, DT, ragg and the Quarto CLI.
+digest, jsonlite, viridisLite, plotly, DT, ragg and the Quarto CLI.
 
 ```bash
 Rscript benchmark/time_series_jasinska2020/prepare_sources.R
@@ -212,9 +218,38 @@ and exports the 78 source-hashed sample receipts.
 
 `r_report/browser_checks.R` uses R to drive a temporary local Chrome instance
 on port 9223. It checks offline rendering, native gt tables, the A–D panels,
-six composition tabs, hover labels, barcode search, CSV download and a narrow
+three replicate tabs showing treatment and control side by side, their six
+full-barcode figure receipts, barcode search,
+CSV download and a narrow
 mobile viewport. JavaScript expressions in that file inspect the browser UI;
 all biological calculations and report preparation are in R.
+
+## Optional LTC palette comparison
+
+The [palette comparison](r_report/palette_comparison.html) shows every barcode
+from treatment replicate 1 beside control replicate 1 using `alger`, `dora` and
+`casa_natal`, plus a swatch sheet of all 32 palettes exposed by
+[`ggvmap::vm_palettes()`](https://github.com/loukesio/ggvmap). Frequencies, barcode
+order and polygon geometry are identical across choices. The palette mapping is
+shared between treatment and control. The main report retains plasma while these
+alternatives are reviewed. No palette is claimed to make hundreds of thousands
+of adjacent bands visually distinguishable.
+
+The optional comparison uses the installed `ggvmap` package (recorded version
+0.3.0); barbac itself already accepts its colour vectors through `palette=`.
+To rebuild the previews after building the main report assets:
+
+```bash
+Rscript benchmark/time_series_jasinska2020/r_report/palette_preview.R swatches
+Rscript benchmark/time_series_jasinska2020/r_report/palette_preview.R A3
+Rscript benchmark/time_series_jasinska2020/r_report/palette_preview.R A1
+Rscript benchmark/time_series_jasinska2020/r_report/build_palette_comparison.R
+Rscript benchmark/time_series_jasinska2020/r_report/browser_checks.R
+```
+
+Main-report figures use separate R processes for parallel rendering. Forked
+rendering can fail during macOS font initialization; failed workers must stop
+the build instead of producing a success receipt.
 
 Checksum maps are written as JSON objects keyed by filenames. Readers reject
 empty or unnamed maps, missing files and changed contents. The local

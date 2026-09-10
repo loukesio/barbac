@@ -2,11 +2,15 @@
   "status": "passed",
   "browser_validation": "passed",
   "hashes": {
-    "report.qmd": "3c2d8a99170f12abbb98b027e4146c6421067009db415d2aa93722f53fd5fb49",
-    "report_helpers.R": "0edf7f9e96fb31b9c0bace60bc9e8d0284fa98e1b264678e09c0e260051eca99",
-    "build_report.R": "9393bd788278eba3f5738cd05454c251ed1e8bd51055a98906e63b94f111aed8",
-    "report.html": "139e5c6bfbc3906efd328874a6945ada6b1b4178980412b434c725ce73d6670f",
-    "session_info.txt": "b38d6a09b696e7882076ef2c720febb63a9cebe6a2dd2954ba20cfbf898ff4f8"
+    "report.qmd": "cabefe22316c201119ba4f5208564645fc9e1c56649ac227f8778d514bc69b73",
+    "report_helpers.R": "f8ce4e4c058866c775e7a51b4e99b293213465c03aa80025de42b95c83f5faad",
+    "composition_helpers.R": "4ef40107a6102433f1ac69f469ea8147c36f6e0f0edb53a380982ec936bb0801",
+    "validate_composition.R": "1544932e60a5bf6b949ea4e4126dbfb13487317f7045c433b1b2b8ae13c3e5a7",
+    "build_report.R": "98d736e874e7a9a3535fb83fe096f12b8d74f8e6af4ea07c1217967156154853",
+    "composition_validation.json": "ecb4a570cb0280ba1cb5860a81860486435aa6b682c21bf487baaa45bc9cea3f",
+    "barcode_colours.csv.gz": "827c696db083cece19625dde74ff09ec6c79e6806986a820058ce65afd358ac3",
+    "report.html": "72f8f3814211876fdd6c27f6529926f34f8458bd6dcebf67969d9bfa93c72c66",
+    "session_info.txt": "431391083a7a905a68908ca63f422db8592c9bf8c1ff624720810f8be0ea2329"
   },
   "no_competitor_runs": true,
   "publication_comparison": "Sample summaries and published dominant-barcode final frequencies",
@@ -18,6 +22,6 @@
   "samples": 75,
   "biological_populations": 6,
   "published_dominant_barcodes": 120,
-  "browser_checks_sha256": "c37b5611a937a10969865e80c9235808c330d0624a664f5b7d784ccc5fd62d2b",
-  "browser_receipt_sha256": "0b060c99d31fbf13f1daeeca3e02550a3a1637eef084e8ff32fd5495778c6678"
+  "browser_checks_sha256": "fb2dd9ca6e49b739ed8701a8be07c61fb1152c4f15ecf8aa346d2c2c3a0911c7",
+  "browser_receipt_sha256": "e428dbdf2a2e049c4f04861a7b87665d6ce1695bc97ef8cf46e67c8cea4a4eae"
 }

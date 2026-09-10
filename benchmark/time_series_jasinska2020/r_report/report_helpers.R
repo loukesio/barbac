@@ -91,33 +91,30 @@ make_report_assets <- function(report,kit,here) {
     diagnostic
   })
   report$diagnostics <- diagnostics
-  # Four identities selected from published mean frequencies, before agreement.
-  ranked <- sort(tapply(report$top$published_mean,report$top$barcode,sum),decreasing=TRUE)
-  featured <- names(ranked)[1:4]
-  colors <- setNames(c(blue,gold,'#7B8245','#BD668A','#D4D4D4','#87929D'),
-    c(featured,'All remaining barcodes','No extracted barcode'))
-  palette <- unname(colors[sort(names(colors))])
-  report$composition <- list();explorer <- list()
+  source(file.path(here,'composition_helpers.R'),local=TRUE)
+  # One shared mapping ensures a barcode keeps its colour across all six panels.
+  ids <- sort(unique(unlist(lapply(report$series,function(s)rownames(s$count_matrix)))))
+  colours <- setNames(viridisLite::plasma(length(ids)),ids)
+  readr::write_csv(data.frame(barcode=ids,colour=unname(colours)),
+    file.path(here,'barcode_colours.csv.gz'))
+  # Separate R processes are safe for macOS font rendering; forked workers can
+  # abort in Objective-C font initialization and return NULL without an R error.
+  workers <- parallel::makePSOCKcluster(3L)
+  on.exit(parallel::stopCluster(workers),add=TRUE)
+  invisible(parallel::clusterCall(workers,function(kit,here) {
+    source(file.path(kit,'load_release.R'));invisible(load_release(kit))
+    source(file.path(here,'composition_helpers.R'),local=globalenv())
+    NULL
+  },kit,here))
+  report$composition <- parallel::parLapply(workers,report$series,
+    function(s,colours,here)make_composition(s,colours,here),colours,here)
+  stopifnot(length(report$composition)==length(report$series),
+    all(vapply(report$composition,function(x)is.list(x) &&
+      isTRUE(x$every_frequency_and_band_width_verified) &&
+      identical(x$lineages,x$polygon_count),logical(1))))
+  explorer <- list()
   for(pop in names(report$series)) {
     s <- report$series[[pop]];m <- s$count_matrix
-    rows <- lapply(seq_along(s$passages),function(j) {
-      counts <- setNames(rep(0,length(featured)),featured)
-      idx <- match(featured,rownames(m));counts[!is.na(idx)] <- m[idx[!is.na(idx)],j]
-      data.frame(barcode=c(featured,'All remaining barcodes','No extracted barcode'),
-        time=s$passages[j],counts=c(counts,sum(m[,j])-sum(counts),s$totals[j]-sum(m[,j])))
-    })
-    input <- do.call(rbind,rows)
-    stopifnot(all(input$counts>=0),isTRUE(all.equal(as.numeric(tapply(input$counts,input$time,sum)),unname(s$totals))))
-    args <- list(data=input,min_total_count=0,include_late=TRUE,fill_missing='zero',time_zero_shift=FALSE,
-      palette=palette,show_legend=TRUE,x_breaks=c(0,6,12,18,24,30),x_lab='Passage (culture transfers)',
-      y_lab='Fraction of all sequenced reads',
-      title=sub('No drug r','No antibiotic · replicate ',sub('Low CMP r','Chloramphenicol · replicate ',pop,fixed=TRUE),fixed=TRUE),
-      theme=barbac::theme_barbac(base_size=11,family='Arial')+
-        ggplot2::theme(plot.margin=ggplot2::margin(10,25,12,14)))
-    static <- do.call(barbac::barbac_ts_area,args)
-    ggplot2::ggsave(file.path(here,'figures',paste0(s$manifest$well[1],'_composition.png')),static,
-      width=11,height=6,dpi=130,device=ragg::agg_png)
-    report$composition[[pop]] <- do.call(barbac::barbac_ts_area,c(args,list(interactive='ggiraph')))
     top <- s$top
     for(i in seq_len(nrow(top))) explorer[[length(explorer)+1L]] <- data.frame(
       Population=pop,Barcode=top$barcode[i],Passage=s$passages,
@@ -126,7 +123,10 @@ make_report_assets <- function(report,kit,here) {
       Published_final_percent=ifelse(s$passages==max(s$passages),100*top$published_final[i],NA_real_))
   }
   report$explorer <- do.call(rbind,explorer)
-  report$featured <- featured
+  jsonlite::write_json(list(status='passed',populations=report$composition,
+    shared_barcode_colours=TRUE,colour_map_sha256=digest::digest(
+      file=file.path(here,'barcode_colours.csv.gz'),algo='sha256')),
+    file.path(here,'composition_validation.json'),pretty=TRUE,auto_unbox=TRUE)
   # Keep large matrices in separate reproducible count files, not the HTML cache.
   report$series <- NULL
   report

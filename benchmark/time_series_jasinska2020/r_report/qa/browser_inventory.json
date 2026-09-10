@@ -2,8 +2,8 @@
   "title": "E. coli lineages under antibiotic exposure",
   "gt": 19,
   "tableRows": 1620,
-  "girafe": 6,
-  "girafeWithPlots": 6,
+  "girafe": 0,
+  "girafeWithPlots": 0,
   "plotly": 5,
   "images": [
     {
@@ -148,6 +148,30 @@
     },
     {
       "alt": "",
+      "loaded": true
+    },
+    {
+      "alt": "Every barcode separately, chloramphenicol replicate 1",
+      "loaded": true
+    },
+    {
+      "alt": "Every barcode separately, no-antibiotic replicate 1",
+      "loaded": true
+    },
+    {
+      "alt": "Every barcode separately, chloramphenicol replicate 2",
+      "loaded": true
+    },
+    {
+      "alt": "Every barcode separately, no-antibiotic replicate 2",
+      "loaded": true
+    },
+    {
+      "alt": "Every barcode separately, chloramphenicol replicate 3",
+      "loaded": true
+    },
+    {
+      "alt": "Every barcode separately, no-antibiotic replicate 3",
       "loaded": true
     }
   ],
