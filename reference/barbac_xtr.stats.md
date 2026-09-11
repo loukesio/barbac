@@ -12,7 +12,9 @@ barbac_xtr.stats(
   save_plot = FALSE,
   plot_width = 12,
   plot_height = 8,
-  verbose = TRUE
+  verbose = TRUE,
+  panel_labels = FALSE,
+  return_details = FALSE
 )
 ```
 
@@ -49,6 +51,20 @@ barbac_xtr.stats(
 
   Logical. Print summary statistics. Default is TRUE.
 
+- panel_labels:
+
+  Logical. Add A, B, C, D labels to the combined diagnostic.
+
+- return_details:
+
+  Logical. Return the combined plot, individual histogram plots, numeric
+  length summary and per-sequence entropy for report composition. The
+  default preserves the patchwork return value.
+
 ## Value
 
-Patchwork plot object with histograms and summary table
+A patchwork plot, or with \`return_details = TRUE\`, a list containing
+\`plot\`, \`plots\`, \`length_summary\` and \`sequence_entropy\`. The
+numeric summary can be passed to \`gt::gt()\` for an HTML report.
+Entropy is measured in bits across nucleotide frequencies within each
+sequence, not across lineages.

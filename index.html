@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="index.html">barbac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,8 @@
 <li class="nav-item"><a class="nav-link" href="articles/barbac.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
+<li class="nav-item"><a class="nav-link" href="app/media/watch.html">Studio</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -52,506 +54,171 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="barbac">barbac<a class="anchor" aria-label="anchor" href="#barbac"></a>
+</h1>
+</div>
+<p><a href="https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main" alt="R CMD check"></a> <a href="https://loukesio.github.io/barbac/"><img src="https://img.shields.io/badge/docs-barbac-24574B" alt="Documentation"></a> <a href="LICENSE.html"><img src="https://img.shields.io/badge/license-GPL%20%E2%89%A5%202-24574B" alt="License: GPL ≥ 2"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-D8BD82" alt="Lifecycle: experimental"></a></p>
+<p><strong>Fast DNA barcode clustering. From sequencing reads to lineage trajectories.</strong></p>
+<p>barbac is an R package for extracting DNA barcodes, correcting sequencing errors, and following lineages through time. Its native C++ engine combines abundance-aware clustering with Hamming or Levenshtein distances, retaining the members and counts behind every inferred lineage.</p>
+<p>Start with a barcode-count table or with <strong>R1-only or overlapping paired-end FASTQ reads</strong>. Work in R, or explore your analysis in <strong>barbac Studio</strong>, the local Shiny app.</p>
+<p><a href="#quick-start">Get started</a> · <a href="#barbac-studio">Explore Studio</a> · <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.html">Read the workflow</a> · <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.html">Inspect the evidence</a></p>
+<p><br clear="right"></p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p><strong><a href="https://loukesio.github.io/barbac/">barbac</a></strong> is an R package for end-to-end DNA barcode lineage tracking. <img align="right" src="reference/figures/logo.png" width="400"></p>
+<p>Install from GitHub with a working C++ toolchain and the Bioconductor dependencies:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install development version from GitHub</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"loukesio/barbac"</span><span class="op">)</span></span>
-<span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remotes"</span>, <span class="st">"BiocManager"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># once, if missing</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GenomicAlignments"</span>, <span class="st">"GenomicRanges"</span>, <span class="st">"Rsamtools"</span>, <span class="st">"Biostrings"</span><span class="op">)</span>,</span>
+<span>  ask <span class="op">=</span> <span class="cn">FALSE</span>, update <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"loukesio/barbac"</span>, upgrade <span class="op">=</span> <span class="st">"never"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://loukesio.github.io/barbac">barbac</a></span><span class="op">)</span></span></code></pre></div>
-<p><code>barbac</code> links to Rcpp and requires a working C++ toolchain. It also depends on the Bioconductor packages <code>GenomicAlignments</code> and <code>GenomicRanges</code> (installed automatically). The upstream CLI pipeline (FastQC, PEAR, minimap2, samtools) is optional and provisioned via <code><a href="reference/configure_environment.html">configure_environment()</a></code> on demand.</p>
-</div>
-<div class="section level2">
-<h2 id="prefer-a-container-use-the-pre-built-image">Prefer a container? Use the pre-built image<a class="anchor" aria-label="anchor" href="#prefer-a-container-use-the-pre-built-image"></a>
-</h2>
-<p>Every push to <code>main</code> builds and publishes a Docker image with R, Bioconductor, and the full FASTQ→BAM CLI stack (FastQC, PEAR, minimap2, samtools, MultiQC) already installed, alongside the latest <code>barbac</code>. Zero conda dance:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/loukesio/barbac:latest</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Start an R session with your working directory mounted at /data</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-it</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">"</span>:/data ghcr.io/loukesio/barbac:latest R</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># Or run a script non-interactively</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">"</span>:/data ghcr.io/loukesio/barbac:latest <span class="dt">\</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  Rscript /data/my_analysis.R</span></code></pre></div>
-<p>Tags: <code>latest</code> on <code>main</code>, <code>&lt;short-sha&gt;</code> per commit, <code>0.1.0</code> / <code>0.1</code> on version tags.</p>
-</div>
-<div class="section level2">
-<h2 id="environment-setup-optional--only-for-the-fastqbam-pipeline-native-install">Environment setup (optional — only for the FASTQ→BAM pipeline, native install)<a class="anchor" aria-label="anchor" href="#environment-setup-optional--only-for-the-fastqbam-pipeline-native-install"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># One-time: create the conda environment with FastQC, PEAR, minimap2, samtools</span></span>
-<span><span class="fu"><a href="reference/configure_environment.html">configure_environment</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Activate for this R session (adds the tools to PATH)</span></span>
-<span><span class="fu"><a href="reference/use_barbac_env.html">use_barbac_env</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Sanity-check</span></span>
-<span><span class="fu"><a href="reference/check_barbac_tools.html">check_barbac_tools</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="quick-start--clustering">Quick start — clustering<a class="anchor" aria-label="anchor" href="#quick-start--clustering"></a>
-</h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/super_cluster2.html">super_cluster2</a></span><span class="op">(</span></span>
-<span>  <span class="st">"path/to/reads.csv"</span>,   <span class="co"># or a data.frame with columns `barcode`, `counts`</span></span>
-<span>  distance    <span class="op">=</span> <span class="fl">3</span>,       <span class="co"># max Levenshtein distance</span></span>
-<span>  merge_ratio <span class="op">=</span> <span class="fl">20</span>       <span class="co"># distance-aware count-ratio merge guard</span></span>
+<p>Cluster a CSV with <code>barcode,counts</code> columns, or pass a data frame directly:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">reads</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  barcode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ACGTACGTACGTACGTACGTACGTAC"</span>,</span>
+<span>              <span class="st">"ACGTACGTACGTACGTACGTACGTAA"</span>,</span>
+<span>              <span class="st">"TGCATGCATGCATGCATGCATGCATG"</span><span class="op">)</span>,</span>
+<span>  counts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">12</span>, <span class="fl">800</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">result</span></span>
-<span><span class="co">#&gt; # A tibble: N x 5</span></span>
-<span><span class="co">#&gt;   cluster_id central_barcode      all_barcodes all_counts sum_counts</span></span>
-<span><span class="co">#&gt;   ...</span></span></code></pre></div>
-<p><code><a href="reference/super_cluster2.html">super_cluster2()</a></code> returns one row per cluster: the abundance-ranked centroid, the list of member barcodes and their counts, and the summed abundance.</p>
+<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/super_cluster2.html">super_cluster2</a></span><span class="op">(</span><span class="va">reads</span>, method <span class="op">=</span> <span class="st">"lv"</span>, distance <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">clusters</span><span class="op">)</span></span></code></pre></div>
+<p>Each result row contains a <code>central_barcode</code>, its <code>all_barcodes</code> and <code>all_counts</code>, and the combined <code>sum_counts</code>. Member sequences remain available for inspection and for mapping the original samples back to a shared lineage identity.</p>
 </div>
 <div class="section level2">
-<h2 id="quick-start--time-series-visualisation">Quick start — time-series visualisation<a class="anchor" aria-label="anchor" href="#quick-start--time-series-visualisation"></a>
+<h2 id="built-around-the-clustering">Built around the clustering<a class="anchor" aria-label="anchor" href="#built-around-the-clustering"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Long-format input: (barcode, time, counts)</span></span>
-<span><span class="fu"><a href="reference/barbac_ts_area.html">barbac_ts_area</a></span><span class="op">(</span><span class="va">reads_long</span>,</span>
-<span>               min_total_count <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>               include_late    <span class="op">=</span> <span class="cn">TRUE</span>,   <span class="co"># keep barcodes appearing at later timepoints</span></span>
-<span>               fill_missing    <span class="op">=</span> <span class="st">"epsilon"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Bartender-wide format is auto-detected</span></span>
-<span><span class="fu"><a href="reference/barbac_ts_area.html">barbac_ts_area</a></span><span class="op">(</span><span class="st">"path/to/cluster_output.csv"</span><span class="op">)</span></span></code></pre></div>
-<p>Accepts either long-format or Bartender-wide input. If neither layout matches, <code><a href="reference/barbac_ts_area.html">barbac_ts_area()</a></code> errors with the expected schema. Late-appearing lineages are carried through the full series with missing cells filled by ε (default <code>1e-6</code>) or by zero.</p>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="the-full-fastqlineage-pipeline">The full FASTQ→lineage pipeline<a class="anchor" aria-label="anchor" href="#the-full-fastqlineage-pipeline"></a>
-</h2>
-<div align="center">
-<p><img src="reference/figures/pipeline.svg" alt="barbac pipeline: samples.csv and reference.fasta flow through FastQC/MultiQC, PEAR, minimap2, BAM stats, barcode extraction, super_cluster2 clustering, and barbac_ts_area, with QC branches (plot_bam_stats, barbac_xtr.stats, cluster_stats) alongside." width="820"></p>
-</div>
-<p><sub>Diagram source: <a href="man/figures/pipeline.mmd"><code>man/figures/pipeline.mmd</code></a>. To regenerate the SVG after editing, run <code>npx –yes -p @mermaid-js/mermaid-cli mmdc -i man/figures/pipeline.mmd -o man/figures/pipeline.svg -b transparent</code>.</sub></p>
-<div class="section level3">
-<h3 id="define-your-samples">Define your samples<a class="anchor" aria-label="anchor" href="#define-your-samples"></a>
-</h3>
-<p>Provide a <code>samples.csv</code> file listing one sample per row. <code>sample</code> and <code>R1</code> are required; <code>R2</code> is optional (single-end mode is used when it’s missing).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sample_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  sample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample1"</span>, <span class="st">"sample2"</span>, <span class="st">"sample3"</span><span class="op">)</span>,</span>
-<span>  R1     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data/sample1_R1.fastq.gz"</span>, <span class="st">"data/sample2_R1.fastq.gz"</span>, <span class="st">"data/sample3_R1.fastq.gz"</span><span class="op">)</span>,</span>
-<span>  R2     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data/sample1_R2.fastq.gz"</span>, <span class="st">"data/sample2_R2.fastq.gz"</span>, <span class="st">"data/sample3_R2.fastq.gz"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">sample_table</span>, <span class="st">"samples.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr>
-<th>sample</th>
-<th>R1</th>
-<th>R2</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>sample1</td>
-<td>data/sample1_R1.fastq.gz</td>
-<td>data/sample1_R2.fastq.gz</td>
-</tr>
-<tr>
-<td>sample2</td>
-<td>data/sample2_R1.fastq.gz</td>
-<td>data/sample2_R2.fastq.gz</td>
-</tr>
-<tr>
-<td>sample3</td>
-<td>data/sample3_R1.fastq.gz</td>
-<td>data/sample3_R2.fastq.gz</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level3">
-<h3 id="one-command-pipeline">One-command pipeline<a class="anchor" aria-label="anchor" href="#one-command-pipeline"></a>
-</h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/run_cli_pipeline.html">run_cli_pipeline</a></span><span class="op">(</span></span>
-<span>  sample_table <span class="op">=</span> <span class="st">"samples.csv"</span>,</span>
-<span>  reference    <span class="op">=</span> <span class="st">"data/Reference_barcodes.fasta"</span>,</span>
-<span>  output_dir   <span class="op">=</span> <span class="st">"results"</span>,</span>
-<span>  log_file     <span class="op">=</span> <span class="st">"barbac.log"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="step-by-step">Step-by-step<a class="anchor" aria-label="anchor" href="#step-by-step"></a>
-</h3>
-<details><summary>
-Prefer to run each stage explicitly? Click to expand.
-</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="st">"samples.csv"</span></span>
-<span><span class="va">ref</span>     <span class="op">&lt;-</span> <span class="st">"data/Reference_barcodes.fasta"</span></span>
-<span></span>
-<span><span class="co"># 1. Quality control</span></span>
-<span><span class="fu"><a href="reference/run_fastqc.html">run_fastqc</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span>                            <span class="co"># -&gt; results/fastQC/</span></span>
-<span><span class="fu"><a href="reference/run_multiqc.html">run_multiqc</a></span><span class="op">(</span><span class="op">)</span>                                  <span class="co"># -&gt; results/multiqc_report.html</span></span>
-<span></span>
-<span><span class="co"># 2. Merge paired-end reads</span></span>
-<span><span class="fu"><a href="reference/run_pear_merge.html">run_pear_merge</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span>                        <span class="co"># -&gt; results/merged/</span></span>
-<span></span>
-<span><span class="co"># 3. Reference mapping</span></span>
-<span><span class="fu"><a href="reference/run_minimap2.html">run_minimap2</a></span><span class="op">(</span>merged_dir <span class="op">=</span> <span class="st">"results/merged/"</span>,   <span class="co"># -&gt; results/merged/bam/</span></span>
-<span>             reference  <span class="op">=</span> <span class="va">ref</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 4. Mapping statistics (+ QC plot)</span></span>
-<span><span class="va">bam_stats</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/summarise_bam_stats.html">summarise_bam_stats</a></span><span class="op">(</span>bam_dir <span class="op">=</span> <span class="st">"results/merged/bam/"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_bam_stats.html">plot_bam_stats</a></span><span class="op">(</span><span class="va">bam_stats</span><span class="op">)</span>                      <span class="co"># per-sample mapped/unmapped bars</span></span>
-<span></span>
-<span><span class="co"># 5. Extract barcodes at fixed coordinates (+ QC plot)</span></span>
-<span><span class="fu"><a href="reference/barbac_xtr.html">barbac_xtr</a></span><span class="op">(</span><span class="st">"results/merged/bam/sample1_sorted.bam"</span>,</span>
-<span>           start_pos <span class="op">=</span> <span class="fl">54</span>, end_pos <span class="op">=</span> <span class="fl">78</span><span class="op">)</span>       <span class="co"># -&gt; sample1_barcodes.csv</span></span>
-<span><span class="fu"><a href="reference/barbac_xtr.stats.html">barbac_xtr.stats</a></span><span class="op">(</span><span class="st">"sample1_barcodes.csv"</span>,</span>
-<span>                 barcode_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span>   <span class="co"># histograms + summary table</span></span>
-<span></span>
-<span><span class="co"># 6. Cluster (+ QC summary)</span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/super_cluster2.html">super_cluster2</a></span><span class="op">(</span><span class="st">"sample1_barcodes.csv"</span>, distance <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                          <span class="co"># n_clusters, singleton_frac, topK_frac</span></span>
-<span></span>
-<span><span class="co"># 7. Visualise (once joined across timepoints)</span></span>
-<span><span class="fu"><a href="reference/barbac_ts_area.html">barbac_ts_area</a></span><span class="op">(</span><span class="va">result_time_series</span><span class="op">)</span></span></code></pre></div>
-</details>
-</div>
-<div class="section level3">
-<h3 id="output-structure">Output structure<a class="anchor" aria-label="anchor" href="#output-structure"></a>
-</h3>
-<pre><code>results/
-├── fastQC/                       # Quality control reports
-│   ├── sample1_R1_fastqc.html
-│   └── sample1_R2_fastqc.html
-├── merged/                       # PEAR merged reads
-│   ├── sample1_ANC.assembled.fastq   # "_ANC" tag added by run_pear_merge()
-│   └── bam/                      # Alignment results
-│       ├── *_sorted.bam
-│       └── *_sorted.bam.bai
-├── bam_summary.csv               # per-sample mapped / unmapped counts
-└── pipeline.log</code></pre>
-<hr>
-</div>
-</div>
-<div class="section level2">
-<h2 id="benchmarks">Benchmarks<a class="anchor" aria-label="anchor" href="#benchmarks"></a>
-</h2>
-<div class="section level3">
-<h3 id="parity-with-shepherd-on-the-johnson-et-al-2023-reference-dataset">Parity with Shepherd on the Johnson et al. (2023) reference dataset<a class="anchor" aria-label="anchor" href="#parity-with-shepherd-on-the-johnson-et-al-2023-reference-dataset"></a>
-</h3>
-<p>Same input (100,000 true barcodes, ~1.5M unique reads), same parameters (max distance 3), same evaluation protocol.</p>
-<table class="table">
-<thead><tr>
-<th>Method</th>
-<th align="right">Pearson R</th>
-<th align="right">FN%</th>
-<th align="right">FP%</th>
-<th align="right">WS%</th>
-<th align="right">Time</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>barbac</td>
-<td align="right">1.00</td>
-<td align="right">0.47</td>
-<td align="right">0.09</td>
-<td align="right">0.06</td>
-<td align="right"><strong>1.4 min</strong></td>
-</tr>
-<tr>
-<td>Shepherd</td>
-<td align="right">1.00</td>
-<td align="right">0.47</td>
-<td align="right">0.09</td>
-<td align="right">0.06</td>
-<td align="right">2.4 min</td>
-</tr>
-</tbody>
-</table>
-<p>470 of the 471 false negatives are shared between the two methods — both fail on the same hard cases (mostly barcodes with count = 0 in the input). See <code>benchmark/compare_with_shepherd.ipynb</code> for the full analysis.</p>
-</div>
-<div class="section level3">
-<h3 id="robustness-on-illumina-quality-data">Robustness on Illumina-quality data<a class="anchor" aria-label="anchor" href="#robustness-on-illumina-quality-data"></a>
-</h3>
-<p>We benchmarked barbac against Shepherd, Starcode, and Bartender on 10,000-barcode / 1M-read datasets under Illumina-quality error regimes typical of experimental-evolution barcode sequencing: <strong>0.5% per-base substitution rate</strong>, insertion+deletion rates of <strong>0% and 0.5%</strong>. Higher indel rates typical of long-read platforms (PacBio, nanopore) are outside the scope of this comparison.</p>
 <table class="table">
 <colgroup>
-<col width="14%">
-<col width="12%">
-<col width="14%">
-<col width="9%">
-<col width="11%">
-<col width="11%">
-<col width="12%">
-<col width="12%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr>
-<th align="left">Condition</th>
-<th align="left">Method</th>
-<th align="right">Pearson R</th>
-<th align="right">FN%</th>
-<th align="right">FP%</th>
-<th align="right">WS%</th>
-<th align="right">Wall (s)</th>
-<th align="right">Algo (s)</th>
+<th>Capability</th>
+<th>What it gives you</th>
 </tr></thead>
 <tbody>
 <tr>
-<td align="left">
-<strong>sub_only</strong> (0% ins, 0% del)</td>
-<td align="left">barbac</td>
-<td align="right">1.0000</td>
-<td align="right">0.44</td>
-<td align="right">0.47</td>
-<td align="right">0.43</td>
-<td align="right">4.3</td>
-<td align="right"><strong>0.7</strong></td>
+<td><strong>Native C++ search</strong></td>
+<td>Bit-parallel distances, exact candidate partitions and abundance bounds that reduce unnecessary comparisons</td>
 </tr>
 <tr>
-<td align="left"></td>
-<td align="left">Shepherd</td>
-<td align="right">1.0000</td>
-<td align="right">0.44</td>
-<td align="right">0.47</td>
-<td align="right">0.43</td>
-<td align="right">2.7</td>
-<td align="right">2.7</td>
+<td><strong>Hamming and Levenshtein</strong></td>
+<td>Substitution-focused comparisons or edit distances that also handle insertions, deletions and shifts</td>
 </tr>
 <tr>
-<td align="left"></td>
-<td align="left">Starcode</td>
-<td align="right">1.0000</td>
-<td align="right">0.48</td>
-<td align="right">0.51</td>
-<td align="right">0.47</td>
-<td align="right">2.8</td>
-<td align="right">2.8</td>
+<td><strong>Explicit correction settings</strong></td>
+<td>Distance and count-ratio guards, reproducible tie ordering, and an optional Poisson indel model</td>
 </tr>
 <tr>
-<td align="left"></td>
-<td align="left">Bartender</td>
-<td align="right">1.0000</td>
-<td align="right">0.48</td>
-<td align="right">0.52</td>
-<td align="right">0.48</td>
-<td align="right">1.0</td>
-<td align="right">1.0</td>
+<td><strong>Inspectable results</strong></td>
+<td>Centroids, complete memberships, conserved counts and cluster diagnostics</td>
 </tr>
 <tr>
-<td align="left">
-<strong>low_indel</strong> (0.5% ins, 0.5% del)</td>
-<td align="left"><strong>barbac</strong></td>
-<td align="right"><strong>1.0000</strong></td>
-<td align="right">1.55</td>
-<td align="right"><strong>3.36</strong></td>
-<td align="right"><strong>1.57</strong></td>
-<td align="right">5.7</td>
-<td align="right"><strong>2.4</strong></td>
-</tr>
-<tr>
-<td align="left"></td>
-<td align="left">Shepherd</td>
-<td align="right">0.9993</td>
-<td align="right">0.95</td>
-<td align="right">49.15</td>
-<td align="right">48.81</td>
-<td align="right">3.5</td>
-<td align="right">3.5</td>
-</tr>
-<tr>
-<td align="left"></td>
-<td align="left">Starcode</td>
-<td align="right">1.0000</td>
-<td align="right">1.58</td>
-<td align="right">3.38</td>
-<td align="right">1.59</td>
-<td align="right">17.2</td>
-<td align="right">17.2</td>
-</tr>
-<tr>
-<td align="left"></td>
-<td align="left">Bartender</td>
-<td align="right">0.9959</td>
-<td align="right">0.94</td>
-<td align="right">511.14</td>
-<td align="right">509.41</td>
-<td align="right">2.0</td>
-<td align="right">2.0</td>
+<td><strong>Lineages through time</strong></td>
+<td>Shared memberships across samples and <code><a href="reference/barbac_ts_area.html">barbac_ts_area()</a></code> plots with 32 built-in LTC palettes</td>
 </tr>
 </tbody>
 </table>
-<p><em>Wall = end-to-end wall time. Algo = pure clustering time, excluding R boot + package loading for barbac (Shepherd/Starcode/Bartender pay a negligible boot tax so wall ≈ algo for them).</em></p>
-<p><strong>No-indel baseline.</strong> All four methods are statistically indistinguishable (R = 1.0000, FN/FP/WS all within 5 barcodes out of 10,000). Confirms the four-way validity check.</p>
-<p><strong>Realistic Illumina indel regime (0.5%).</strong> Two-tier picture:</p>
-<ul>
-<li>
-<strong>barbac and Starcode are essentially tied for clustering accuracy</strong> — both preserve R = 1.0000 and confine WS to ~1.6%. Both use Levenshtein natively.</li>
-<li>
-<strong>Shepherd and Bartender break.</strong> Shepherd’s WS rises 113-fold to 48.81% (a <strong>31-fold</strong> gap versus barbac); Bartender’s rises to <strong>509.41% (a 324-fold gap)</strong>. Both rely on Hamming-based indexing that fragments indel variants into spurious centroids.</li>
-</ul>
-<p><strong>Where barbac beats its Levenshtein peer (Starcode).</strong></p>
-<ul>
-<li>
-<strong>~7× faster algorithm time</strong> (2.4 s vs 17.2 s at low_indel; wall-time gap smaller because barbac pays a fixed ~3 s R-boot tax that Starcode does not).</li>
-<li>
-<strong>R-native</strong>, with an in-package Rcpp binding — no shelling out to a standalone C binary and parsing text output.</li>
-<li>
-<strong>Integrated with the FASTQ→lineage pipeline</strong> (<code>run_cli_pipeline</code>, <code>barbac_xtr</code>) and the time-series visualisation (<code>barbac_ts_area</code>) in the same package.</li>
-</ul>
+<p>Use LV for indel-containing or variable-length libraries. Hamming is useful for fixed-length substitution-focused designs. The Poisson model and support-based tie ordering are explicit options; choose settings using your library design and controls. See the <a href="https://loukesio.github.io/barbac/reference/super_cluster2.html">function reference</a>.</p>
 </div>
-<div class="section level3">
-<h3 id="structured-mixed-anchor-barcode-designs">Structured (mixed-anchor) barcode designs<a class="anchor" aria-label="anchor" href="#structured-mixed-anchor-barcode-designs"></a>
-</h3>
-<p>Many real barcode libraries are not fully random: they interleave random positions with fixed anchor sequences (e.g. <code>NNNNNNNN-ATGC-NNNNNNNN-ATCGTTAA</code>). We benchmarked this case with a 28 bp template carrying 16 variable positions, 2,000 barcodes and 200k reads, clustered at distance 3. The fixed anchors are the interesting stress: indels shift them out of register, which fragments Hamming-indexed methods. The variable region is deliberately wide enough that only 28 of 2,000 true barcodes fall within distance 3 of another, so the numbers reflect the tools, not the design.</p>
-<p><strong>sub_only (0% indel — representative of Illumina):</strong></p>
+<div class="section level2">
+<h2 id="from-fastq-to-barcodes">From FASTQ to barcodes<a class="anchor" aria-label="anchor" href="#from-fastq-to-barcodes"></a>
+</h2>
+<pre class="mermaid"><code>flowchart LR
+    R1["R1-only reads"] --&gt; Map["Map · sort · index"]
+    PE["Overlapping R1 + R2"] --&gt; Merge["PEAR merge"] --&gt; Map
+    Ref["Reference cassette"] --&gt; Map
+    Map --&gt; Extract["Extract barcodes"]
+    Extract --&gt; Cluster["super_cluster2"]
+    Counts["Barcode counts"] --&gt; Cluster
+    Cluster --&gt; Results["Lineages · statistics · plots"]</code></pre>
+<p>Set up the external tools once with <code><a href="reference/configure_environment.html">configure_environment()</a></code>, or use equivalent tools already on your system. FastQC, minimap2 and samtools are required; PEAR is needed for paired reads, and MultiQC is optional.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/configure_environment.html">configure_environment</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># needs an existing conda installation</span></span>
+<span><span class="fu"><a href="reference/use_barbac_env.html">use_barbac_env</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># R1-only reads map directly. Add R2 for overlapping paired reads.</span></span>
+<span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="st">"sample1"</span>, R1 <span class="op">=</span> <span class="st">"data/sample1_R1.fastq.gz"</span><span class="op">)</span></span>
+<span><span class="va">pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_cli_pipeline.html">run_cli_pipeline</a></span><span class="op">(</span><span class="va">samples</span>, <span class="st">"data/cassette.fasta"</span>, <span class="st">"results"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">barcode_csv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/barbac_xtr.html">barbac_xtr</a></span><span class="op">(</span></span>
+<span>  <span class="va">pipeline</span><span class="op">$</span><span class="va">bam_files</span><span class="op">[[</span><span class="st">"sample1"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  ref_name <span class="op">=</span> <span class="st">"my_cassette"</span>, start_pos <span class="op">=</span> <span class="fl">171</span>, end_pos <span class="op">=</span> <span class="fl">196</span>,</span>
+<span>  output_file <span class="op">=</span> <span class="st">"results/sample1_barcodes.csv"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/super_cluster2.html">super_cluster2</a></span><span class="op">(</span><span class="va">barcode_csv</span><span class="op">)</span></span></code></pre></div>
+<p>Use your construct’s reference name and <strong>one-based, inclusive</strong> coordinates. For indel-preserving extraction, supply a <code>flank_pattern</code> whose capture group matches the observed barcode between constant flanks. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.html">complete workflow</a> explains both extraction modes, QC, mixed single/paired sample tables and time-series joins.</p>
+</div>
+<div class="section level2">
+<h2 id="barbac-studio">barbac Studio<a class="anchor" aria-label="anchor" href="#barbac-studio"></a>
+</h2>
+<p>A local workspace for the same native barbac engine. Upload extracted counts or FASTQs, cluster your sequences, explore lineage plots and statistics, then download the analysis.</p>
+<p><a href="app/media/studio-walkthrough.mp4"><img src="reference/figures/studio-preview.gif" alt="barbac Studio showing lineage plots and clustering results"></a></p>
 <table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
 <thead><tr>
-<th align="left">Method</th>
-<th align="right">Pearson R</th>
-<th align="right">FN%</th>
-<th align="right">FP%</th>
-<th align="right">WS%</th>
+<th>Watch the workflow</th>
+<th>What you will see</th>
 </tr></thead>
 <tbody>
 <tr>
-<td align="left"><strong>barbac</strong></td>
-<td align="right">1.0000</td>
-<td align="right">0.55</td>
-<td align="right">0.55</td>
-<td align="right"><strong>0.50</strong></td>
+<td><a href="app/media/studio-walkthrough.mp4">Barcode counts → complete analysis · 44 s</a></td>
+<td>Upload, clustering, lineage plots, LTC palettes, memberships and exports</td>
 </tr>
 <tr>
-<td align="left">Shepherd</td>
-<td align="right">1.0000</td>
-<td align="right">0.75</td>
-<td align="right">0.75</td>
-<td align="right">0.70</td>
-</tr>
-<tr>
-<td align="left">Starcode</td>
-<td align="right">1.0000</td>
-<td align="right">1.35</td>
-<td align="right">1.25</td>
-<td align="right">1.20</td>
-</tr>
-<tr>
-<td align="left">Bartender</td>
-<td align="right">1.0000</td>
-<td align="right">0.65</td>
-<td align="right">0.75</td>
-<td align="right">0.70</td>
+<td><a href="app/media/studio-fastq.mp4">FASTQ → extracted barcodes · 24 s</a></td>
+<td>Paired-read extraction, downloading counts before clustering, and clustering</td>
 </tr>
 </tbody>
 </table>
-<p><strong>low_indel (0.5% ins, 0.5% del):</strong></p>
-<table class="table">
-<thead><tr>
-<th align="left">Method</th>
-<th align="right">Pearson R</th>
-<th align="right">FN%</th>
-<th align="right">FP%</th>
-<th align="right">WS%</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="left"><strong>barbac</strong></td>
-<td align="right">1.0000</td>
-<td align="right">2.25</td>
-<td align="right"><strong>9.15</strong></td>
-<td align="right"><strong>2.50</strong></td>
-</tr>
-<tr>
-<td align="left">Shepherd</td>
-<td align="right">0.9989</td>
-<td align="right">1.70</td>
-<td align="right">101.30</td>
-<td align="right">100.35</td>
-</tr>
-<tr>
-<td align="left">Starcode</td>
-<td align="right">1.0000</td>
-<td align="right">3.15</td>
-<td align="right">10.10</td>
-<td align="right">3.45</td>
-</tr>
-<tr>
-<td align="left">Bartender</td>
-<td align="right">0.9944</td>
-<td align="right">1.45</td>
-<td align="right">772.55</td>
-<td align="right">765.75</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>
-<strong>barbac has the lowest wrong-sequence rate of all four tools on both conditions</strong> — the anchors don’t trip it up because the Levenshtein kernel realigns indel-shifted reads.</li>
-<li>
-<strong>Shepherd and Bartender fragment on indels</strong>, WS jumping to 100% and 766% as soon as indels appear, because Hamming-based indexing splits each anchor-shifted variant into its own centroid.</li>
-<li>
-<strong>Starcode is barbac’s closest competitor</strong> (also Levenshtein-based), but barbac edges it on every metric here.</li>
-<li>FP at nonzero indel rates is inflated for every tool by harmless singleton error-reads that drift more than 3 edits from any true barcode; <strong>WS</strong> (spurious centroids <em>near</em> a true barcode) is the metric that separates safe tools from fragmenting ones.</li>
-</ul>
-<p>Full reproducibility scripts are in <a href="benchmark/indel_experiment/"><code>benchmark/indel_experiment/</code></a>. The experiment runner also produces mid- and high-indel conditions; those regimes (2%+ indels) are outside the Illumina scope of the current paper and treated as future work.</p>
-<hr>
-</div>
+<p>These are actual app recordings using small synthetic examples. Their timings illustrate the interface and are not benchmarks for large libraries.</p>
+<p>From a repository checkout, launch Studio with:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/loukesio/barbac.git</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="bu">cd</span> barbac</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="ex">Rscript</span> app/run.R</span></code></pre></div>
+<p>Open <strong><a href="http://127.0.0.1:3838" class="external-link uri">http://127.0.0.1:3838</a></strong> on the same computer. The <a href="app/README.html">Studio guide</a> covers the additional R dependencies and optional Quarto installation. Studio builds an isolated release installation of the current package and runs locally; no public upload service is provided.</p>
+<p>Download extracted counts <strong>before clustering</strong>, or export centroids, complete memberships, per-sample lineage counts, clustering statistics, figures and a self-contained Quarto HTML report. The <a href="app/media/watch.html">offline video viewer</a> plays both walkthroughs without R or Shiny.</p>
 </div>
 <div class="section level2">
-<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+<h2 id="plot-every-lineage">Plot every lineage<a class="anchor" aria-label="anchor" href="#plot-every-lineage"></a>
 </h2>
-<ul>
-<li>📖 <strong>Package website:</strong> <a href="https://loukesio.github.io/barbac/" class="uri">https://loukesio.github.io/barbac/</a>
-</li>
-<li>📘 <strong>Getting-started vignette:</strong> <code><a href="articles/barbac.html">vignette("barbac", package = "barbac")</a></code> or <code>browseVignettes("barbac")</code>
-</li>
-<li>💻 <strong>Function help:</strong> <code><a href="reference/super_cluster2.html">?super_cluster2</a></code>, <code><a href="reference/barbac_ts_area.html">?barbac_ts_area</a></code>, <code><a href="reference/run_cli_pipeline.html">?run_cli_pipeline</a></code>, <code><a href="reference/barbac_xtr.html">?barbac_xtr</a></code>, <code><a href="reference/configure_environment.html">?configure_environment</a></code>
-</li>
-</ul>
+<p>Pool counts within each independent population, cluster once, and map the memberships back to each sample. Then plot the resulting long table:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># lineage_counts: barcode, time, counts</span></span>
+<span><span class="fu"><a href="reference/barbac_ts_area.html">barbac_ts_area</a></span><span class="op">(</span></span>
+<span>  <span class="va">lineage_counts</span>,</span>
+<span>  min_total_count <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  fill_missing <span class="op">=</span> <span class="st">"zero"</span>,</span>
+<span>  palette <span class="op">=</span> <span class="st">"alger"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="reference/barbac_palettes.html">barbac_palettes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  <span class="co"># all 32 native LTC palettes</span></span></code></pre></div>
+<p>These explicit settings keep every lineage as its own band and missing counts at zero. Pooling across timepoints is retrospective. See the <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.html#cluster-and-construct-a-time-series">time-series workflow</a> and <a href="https://loukesio.github.io/barbac/articles/barbac.html">R vignette</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="support">Support<a class="anchor" aria-label="anchor" href="#support"></a>
+<h2 id="evidence-and-reproducibility">Evidence and reproducibility<a class="anchor" aria-label="anchor" href="#evidence-and-reproducibility"></a>
 </h2>
-<table class="table">
-<tr>
-<td>
-🐛 <b>Issues</b>
-</td>
-<td>
-<a href="https://github.com/loukesio/barbac/issues" class="external-link">Report a bug or problem</a>
-</td>
-</tr>
-<tr>
-<td>
-💡 <b>Discussions</b>
-</td>
-<td>
-<a href="https://github.com/loukesio/barbac/discussions" class="external-link">Feature requests &amp; questions</a>
-</td>
-</tr>
-<tr>
-<td>
-📧 <b>Email</b>
-</td>
-<td>
-<a href="mailto:loukesio@gmail.com">loukesio@gmail.com</a>
-</td>
-</tr>
-<tr>
-<td>
-🦋 <b>Bluesky</b>
-</td>
-<td>
-<a href="https://bsky.app/profile/bioinformatician.bsky.social" class="external-link">@bioinformatician.bsky.social</a>
-</td>
-</tr>
-</table>
+<p>A barbac mode achieved the highest centroid F1 in <strong>four of five datasets</strong> in the recorded comparison with Shepherd, Starcode and Bartender. Rankings depend on the dataset, mode and metric. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.html">benchmark evidence</a> provides settings, complete tables, timings and limitations; the comparison’s v13 measurements remain separate from the current v14 search improvements.</p>
+<p>The repository also includes reproducible workflows for the <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_chen2023/README.html">Chen 2023</a> and <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_jasinska2020/README.html">Jasinska 2020</a> applications, known-truth extraction checks, and tests of indexed versus exhaustive clustering. Raw study data and large generated analyses are recreated locally from the provided scripts. <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.html">Verification instructions and receipts</a> explain exactly what was checked.</p>
 </div>
 <div class="section level2">
-<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+<h2 id="containers-and-help">Containers and help<a class="anchor" aria-label="anchor" href="#containers-and-help"></a>
 </h2>
-<p>GPL (≥ 2). See <a href="LICENSE.html">LICENSE.md</a>.</p>
+<p>The <a href="https://github.com/loukesio/barbac/blob/main/.github/workflows/docker.yml">container workflow</a> builds the R package and FASTQ toolchain for <code>linux/amd64</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/loukesio/barbac:latest</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-it</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">"</span>:/data ghcr.io/loukesio/barbac:latest R</span></code></pre></div>
+<p><a href="https://loukesio.github.io/barbac/">Documentation</a> · <a href="https://github.com/loukesio/barbac/issues" class="external-link">Issues</a> · <a href="https://github.com/loukesio/barbac" class="external-link">Source</a></p>
+<p>Developed by Loukas Theodosiou. Use <code>citation("barbac")</code> for the package citation. GPL (≥ 2); see <a href="LICENSE.html">LICENSE.md</a>. Bundled LTC palettes retain their <a href="inst/COPYRIGHTS">attribution and permission notice</a>.</p>
 </div>
-
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -583,17 +250,7 @@ Prefer to run each stage explicitly? Click to expand.
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://www.gnu.org/licenses/gpl-2.0" class="external-link"><img src="https://img.shields.io/badge/License-GPL%20(%E2%89%A5%202)-blue.svg" alt="License: GPL (&gt;= 2)"></a></li>
-<li><a href="https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R CMD check"></a></li>
-<li><a href="https://github.com/loukesio/barbac/pkgs/container/barbac" class="external-link"><img src="https://img.shields.io/badge/docker-ghcr.io%2Floukesio%2Fbarbac-2496ed?logo=docker&amp;logoColor=white" alt="Docker image"></a></li>
-<li><a href="https://loukesio.github.io/barbac/"><img src="https://img.shields.io/badge/docs-pkgdown-blue" alt="Vignettes"></a></li>
-<li><a href="https://github.com/loukesio/barbac/stargazers" class="external-link"><img src="https://img.shields.io/github/stars/loukesio/barbac?style=social" alt="GitHub stars"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>
@@ -604,7 +261,7 @@ Prefer to run each stage explicitly? Click to expand.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

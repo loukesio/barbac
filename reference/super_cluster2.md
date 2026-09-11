@@ -21,7 +21,11 @@ super_cluster2(
   kmer_size = 5L,
   min_shared_kmers = 2L,
   merge_ratio = 20,
-  error_rate = 0.005
+  error_rate = 0.005,
+  tie_break = c("sequence", "hash", "support"),
+  tie_seed = 0L,
+  use_design = FALSE,
+  indel_model = c("none", "poisson")
 )
 ```
 
@@ -69,7 +73,8 @@ super_cluster2(
 
 - kmer_size:
 
-  Integer. Seed size for LV index. Default: 5.
+  Integer. Kept for API compatibility. Search partitions are now chosen
+  from observed sequence information. Default: 5.
 
 - min_shared_kmers:
 
@@ -84,6 +89,47 @@ super_cluster2(
 
   Numeric. Approximate per-base error rate for likelihood scoring.
   Default: 0.005.
+
+- tie_break:
+
+  Character string. How to order barcodes that share a count:
+  `"sequence"` (default) orders them by the barcode itself; `"hash"`
+  orders them by a salted hash using `tie_seed`; `"support"` first
+  orders by the summed counts of one-edit neighbours that are no more
+  abundant than the barcode, then by sequence. Support uses the selected
+  distance method and observed reads only. It is an optional
+  evidence-based tie rule, not a guarantee of improved accuracy. All
+  three options are deterministic and independent of input row order.
+  Re-running the hash option across seeds measures sensitivity to
+  arbitrary equal-count ordering; support retains sequence order when
+  evidence ties.
+
+- tie_seed:
+
+  Integer. Salt for `tie_break = "hash"`. Default: 0.
+
+- use_design:
+
+  Logical. Exploit the barcode design. A library that fixes some
+  positions and randomises others carries identity only at the random
+  ones, so a read differing from a centroid solely at a fixed position
+  cannot be a different barcode and is absorbed without consulting the
+  abundance guard. The fixed positions are read off the data (a position
+  where one base covers at least 90 effect on fully random libraries,
+  where every position varies. Default: FALSE.
+
+- indel_model:
+
+  Character string. Experimental LV merge-guard exception: `"none"`
+  (default) or `"poisson"`. The latter allows a repeated-base single
+  insertion/deletion to pass a blocked ratio guard if its count is
+  consistent with a Poisson error expectation (upper tail at least
+  0.01). Uses `error_rate` as a deletion-rate upper-bound proxy, and one
+  fourth of that rate for a specific inserted base, multiplied by
+  equivalent gap positions. This is not an estimated platform-specific
+  error rate or posterior probability. It may merge genuine length
+  variants; validate on independent controls. Requires the C++ LV
+  method.
 
 ## Value
 

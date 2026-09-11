@@ -79,7 +79,16 @@ barbac_ts_area(
 
 - palette:
 
-  Optional character vector of colours. If `NULL` (default), a
+  A built-in LTC palette name, such as `"alger"` or `"minou"`, or a
+  character vector of R colours. See
+  `names(`[`barbac_palettes`](https://loukesio.github.io/barbac/reference/barbac_palettes.md)`())`
+  for all 32 names. Named palettes are interpolated end to end to give
+  each lineage a colour. Short custom vectors are interpolated; longer
+  vectors are used in barcode factor order. Colour mappings are local to
+  each plot; for matching colours across populations, generate one
+  vector over the union of barcode IDs using
+  [`barbac_palette`](https://loukesio.github.io/barbac/reference/barbac_palettes.md)
+  and subset it in each plot's barcode order. If `NULL` (default), a
   continuous `PNWColors::pnw_palette("Sailboat")` is expanded to the
   number of lineages.
 
@@ -159,6 +168,7 @@ df <- tibble::tibble(
                 0,  0, 10, 50, 40)
 )
 barbac_ts_area(df, min_total_count = 0)
+barbac_ts_area(df, min_total_count = 0, palette = "alger")
 
 # Bartender wide-format input auto-detects
 bt <- tibble::tibble(

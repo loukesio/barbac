@@ -257,8 +257,7 @@ is designed to handle the many-lineage output of a real
 barcode-sequencing experiment. Here we simulate a 100-lineage community
 across 21 timepoints, with log-normal initial abundances and a small
 Gaussian fitness effect per lineage, and plot every lineage using the
-**minou** palette from the
-[`ltc`](https://github.com/loukesio/ltc_palettes) package.
+**minou** palette, one of the 32 LTC palettes included in barbac.
 
 ``` r
 
@@ -283,22 +282,10 @@ ts_multi <- do.call(rbind, lapply(tp, function(t) {
   )
 }))
 
-# One colour per barcode, interpolated from the minou seed palette
-# (same pattern as the phage.colors helper in the ltc README).
-phage_colors <- function(df) {
-  n <- dplyr::n_distinct(df$barcode)
-  pal <- if (requireNamespace("ltc", quietly = TRUE)) {
-    ltc::ltc("minou", n, type = "continuous")
-  } else {
-    viridisLite::magma(n, begin = 0.05, end = 0.95)  # fallback
-  }
-  grDevices::colorRampPalette(pal)(n)
-}
-
 barbac_ts_area(
   ts_multi,
   min_total_count = 0,                            # plot every lineage
-  palette         = phage_colors(ts_multi),
+  palette         = "minou",
   title           = "Multilineage — 100 barcodes across 21 timepoints"
 )
 ```
@@ -309,10 +296,12 @@ Every timepoint fills the stack to y = 1 exactly. Lineages with positive
 fitness sweep upward across the 21 timepoints; negative-fitness lineages
 shrink; neutral ones drift proportionally to their initial abundance.
 
-The `ltc` package is available from
-[GitHub](https://github.com/loukesio/ltc_palettes) via
-`remotes::install_github("loukesio/ltc_palettes")`. Any character vector
-of colour hex codes works as `palette`, so
+Use `palette = "alger"`, `palette = "dora"`, or another name from
+`names(barbac_palettes())` to switch colours. No other palette package
+is needed. Names such as `"Casa Natal"` and `"casa_natal"` are
+equivalent. `barbac_palette("minou", n = 100)` also returns colours for
+other plots. Any character vector of colour hex codes works as
+`palette`, so
 [`viridisLite::magma()`](https://sjmgarnier.github.io/viridisLite/reference/viridis.html),
 [`RColorBrewer::brewer.pal()`](https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html),
 a manual palette, or any other source are equally valid.
@@ -341,7 +330,7 @@ supports two interactive backends:
 barbac_ts_area(
   ts_multi,
   min_total_count = 0,
-  palette         = phage_colors(ts_multi),
+  palette         = "minou",
   title           = "Multilineage — hover over a band for its barcode",
   interactive     = TRUE                                # = "ggiraph"
 )
@@ -354,7 +343,7 @@ If you prefer plotly’s zoom / pan controls:
 barbac_ts_area(
   ts_multi,
   min_total_count = 0,
-  palette         = phage_colors(ts_multi),
+  palette         = "minou",
   title           = "Multilineage (plotly backend)",
   interactive     = "plotly"
 )
@@ -402,7 +391,7 @@ for details.
 sessionInfo()
 #> R version 4.6.1 (2026-06-24)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.4 LTS
+#> Running under: Ubuntu 24.04.5 LTS
 #> 
 #> Matrix products: default
 #> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -421,54 +410,51 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.2.1  tibble_3.3.1 barbac_0.1.0
+#> [1] dplyr_1.2.1  tibble_3.3.1 barbac_0.2.0
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] ggiraph_0.9.6               tidyselect_1.2.1           
-#>  [3] farver_2.1.2                Biostrings_2.80.1          
-#>  [5] S7_0.2.2                    bitops_1.0-9               
-#>  [7] fastmap_1.2.0               tweenr_2.0.3               
-#>  [9] fontquiver_0.2.1            GenomicAlignments_1.48.0   
-#> [11] digest_0.6.39               lifecycle_1.0.5            
-#> [13] magrittr_2.0.5              compiler_4.6.1             
-#> [15] rlang_1.2.0                 sass_0.4.10                
-#> [17] tools_4.6.1                 utf8_1.2.6                 
-#> [19] yaml_2.3.12                 knitr_1.51                 
-#> [21] S4Arrays_1.12.0             labeling_0.4.3             
-#> [23] htmlwidgets_1.6.4           DelayedArray_0.38.2        
-#> [25] RColorBrewer_1.1-3          abind_1.4-8                
-#> [27] BiocParallel_1.46.0         withr_3.0.3                
-#> [29] purrr_1.2.2                 BiocGenerics_0.58.1        
-#> [31] desc_1.4.3                  grid_4.6.1                 
-#> [33] polyclip_1.10-7             stats4_4.6.1               
-#> [35] gdtools_0.5.1               colorspace_2.1-2           
-#> [37] ggplot2_4.0.3               scales_1.4.0               
-#> [39] MASS_7.3-65                 SummarizedExperiment_1.42.0
-#> [41] cli_3.6.6                   rmarkdown_2.31             
-#> [43] crayon_1.5.3                ragg_1.5.2                 
-#> [45] generics_0.1.4              otel_0.2.0                 
-#> [47] stringdist_0.9.17           tzdb_0.5.0                 
-#> [49] cachem_1.1.0                ggforce_0.5.0              
-#> [51] stringr_1.6.0               PNWColors_0.1.0            
-#> [53] parallel_4.6.1              XVector_0.52.0             
-#> [55] matrixStats_1.5.0           vctrs_0.7.3                
-#> [57] Matrix_1.7-5                jsonlite_2.0.0             
-#> [59] fontBitstreamVera_0.1.1     IRanges_2.46.0             
-#> [61] hms_1.1.4                   patchwork_1.3.2            
-#> [63] S4Vectors_0.50.1            systemfonts_1.3.2          
-#> [65] jquerylib_0.1.4             tidyr_1.3.2                
-#> [67] glue_1.8.1                  pkgdown_2.2.0              
-#> [69] codetools_0.2-20            stringi_1.8.7              
-#> [71] gtable_0.3.6                GenomicRanges_1.64.0       
-#> [73] ltc_0.3.0                   pillar_1.11.1              
-#> [75] htmltools_0.5.9             Seqinfo_1.2.0              
-#> [77] R6_2.6.1                    textshaping_1.0.5          
-#> [79] evaluate_1.0.5              lattice_0.22-9             
-#> [81] Biobase_2.72.0              readr_2.2.0                
-#> [83] Rsamtools_2.28.0            cigarillo_1.2.0            
-#> [85] fontLiberation_0.1.0        bslib_0.11.0               
-#> [87] Rcpp_1.1.1-1.1              gridExtra_2.3.1            
-#> [89] SparseArray_1.12.2          xfun_0.59                  
-#> [91] fs_2.1.0                    MatrixGenerics_1.24.0      
-#> [93] pkgconfig_2.0.3
+#>  [1] stringdist_0.9.17           SummarizedExperiment_1.42.0
+#>  [3] gtable_0.3.6                xfun_0.60                  
+#>  [5] bslib_0.12.0                ggplot2_4.0.3              
+#>  [7] htmlwidgets_1.6.4           Biobase_2.72.0             
+#>  [9] lattice_0.22-9              tzdb_0.5.0                 
+#> [11] bitops_1.1-0                vctrs_0.7.3                
+#> [13] tools_4.6.1                 PNWColors_0.1.0            
+#> [15] generics_0.1.4              parallel_4.6.1             
+#> [17] stats4_4.6.1                pkgconfig_2.0.3            
+#> [19] Matrix_1.7-5                RColorBrewer_1.1-3         
+#> [21] cigarillo_1.2.1             S7_0.2.2                   
+#> [23] desc_1.4.3                  S4Vectors_0.50.2           
+#> [25] lifecycle_1.0.5             stringr_1.6.0              
+#> [27] compiler_4.6.1              farver_2.1.2               
+#> [29] Rsamtools_2.28.0            textshaping_1.0.5          
+#> [31] Biostrings_2.80.2           codetools_0.2-20           
+#> [33] Seqinfo_1.2.0               fontquiver_0.2.1           
+#> [35] fontLiberation_0.1.0        htmltools_0.5.9            
+#> [37] sass_0.4.10                 yaml_2.3.12                
+#> [39] tidyr_1.3.2                 pillar_1.11.1              
+#> [41] pkgdown_2.2.1               crayon_1.5.3               
+#> [43] jquerylib_0.1.4             MASS_7.3-65                
+#> [45] BiocParallel_1.46.0         cachem_1.1.0               
+#> [47] DelayedArray_0.38.2         abind_1.4-8                
+#> [49] fontBitstreamVera_0.1.1     tidyselect_1.2.1           
+#> [51] digest_0.6.39               stringi_1.8.9              
+#> [53] purrr_1.2.2                 labeling_0.4.3             
+#> [55] fastmap_1.2.0               grid_4.6.1                 
+#> [57] cli_3.6.6                   SparseArray_1.12.2         
+#> [59] magrittr_2.0.5              patchwork_1.3.2            
+#> [61] S4Arrays_1.12.0             utf8_1.2.6                 
+#> [63] withr_3.0.3                 readr_2.2.0                
+#> [65] gdtools_0.5.1               scales_1.4.0               
+#> [67] rmarkdown_2.32              XVector_0.52.0             
+#> [69] matrixStats_1.5.0           otel_0.2.0                 
+#> [71] gridExtra_2.3.1             hms_1.1.4                  
+#> [73] ragg_1.5.2                  evaluate_1.0.5             
+#> [75] knitr_1.52                  GenomicRanges_1.64.0       
+#> [77] IRanges_2.46.0              rlang_1.3.0                
+#> [79] ggiraph_0.9.6               Rcpp_1.1.2                 
+#> [81] glue_1.8.1                  BiocGenerics_0.58.1        
+#> [83] jsonlite_2.0.0              R6_2.6.1                   
+#> [85] MatrixGenerics_1.24.0       GenomicAlignments_1.48.0   
+#> [87] systemfonts_1.3.2           fs_2.1.0
 ```

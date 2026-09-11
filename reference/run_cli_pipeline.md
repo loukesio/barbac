@@ -1,7 +1,9 @@
-# Run Full Barbac CLI Pipeline
+# Map Single-End or Overlapping Paired-End Reads
 
-This function runs the full CLI pipeline for barcode analysis: FastQC
--\> PEAR -\> Minimap2 -\> BAM Stats.
+Run FastQC, merge overlapping pairs with PEAR when R2 is supplied, and
+map each sample with minimap2/samtools to a sorted, indexed BAM. R1-only
+samples map directly. Extract barcodes from the returned BAMs with
+[`barbac_xtr()`](https://loukesio.github.io/barbac/reference/barbac_xtr.md).
 
 ## Usage
 
@@ -20,55 +22,71 @@ run_cli_pipeline(
 
 - sample_table:
 
-  Path to samples.csv or a data.frame/tibble containing \`sample\`,
-  \`R1\`, and optionally \`R2\`.
+  A data.frame with `sample`, `R1`, and optional `R2`, or the path to a
+  CSV (or directory containing `samples.csv`). Missing, NA or empty R2
+  entries select single-end mode for that row. Sample names must be
+  unique, start with a letter or digit, and contain only letters,
+  digits, underscores, dots or hyphens. Read paths are relative to the
+  working directory.
 
 - reference:
 
-  Path to reference FASTA file.
+  Path to the mapping-reference FASTA.
 
 - output_dir:
 
-  Directory to write output files. Default: "results".
+  New or empty output directory. Existing results are never discovered
+  as inputs or silently overwritten. Default: `"results"`.
 
 - verbose:
 
-  Whether to print progress messages to console. Default: TRUE.
+  Print progress messages. Default: TRUE.
 
 - log_file:
 
-  File path for logging. If NULL, uses output_dir/pipeline.log. Default:
-  NULL.
+  New log-file path; defaults to `output_dir/pipeline.log`.
 
 - create_output_dir:
 
-  Whether to create output_dir if it doesn't exist. Default: TRUE.
+  Create the output directory if needed. Default: TRUE.
 
 ## Value
 
-Invisible list containing:
+An invisible list containing `commands`, `output_dir`, `fastqc_dir`,
+`merged_dir`, `bam_dir`, `stats`, `summary_file`, `log_file`,
+`multiqc_status`, and `samples`. The `samples` table links original
+sample labels to mode, mapping input and indexed BAM. `bam_files` is a
+vector named by sample. Paired BAM names retain
+`<sample>_ANC.assembled_sorted.bam`; R1-only BAMs use
+`<sample>_sorted.bam`. The `stats$sample` column retains these basenames
+without `_sorted.bam` for compatibility with earlier paired runs.
 
-- commands: Character vector of system commands executed
+## Details
 
-- output_dir: Path to output directory
+PEAR is required only when at least one sample has R2. Paired mode maps
+the assembled reads and excludes unmerged pairs. It is intended for
+overlapping reads, not general paired-end mapping. A table may mix
+paired and R1-only rows.
 
-- stats: Data frame with BAM statistics
+Mapping uses minimap2's short-read preset (`-x sr`) with secondary
+alignments disabled. Secondary and supplementary alignments are removed
+from the BAM; mapping statistics therefore count primary reads or merged
+molecules. FastQC input filenames must produce unique report names
+within a run.
+
+Required commands stop the pipeline on failure, with their output
+recorded in the log. MultiQC runs when available; its failure raises a
+warning and is reported as `multiqc_status = "failed"`. This wrapper
+does not extract barcodes, deduplicate UMIs, or apply study-specific
+filtering.
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-# Run with default output directory (./results)
-run_cli_pipeline(
-  sample_table = "samples.csv",
-  reference = "barcodes.fasta"
-)
-
-# Run with custom output directory
-run_cli_pipeline(
-  sample_table = "samples.csv",
-  reference = "barcodes.fasta",
-  output_dir = "/path/to/my_results"
-)
+samples <- data.frame(sample = "sample1", R1 = "sample1_R1.fastq.gz")
+pipeline <- run_cli_pipeline(samples, "cassette.fasta", "results")
+pipeline$bam_files[["sample1"]]
+pipeline$stats
 } # }
 ```

@@ -11,7 +11,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">barbac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/barbac.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
+<li class="nav-item"><a class="nav-link" href="../app/media/watch.html">Studio</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/loukesio/barbac/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -59,7 +61,11 @@
 <span>  kmer_size <span class="op">=</span> <span class="fl">5L</span>,</span>
 <span>  min_shared_kmers <span class="op">=</span> <span class="fl">2L</span>,</span>
 <span>  merge_ratio <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  error_rate <span class="op">=</span> <span class="fl">0.005</span></span>
+<span>  error_rate <span class="op">=</span> <span class="fl">0.005</span>,</span>
+<span>  tie_break <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sequence"</span>, <span class="st">"hash"</span>, <span class="st">"support"</span><span class="op">)</span>,</span>
+<span>  tie_seed <span class="op">=</span> <span class="fl">0L</span>,</span>
+<span>  use_design <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  indel_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"poisson"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,7 +114,8 @@
 
 
 <dt id="arg-kmer-size">kmer_size<a class="anchor" aria-label="anchor" href="#arg-kmer-size"></a></dt>
-<dd><p>Integer. Seed size for LV index. Default: 5.</p></dd>
+<dd><p>Integer. Kept for API compatibility. Search partitions are
+now chosen from observed sequence information. Default: 5.</p></dd>
 
 
 <dt id="arg-min-shared-kmers">min_shared_kmers<a class="anchor" aria-label="anchor" href="#arg-min-shared-kmers"></a></dt>
@@ -123,6 +130,46 @@ guard. Effective ratio increases with distance. Default: 20.</p></dd>
 <dt id="arg-error-rate">error_rate<a class="anchor" aria-label="anchor" href="#arg-error-rate"></a></dt>
 <dd><p>Numeric. Approximate per-base error rate for likelihood
 scoring. Default: 0.005.</p></dd>
+
+
+<dt id="arg-tie-break">tie_break<a class="anchor" aria-label="anchor" href="#arg-tie-break"></a></dt>
+<dd><p>Character string. How to order barcodes that share a count:
+<code>"sequence"</code> (default) orders them by the barcode itself;
+<code>"hash"</code> orders them by a salted hash using <code>tie_seed</code>;
+<code>"support"</code> first orders by the summed counts of one-edit neighbours
+that are no more abundant than the barcode, then by sequence. Support
+uses the selected distance method and observed reads only. It is an
+optional evidence-based tie rule, not a guarantee of improved accuracy.
+All three options are deterministic and independent of input row order.
+Re-running the hash option across seeds measures sensitivity to arbitrary
+equal-count ordering; support retains sequence order when evidence ties.</p></dd>
+
+
+<dt id="arg-tie-seed">tie_seed<a class="anchor" aria-label="anchor" href="#arg-tie-seed"></a></dt>
+<dd><p>Integer. Salt for <code>tie_break = "hash"</code>. Default: 0.</p></dd>
+
+
+<dt id="arg-use-design">use_design<a class="anchor" aria-label="anchor" href="#arg-use-design"></a></dt>
+<dd><p>Logical. Exploit the barcode design. A library that fixes
+some positions and randomises others carries identity only at the random
+ones, so a read differing from a centroid solely at a fixed position cannot
+be a different barcode and is absorbed without consulting the abundance
+guard. The fixed positions are read off the data (a position where one base
+covers at least 90<!-- % of reads), so no template has to be supplied. Has no -->
+effect on fully random libraries, where every position varies.
+Default: FALSE.</p></dd>
+
+
+<dt id="arg-indel-model">indel_model<a class="anchor" aria-label="anchor" href="#arg-indel-model"></a></dt>
+<dd><p>Character string. Experimental LV merge-guard exception:
+<code>"none"</code> (default) or <code>"poisson"</code>. The latter allows a
+repeated-base single insertion/deletion to pass a blocked ratio guard if
+its count is consistent with a Poisson error expectation (upper tail at
+least 0.01). Uses <code>error_rate</code> as a deletion-rate upper-bound proxy,
+and one fourth of that rate for a specific inserted base, multiplied by
+equivalent gap positions. This is not an estimated platform-specific
+error rate or posterior probability. It may merge genuine length variants;
+validate on independent controls. Requires the C++ LV method.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -140,7 +187,7 @@ scoring. Default: 0.005.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

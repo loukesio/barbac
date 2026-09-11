@@ -16,6 +16,9 @@ Stacked-area plots of lineage frequencies over time.
   : Stacked-area plot of barcode lineage frequencies over time
 - [`theme_barbac()`](https://loukesio.github.io/barbac/reference/theme_barbac.md)
   : A publication-ready ggplot2 theme for barbac plots
+- [`barbac_palettes()`](https://loukesio.github.io/barbac/reference/barbac_palettes.md)
+  [`barbac_palette()`](https://loukesio.github.io/barbac/reference/barbac_palettes.md)
+  : Built-in LTC colour palettes
 
 ## Barcode extraction
 
@@ -37,7 +40,7 @@ pipeline.
 ## End-to-end pipeline orchestrator
 
 - [`run_cli_pipeline()`](https://loukesio.github.io/barbac/reference/run_cli_pipeline.md)
-  : Run Full Barbac CLI Pipeline
+  : Map Single-End or Overlapping Paired-End Reads
 
 ## Individual pipeline steps
 
@@ -64,7 +67,7 @@ Provision and activate a conda environment with the CLI tools.
 - [`use_barbac_env()`](https://loukesio.github.io/barbac/reference/use_barbac_env.md)
   : Use barbac conda environment in the current R session
 - [`check_barbac_tools()`](https://loukesio.github.io/barbac/reference/check_barbac_tools.md)
-  : Check availability of tools in barbac conda environment
+  : Report which external command-line tools barbac can find
 
 ## Package overview
 
