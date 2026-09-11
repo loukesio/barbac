@@ -28,6 +28,15 @@ under `benchmark/validation/release_2026-09-11/`. Timings are not speed benchmar
 The local installed dependencies emit package-version and stack-imbalance
 warnings when loaded; the tests themselves completed as recorded above.
 
+The GitHub Linux package, Studio integration, documentation and Docker **build**
+checks passed before the merge into main. The R source release is published as
+[`v0.2.0`](https://github.com/loukesio/barbac/releases/tag/v0.2.0). Uploading the
+Docker image to GHCR was rejected with `permission_denied: write_package`; the
+README therefore builds the current source checkout. The package owner can grant
+`loukesio/barbac` Write access under the container package's **Settings → Manage
+Actions access**, then rerun the failed publication job. See
+[GitHub's package permissions documentation](https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages).
+
 ## Archived paired-read verification · 10 September 2026
 
 The [reproducible integration check](../benchmark/validation/verify_pipeline_extraction.R)
@@ -139,4 +148,3 @@ For the package tests alone:
 devtools::load_all(".")
 testthat::test_dir("tests/testthat", reporter = "summary")
 ```
-

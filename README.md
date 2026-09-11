@@ -184,11 +184,11 @@ explain exactly what was checked.
 ## Containers and help
 
 The [container workflow](.github/workflows/docker.yml) builds the R package and
-FASTQ toolchain for `linux/amd64`:
+FASTQ toolchain for `linux/amd64`. Build the current release from a checkout:
 
 ```sh
-docker pull ghcr.io/loukesio/barbac:latest
-docker run --rm -it -v "$PWD":/data ghcr.io/loukesio/barbac:latest R
+docker build --platform linux/amd64 -t barbac:0.2.0 .
+docker run --platform linux/amd64 --rm -it -v "$PWD":/data barbac:0.2.0 R
 ```
 
 [Documentation](https://loukesio.github.io/barbac/) ·
