@@ -40,8 +40,17 @@ stopifnot(all(file.copy(file.path('app', 'media', media), target, overwrite = TR
 # relative media URLs above so videos play directly from the documentation site.
 index <- file.path('docs', 'index.html')
 html <- readLines(index, warn = FALSE)
-html <- gsub('href="((documentation|benchmark|[.]github)/[^"#]+)',
-             'href="https://github.com/loukesio/barbac/blob/main/\\1', html)
-html <- gsub('href="app/README[.]md',
-             'href="https://github.com/loukesio/barbac/blob/main/app/README.md', html)
+matches <- gregexpr('href="[^"]+"', html)
+links <- regmatches(html, matches)
+regmatches(html, matches) <- lapply(links, function(line) vapply(line, function(link) {
+  href <- substring(link, 7, nchar(link) - 1)
+  if (!grepl('^((documentation|benchmark|[.]github|inst)/|app/README[.])', href)) return(link)
+  path <- sub('#.*$', '', href)
+  fragment <- substring(href, nchar(path) + 1)
+  # pkgdown rewrites Markdown links to .html even for source-only guides.
+  markdown <- sub('[.]html$', '.md', path)
+  source <- if (file.exists(file.path(repo, path))) path else markdown
+  if (!file.exists(file.path(repo, source))) stop('Unresolved documentation source: ', href)
+  paste0('href="https://github.com/loukesio/barbac/blob/main/', source, fragment, '"')
+}, character(1)))
 writeLines(html, index)
