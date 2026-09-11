@@ -2,7 +2,7 @@
 % Please edit documentation in R/09_run_cli_pipeline.R
 \name{run_cli_pipeline}
 \alias{run_cli_pipeline}
-\title{Run Full Barbac CLI Pipeline}
+\title{Map Single-End or Overlapping Paired-End Reads}
 \usage{
 run_cli_pipeline(
   sample_table,
@@ -14,42 +14,57 @@ run_cli_pipeline(
 )
 }
 \arguments{
-\item{sample_table}{Path to samples.csv or a data.frame/tibble containing `sample`, `R1`, and optionally `R2`.}
+\item{sample_table}{A data.frame with \code{sample}, \code{R1}, and optional \code{R2}, or
+the path to a CSV (or directory containing \code{samples.csv}). Missing, NA or
+empty R2 entries select single-end mode for that row. Sample names must
+be unique, start with a letter or digit, and contain only letters, digits,
+underscores, dots or hyphens. Read paths are relative to the working directory.}
 
-\item{reference}{Path to reference FASTA file.}
+\item{reference}{Path to the mapping-reference FASTA.}
 
-\item{output_dir}{Directory to write output files. Default: "results".}
+\item{output_dir}{New or empty output directory. Existing results are never
+discovered as inputs or silently overwritten. Default: \code{"results"}.}
 
-\item{verbose}{Whether to print progress messages to console. Default: TRUE.}
+\item{verbose}{Print progress messages. Default: TRUE.}
 
-\item{log_file}{File path for logging. If NULL, uses output_dir/pipeline.log. Default: NULL.}
+\item{log_file}{New log-file path; defaults to \code{output_dir/pipeline.log}.}
 
-\item{create_output_dir}{Whether to create output_dir if it doesn't exist. Default: TRUE.}
+\item{create_output_dir}{Create the output directory if needed. Default: TRUE.}
 }
 \value{
-Invisible list containing:
-  \itemize{
-    \item commands: Character vector of system commands executed
-    \item output_dir: Path to output directory
-    \item stats: Data frame with BAM statistics
-  }
+An invisible list containing \code{commands}, \code{output_dir}, \code{fastqc_dir},
+\code{merged_dir}, \code{bam_dir}, \code{stats}, \code{summary_file}, \code{log_file}, \code{multiqc_status},
+and \code{samples}. The \code{samples} table links original sample labels to mode,
+mapping input and indexed BAM. \code{bam_files} is a vector named by sample.
+Paired BAM names retain \verb{<sample>_ANC.assembled_sorted.bam}; R1-only BAMs
+use \verb{<sample>_sorted.bam}. The \code{stats$sample} column retains these basenames
+without \verb{_sorted.bam} for compatibility with earlier paired runs.
 }
 \description{
-This function runs the full CLI pipeline for barcode analysis: FastQC -> PEAR -> Minimap2 -> BAM Stats.
+Run FastQC, merge overlapping pairs with PEAR when R2 is supplied, and map
+each sample with minimap2/samtools to a sorted, indexed BAM. R1-only samples
+map directly. Extract barcodes from the returned BAMs with \code{\link[=barbac_xtr]{barbac_xtr()}}.
+}
+\details{
+PEAR is required only when at least one sample has R2. Paired mode maps the
+assembled reads and excludes unmerged pairs. It is intended for overlapping
+reads, not general paired-end mapping. A table may mix paired and R1-only rows.
+
+Mapping uses minimap2's short-read preset (\verb{-x sr}) with secondary alignments
+disabled. Secondary and supplementary alignments are removed from the BAM;
+mapping statistics therefore count primary reads or merged molecules.
+FastQC input filenames must produce unique report names within a run.
+
+Required commands stop the pipeline on failure, with their output recorded
+in the log. MultiQC runs when available; its failure raises a warning and is
+reported as \code{multiqc_status = "failed"}. This wrapper does not extract barcodes,
+deduplicate UMIs, or apply study-specific filtering.
 }
 \examples{
 \dontrun{
-# Run with default output directory (./results)
-run_cli_pipeline(
-  sample_table = "samples.csv",
-  reference = "barcodes.fasta"
-)
-
-# Run with custom output directory
-run_cli_pipeline(
-  sample_table = "samples.csv",
-  reference = "barcodes.fasta",
-  output_dir = "/path/to/my_results"
-)
+samples <- data.frame(sample = "sample1", R1 = "sample1_R1.fastq.gz")
+pipeline <- run_cli_pipeline(samples, "cassette.fasta", "results")
+pipeline$bam_files[["sample1"]]
+pipeline$stats
 }
 }

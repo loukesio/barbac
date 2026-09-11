@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>barbac Studio · Watch the workflow</title>
+  <style>
+    :root { color-scheme: light; font-family: Avenir, "Segoe UI", sans-serif; color: #173f39; background: #f7f6f0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1120px; margin: auto; padding: 48px 28px 32px; }
+    .brand { display: flex; align-items: center; gap: 16px; font-size: 27px; font-weight: 750; letter-spacing: -1px; }
+    .brand span { border-left: 1px solid #cad4cc; padding-left: 16px; font-size: 11px; font-weight: 600; letter-spacing: 3px; }
+    .eyebrow { margin-top: 48px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    h1 { font-size: clamp(32px, 5vw, 56px); letter-spacing: -2px; line-height: 1.1; margin: 14px 0 18px; max-width: 800px; }
+    .intro { color: #536960; max-width: 680px; line-height: 1.65; margin-bottom: 34px; }
+    article { background: white; border: 1px solid #dfe4da; border-radius: 18px; overflow: hidden; margin: 24px 0; }
+    .text { padding: 25px 28px 20px; }
+    h2 { font-size: 23px; letter-spacing: -.6px; margin: 0 0 10px; }
+    article p { color: #536960; line-height: 1.6; margin: 0; }
+    .duration { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; color: #587365; text-transform: uppercase; }
+    video { display: block; width: 100%; aspect-ratio: 3 / 2; background: #173f39; }
+    .links { padding: 16px 28px; font-size: 13px; }
+    a { color: #235f4a; text-underline-offset: 3px; }
+    a:focus-visible { outline: 3px solid #b6924e; outline-offset: 4px; }
+    footer { margin-top: 28px; font-size: 13px; line-height: 1.7; color: #536960; }
+    @media (max-width: 560px) { main { padding: 28px 16px; } .text { padding: 20px; } h1 { letter-spacing: -1px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">barbac <span>STUDIO</span></div>
+    <p class="eyebrow">Watch the workflow · Local recordings</p>
+    <h1>From barcode reads<br>to lineages you can explore.</h1>
+    <p class="intro">Two short walkthroughs of the real Shiny app. Bring extracted
+      barcode counts or start from FASTQ reads, run native barbac clustering,
+      and take your results with you.</p>
+
+    <article aria-labelledby="counts-title">
+      <div class="text">
+        <span class="duration">01 / Counts to results · 44 seconds</span>
+        <h2 id="counts-title">Your complete barcode analysis</h2>
+        <p>Upload a count table, cluster sequences, explore lineage trajectories
+          and statistics, choose an LTC palette, and export a results ZIP and
+          Quarto HTML report.</p>
+      </div>
+      <video controls playsinline preload="metadata" poster="studio-walkthrough.jpg" aria-label="Barcode counts to complete analysis walkthrough">
+        <source src="studio-walkthrough.mp4" type="video/mp4">
+        <p><a href="studio-walkthrough.mp4">Open the barcode analysis video</a>.</p>
+      </video>
+      <div class="links"><a href="studio-walkthrough.mp4" download>Download video</a> · Synthetic example: 18 clusters, 192,000 barcode reads, eight timepoints.</div>
+    </article>
+
+    <article aria-labelledby="fastq-title">
+      <div class="text">
+        <span class="duration">02 / Raw reads to barcodes · 24 seconds</span>
+        <h2 id="fastq-title">Start with sequencing reads</h2>
+        <p>Supply paired FASTQs and a reference cassette, define the barcode
+          region and flanks, extract sequences, and download the counts before
+          continuing to clustering.</p>
+      </div>
+      <video controls playsinline preload="metadata" poster="studio-fastq.jpg" aria-label="FASTQ extraction and clustering walkthrough">
+        <source src="studio-fastq.mp4" type="video/mp4">
+        <p><a href="studio-fastq.mp4">Open the FASTQ extraction video</a>.</p>
+      </video>
+      <div class="links"><a href="studio-fastq.mp4" download>Download video</a> · Synthetic example: 140 molecules, three known barcodes.</div>
+    </article>
+
+    <footer>
+      Recorded locally on 11 September 2026. Silent videos include captions on
+      screen and play at the recorded speed. These small synthetic examples
+      demonstrate the interface; timings are not large-library benchmarks.<br>
+      This viewer also works from disk for offline playback. The interactive
+      app runs locally at <a href="http://127.0.0.1:3838">127.0.0.1:3838</a> after
+      launching <code>Rscript app/run.R</code> from the repository root.
+    </footer>
+  </main>
+</body>
+</html>

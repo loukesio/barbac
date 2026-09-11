@@ -1,0 +1,21 @@
+{
+  "recorded_utc": "2026-09-11 10:06:13 UTC",
+  "source": "Real local Shiny app",
+  "clips": [
+    {
+      "file": "studio-walkthrough.mp4",
+      "duration_seconds": 43.8348,
+      "frames": 247,
+      "synthetic_data": true,
+      "continuous_capture": true
+    },
+    {
+      "file": "studio-fastq.mp4",
+      "duration_seconds": 23.4019,
+      "frames": 136,
+      "synthetic_data": true,
+      "continuous_capture": true
+    }
+  ],
+  "note": "Synthetic fixtures only. No timing speedup, invented screen or fabricated result."
+}

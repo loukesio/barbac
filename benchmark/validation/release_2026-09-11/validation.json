@@ -1,0 +1,92 @@
+{
+  "status": "passed",
+  "checked_utc": "2026-09-11 10:42:09 UTC",
+  "package_version": "0.2.0",
+  "native_build": "barbac-2026-09-10-eligible-parent-v14",
+  "R": "R version 4.5.1 (2025-06-13)",
+  "platform": "aarch64-apple-darwin20",
+  "package_tests": {
+    "cases": 44,
+    "assertions": 526,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "warnings": 0
+  },
+  "app_tests": {
+    "status": "passed",
+    "cases": 8,
+    "assertions": 57,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tools": [
+    {
+      "tool": "fastqc",
+      "version": "FastQC v0.12.1"
+    },
+    {
+      "tool": "pear",
+      "version": "PEAR v0.9.6 [January 15, 2015]  - [+bzlib +zlib]"
+    },
+    {
+      "tool": "minimap2",
+      "version": "2.30-r1287"
+    },
+    {
+      "tool": "samtools",
+      "version": "samtools 1.22"
+    }
+  ],
+  "integration": {
+    "R1_only_without_PEAR": true,
+    "mixed_single_paired": true,
+    "expected_reads_per_fixture_sample": 144,
+    "expected_clusters_per_fixture_sample": 3,
+    "known_indel_sequences_and_counts": true,
+    "fail_fast_commands": true,
+    "native_membership_and_plot_parity": true,
+    "Quarto_export": true
+  },
+  "source_hashes": {
+    "DESCRIPTION": "db2622687f30820005c5b20b1276ef86a139c89c5a66945526187454635813e8",
+    "NAMESPACE": "cd0464ff14b6531885b12cbb852fc94164d2eb74efd0349412a912b06bc6223d",
+    "R/01_configure_environment.R": "eb61e4673c680bd4d3743047a5c92a22f569f32362fe652cf0533973dc2f91b7",
+    "R/02_use_barbac_env.R": "f5c678444cccbce23c463ef3bc572bed63b48808a6a16cae150464ce907ce202",
+    "R/03_check-barbac-tools.R": "25d2a6f9fb167364d12754b82fd68e611c8700010c656279c613c532128f3e1d",
+    "R/04_run_fastqc.R": "27de29bb0478b9a301e6801c0bf2dd08e15b7e146a53bfdf0e435362a8a658f3",
+    "R/05_run_multiqc.R": "e7ede42a2ff6a473c1f5224133bec411319aaf1139f7dec0142ffeecb3e32c6a",
+    "R/06_run_pear.R": "1f0cbf42223a7f6b1ba23e80229efeccbaa460f3baee8ec4a168e9b79b71bf80",
+    "R/07_run_minimap2.R": "2c26d01a8ad89a8eb71a2faff4ad3722495863768c3805d33512316eaff28ccf",
+    "R/08_summarise_bam_stats.R": "974f357b2f654310f25f3196344608b4eb7ac88241b0046e372c52919f10b7e5",
+    "R/09_run_cli_pipeline.R": "d9490fc4cc7fee57fc097372d978877032283990691dedd814a031e7e22aebb4",
+    "R/10_barbac_xtr.R": "d15597a4541b4d6cc5dd487e07f91cb14b4ac06df8c6113b0f5daf4ffc69371c",
+    "R/10a_extract_flanked_bam.R": "7fd6e98001d8de236fc9f1aad1623ea3068864550810a502d685f849520baa88",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+    "R/12_barbac_ts_area.R": "6a8d174a3f078d897b011246dec5ed160355927d119296f5ac19394a19689d8b",
+    "R/13_theme_barbac.R": "c71d0b2674a592a2a1d47022a9c432cbfef9835fa7c0770c6b521bab63d61a33",
+    "R/14_barbac_palettes.R": "9ed56e3e48d8f54a503c66644c4aaf7b4a12d1bbf53cf5bc0846838f016cf245",
+    "R/14_cluster_stats.R": "08fd00a0c74462e255e239682c4cdf40638bbf4169f44b0f1535f2a68bf11212",
+    "R/barbac-package.R": "db5aa4bdd19c4f581864fe41322ac238253b5d2ab4d0c788555f76e8011377a6",
+    "R/RcppExports.R": "c46d8468ba91e7db9cb22d450034ea65ebea57c83d16ac516c8f15e47c592e83",
+    "src/clustering.cpp": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+    "src/RcppExports.cpp": "480e2a802534003f3af01e8ce86feb6ab18fae35bccfe62d45ac789419f51c61",
+    "tests/testthat/test-barbac_ts_area.R": "309f0d19c5129159fe61d28f114d1088b559ada91a7bed1849cd08ad3241748f",
+    "tests/testthat/test-barbac-palettes.R": "49d60d7b79bcd1aeffe4958781138a98348892a41733f5c7efded4171790d250",
+    "tests/testthat/test-extraction-stats.R": "f80942298703bae3275624dedd76ee8e14e64c2e9b61fcaf4bd52115fdd5df27",
+    "tests/testthat/test-flanked-bam-extraction.R": "1cfb39e830da545fd29a7a0175a89a2bad3f2a35f77486fcf498332c42423971",
+    "tests/testthat/test-lv-indel-model.R": "b4488282117c7d4d94c905826b9ed27f945ffdfe7770eb673c2817f41d59e25f",
+    "tests/testthat/test-run-cli-pipeline.R": "5c037c2ba01db4f090b1ce1b05478a5a3d4a5d9f6414d3ae5947a354d133f449",
+    "tests/testthat/test-super_cluster2.R": "47c933fd9dd27ee0a1520c2c3e9a18930afad8508fdc2beda81650afa710a7ba",
+    "app/app.R": "073c1d0b6ce9290550f4b4606c7c214f33991ecfa37f51c78f3763c79425d5e6",
+    "app/run.R": "fa2aff7333e0e8cb4a9b9fb675aa913ff964cec97b7b28bf45e8f09e48ffc90f",
+    "app/R/engine.R": "7d59a89fb730a15d002296579e9bd6453bb376acb9636a5ec09ba2d6c370bf72",
+    "app/R/examples.R": "3c514d1916cebdf995c3684e64bd8330f6936c71e789049c3da076ad0ca37224",
+    "app/R/report.R": "5c20814f2275d40d96778d68fcdd4ff69cd785a55c5de44693c5c21fcf0d60a6",
+    "app/tests/test-engine.R": "6d053109d6c3471ccb19ac66e6106c3d72158b9226572b9d2b23793acb88e3b9",
+    "app/report.qmd": "2b4d7b775cb6c314e0b2c2fe7442e926cd6213a3e9e9cff47dd86ba69490a40d",
+    "tools/verify_release.R": "a4dc6172f7107454402055b48b2ccd4a85c459a43ea0ec884f3ea5a3b379db40"
+  },
+  "scope": "Local correctness and integration verification using synthetic fixtures and real executables. Not a runtime benchmark or a validation of every library design."
+}

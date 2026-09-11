@@ -133,3 +133,7 @@ __pycache__/
 *.swo
 /doc/
 /Meta/
+
+# Shiny workspace: private uploads, release library and browser verification.
+app/.runtime/
+app/.qa/

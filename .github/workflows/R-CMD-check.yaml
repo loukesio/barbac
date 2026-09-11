@@ -23,6 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install tools for real R1 mapping and extraction tests
+        run: sudo apt-get update && sudo apt-get install -y fastqc minimap2 samtools
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r@v2
