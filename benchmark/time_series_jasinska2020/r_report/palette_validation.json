@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "browser_validation": "passed",
+  "hashes": {
+    "palette_preview.R": "1be71b706f457eeaa242d4592f1f60d589e5c16162a4c2f4ff592fc6b337668d",
+    "composition_helpers.R": "4ef40107a6102433f1ac69f469ea8147c36f6e0f0edb53a380982ec936bb0801",
+    "build_palette_comparison.R": "be8549cb032091721ead6a140bcf6893d098fbdcb8703422d421a3ec671f0963",
+    "palette_comparison.qmd": "11eec36705cf09918da6787e93e2fedd31bfbaa76001f2f5deb6accf875fc713",
+    "palette_comparison.html": "7fb3c6a73f9a37aa5ac68d94c578650319413e4f75840b81556aa29ac9871ee1",
+    "palette_preview/A1_alger.png": "c3286ba5dbd26cee6f22b90a4227067c5dfa6c215cc3ae8c3f800fa6cf8e8fb9",
+    "palette_preview/A1_casa_natal.png": "755a9c230e7ab0bc9841f61605a56741393d53dcb7e86e4d4053eda4b3fdb252",
+    "palette_preview/A1_dora.png": "1ba6b82dd802442b3c4c3c23533f8f20c8b71a4f6a3c6c25e1718be817d0b813",
+    "palette_preview/A1_validation.json": "c331920ddb1ac3f151ec4ca4263512b802b5c076da976c9136634a0c484c672a",
+    "palette_preview/A3_alger.png": "1ff4b828d5aacf86e518ea5a9da6b692d67f7c2e82d27bab352d35681d262245",
+    "palette_preview/A3_casa_natal.png": "2a49661b44eca6de16d4748f054baa6bdd546b2995ae0e5c69fd3905b0a8b94a",
+    "palette_preview/A3_dora.png": "6dd76ef0fd90b53a434780172f0798d5eab67e26e1eac9c33fffa88bc3d67c1e",
+    "palette_preview/A3_validation.json": "4f208a847938b00b50e3d518b2ece67971e4c658e999de8b62515c802ab79eb6",
+    "palette_preview/all_palettes.png": "bdd69571466f72af52a3592382ae498210c927ad7d7e207a86454a01d880e6f5",
+    "palette_preview/original_palettes.json": "49c0b07dbedd92b72f6e0c6750a7aeefe9ce46c99f97e4a2ec4c325853634715",
+    "palette_preview/palettes.json": "b22980525ff69a0c0a3cd0df4b37b920bc1979aa429a172bfb5d09d4a7d88567"
+  },
+  "counts_and_order_identical_across_palettes": true,
+  "all_barcodes_individual": true,
+  "populations": [
+    "Low CMP r1",
+    "No drug r1"
+  ],
+  "preview_palettes": [
+    "alger",
+    "dora",
+    "casa_natal"
+  ],
+  "browser_checks_sha256": "fb2dd9ca6e49b739ed8701a8be07c61fb1152c4f15ecf8aa346d2c2c3a0911c7",
+  "browser_receipt_sha256": "31e1d9e62fb42c36b3778f7f2098edb4bb53c84ab190992a46bcdadd00d184ce"
+}

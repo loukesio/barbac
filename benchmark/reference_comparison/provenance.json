@@ -1,0 +1,99 @@
+{
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "processor": "arm",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "python_packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "rapidfuzz": "3.14.5"
+  },
+  "r_version": "Rscript (R) version 4.5.1 (2025-06-13)",
+  "git_revision": "dd6aad3bee8b9413b9b842b5a61b88fd597d8bcc",
+  "input_sha256": {
+    "input.csv": "94e5f9223fa1c229ec6bca4d46881a450b17088a819fc9b622fbb63dfa0194c8",
+    "input.tsv": "cf583b8b4d1e6b3d51d5d9a71a25d68bb513978975e18641600e874f91b2b1cf"
+  },
+  "source_sha256": {
+    "benchmark/reference_comparison/run_comparison.py": "a3c045525491a157e444de55ab9e0750f9982bb846b9a0d070bf98ef51310fbd",
+    "benchmark/reference_comparison/run_barbac.R": "c2677b99761cc365484823178cf8355d2dc1e966b92c1dfb60a736f9c581335a",
+    "src/clustering.cpp": "d1873293a9880ca8960a25b7a926a99a49577fd55e969da4532cb4d83516e522",
+    "R/11_super_cluster2.R": "b9ac566f21d8fc14feddbddf6514803aa208bc57d6fff564fdfbc5bbd2268c6f"
+  },
+  "libraries": {
+    "/private/tmp/barbac-exact-final": {
+      "barbac/NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405",
+      "barbac/DESCRIPTION": "05aaddb9b799c65e496db3eb7916262468d9e946d9c51b56dcc1be13b6feab8a",
+      "barbac/INDEX": "523a242af65b20193d3a320375f0516b849072d668685ab7cf574dfdb414e66d",
+      "barbac/R/barbac.rdb": "53dde033ed557fde077c5f895453becef1e6a80ab47f32acc259c660bac751d8",
+      "barbac/R/barbac.rdx": "f041fa6768ee0f210cbbfbd0b3a29ab697d0c863044752305d5d5fa8549f2619",
+      "barbac/R/barbac": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+      "barbac/Meta/links.rds": "5e9a5d6868693ad6879bc2d52b2ce58a7d1f6c79c0a4794e0216d93cef44ed1e",
+      "barbac/Meta/features.rds": "b93acb524dc15de6489965f64f7b2f78fb786471c4b44abbed873873df97ce3d",
+      "barbac/Meta/nsInfo.rds": "dd156db18469e3a0b4ecaa3e0bd88285397ee2ba5166b0ffb3e34a42117117df",
+      "barbac/Meta/package.rds": "3fccb8fdeaea9802c109a5740fa7f85181ebf5ab370e1e5b57fd407bca609314",
+      "barbac/Meta/hsearch.rds": "04113ccace040268592f3904cb6c39d67104477bd543092f85a97b22e96b205f",
+      "barbac/Meta/Rd.rds": "fd9f4a43edb8d4eb85f8fadd76fbdc4e88d419e0edbea1f330c71c035d65b7c9",
+      "barbac/html/R.css": "52144cf4c349f7f2cf131342f81bbc43c6514ba2274556815df88918fdeb189b",
+      "barbac/html/00Index.html": "d3aa4073a83c5aa0c2566a7f19874481b55b903780ff75e709840653df9b3390",
+      "barbac/libs/barbac.so": "3971237fb5f86d328d6d1e9bbb22afeb52f12fbf5a23d035ce01d3ce05f3802d",
+      "barbac/help/barbac.rdb": "faf044cbb2432d403c849dbdae492d22e84e36daf52e41e4b7ea6a27846e0c42",
+      "barbac/help/AnIndex": "9a37a5c38ea6be68fdf5557a6555ebfb33103df53b2198bbc178413a1a30de12",
+      "barbac/help/barbac.rdx": "3bd561aebde45890d591e03e742095df3965863f57f47e175f56c566f8c3ab60",
+      "barbac/help/aliases.rds": "dc80b1ff4654e0cd8a612a78afb7390772f5e295be953b2d7b0d3d9d22ebf36d",
+      "barbac/help/paths.rds": "d6fb5ee0fbc74fb24f21fd1cf7b392d2a4a85620cdacd843584ed2db062699a0",
+      "barbac/help/figures/logo.png": "690f525cd69a4859f3009501a91ee740e20985ae8509ce61f7e9ddce37e4051b",
+      "barbac/help/figures/pipeline.svg": "ba4f1ba788d7da73d8a923974c919c502f86ebeaa4787500b47d1bb163d1653e"
+    },
+    "/private/tmp/barbac-exact-baseline": {
+      "barbac/NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405",
+      "barbac/DESCRIPTION": "de6c7ad380ff2b9594f852c3bc21534024f7028534b62e7bcf8b9bdcc3234c22",
+      "barbac/INDEX": "523a242af65b20193d3a320375f0516b849072d668685ab7cf574dfdb414e66d",
+      "barbac/R/barbac.rdb": "56e4a87619251df8a378b6cbdc12c53867567b4fc4e5f2e769fb0ac5c0a0dc33",
+      "barbac/R/barbac.rdx": "edde57f3f74003baaf98b2a5051bf8909f19f6a09e5e73ce49cc60cdd424ecd0",
+      "barbac/R/barbac": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+      "barbac/Meta/links.rds": "5e9a5d6868693ad6879bc2d52b2ce58a7d1f6c79c0a4794e0216d93cef44ed1e",
+      "barbac/Meta/features.rds": "b93acb524dc15de6489965f64f7b2f78fb786471c4b44abbed873873df97ce3d",
+      "barbac/Meta/nsInfo.rds": "dd156db18469e3a0b4ecaa3e0bd88285397ee2ba5166b0ffb3e34a42117117df",
+      "barbac/Meta/package.rds": "1f522e7ed6b9b00e23ee464ff8a1dd25bb7080c9bd0df1afe5ee9b5660c07dbc",
+      "barbac/Meta/hsearch.rds": "04113ccace040268592f3904cb6c39d67104477bd543092f85a97b22e96b205f",
+      "barbac/Meta/Rd.rds": "fd9f4a43edb8d4eb85f8fadd76fbdc4e88d419e0edbea1f330c71c035d65b7c9",
+      "barbac/html/R.css": "52144cf4c349f7f2cf131342f81bbc43c6514ba2274556815df88918fdeb189b",
+      "barbac/html/00Index.html": "d3aa4073a83c5aa0c2566a7f19874481b55b903780ff75e709840653df9b3390",
+      "barbac/libs/barbac.so": "7700c229b21cdb196cc1056175cf2074a51a8b52af00c10d219d3cbd3fb4f4b6",
+      "barbac/help/barbac.rdb": "faf044cbb2432d403c849dbdae492d22e84e36daf52e41e4b7ea6a27846e0c42",
+      "barbac/help/AnIndex": "9a37a5c38ea6be68fdf5557a6555ebfb33103df53b2198bbc178413a1a30de12",
+      "barbac/help/barbac.rdx": "3bd561aebde45890d591e03e742095df3965863f57f47e175f56c566f8c3ab60",
+      "barbac/help/aliases.rds": "dc80b1ff4654e0cd8a612a78afb7390772f5e295be953b2d7b0d3d9d22ebf36d",
+      "barbac/help/paths.rds": "d6fb5ee0fbc74fb24f21fd1cf7b392d2a4a85620cdacd843584ed2db062699a0",
+      "barbac/help/figures/logo.png": "690f525cd69a4859f3009501a91ee740e20985ae8509ce61f7e9ddce37e4051b",
+      "barbac/help/figures/pipeline.svg": "ba4f1ba788d7da73d8a923974c919c502f86ebeaa4787500b47d1bb163d1653e"
+    }
+  },
+  "tools": {
+    "Shepherd": "83ea670b929d4c3370e9f162bfdc34e6893cf5cc",
+    "starcode": "8987b2eb7558bdb6e8a44823881e4e2f76f47535",
+    "bartender-1.1": "c458f6446a4a69e901ec54bd1bea5c40bf358f3e"
+  },
+  "tool_file_sha256": {
+    "Shepherd/shepherd_t0.py": "0e5b88bb1849a34538c6c497889d9463ddb3a7a918cf644861274c46f828cfc4",
+    "starcode/starcode": "37f4eb89544f5efa08ba12111f8dfd554d4b667d0a1b1da0e578b5c7f8064e5a",
+    "bartender-1.1/bartender_single_com": "ad71e1c4164fe4c46a86fc364783f68d082b991dc1de9c91ea01061303a912f1",
+    "bartender-1.1/bartender_single": "73944552457812f34e324fe7e94d53f1d2e0f17e57b5e5057c61b33a942e8da8"
+  },
+  "protocol": "One serial run per configuration; fixed abundance then sequence ordering; distance 3; barbac ratio20/error0.005; BLAS/OpenMP capped at one; tool and I/O settings recorded in execution_notes. Core includes CSV input; process includes native exports/startup; pipeline also includes format conversion. Common input staging and metric evaluation excluded. No labels used for clustering.",
+  "reproduction_source_sha256": {
+    "benchmark/reference_comparison/run_comparison.py": "b87cc3083c45eb71acc24274e659756506f8bfb5ed452d6859e1090deacbecc1",
+    "benchmark/reference_comparison/run_barbac.R": "c2677b99761cc365484823178cf8355d2dc1e966b92c1dfb60a736f9c581335a",
+    "benchmark/reference_comparison/test_metrics.py": "1f292bbb85e9f04706acd54808643db0c747fde0c07638afe86765bc7c50ad54",
+    "benchmark/reference_comparison/build_report.py": "2c1d1fa19bbaca31cba08e257546ff740725867a173bebdc59571f88ae9ca0b6",
+    "benchmark/reference_comparison/report_metrics.sql": "bbeec9faafcfd09563820756bcff94d4a1c22a373450a1109067010dbce181ee"
+  },
+  "execution_notes": [
+    "One retained serial timing per configuration. Initial Shepherd output-path parsing failure required a second execution; both outputs were identical.",
+    "R helper, installed libraries and native clustering sources were unchanged throughout the benchmark. Python wrapper fixes concerned source-data checks, Shepherd output paths, Bartender PATH, and output validation.",
+    "Barbac and Shepherd clustering are single-threaded; Starcode and Bartender requested one thread. BLAS/OpenMP were capped at one; other I/O library defaults were retained.",
+    "All inspected compiled binaries (barbac shared library, Starcode, Bartender) are arm64. CPU model inspection was unavailable in the sandbox.",
+    "Lightweight interactive code/report preparation occurred during some timings; the machine was not reserved exclusively for benchmarking."
+  ]
+}

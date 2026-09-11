@@ -235,8 +235,7 @@ The four-lineage toy above demonstrates the API. In practice
 real barcode-sequencing experiment. Here we simulate a 100-lineage
 community across 21 timepoints, with log-normal initial abundances and
 a small Gaussian fitness effect per lineage, and plot every lineage
-using the **minou** palette from the
-[`ltc`](https://github.com/loukesio/ltc_palettes) package.
+using the **minou** palette, one of the 32 LTC palettes included in barbac.
 
 ```{r sim-multi, fig.width = 9, fig.height = 5.5}
 set.seed(7)
@@ -260,22 +259,10 @@ ts_multi <- do.call(rbind, lapply(tp, function(t) {
   )
 }))
 
-# One colour per barcode, interpolated from the minou seed palette
-# (same pattern as the phage.colors helper in the ltc README).
-phage_colors <- function(df) {
-  n <- dplyr::n_distinct(df$barcode)
-  pal <- if (requireNamespace("ltc", quietly = TRUE)) {
-    ltc::ltc("minou", n, type = "continuous")
-  } else {
-    viridisLite::magma(n, begin = 0.05, end = 0.95)  # fallback
-  }
-  grDevices::colorRampPalette(pal)(n)
-}
-
 barbac_ts_area(
   ts_multi,
   min_total_count = 0,                            # plot every lineage
-  palette         = phage_colors(ts_multi),
+  palette         = "minou",
   title           = "Multilineage — 100 barcodes across 21 timepoints"
 )
 ```
@@ -285,10 +272,11 @@ positive fitness sweep upward across the 21 timepoints; negative-fitness
 lineages shrink; neutral ones drift proportionally to their initial
 abundance.
 
-The `ltc` package is available from
-[GitHub](https://github.com/loukesio/ltc_palettes) via
-`remotes::install_github("loukesio/ltc_palettes")`. Any character
-vector of colour hex codes works as `palette`, so
+Use `palette = "alger"`, `palette = "dora"`, or another name from
+`names(barbac_palettes())` to switch colours. No other palette package is
+needed. Names such as `"Casa Natal"` and `"casa_natal"` are equivalent.
+`barbac_palette("minou", n = 100)` also returns colours for other plots.
+Any character vector of colour hex codes works as `palette`, so
 `viridisLite::magma()`, `RColorBrewer::brewer.pal()`, a manual palette,
 or any other source are equally valid.
 
@@ -314,7 +302,7 @@ tooltips showing the barcode identifier, timepoint and frequency.
 barbac_ts_area(
   ts_multi,
   min_total_count = 0,
-  palette         = phage_colors(ts_multi),
+  palette         = "minou",
   title           = "Multilineage — hover over a band for its barcode",
   interactive     = TRUE                                # = "ggiraph"
 )
@@ -326,7 +314,7 @@ If you prefer plotly's zoom / pan controls:
 barbac_ts_area(
   ts_multi,
   min_total_count = 0,
-  palette         = phage_colors(ts_multi),
+  palette         = "minou",
   title           = "Multilineage (plotly backend)",
   interactive     = "plotly"
 )

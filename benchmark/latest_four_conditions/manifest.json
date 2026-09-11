@@ -1,0 +1,489 @@
+{
+  "git_revision": "0f8634dd2d1bf773d369838ca5e14906f4159747",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "library_sha256": {
+    "barbac/NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405",
+    "barbac/DESCRIPTION": "27ce22c244c20810e0dcdc3913e085d674e346ca877c4646a6b90910013c08b4",
+    "barbac/INDEX": "523a242af65b20193d3a320375f0516b849072d668685ab7cf574dfdb414e66d",
+    "barbac/R/barbac.rdb": "27e8daec60b2475c691ec6be900f63967c4d77e6298b4885c60c9de99fd66a82",
+    "barbac/R/barbac.rdx": "f906dfc2d542b95d3a2d70c60f9940b1709c78921b081aae3d3c8ea9c90fae06",
+    "barbac/R/barbac": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+    "barbac/Meta/links.rds": "5e9a5d6868693ad6879bc2d52b2ce58a7d1f6c79c0a4794e0216d93cef44ed1e",
+    "barbac/Meta/features.rds": "b93acb524dc15de6489965f64f7b2f78fb786471c4b44abbed873873df97ce3d",
+    "barbac/Meta/nsInfo.rds": "dd156db18469e3a0b4ecaa3e0bd88285397ee2ba5166b0ffb3e34a42117117df",
+    "barbac/Meta/package.rds": "42908c8646c89bea94dd960caa396521cc08e219bfab3b7264030ba45256c9a7",
+    "barbac/Meta/hsearch.rds": "04113ccace040268592f3904cb6c39d67104477bd543092f85a97b22e96b205f",
+    "barbac/Meta/Rd.rds": "fd9f4a43edb8d4eb85f8fadd76fbdc4e88d419e0edbea1f330c71c035d65b7c9",
+    "barbac/html/R.css": "52144cf4c349f7f2cf131342f81bbc43c6514ba2274556815df88918fdeb189b",
+    "barbac/html/00Index.html": "d3aa4073a83c5aa0c2566a7f19874481b55b903780ff75e709840653df9b3390",
+    "barbac/libs/barbac.so": "da8ba182a114c26bbb721021b0acfd2a4b97b1977a341a4f52e2ca632a740326",
+    "barbac/help/barbac.rdb": "dd7c56cc24933720e27915a301f694e9ff13fa75fec1e253fe1710b91e628148",
+    "barbac/help/AnIndex": "9a37a5c38ea6be68fdf5557a6555ebfb33103df53b2198bbc178413a1a30de12",
+    "barbac/help/barbac.rdx": "6ffe5b47f9cbbf4da2ed490d691bf106a0b0cdfde19967c12b8c04ec2c891129",
+    "barbac/help/aliases.rds": "dc80b1ff4654e0cd8a612a78afb7390772f5e295be953b2d7b0d3d9d22ebf36d",
+    "barbac/help/paths.rds": "d6fb5ee0fbc74fb24f21fd1cf7b392d2a4a85620cdacd843584ed2db062699a0",
+    "barbac/help/figures/logo.png": "690f525cd69a4859f3009501a91ee740e20985ae8509ce61f7e9ddce37e4051b",
+    "barbac/help/figures/pipeline.svg": "ba4f1ba788d7da73d8a923974c919c502f86ebeaa4787500b47d1bb163d1653e"
+  },
+  "source_sha256": {
+    "src/clustering.cpp": "9f79a81f3dcdde2682ea0e04fa08b5d1de7078e87258156669ff6ad70bd5eb58",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+    "benchmark/latest_four_conditions/run_barbac.R": "69ee1fafdde1c09aa750ca925bf569c03ed3928359caaf0a321ccabb8f858533",
+    "benchmark/latest_four_conditions/run_comparison.py": "229d7568e7e8d61b0bb3ef81ba2894f145e94e1a940fd24a52288abacb055947"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "distances": [
+    2,
+    3
+  ],
+  "tie_break": "support",
+  "error_rate": 0.005,
+  "merge_ratio": 20,
+  "use_design": false,
+  "timing": "One serial fresh process per barbac configuration. Core includes CSV reading/order/clustering; workflow adds startup and centroid/member exports. Peer timings are retained earlier serial process observations with centroid output only. No timing confidence intervals.",
+  "peers": "Shepherd and Starcode sphere, distance 3; saved runs, all input/output hashes revalidated.",
+  "parent_labels": "Not retained by the original simulator; read assignment accuracy unavailable.",
+  "input_sha256": {
+    "42/random_substitutions": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 20,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 42,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "267e88cf0ef8b98138713fc039dee54a17e2354d72e3fe6070ea289f98438fea",
+        "true_counts.csv": "444476291b7a20cb34ef536a890012f514f684d8039944d9f431bf4d35b82d62",
+        "shepherd_input.txt": "2d1fadafe861951d60a76a426d0d6bd689cc673ec9272d4ac675a393951b4219"
+      }
+    },
+    "42/random_low_indels": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 20,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 42,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "8e75b678bcc5baead5309acdd3702cb51cfa068ee7b13ace82d8317f6cb93ebf",
+        "true_counts.csv": "444476291b7a20cb34ef536a890012f514f684d8039944d9f431bf4d35b82d62",
+        "shepherd_input.txt": "d1cbbcb1469325465a8de3ce1437a1ecbcfd81b6028e00a8b23d91074bbbca5b"
+      }
+    },
+    "42/anchored_substitutions": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 28,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 42,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "a365bd439dca129cb34cfae11f685367e721f5e56f3c697e534c17fe53b33174",
+        "true_counts.csv": "1b5e3da4af2a078bd253e48ddb59f1def608bc2638ffa0bb31453ba5b1edf59c",
+        "shepherd_input.txt": "cce84fb536f5b235dea125ab88f5cd6944bb8c44615136eab257b9aa61f500a8"
+      }
+    },
+    "42/anchored_low_indels": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 28,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 42,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "364e842c7b372a79c5cb81f807b48e31f2a971c2226fb2976d2013907d11541b",
+        "true_counts.csv": "1b5e3da4af2a078bd253e48ddb59f1def608bc2638ffa0bb31453ba5b1edf59c",
+        "shepherd_input.txt": "1b869e496b39c0ef5fffc7f61ea9775ad1da47c7861fc308366baff27fcccd18"
+      }
+    },
+    "43/random_substitutions": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 20,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 43,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "5df8dade2c149435e49258be6a0f5fee3bcc585834d7568d5e23aae27b61c25d",
+        "true_counts.csv": "0623b22c5219ce6c90fcadebd495ac761c1bf59644e4aec7f22a9d7b7280eb24",
+        "shepherd_input.txt": "842e54bdef6c9d49a33b6b2a08a5507080716a07c73837768f990b8983ca7a1b"
+      }
+    },
+    "43/random_low_indels": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 20,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 43,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "6050934971ef4381d059b8adc837f44226843f7d72e9bee1fea858c81917066c",
+        "true_counts.csv": "0623b22c5219ce6c90fcadebd495ac761c1bf59644e4aec7f22a9d7b7280eb24",
+        "shepherd_input.txt": "88087b36b2a2e20a5f82db20ad6d6009e91c0e40aa32b5ef87bba951f49a5c03"
+      }
+    },
+    "43/anchored_substitutions": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 28,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 43,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "911f5a9b364d55ec27a872ddeded7259151b36e174de97ae93cd50d1041e2834",
+        "true_counts.csv": "021fb2cfea6a9281e8519e9698a37c8dc4966863830ca2d2be6c60a5e655e2f7",
+        "shepherd_input.txt": "62f81cd54a734d58b7e68a699baf401598e4e766daa768c1a59650ce6e187254"
+      }
+    },
+    "43/anchored_low_indels": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 28,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 43,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "59a749027a65f8a1ce33394eaf8909bb79f129597b988f8e91d4d2af237bcdfe",
+        "true_counts.csv": "021fb2cfea6a9281e8519e9698a37c8dc4966863830ca2d2be6c60a5e655e2f7",
+        "shepherd_input.txt": "ea3dca268b9abcf9763526fa75fc208308d4258cd15c9d5dc869c6949b5dc6d2"
+      }
+    },
+    "44/random_substitutions": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 20,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 44,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "2872a09ea7b5195498c8bf9eeef7d18cf36a68b55d7f1e372ba53731f58775bf",
+        "true_counts.csv": "c2c024407ffbe26d8dd3fb4e7eadb1e365942e364c1382537488ac4db9e0c4fc",
+        "shepherd_input.txt": "8713cc66bd7b015f19048a47847a408f07f11112bbd88b3d0d47556a8d786b50"
+      }
+    },
+    "44/random_low_indels": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 20,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 44,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "6b79644dde6769bae5d2e3f82b7ac270fc4815bbf3f0237eac41553248e8d813",
+        "true_counts.csv": "c2c024407ffbe26d8dd3fb4e7eadb1e365942e364c1382537488ac4db9e0c4fc",
+        "shepherd_input.txt": "a496ecb71688d2705ee02abc7533a819c9de703b00127e50143d546eeeeca985"
+      }
+    },
+    "44/anchored_substitutions": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 28,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 44,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "48d9a4521ea91c0f1e372a80501572f049b36b9c038fe195c08a07c9eab7f62b",
+        "true_counts.csv": "79f2dde229f87de7241e01c59492b12dfa46c8c7bab86524122171ba4a9855df",
+        "shepherd_input.txt": "35f682387c73f49176c91134152d666b96a7ace8a423680dd9b60a87b0f1f7fb"
+      }
+    },
+    "44/anchored_low_indels": {
+      "configuration": {
+        "n_barcodes": 10000,
+        "n_reads": 1000000,
+        "barcode_length": 28,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 44,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "sha256": {
+        "input.csv": "ca729e17b50a9e53708ba59f49cb690640a870aff60d74cee203d9e8da4d233a",
+        "true_counts.csv": "79f2dde229f87de7241e01c59492b12dfa46c8c7bab86524122171ba4a9855df",
+        "shepherd_input.txt": "fd111b0bf301392b0007a1d50ed23a7057a879217a51432e99f023b2ac0d42b1"
+      }
+    }
+  },
+  "output_sha256": {
+    "42/random_substitutions/hamming-d3-none": {
+      "centroids.csv": "8c5cfb1255b1b7f57d249b7ec6433e657f425e26782810ce71beb7092ae6d430",
+      "members.csv": "3cda1fcddc32960fdc930be90faf740336345c27d4f721f51a0176a684493dbe"
+    },
+    "42/random_substitutions/lv-d3-poisson": {
+      "centroids.csv": "8c5cfb1255b1b7f57d249b7ec6433e657f425e26782810ce71beb7092ae6d430",
+      "members.csv": "3cda1fcddc32960fdc930be90faf740336345c27d4f721f51a0176a684493dbe"
+    },
+    "42/random_substitutions/hamming-d2-none": {
+      "centroids.csv": "9e2e4575c917099914b75aca89da145a8bfc96583968c1eb071e3ecf362d553d",
+      "members.csv": "c1cbf9861b2b42be65588b63a03543d54b0f1894365abaa54166cb79169d7394"
+    },
+    "42/random_substitutions/lv-d2-poisson": {
+      "centroids.csv": "9e2e4575c917099914b75aca89da145a8bfc96583968c1eb071e3ecf362d553d",
+      "members.csv": "c1cbf9861b2b42be65588b63a03543d54b0f1894365abaa54166cb79169d7394"
+    },
+    "42/random_low_indels/hamming-d3-none": {
+      "centroids.csv": "c0ae067c605c398c2620337d6e6e1ecbddc7ea968d1985e744de2aea51ac93b1",
+      "members.csv": "5b4acde39685adf89fa7f20b9f7d1870d28e979371f71d7040abdb8b7d216c5b"
+    },
+    "42/random_low_indels/lv-d3-poisson": {
+      "centroids.csv": "3e5ea53d0cd984ca59a7acb2540f674009a7b82cc54e4ea4c7ee8c95b38ec042",
+      "members.csv": "5e6aecffc6dd06a6befa5d3604387aef28132f9f404baaea97ab86ec3554bd1d"
+    },
+    "42/random_low_indels/hamming-d2-none": {
+      "centroids.csv": "6dc02dac565b1e0de955eccd54cac1d51c7c96787ca910a5aa1fb2c8cf430300",
+      "members.csv": "f71541435a3c63ea7261b55c2ad8d5b1f1398f9d26b2813a857e3a6720f00880"
+    },
+    "42/random_low_indels/lv-d2-poisson": {
+      "centroids.csv": "df1b1a87170c62d0a3fba8af31c4553f85935d658b6308b34ce5f242cac1b5b2",
+      "members.csv": "f57b728487fea772b8b994758c197dae7d1430f0d1eaa211129dd65782cd3ea0"
+    },
+    "42/anchored_substitutions/hamming-d3-none": {
+      "centroids.csv": "dcf12e1188d1f65e7acbe83c07d2d3f3a1ef512b098bf7a27fce924a56895ee5",
+      "members.csv": "17c733b039df3f537076b5654df4806b9ac21343ebd3468a020440c688fa0dd0"
+    },
+    "42/anchored_substitutions/lv-d3-poisson": {
+      "centroids.csv": "dc8c1e292722ad3fc815875c7deb15cd732ccb3a75a9ad3691e2afd7849d39d3",
+      "members.csv": "3deb94fb27ae8f34cc14b930078e5b8cf82e8e791271a8bb37b209ad9f978394"
+    },
+    "42/anchored_substitutions/hamming-d2-none": {
+      "centroids.csv": "e665abdbe191eb32851a6727bf88a13c1b455b31cf3ab945a1bf1fa1969d2c83",
+      "members.csv": "3d2d581e127fb2879dea8bf43bee1d2815aea37c8938364ab1053d28ae9fcca3"
+    },
+    "42/anchored_substitutions/lv-d2-poisson": {
+      "centroids.csv": "875e6e5f42bf214d0731f71c49bcae11d5ef70447c8d34e360c9de20d1f20d6a",
+      "members.csv": "7bf3d39b2eb563ce116a95ab77ae1edfdd82c645354a8b4fc2cc5bdb66d70533"
+    },
+    "42/anchored_low_indels/hamming-d3-none": {
+      "centroids.csv": "613dd7eee2af14850b9339aa8359fb55911ed32870f1097d22fe20fbe98ab44d",
+      "members.csv": "d77bcca966ad6274aa42b15540ee215f95b051db3238b2abb756acf39526ad54"
+    },
+    "42/anchored_low_indels/lv-d3-poisson": {
+      "centroids.csv": "d6a7c244062a15d550e19a57a5c4743f5efc1d9ceb185f0409d515ccbdde4e17",
+      "members.csv": "db25c8c1ec5c36b4dcfd9be4883c99abb9d73e48e310ba4fc24dd48821352079"
+    },
+    "42/anchored_low_indels/hamming-d2-none": {
+      "centroids.csv": "862863a7ed1ec7efac97ca0d97f3951e6efbab05ae6c8a03529632bf47d77ecd",
+      "members.csv": "be56d8c5f28a5786955762f70ba3b787a654d45166120d73ab2808c108c1587d"
+    },
+    "42/anchored_low_indels/lv-d2-poisson": {
+      "centroids.csv": "66cf0d095094e380d5be3b3939aeb63ddcf11d43b59959336b98a473acd92f8b",
+      "members.csv": "5d0faf6c2c573c944fa54b9a3133e63f17996b8e5310e49dd5e495ad0ad73d9f"
+    },
+    "43/random_substitutions/lv-d2-poisson": {
+      "centroids.csv": "272984fc6e98904440cbb62723249ccf1fc49fa08ca002935f1e803d5584d80c",
+      "members.csv": "613c95d4b16cc0d29d7e12f06ab531087994b16dac3fee1ca05d7764abaed4d7"
+    },
+    "43/random_substitutions/hamming-d2-none": {
+      "centroids.csv": "3b74c5d49652eb1cdb21a3aa62155b2e200a7ef0d0dc6c095c7b863c32aeff15",
+      "members.csv": "7f598d7b09c249ee23facef3dee787e830836038110fee5bad652b11039fa01e"
+    },
+    "43/random_substitutions/lv-d3-poisson": {
+      "centroids.csv": "7ab145e5e29054327436485b21d49790d29a45a7ad14024b75bc77a051abe9aa",
+      "members.csv": "7d46e6783c1af971c018d09fc2bfb1dde4acdc70f56adfdb0d8e44745e56451f"
+    },
+    "43/random_substitutions/hamming-d3-none": {
+      "centroids.csv": "211a32c430fae3395535cd4920e2c405b8be8080ee88f6c6eb8cf85d7a2e3369",
+      "members.csv": "ce73d3f906e9e16569a8de3147f53bc2954599b3e54c4615eb71573f10203f39"
+    },
+    "43/random_low_indels/lv-d2-poisson": {
+      "centroids.csv": "f82e3bd46221c814ad9e40b3a028a5fdd2cb908ba1d8a103363e3b6466548547",
+      "members.csv": "e0f9ebe82a3ad6c5b5af765b13d12139441acde7b5901ffab87c445a091ac651"
+    },
+    "43/random_low_indels/hamming-d2-none": {
+      "centroids.csv": "40c14696d31f2cfa091b313ff426d6647c2f5e95f2979daa6e89a5b2c6a0c702",
+      "members.csv": "3d2c8d8ecb015ffee460db70c276a73e0d94c8ed8f0af50bcb5e8e002adaf4be"
+    },
+    "43/random_low_indels/lv-d3-poisson": {
+      "centroids.csv": "03b3345733dcd8e9301c24997b33d8c614235de6c85196f9010f839a9f981797",
+      "members.csv": "7b501f6e038b281ecd78d1d65536c6b5e6aa66cedf6c497c3abf92b2678dab9e"
+    },
+    "43/random_low_indels/hamming-d3-none": {
+      "centroids.csv": "20f56d8b4c4d7e12b789f85a5329c435a824e9fea1bc90b4f9435cfbff583d5d",
+      "members.csv": "b02cbe463290b1126c896c717be3cff1a308e4bdd46ac8d9723c8150db77acc2"
+    },
+    "43/anchored_substitutions/lv-d2-poisson": {
+      "centroids.csv": "3439ce3db023b4c842c227692f503a9558056c06318a8d60ac12e76f778faea9",
+      "members.csv": "379e1b44eb29836680672b74f9ee691d14bb341066984bd1392d7a6afaf2ba44"
+    },
+    "43/anchored_substitutions/hamming-d2-none": {
+      "centroids.csv": "6a998c0e70463726e3d329135fd6cb4b473e4f7d4c97ec6a05edb623753ff4f2",
+      "members.csv": "bd6c27e32fe1d849e443c1d70ab93c8ecd5d6c736750fd9604e00315d5821fac"
+    },
+    "43/anchored_substitutions/lv-d3-poisson": {
+      "centroids.csv": "fa8682d3a0591dfe400037821dad92ce2ea453c3e27349f79066533f319a4cbd",
+      "members.csv": "f0fe15b265ac3755a2b3a2e0f46d67947dc4bcf7f4157d97b56265bfeef53145"
+    },
+    "43/anchored_substitutions/hamming-d3-none": {
+      "centroids.csv": "22afb1b1d30c3177beffaed9de060b06989211cf97d8ad2a9323788404db3fa0",
+      "members.csv": "4d971b650c3529ebadf8704f06d78c78df1e1be1d92bd71ddad3f9f844de6863"
+    },
+    "43/anchored_low_indels/lv-d2-poisson": {
+      "centroids.csv": "de016a6511a1ebb53aad32293f31da8b48827b54d733c36e068433be71106916",
+      "members.csv": "0a5af3154654696b9ddbeba6a3cd74e44c762e26dd1c677f81ef9b49e7241646"
+    },
+    "43/anchored_low_indels/hamming-d2-none": {
+      "centroids.csv": "e5d68048c73acf563d97127b343d9286ab3f9e440affffc3bca543b13d9b36ec",
+      "members.csv": "ecf53d48a34162b78a32725cbdbcd8bf3dd9920db25552aa070fc955d0677760"
+    },
+    "43/anchored_low_indels/lv-d3-poisson": {
+      "centroids.csv": "bd912ce7f93009fb8264df43192a5a4b40e836f558514e83d2461c7b12e74ef7",
+      "members.csv": "dbf79703420dea9ec0303ad8843471091c7fa263821f185fccb588ffac368878"
+    },
+    "43/anchored_low_indels/hamming-d3-none": {
+      "centroids.csv": "8f6f3826660818b21accbd319e1ef3d9161cb6111957bc23e5e400b1201000bc",
+      "members.csv": "e21346b61d8965aef2c40b33480eda60b8431cf393be37e4bf33ee71efc9e177"
+    },
+    "44/random_substitutions/hamming-d3-none": {
+      "centroids.csv": "eba69d1eb8d8bee859a27451fdc1b188d7dd3ed3c58636f8b39345e71d9a1c46",
+      "members.csv": "781eb1dfc03e6b5be8d17dba5cf8958a31570fe31f910fc1db48a70e261497a7"
+    },
+    "44/random_substitutions/lv-d3-poisson": {
+      "centroids.csv": "19bffd510c0056651b12235e7d1b4d05566ccaf0ca723fb78ec12a6470b71e79",
+      "members.csv": "66a55cb4f664215cd7b7e479ba58b6534ae4b9f3b072e56c0bf5e2a04d0f5622"
+    },
+    "44/random_substitutions/hamming-d2-none": {
+      "centroids.csv": "9a565cb328f686fb4887c7d20dc56d54faf4ece422b15fa79c7399f1afbb3752",
+      "members.csv": "0389bbe1da10fc26e36fef7e9d9a4e6d6d39c384a7b7f1850682d9b58879fbb7"
+    },
+    "44/random_substitutions/lv-d2-poisson": {
+      "centroids.csv": "88239b8987f68c16e88b5fd143ce8a0e26b16e1c8b269e2762a8f7ea0e1dfbbe",
+      "members.csv": "b91c858a44cff2af05da1c88b61739fba37ab429c2d3867296fad3f2fb9ac756"
+    },
+    "44/random_low_indels/hamming-d3-none": {
+      "centroids.csv": "4cd1e3511640bdcfc84e7837ec6648f0c2e6db664608cbd8a15771e295148ba1",
+      "members.csv": "8d80adc6185a20f2ff149d9dbd6ac24a6e420bdcbb7d8994a5a1d04204b174f3"
+    },
+    "44/random_low_indels/lv-d3-poisson": {
+      "centroids.csv": "ccdd3a610ecd6735fb0958c180381986202502e0a88905c519bdd24a8b9f41e5",
+      "members.csv": "2b093e582346bd5ddc365c4871622ba8d558fdd871a68419ce1a3ade668699cc"
+    },
+    "44/random_low_indels/hamming-d2-none": {
+      "centroids.csv": "1ea165f00111251ccc177f5ca81dbf875f39e63e4226867af467c5c7834c5b60",
+      "members.csv": "d108c360b8b52bdbf5f1ac5e4ca8eb44601e1a476f7eb482d838950ce03fa731"
+    },
+    "44/random_low_indels/lv-d2-poisson": {
+      "centroids.csv": "34e0d463b126c84230b0cacf25bddd8bb43d8ef980982ac8463632391ac20796",
+      "members.csv": "8fcfd0cf934c7c0ecb62c0df34f303d27b87b60207c74fe3c4dbc50281487531"
+    },
+    "44/anchored_substitutions/hamming-d3-none": {
+      "centroids.csv": "79a9452c880a44ff734cd30c3ac8b56f007b7ab5e0c682f1bf0ae0f37fc674d0",
+      "members.csv": "531081eef5127914a3d5c1f7edcee11a3e1e2a953df7950b719998d3bb01dfa1"
+    },
+    "44/anchored_substitutions/lv-d3-poisson": {
+      "centroids.csv": "2b8e700d4e08a314f6ee23867af43a18b55fcd09e439823eac004bf019144010",
+      "members.csv": "724ace93b0779ed28bcdc64152e06a5e512cdb8fd70a80411de959e39b6bf275"
+    },
+    "44/anchored_substitutions/hamming-d2-none": {
+      "centroids.csv": "b72fc250bca3e8ee5d07a3fcb9cffca91765e85a22c328de90b3edc1263f6766",
+      "members.csv": "6cdfa7cdadc9265f0077e32fcc2821817dbef7e8abc2b34eb391fc018c74ce91"
+    },
+    "44/anchored_substitutions/lv-d2-poisson": {
+      "centroids.csv": "67234ba721e06f836eb9134ffcba124d2536db85a338dc469b8eae3ee8beb477",
+      "members.csv": "ea05857425da7b3cf5cee4e082b073a93d971080f9ebd7d8489595fa68f32303"
+    },
+    "44/anchored_low_indels/hamming-d3-none": {
+      "centroids.csv": "75542303dc2b57d3e5ced902681d94516a30af1088eb377a78c76793d2a66ab5",
+      "members.csv": "842dd041ba47d46fd0e74adce34ea5e6822627bb613cd515c9e817a2ef69ea02"
+    },
+    "44/anchored_low_indels/lv-d3-poisson": {
+      "centroids.csv": "b97ed0eec381a4f5192132c96ef7c4fa59136d4fad87b38e0b46293f850b8c8b",
+      "members.csv": "1e08fc36bfe002d93976ffd6e5650057fc00060a4eefd2a822144326c7f225ec"
+    },
+    "44/anchored_low_indels/hamming-d2-none": {
+      "centroids.csv": "307c97ba9d36154460da9eb8eb1b0d9530a7ad818b018392c1ff4e73f2a951dc",
+      "members.csv": "a11e754d389dbd2d667d1d1bb6678aae4de8e1694b24d3620b1e09be4d9ffbd0"
+    },
+    "44/anchored_low_indels/lv-d2-poisson": {
+      "centroids.csv": "6bfa6ef2b72b870e033cbd2e818e59ff474a7572630dd385b7e51e7645ccb32b",
+      "members.csv": "dad640249efc011a1de6fd1090b27ee461411002b4775fa81e9cd6412bbf53f2"
+    }
+  },
+  "status": "complete",
+  "validated_fresh_runs": 48,
+  "validated_retained_runs": 36
+}

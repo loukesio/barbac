@@ -23,6 +23,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install tools for real R1 mapping and extraction tests
+        run: sudo apt-get update && sudo apt-get install -y fastqc minimap2 samtools
+
+      - uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: barbac-cli
+          create-args: >-
+            -c conda-forge -c bioconda pear=0.9.6
+          init-shell: bash
+          cache-environment: true
+
+      - name: Use the sequencing PEAR executable for package checks
+        shell: bash -el {0}
+        run: echo "$CONDA_PREFIX/bin" >> "$GITHUB_PATH"
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r@v2
@@ -36,11 +51,6 @@ jobs:
             any::rcmdcheck
             any::remotes
           needs: check
-
-      # ltc is a GitHub-only palette used by the vignette. Install it so
-      # R CMD check --as-cran doesn't flag it as an unstated dependency.
-      - name: Install GitHub-only palette dependency
-        run: Rscript -e 'remotes::install_github("loukesio/ltc_palettes", upgrade = "never")'
 
       - uses: r-lib/actions/check-r-package@v2
         with:

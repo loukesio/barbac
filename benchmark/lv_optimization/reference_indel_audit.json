@@ -1,0 +1,8 @@
+{
+  "off_length_reads": 1001,
+  "wrong_off_length_before": 100,
+  "wrong_off_length_after": 0,
+  "changed_sequences": 9,
+  "changed_reads": 100,
+  "all_changes_correct_against_supplied_labels": true
+}

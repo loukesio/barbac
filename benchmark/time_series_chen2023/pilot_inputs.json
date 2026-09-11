@@ -1,0 +1,23 @@
+{
+  "scope": "First 50000 complete paired records, not a random sample and not full FASTQs. Range prefixes are intentionally incomplete gzip streams; complete records were recompressed into valid gzip files.",
+  "inputs": [
+    {
+      "mate": 1,
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR227/005/SRR22757105/SRR22757105_1.fastq.gz",
+      "compressed_range": "0-2097151",
+      "received_bytes": 2097152,
+      "prefix_sha256": "bf233b2d58d82705bbcae3e01a790a1a5e0b4ce71ca6c8a4dbcce9680028d5c7",
+      "complete_pairs": 50000,
+      "fastq_gz_sha256": "d028c617e627d76498fb16449278280b7698351096c1f8717db33b830d1f49bd"
+    },
+    {
+      "mate": 2,
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR227/005/SRR22757105/SRR22757105_2.fastq.gz",
+      "compressed_range": "0-2097151",
+      "received_bytes": 2097152,
+      "prefix_sha256": "a57526da988856609a42adfec29910a85e7652a63727eba5e3a9d6845f74dd9e",
+      "complete_pairs": 50000,
+      "fastq_gz_sha256": "88ad9819c2e2c65477120fa95da8bf5030d2b2b5744983e04341060cfb9c205d"
+    }
+  ]
+}

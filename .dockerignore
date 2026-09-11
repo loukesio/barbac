@@ -9,6 +9,12 @@
 .RDataTmp*
 .DS_Store
 *.Rproj
+HANDOFF.md
+.codex
+.agents
+data
+raw
+private
 
 # Large private benchmark artefacts (regenerate inside the container if needed)
 benchmark
@@ -21,3 +27,7 @@ _pkgdown.yml
 
 # Local caches
 node_modules
+app/.runtime
+app/.qa
+app/media
+documentation

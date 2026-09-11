@@ -1,0 +1,4 @@
+generated/
+r_report/report_files/
+r_report/.quarto/
+*.log

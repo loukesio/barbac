@@ -69,9 +69,6 @@ install.packages("remotes")
 # already provided by the Bioconductor base image is silently replaced.
 remotes::install_deps(dependencies = TRUE, upgrade = "never")
 
-# ltc is a github-only palette package used by the vignette examples.
-remotes::install_github("loukesio/ltc_palettes", upgrade = "never")
-
 # Install barbac from the working directory. dependencies = FALSE
 # because install_deps() just handled them; skipping that check saves
 # a second solver pass.

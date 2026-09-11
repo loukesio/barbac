@@ -1,0 +1,51 @@
+{
+  "retrieved_utc": "2026-09-08",
+  "paper": "https://doi.org/10.7554/eLife.92899",
+  "study": "PRJNA912754",
+  "author_repository": "https://github.com/mjohnson11/PLT_code",
+  "author_commit": "a375a116bf69160f634a3d6a1b0ecc53ad62d142",
+  "files": [
+    {
+      "filename": "ena_PRJNA912754.tsv",
+      "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA912754&result=read_run&fields=run_accession,sample_accession,sample_alias,experiment_title,library_layout,library_strategy,read_count,fastq_ftp,fastq_md5,fastq_bytes&format=tsv",
+      "sha256": "737539ba22bebf8058705360d23a04a577fee0aa6c40b8b22c771d580d7f84ea",
+      "bytes": 764976
+    },
+    {
+      "filename": "hBFA1_assay.csv",
+      "url": "https://raw.githubusercontent.com/mjohnson11/PLT_code/a375a116bf69160f634a3d6a1b0ecc53ad62d142/file_info/assay_files/hBFA1_assay.csv",
+      "sha256": "0a4202acb1a804fb4bd39a196bffa62c99e0da16f05607c3f85af4574ae11b06",
+      "bytes": 5852
+    },
+    {
+      "filename": "All_file_primer_info.csv",
+      "url": "https://raw.githubusercontent.com/mjohnson11/PLT_code/a375a116bf69160f634a3d6a1b0ecc53ad62d142/file_info/All_file_primer_info.csv",
+      "sha256": "d6a470f2a1aad5e3d25f2ab1106e9c1539970415574a510417f7bc4cc5167d95",
+      "bytes": 72345
+    },
+    {
+      "filename": "hBFA1_part1_indices.csv",
+      "url": "https://raw.githubusercontent.com/mjohnson11/PLT_code/a375a116bf69160f634a3d6a1b0ecc53ad62d142/file_info/demult_maps/BFAs/hBFA1_part1_indices.csv",
+      "sha256": "90c8e428256a086ff9698083e773186249651150c53548310c9998f84bf9a3e5",
+      "bytes": 2160
+    },
+    {
+      "filename": "hBFA1_all_freqs_tidy.csv",
+      "url": "https://raw.githubusercontent.com/mjohnson11/PLT_code/a375a116bf69160f634a3d6a1b0ecc53ad62d142/Final_data_sets/hBFA1_all_freqs_tidy.csv",
+      "sha256": "3dc3ec353c593c38fd50cdc4ef3fc3343aa0338f8562e2515493eb879dc8ad7f",
+      "bytes": 13868445
+    },
+    {
+      "filename": "tp_exclusion_list.xlsx",
+      "url": "https://raw.githubusercontent.com/mjohnson11/PLT_code/a375a116bf69160f634a3d6a1b0ecc53ad62d142/file_info/tp_exclusion_list.xlsx",
+      "sha256": "50aa5f2ecdb4870ba0f33e776274341c8a2fc41c22631ed970e0c04bf7a70730",
+      "bytes": 10858
+    },
+    {
+      "filename": "PLT_parse_predemultiplexed.py",
+      "url": "https://raw.githubusercontent.com/mjohnson11/PLT_code/a375a116bf69160f634a3d6a1b0ecc53ad62d142/processing/PLT_parse_predemultiplexed.py",
+      "sha256": "88520e75d4a5d7e2d516a85e23d70db6f9fd599eda0588f914cb3cbaac04ef9a",
+      "bytes": 9982
+    }
+  ]
+}

@@ -55,7 +55,15 @@ after grid completion. One of \code{"epsilon"} (default) or
 \item{epsilon}{Numeric. Value used when
 \code{fill_missing = "epsilon"} (default \code{1e-6}).}
 
-\item{palette}{Optional character vector of colours. If \code{NULL}
+\item{palette}{A built-in LTC palette name, such as \code{"alger"} or
+\code{"minou"}, or a character vector of R colours. See
+\code{names(\link{barbac_palettes}())} for all 32 names. Named palettes
+are interpolated end to end to give each lineage a colour. Short custom
+vectors are interpolated; longer vectors are used in barcode factor order.
+Colour mappings are local to each plot; for matching colours across
+populations, generate one vector over the union of barcode IDs using
+\code{\link{barbac_palette}} and subset it in each plot's barcode order.
+If \code{NULL}
 (default), a continuous \code{PNWColors::pnw_palette("Sailboat")}
 is expanded to the number of lineages.}
 
@@ -126,6 +134,7 @@ df <- tibble::tibble(
                 0,  0, 10, 50, 40)
 )
 barbac_ts_area(df, min_total_count = 0)
+barbac_ts_area(df, min_total_count = 0, palette = "alger")
 
 # Bartender wide-format input auto-detects
 bt <- tibble::tibble(

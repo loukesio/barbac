@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-01",
+  "barbac_build_id": "barbac-2026-09-01-hamming-refinement-v11",
+  "original_full_run_barbac_build_id": "barbac-2026-09-01-composition-prefilter-v10",
+  "hamming_rows_rerun_with_build_id": "barbac-2026-09-01-hamming-refinement-v11",
+  "barbac_git_revision": "22cb97615660de007ce86d05a3fa255d9e419d8d",
+  "barbac_worktree_was_clean": false,
+  "shepherd_git_revision": "83ea670b929d4c3370e9f162bfdc34e6893cf5cc",
+  "starcode_git_revision": "8987b2eb7558bdb6e8a44823881e4e2f76f47535",
+  "bartender_git_revision": "c458f6446a4a69e901ec54bd1bea5c40bf358f3e",
+  "r_version": "R version 4.5.1 (2025-06-13)",
+  "python_packages": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "rapidfuzz": "3.14.5",
+    "scipy": "1.15.3"
+  },
+  "configuration": {
+    "n_barcodes": 10000,
+    "n_reads": 1000000,
+    "seed": 42,
+    "tie_order": "sequence",
+    "abundance": "lognormal",
+    "sub_rate": 0.005,
+    "low_ins_rate": 0.005,
+    "low_del_rate": 0.005,
+    "anchor_template": "NNNNNNNNATGCNNNNNNNNATCGTTAA"
+  }
+}

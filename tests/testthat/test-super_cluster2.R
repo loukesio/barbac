@@ -106,3 +106,267 @@ test_that("super_cluster2 warns on Hamming-incompatible barcodes", {
   expect_warning(super_cluster2(input, method = "hamming", verbose = FALSE),
                  "Hamming mode cannot compare")
 })
+
+test_that("indexed LV clustering matches the full scan on fixed-anchor designs", {
+  # Structured barcode designs repeat a constant anchor in every sequence, so
+  # seeds drawn from the anchor are shared by the whole table and carry no
+  # information. The seed index skips such posting lists to stay fast; this
+  # checks that skipping them costs no recall by comparing against the
+  # exhaustive scan (use_kmer_filter = FALSE), which uses no index at all.
+  set.seed(11)
+  ALPH <- c("A", "C", "G", "T")
+  template <- c(rep("N", 8), strsplit("ATGC", "")[[1]],
+                rep("N", 8), strsplit("ATCGTTAA", "")[[1]])
+  var_pos <- which(template == "N")
+
+  draw <- function() {
+    s <- template
+    s[var_pos] <- sample(ALPH, length(var_pos), replace = TRUE)
+    paste0(s, collapse = "")
+  }
+  truth <- unique(replicate(60, draw()))
+
+  mutate1 <- function(s) {                  # one substitution in the variable part
+    cs <- strsplit(s, "")[[1]]
+    j <- sample(var_pos, 1)
+    cs[j] <- sample(setdiff(ALPH, cs[j]), 1)
+    paste0(cs, collapse = "")
+  }
+  bc  <- unlist(lapply(truth, function(t) c(t, t, mutate1(t))))
+  tab <- aggregate(counts ~ barcode,
+                   data.frame(barcode = bc,
+                              counts  = sample(1:40, length(bc), TRUE)),
+                   sum)
+
+  canon <- function(filter_on) {
+    r <- super_cluster2(tab, distance = 3, method = "lv",
+                        use_kmer_filter = filter_on, verbose = FALSE)
+    sort(vapply(seq_len(nrow(r)), function(i)
+      paste(r$central_barcode[i], r$sum_counts[i],
+            paste(sort(r$all_barcodes[[i]]), collapse = "|"), sep = "~"),
+      character(1)))
+  }
+
+  expect_identical(canon(TRUE), canon(FALSE))
+})
+
+test_that("tie_break = 'hash' stays deterministic and order-invariant", {
+  set.seed(7)
+  ALPH <- c("A", "C", "G", "T")
+  truth <- replicate(40, paste0(sample(ALPH, 20, replace = TRUE), collapse = ""))
+  mk <- function(s) {
+    cs <- strsplit(s, "")[[1]]; j <- sample(20, 1)
+    cs[j] <- sample(setdiff(ALPH, cs[j]), 1); paste0(cs, collapse = "")
+  }
+  bc  <- unlist(lapply(truth, function(t) c(t, mk(t))))
+  tab <- aggregate(counts ~ barcode,
+                   data.frame(barcode = bc,
+                              counts  = sample(1:6, length(bc), TRUE)),
+                   sum)
+
+  canon <- function(d, ...) {
+    r <- super_cluster2(d, distance = 3, verbose = FALSE, ...)
+    sort(paste(r$central_barcode, r$sum_counts, sep = "~"))
+  }
+
+  # A seed is reproducible, and still independent of input row order.
+  a <- canon(tab,                      tie_break = "hash", tie_seed = 3L)
+  expect_identical(a, canon(tab,       tie_break = "hash", tie_seed = 3L))
+  expect_identical(a, canon(tab[sample(nrow(tab)), ],
+                                       tie_break = "hash", tie_seed = 3L))
+
+  # The default is unchanged by the option's existence.
+  expect_identical(canon(tab), canon(tab, tie_break = "sequence"))
+
+  # Seeds are genuinely different orderings, not the same one relabelled.
+  keys <- barbac:::barbac_seq_order_key(tab$barcode, 1L)
+  expect_false(identical(keys, barbac:::barbac_seq_order_key(tab$barcode, 2L)))
+  expect_identical(keys, barbac:::barbac_seq_order_key(tab$barcode, 1L))
+})
+
+test_that("Hamming mode absorbs trace indel reads instead of splitting them off", {
+  # The Hamming partition index is keyed by sequence length, so a read carrying
+  # an indel is never offered its parent as a candidate and would found a
+  # cluster of its own. With a trace of such reads they are rescued by edit
+  # distance and land in the right cluster.
+  set.seed(3)
+  ALPH <- c("A", "C", "G", "T")
+  truth <- unique(replicate(120, paste0(sample(ALPH, 20, replace = TRUE),
+                                        collapse = "")))
+  parent <- truth[1]
+  deletion <- substr(parent, 1, 19)          # one base short: an indel read
+
+  input <- data.frame(
+    barcode = c(truth, deletion),
+    counts  = c(rep(200L, length(truth)), 1L),
+    stringsAsFactors = FALSE
+  )
+
+  res <- super_cluster2(input, distance = 3, method = "hamming", verbose = FALSE)
+
+  # The shortened read must not survive as its own centroid...
+  expect_false(deletion %in% res$central_barcode)
+  # ...it belongs to the barcode it was derived from.
+  owner <- res$all_barcodes[[which(res$central_barcode == parent)]]
+  expect_true(deletion %in% owner)
+})
+
+test_that("Hamming mode warns when the data is substantially length-variable", {
+  # Past a trace, rescuing by edit distance is the wrong answer: the data wants
+  # Levenshtein, and the user should be told so rather than handed a slow run.
+  set.seed(4)
+  ALPH <- c("A", "C", "G", "T")
+  truth <- unique(replicate(40, paste0(sample(ALPH, 20, replace = TRUE),
+                                       collapse = "")))
+  shortened <- substr(truth, 1, 19)          # half the table is length 19
+  input <- data.frame(
+    barcode = c(truth, shortened),
+    counts  = c(rep(50L, length(truth)), rep(3L, length(shortened))),
+    stringsAsFactors = FALSE
+  )
+  expect_warning(super_cluster2(input, distance = 3, method = "hamming",
+                                verbose = FALSE),
+                 "differ from the modal barcode length")
+})
+
+test_that("LV mode suggests Hamming for fixed-length substitution-only data", {
+  input <- data.frame(
+    barcode = c("AAAAAAAAAAAAAAAAAAAA", "AAAAAAAAAAAAAAAAAAAT"),
+    counts = c(100L, 1L)
+  )
+  expect_message(
+    super_cluster2(input, method = "lv", verbose = TRUE),
+    'method = "hamming" is usually much faster',
+    fixed = TRUE
+  )
+})
+
+test_that("the composition lower bound safely rejects impossible LV pairs", {
+  cpp <- barbac:::barbac_cpp_centroid_cluster_optimized(
+    barcodes = c("AAAAAAAAAA", "CCCCCCCCCC"),
+    counts = c(10L, 1L),
+    max_distance = 3,
+    method = "lv",
+    use_kmer_filter = FALSE,
+    verbose = FALSE
+  )
+  expect_equal(length(cpp$central_barcode), 2L)
+  expect_equal(unname(cpp$distance_count[["lv_composition_rejects"]]), 1)
+  expect_equal(unname(cpp$distance_count[["lv_verifications"]]), 0)
+})
+
+test_that("Hamming refinement lets promoted barcodes reclaim earlier error roots", {
+  parent <- paste0(rep("A", 28), collapse = "")
+  promoted <- paste0("CCC", paste0(rep("A", 25), collapse = ""))
+  promoted_error <- paste0("CCCC", paste0(rep("A", 24), collapse = ""))
+  input <- data.frame(
+    barcode = c(parent, promoted, promoted_error),
+    counts = c(100L, 2L, 1L)
+  )
+
+  res <- super_cluster2(input, distance = 3, method = "hamming",
+                        verbose = FALSE)
+
+  # The d=3, count-2 sequence is too abundant for Shepherd's exact error
+  # model and is promoted back to a true centroid. Its d=1 singleton error
+  # was processed before that centroid existed, so the post-promotion cleanup
+  # must reclaim it instead of leaving a false root behind.
+  expect_setequal(res$central_barcode, c(parent, promoted))
+  owner <- which(res$central_barcode == promoted)
+  expect_setequal(res$all_barcodes[[owner]], c(promoted, promoted_error))
+  expect_equal(res$sum_counts[[owner]], 3L)
+})
+
+test_that("LV compares all parents when a Hamming match is weaker", {
+  input <- data.frame(
+    barcode = c('CTTTGCTTTCCTCCGCCCCA', 'TTTTCTTTCTTCCGCCCCTT',
+                'TTTGCTTTCCTCCGCCCCAT'), counts = c(1000L, 50L, 1L))
+  expect_equal(stringdist::stringdist(input$barcode[1], input$barcode[3], method='lv'), 2)
+  expect_gt(stringdist::stringdist(input$barcode[1], input$barcode[2], method='lv'), 3)
+  for (filter in c(TRUE, FALSE)) {
+    r <- super_cluster2(input, method='lv', use_kmer_filter=filter, verbose=FALSE)
+    owner <- which(vapply(r$all_barcodes, function(b) input$barcode[3] %in% b, logical(1)))
+    expect_equal(r$central_barcode[owner], input$barcode[1])
+  }
+})
+
+test_that("LV uses two edits for a three-position cyclic shift", {
+  input <- data.frame(barcode=c('GGGGACGTTTT', 'GGGGCGATTTT'), counts=c(1000L, 2L))
+  expect_equal(stringdist::stringdist(input$barcode[1], input$barcode[2], method='hamming'), 3)
+  expect_equal(stringdist::stringdist(input$barcode[1], input$barcode[2], method='lv'), 2)
+  # Misreporting d=3 promotes the count-2 child; at true d=2 it stays absorbed.
+  for (filter in c(TRUE, FALSE)) {
+    r <- super_cluster2(input, method='lv', use_kmer_filter=filter, verbose=FALSE)
+    expect_equal(nrow(r), 1L)
+    expect_equal(r$sum_counts, 1002L)
+  }
+})
+
+test_that("learned partitions agree with exhaustive clustering across edit regimes", {
+  canon <- function(r) sort(vapply(seq_len(nrow(r)), function(i)
+    paste(r$central_barcode[i], r$sum_counts[i],
+          paste(sort(r$all_barcodes[[i]]), collapse='|')), character(1)))
+  set.seed(987)
+  for (method in c('hamming', 'lv')) for (len in c(3, 6, 20, 28, 32, 40, 65)) {
+    if (method == 'hamming' && len > 32) next
+    roots <- replicate(20, paste(sample(c('A','C','G','T'), len, TRUE), collapse=''))
+    bc <- unlist(lapply(roots, function(s) c(s, replicate(4, {
+      bases <- strsplit(s, '')[[1]]
+      for (edit in seq_len(sample(1:3, 1))) {
+        if (!length(bases)) break
+        pos <- sample(seq_along(bases), 1)
+        op <- if (method == 'hamming') 1L else sample(1:3, 1)
+        if (op == 1) bases[pos] <- sample(c('A','C','G','T'), 1)
+        if (op == 2) bases <- bases[-pos]
+        if (op == 3) bases <- append(bases, sample(c('A','C','G','T'),1), pos)
+      }
+      paste(bases, collapse='')
+    }))))
+    bc <- bc[nchar(bc) > 0]
+    tab <- data.frame(barcode=bc, counts=sample(1:200, length(bc), TRUE))
+    for (d in 0:4) {
+      indexed <- super_cluster2(tab, distance=d, method=method, verbose=FALSE)
+      full <- super_cluster2(tab, distance=d, method=method, verbose=FALSE, use_kmer_filter=FALSE)
+      expect_identical(canon(indexed), canon(full), info=paste(method,len,d))
+      expect_equal(sum(indexed$sum_counts), sum(tab$counts))
+    }
+  }
+})
+
+test_that("LV fallback handles long strings, empty strings, and ambiguous characters", {
+  for (len in c(64, 65, 100)) {
+    root <- paste(rep(c('A','C','G','T'), length.out=len), collapse='')
+    variant <- paste0(substr(root,1,30), 'N', substr(root,32,len))
+    for (filter in c(TRUE, FALSE)) {
+      r <- super_cluster2(data.frame(barcode=c(root,variant), counts=c(100L,1L)),
+                          method='lv', distance=1, use_kmer_filter=filter, verbose=FALSE)
+      expect_equal(r$central_barcode, root)
+      expect_equal(r$sum_counts, 101L)
+    }
+  }
+  input <- data.frame(barcode=c('', '', 'N', 'NA', 'Na', 'na'), counts=c(20L,3L,2L,1L,1L,1L))
+  a <- super_cluster2(input, method='lv', distance=1, verbose=FALSE)
+  b <- super_cluster2(input, method='lv', distance=1, verbose=FALSE, use_kmer_filter=FALSE)
+  expect_identical(a, b)
+  expect_equal(sum(a$sum_counts), sum(input$counts))
+})
+
+test_that("support ties use only one-edit neighbours no more abundant than the query", {
+  bc <- c('AAAAAC', 'AAAAAA', 'AAAACA', 'AAAACC', 'AAAAA')
+  counts <- c(2L, 2L, 1L, 100L, 1L)
+  for (method in c('hamming', 'lv')) {
+    dm <- stringdist::stringdistmatrix(bc, bc, method=method)
+    expected <- vapply(seq_along(bc), function(i) {
+      if (sum(counts == counts[i]) < 2) return(0)
+      sum(counts[dm[i,] == 1 & counts <= counts[i]])
+    }, numeric(1))
+    expect_equal(as.numeric(barbac:::barbac_support_order_key(bc, counts, method)), expected)
+    input <- data.frame(barcode=c(bc[1:3], "CCCCCC"), counts=counts[1:4])
+    a <- super_cluster2(input, method=method, tie_break='support', distance=1, verbose=FALSE)
+    b <- super_cluster2(input[4:1,], method=method, tie_break='support', distance=1, verbose=FALSE)
+    expect_identical(a, b)
+    expect_true('AAAAAA' %in% a$central_barcode)
+    expect_false('AAAAAC' %in% a$central_barcode)
+    expect_equal(sum(a$sum_counts), sum(input$counts))
+  }
+})

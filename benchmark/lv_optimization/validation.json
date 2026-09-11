@@ -1,0 +1,11 @@
+{
+  "main_runs": 40,
+  "holdout_runs": 10,
+  "output_hashes_verified": 100,
+  "source_hashes_verified": true,
+  "reference_full_membership_equivalence": "passed for both ordering options",
+  "four_condition_centroid_equivalence": "passed for all 12 original condition/seed combinations",
+  "package_check": "1 WARNING: installed R header unknown clang warning group -Wfixed-enum-extension; tests, examples and vignette rebuild passed",
+  "default_model": "none",
+  "experimental_model": "poisson"
+}

@@ -11,7 +11,13 @@ barbac_xtr(
   end_pos = 78,
   output_file = NULL,
   min_count = 1,
-  verbose = TRUE
+  verbose = TRUE,
+  flank_pattern = NULL,
+  barcode_group = 1L,
+  read_window = NULL,
+  reverse_complement = FALSE,
+  include_read_ids = FALSE,
+  yield_size = 100000L
 )
 }
 \arguments{
@@ -29,6 +35,24 @@ based on input BAM file. Default is NULL.}
 \item{min_count}{Numeric. Minimum count threshold to include a barcode. Default is 1.}
 
 \item{verbose}{Logical. Print progress messages. Default is TRUE.}
+
+\item{flank_pattern}{Optional PCRE pattern containing a capture group for the
+observed barcode. When supplied, extract from mapped query sequences instead
+of fixed-width reference strings, preserving insertions and deletions.}
+
+\item{barcode_group}{Positive integer identifying the barcode capture group.}
+
+\item{read_window}{Optional two-element, one-based inclusive query window to
+search after applying `reverse_complement`. NULL searches the entire query.}
+
+\item{reverse_complement}{Reverse-complement reference-oriented BAM query
+sequences before flank matching. Only available with `flank_pattern`.}
+
+\item{include_read_ids}{With flank extraction, write one row per matching
+primary alignment (`read_id`, `barcode`, `barcode_length`) instead of counts.
+Names need not be unique in paired BAMs; callers must preserve mate identity.}
+
+\item{yield_size}{Number of BAM records to read per chunk for flank extraction.}
 }
 \value{
 A character string with the path to the generated CSV file.

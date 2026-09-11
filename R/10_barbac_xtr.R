@@ -11,6 +11,18 @@
 #'   based on input BAM file. Default is NULL.
 #' @param min_count Numeric. Minimum count threshold to include a barcode. Default is 1.
 #' @param verbose Logical. Print progress messages. Default is TRUE.
+#' @param flank_pattern Optional PCRE pattern containing a capture group for the
+#'   observed barcode. When supplied, extract from mapped query sequences instead
+#'   of fixed-width reference strings, preserving insertions and deletions.
+#' @param barcode_group Positive integer identifying the barcode capture group.
+#' @param read_window Optional two-element, one-based inclusive query window to
+#'   search after applying `reverse_complement`. NULL searches the entire query.
+#' @param reverse_complement Reverse-complement reference-oriented BAM query
+#'   sequences before flank matching. Only available with `flank_pattern`.
+#' @param include_read_ids With flank extraction, write one row per matching
+#'   primary alignment (`read_id`, `barcode`, `barcode_length`) instead of counts.
+#'   Names need not be unique in paired BAMs; callers must preserve mate identity.
+#' @param yield_size Number of BAM records to read per chunk for flank extraction.
 #'
 #' @return A character string with the path to the generated CSV file.
 #' 
@@ -57,7 +69,22 @@ barbac_xtr <- function(bam_file,
                        end_pos = 78,
                        output_file = NULL,
                        min_count = 1,
-                       verbose = TRUE) {
+                       verbose = TRUE,
+                       flank_pattern = NULL,
+                       barcode_group = 1L,
+                       read_window = NULL,
+                       reverse_complement = FALSE,
+                       include_read_ids = FALSE,
+                       yield_size = 100000L) {
+  if (!is.null(flank_pattern)) {
+    return(invisible(.barbac_xtr_flanks(
+      bam_file, ref_name, start_pos, end_pos, output_file, min_count, verbose,
+      flank_pattern, barcode_group, read_window, reverse_complement,
+      include_read_ids, yield_size)))
+  }
+  if (include_read_ids || reverse_complement || !is.null(read_window)) {
+    stop("Read IDs, query windows and reverse-complement extraction require flank_pattern.")
+  }
   
   # -----------------------------
   # Input validation
@@ -188,8 +215,15 @@ barbac_xtr <- function(bam_file,
 #' @param plot_width Numeric. Width of saved plot in inches. Default is 12.
 #' @param plot_height Numeric. Height of saved plot in inches. Default is 8.
 #' @param verbose Logical. Print summary statistics. Default is TRUE.
+#' @param panel_labels Logical. Add A, B, C, D labels to the combined diagnostic.
+#' @param return_details Logical. Return the combined plot, individual histogram
+#'   plots, numeric length summary and per-sequence entropy for report composition.
+#'   The default preserves the patchwork return value.
 #' 
-#' @return Patchwork plot object with histograms and summary table
+#' @return A patchwork plot, or with `return_details = TRUE`, a list containing
+#'   `plot`, `plots`, `length_summary` and `sequence_entropy`. The numeric summary
+#'   can be passed to `gt::gt()` for an HTML report. Entropy is measured in bits
+#'   across nucleotide frequencies within each sequence, not across lineages.
 #'
 #' @import dplyr
 #' @import ggplot2
@@ -204,7 +238,9 @@ barbac_xtr.stats <- function(file,
                              save_plot = FALSE,
                              plot_width = 12,
                              plot_height = 8,
-                             verbose = TRUE) {
+                             verbose = TRUE,
+                             panel_labels = FALSE,
+                             return_details = FALSE) {
   
   # Load patchwork if not already loaded
   if (!requireNamespace("patchwork", quietly = TRUE)) {
@@ -263,12 +299,12 @@ barbac_xtr.stats <- function(file,
   bin_data <- data %>%
     dplyr::mutate(
       bin = dplyr::case_when(
-        barcode_length < barcode_length[1] ~ 
-          sprintf("< %d bp", barcode_length[1]),
-        barcode_length >= barcode_length[1] & barcode_length <= barcode_length[2] ~ 
-          sprintf("%d - %d bp", barcode_length[1], barcode_length[2]),
+        barcode_length < .env$barcode_length[1] ~
+          sprintf("< %d bp", .env$barcode_length[1]),
+        barcode_length >= .env$barcode_length[1] & barcode_length <= .env$barcode_length[2] ~
+          sprintf("%d - %d bp", .env$barcode_length[1], .env$barcode_length[2]),
         TRUE ~ 
-          sprintf("> %d bp", barcode_length[2])
+          sprintf("> %d bp", .env$barcode_length[2])
       )
     ) %>%
     dplyr::group_by(bin) %>%
@@ -377,6 +413,9 @@ barbac_xtr.stats <- function(file,
   # Combine plots using patchwork
   # -----------------------------
   combined_plot <- (p1 | p2) / (p3 | patchwork::wrap_elements(t1))
+  if (isTRUE(panel_labels)) {
+    combined_plot <- combined_plot + patchwork::plot_annotation(tag_levels = "A")
+  }
   
   # -----------------------------
   # Save plot if requested
@@ -406,6 +445,9 @@ barbac_xtr.stats <- function(file,
   
   if (verbose) message("\n\u2705 Analysis complete!\n")
   
+  if (isTRUE(return_details)) {
+    return(list(plot = combined_plot, plots = list(length = p1, abundance = p2, entropy = p3),
+                length_summary = bin_data, sequence_entropy = data_with_entropy))
+  }
   return(combined_plot)
 }
-

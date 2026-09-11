@@ -14,12 +14,42 @@
 #' @param verbose Logical. Default: TRUE.
 #' @param use_cpp Logical. Default: TRUE.
 #' @param use_kmer_filter Logical. Default: TRUE.
-#' @param kmer_size Integer. Seed size for LV index. Default: 5.
+#' @param kmer_size Integer. Kept for API compatibility. Search partitions are
+#'   now chosen from observed sequence information. Default: 5.
 #' @param min_shared_kmers Integer. Kept for API compatibility. Default: 2.
 #' @param merge_ratio Numeric. Base count-ratio for the distance-aware merge
 #'   guard. Effective ratio increases with distance. Default: 20.
 #' @param error_rate Numeric. Approximate per-base error rate for likelihood
 #'   scoring. Default: 0.005.
+#' @param tie_break Character string. How to order barcodes that share a count:
+#'   \code{"sequence"} (default) orders them by the barcode itself;
+#'   \code{"hash"} orders them by a salted hash using \code{tie_seed};
+#'   \code{"support"} first orders by the summed counts of one-edit neighbours
+#'   that are no more abundant than the barcode, then by sequence. Support
+#'   uses the selected distance method and observed reads only. It is an
+#'   optional evidence-based tie rule, not a guarantee of improved accuracy.
+#'   All three options are deterministic and independent of input row order.
+#'   Re-running the hash option across seeds measures sensitivity to arbitrary
+#'   equal-count ordering; support retains sequence order when evidence ties.
+#' @param tie_seed Integer. Salt for \code{tie_break = "hash"}. Default: 0.
+#' @param use_design Logical. Exploit the barcode design. A library that fixes
+#'   some positions and randomises others carries identity only at the random
+#'   ones, so a read differing from a centroid solely at a fixed position cannot
+#'   be a different barcode and is absorbed without consulting the abundance
+#'   guard. The fixed positions are read off the data (a position where one base
+#'   covers at least 90% of reads), so no template has to be supplied. Has no
+#'   effect on fully random libraries, where every position varies.
+#'   Default: FALSE.
+#'
+#' @param indel_model Character string. Experimental LV merge-guard exception:
+#'   \code{"none"} (default) or \code{"poisson"}. The latter allows a
+#'   repeated-base single insertion/deletion to pass a blocked ratio guard if
+#'   its count is consistent with a Poisson error expectation (upper tail at
+#'   least 0.01). Uses \code{error_rate} as a deletion-rate upper-bound proxy,
+#'   and one fourth of that rate for a specific inserted base, multiplied by
+#'   equivalent gap positions. This is not an estimated platform-specific
+#'   error rate or posterior probability. It may merge genuine length variants;
+#'   validate on independent controls. Requires the C++ LV method.
 #'
 #' @return A \code{\link[tibble]{tibble}} with columns:
 #'   cluster_id, central_barcode, all_barcodes, all_counts, sum_counts.
@@ -44,15 +74,24 @@ super_cluster2 <- function(input_path,
                            kmer_size        = 5L,
                            min_shared_kmers = 2L,
                            merge_ratio      = 20.0,
-                           error_rate       = 0.005) {
+                           error_rate       = 0.005,
+                           tie_break        = c("sequence", "hash", "support"),
+                           tie_seed         = 0L,
+                           use_design       = FALSE,
+                           indel_model      = c("none", "poisson")) {
 
   method        <- match.arg(method)
+  tie_break     <- match.arg(tie_break)
+  indel_model   <- match.arg(indel_model)
+  if (indel_model != "none" && (!use_cpp || method != "lv"))
+    stop("indel_model requires method = 'lv' and use_cpp = TRUE")
   use_cpp_final <- use_cpp && (method %in% c("lv", "hamming"))
 
   if (is.data.frame(input_path)) {
     return(.process_df(input_path, distance, method, barcode_col, counts_col,
                        output_dir, verbose, use_cpp_final, use_kmer_filter,
-                       kmer_size, min_shared_kmers, merge_ratio, error_rate))
+                       kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                       tie_break, tie_seed, use_design, indel_model))
   }
 
   if (!is.character(input_path))
@@ -64,11 +103,12 @@ super_cluster2 <- function(input_path,
     .process_dir(input_path, distance, method, barcode_col, counts_col,
                  output_dir, file_pattern, verbose, use_cpp_final,
                  use_kmer_filter, kmer_size, min_shared_kmers,
-                 merge_ratio, error_rate)
+                 merge_ratio, error_rate, tie_break, tie_seed, use_design, indel_model)
   } else {
     .process_file(input_path, distance, method, barcode_col, counts_col,
                   output_dir, verbose, use_cpp_final, use_kmer_filter,
-                  kmer_size, min_shared_kmers, merge_ratio, error_rate)
+                  kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                  tie_break, tie_seed, use_design, indel_model)
   }
 }
 
@@ -79,7 +119,9 @@ super_cluster2 <- function(input_path,
 #' @noRd
 .process_df <- function(data, distance, method, barcode_col, counts_col,
                         output_dir, verbose, use_cpp_final, use_kmer_filter,
-                        kmer_size, min_shared_kmers, merge_ratio, error_rate) {
+                        kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                        tie_break = "sequence", tie_seed = 0L,
+                        use_design = FALSE, indel_model = "none") {
 
   if (!all(c(barcode_col, counts_col) %in% colnames(data)))
     stop(sprintf("Columns '%s' and/or '%s' not found. Available: %s",
@@ -97,14 +139,13 @@ super_cluster2 <- function(input_path,
   # merges identical barcodes, so duplicate rows would otherwise be double-
   # counted as separate singleton clusters. Only rewrite the table when
   # duplicates actually exist, and preserve first-occurrence row order: the
-  # abundance-ranked greedy pass breaks count ties by row order, so an
-  # already-unique count table must be passed through untouched.
+  # abundance-ranked greedy pass is ordered explicitly below.
   n_after_na <- nrow(data)
   if (anyDuplicated(data[[barcode_col]])) {
     summed <- rowsum(data[[counts_col]], group = data[[barcode_col]],
                      reorder = FALSE)
     data <- data[!duplicated(data[[barcode_col]]), , drop = FALSE]
-    data[[counts_col]] <- as.integer(summed[data[[barcode_col]], 1L])
+    data[[counts_col]] <- as.integer(summed[match(data[[barcode_col]], rownames(summed)), 1L])
   }
   n_collapsed <- n_after_na - nrow(data)
 
@@ -123,13 +164,33 @@ super_cluster2 <- function(input_path,
 
   # Standardise the row order so the abundance-ranked greedy pass is a pure
   # function of the input's content, not the order it happened to arrive in.
-  # Sorting by count then barcode breaks count ties deterministically (barcodes
-  # are unique after the dedup above), making the clustering reproducible under
-  # any row permutation from upstream joins, summaries, or file merges.
-  data <- dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
-                         !!rlang::sym(barcode_col))
+  # Breaking count ties deterministically (barcodes are unique after the dedup
+  # above) makes the clustering reproducible under any row permutation from
+  # upstream joins, summaries, or file merges.
+  #
+  # Which tied barcode is visited first is nonetheless arbitrary, and it decides
+  # which of them is allowed to seed a cluster. tie_break = "hash" re-draws that
+  # arbitrary order from tie_seed without reference to the bases, so repeating a
+  # run across seeds measures how much of a result rests on the choice rather
+  # than on the data. Every seed is itself fully reproducible.
+  data <- if (tie_break == "hash") {
+    dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
+                   barbac_seq_order_key(!!rlang::sym(barcode_col),
+                                        as.integer(tie_seed)),
+                   !!rlang::sym(barcode_col))
+  } else if (tie_break == "support") {
+    support <- barbac_support_order_key(data[[barcode_col]],
+                                        data[[counts_col]], method)
+    data[order(-data[[counts_col]], -support, data[[barcode_col]],
+               method = "radix"), , drop = FALSE]
+  } else {
+    dplyr::arrange(data, dplyr::desc(!!rlang::sym(counts_col)),
+                   !!rlang::sym(barcode_col))
+  }
 
-  mean_len <- mean(nchar(data[[barcode_col]]))
+  barcode_lengths <- nchar(data[[barcode_col]])
+  mean_len <- mean(barcode_lengths)
+  fixed_length <- length(unique(barcode_lengths)) == 1L
   
   if (verbose) {
     message("========================================")
@@ -150,6 +211,11 @@ super_cluster2 <- function(input_path,
       message("  Collapsed dups   : ", n_collapsed, " rows")
     message("  Sequences        : ", format(nrow(data), big.mark = ","))
     message("  Mean length      : ", round(mean_len, 1), " bp")
+    if (method == "lv" && fixed_length) {
+      message("  Speed note       : all barcodes have the same length. If the ",
+              "data are known to exclude indels and shifted alignments, ",
+              "method = \"hamming\" is usually much faster.")
+    }
     message("  Top sequence     : ", data[[barcode_col]][1],
             " (count: ", format(data[[counts_col]][1], big.mark = ","), ")")
     message("Running...")
@@ -168,7 +234,9 @@ super_cluster2 <- function(input_path,
       use_kmer_filter  = use_kmer_filter,
       merge_ratio      = merge_ratio,
       error_rate       = error_rate,
-      verbose          = verbose
+      verbose          = verbose,
+      use_design       = use_design,
+      use_indel_model  = indel_model == "poisson"
     )
     result <- tibble::tibble(
       cluster_id      = cpp$cluster_id,
@@ -230,7 +298,9 @@ super_cluster2 <- function(input_path,
 #' @noRd
 .process_file <- function(file_path, distance, method, barcode_col, counts_col,
                           output_dir, verbose, use_cpp_final, use_kmer_filter,
-                          kmer_size, min_shared_kmers, merge_ratio, error_rate) {
+                          kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                          tie_break = "sequence", tie_seed = 0L,
+                          use_design = FALSE, indel_model = "none") {
 
   if (verbose) message("Reading: ", basename(file_path))
   data <- readr::read_csv(file_path, show_col_types = FALSE)
@@ -240,7 +310,8 @@ super_cluster2 <- function(input_path,
 
   result <- .process_df(data, distance, method, barcode_col, counts_col,
                         NULL, verbose, use_cpp_final, use_kmer_filter,
-                        kmer_size, min_shared_kmers, merge_ratio, error_rate)
+                        kmer_size, min_shared_kmers, merge_ratio, error_rate,
+                        tie_break, tie_seed, use_design, indel_model)
   
   if (!is.null(output_dir)) {
     if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
@@ -264,7 +335,9 @@ super_cluster2 <- function(input_path,
 .process_dir <- function(dir_path, distance, method, barcode_col, counts_col,
                          output_dir, file_pattern, verbose, use_cpp_final,
                          use_kmer_filter, kmer_size, min_shared_kmers,
-                         merge_ratio, error_rate) {
+                         merge_ratio, error_rate,
+                         tie_break = "sequence", tie_seed = 0L,
+                         use_design = FALSE, indel_model = "none") {
   
   files <- list.files(dir_path, pattern = file_pattern, full.names = TRUE)
   if (length(files) == 0)
@@ -279,7 +352,8 @@ super_cluster2 <- function(input_path,
                                      counts_col, output_dir, verbose,
                                      use_cpp_final, use_kmer_filter,
                                      kmer_size, min_shared_kmers,
-                                     merge_ratio, error_rate),
+                                     merge_ratio, error_rate,
+                                     tie_break, tie_seed, use_design, indel_model),
       error = function(e) warning("Failed: ", basename(f), ": ", e$message)
     )
   }

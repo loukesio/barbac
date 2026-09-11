@@ -1,8 +1,8 @@
 Package: barbac
 Type: Package
 Title: End-to-end DNA barcode lineage analysis
-Version: 0.1.0
-Date: 2026-07-01
+Version: 0.2.0
+Date: 2026-09-11
 Authors@R: person("Loukas", "Theodosiou", role = c("aut", "cre"), email
         = "theodosiou@evolbio.mpg.de")
 Description: barbac provides an end-to-end workflow for DNA barcode
@@ -28,6 +28,8 @@ Imports:
     stringr,
     GenomicAlignments,
     GenomicRanges,
+    Rsamtools,
+    Biostrings,
     patchwork,
     tidyr,
     PNWColors
@@ -39,11 +41,9 @@ Suggests:
     showtext,
     sysfonts,
     viridisLite,
-    ltc,
-    testthat (>= 3.0.0),
+    testthat (>= 3.2.0),
     knitr,
     rmarkdown
-Additional_repositories: https://github.com/loukesio/ltc_palettes
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 Config/testthat/edition: 3

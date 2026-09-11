@@ -1,0 +1,138 @@
+---
+title: "LTC palette previews for barcode trajectories"
+subtitle: "The same full counts and barcode order, with different colours"
+format:
+  html:
+    theme: flatly
+    embed-resources: true
+    self-contained: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r validate}
+source('../provenance_helpers.R')
+snapshot <- jsonlite::read_json('palette_preview/palettes.json')
+assert_hash_map(snapshot$source_hashes,'../../..')
+stopifnot(snapshot$all_32_interpolations_match_original,
+  snapshot$shared_preview_colour_vectors_identical)
+for(well in c('A3','A1')) {
+  z <- jsonlite::read_json(file.path('palette_preview',paste0(well,'_validation.json')))
+  stopifnot(z$all_barcodes_individual,z$full_frequencies_verified,z$geometry_unchanged)
+  for(im in z$images) stopifnot(digest::digest(file=file.path('palette_preview',im$path),
+    algo='sha256')==im$sha256)
+}
+```
+
+These previews use **every barcode** from chloramphenicol replicate 1 and
+no-antibiotic replicate 1. Band widths, barcode order, zero counts and the
+extracted-read denominator are identical across palette choices. The same
+barcode receives the same colour in the treatment and control within each choice.
+No barcodes are combined or filtered out.
+
+All **32 LTC palettes by Loukas Theodosiou are built directly into barbac**.
+Choose one with `palette = "alger"`; no additional palette package is needed.
+These use the curated fills, with selected black and near-white colours omitted.
+We interpolate each selected palette end to end to obtain a colour for every
+barcode. Colour identifies a barcode; neither brightness nor hue represents its
+frequency. Many thin bands and neighbouring colours remain indistinguishable at
+screen resolution with this many lineages.
+
+[Open the main report with the plasma reference plots](report.html#following-the-mixture-over-time).
+
+```{=html}
+<style>
+.palette-pair .column { min-width:0; }
+.palette-pair img { width:100%; }
+@media(max-width:700px) { .palette-pair { flex-direction:column; } .palette-pair > .column { width:100%!important; margin-left:0!important; } }
+</style>
+```
+
+:::::: {.panel-tabset}
+## alger
+::::: {.columns .palette-pair}
+:::: {.column width="50%"}
+**Treatment · replicate 1**
+
+[![All treatment barcodes, alger](palette_preview/A3_alger.png)](palette_preview/A3_alger.png)
+::::
+:::: {.column width="50%"}
+**Control · replicate 1**
+
+[![All control barcodes, alger](palette_preview/A1_alger.png)](palette_preview/A1_alger.png)
+::::
+:::::
+## dora
+::::: {.columns .palette-pair}
+:::: {.column width="50%"}
+**Treatment · replicate 1**
+
+[![All treatment barcodes, dora](palette_preview/A3_dora.png)](palette_preview/A3_dora.png)
+::::
+:::: {.column width="50%"}
+**Control · replicate 1**
+
+[![All control barcodes, dora](palette_preview/A1_dora.png)](palette_preview/A1_dora.png)
+::::
+:::::
+## casa_natal
+::::: {.columns .palette-pair}
+:::: {.column width="50%"}
+**Treatment · replicate 1**
+
+[![All treatment barcodes, casa_natal](palette_preview/A3_casa_natal.png)](palette_preview/A3_casa_natal.png)
+::::
+:::: {.column width="50%"}
+**Control · replicate 1**
+
+[![All control barcodes, casa_natal](palette_preview/A1_casa_natal.png)](palette_preview/A1_casa_natal.png)
+::::
+:::::
+::::::
+
+## All 32 available palettes
+
+The sheet below shows the interpolated options available in barbac. The
+`heatmap0`–`heatmap3` palettes are ordered ramps; their diverging shapes should
+not be interpreted as low/high barcode abundance when used for barcode identity.
+
+![All 32 LTC palettes, interpolated end to end](palette_preview/all_palettes.png)
+
+## Use a palette with barbac
+
+Pass the palette name directly:
+
+```r
+library(barbac)
+barbac_ts_area(
+  counts, min_total_count = 0, fill_missing = "zero",
+  palette = "alger", show_legend = FALSE
+)
+
+names(barbac_palettes())  # list all 32 choices
+```
+
+For multiple populations, colours must be assigned over a shared set of barcode
+identifiers to keep the same barcode colour across panels, as in these previews:
+
+```r
+ids <- sort(unique(c(as.character(treatment$barcode), as.character(control$barcode))))
+colours <- setNames(barbac_palette("alger", length(ids)), ids)
+
+plot_population <- function(counts) {
+  local_ids <- sort(unique(as.character(counts$barcode)))
+  counts$barcode <- factor(counts$barcode, levels = local_ids)
+  barbac_ts_area(counts, min_total_count = 0, fill_missing = "zero",
+                 palette = unname(colours[local_ids]))
+}
+plot_population(treatment)
+plot_population(control)
+```
+
+The existing treatment/control images are retained: barbac's native palette
+vectors were checked to be identical to their original colour mappings.
+The R script, exact original and native palette snapshots, source hashes and numerical validation receipts are in
+`palette_preview.R` and `palette_preview/`. Click a plot for its full-size image
+when the accompanying folder is available.

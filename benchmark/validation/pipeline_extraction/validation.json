@@ -1,0 +1,101 @@
+{
+  "status": "passed",
+  "checked_utc": "2026-09-10 15:55:37 UTC",
+  "base_revision": "8ed64abe1834395e85e931ad85e6db8f122c4212",
+  "R": "R version 4.5.1 (2025-06-13)",
+  "platform": "aarch64-apple-darwin20",
+  "tools": [
+    {
+      "tool": "fastqc",
+      "version": "FastQC v0.12.1"
+    },
+    {
+      "tool": "multiqc",
+      "version": "multiqc, version 1.19"
+    },
+    {
+      "tool": "pear",
+      "version": "PEAR v0.9.6 [January 15, 2015]  - [+bzlib +zlib]"
+    },
+    {
+      "tool": "minimap2",
+      "version": "2.30-r1287"
+    },
+    {
+      "tool": "samtools",
+      "version": "samtools 1.22"
+    }
+  ],
+  "fixture": {
+    "seed": 20260910,
+    "samples": 2,
+    "FASTQs": 4,
+    "input_pairs": 290,
+    "merged_reads": 290,
+    "mapped_reads": 285,
+    "unmapped_reads": 5,
+    "extracted_reads": 285,
+    "fixed_coordinate_exact_counts": true,
+    "flank_exact_counts_and_read_ids": true,
+    "observed_lengths": [25, 26, 27],
+    "expected_centroids": 3,
+    "all_time_series_cells_match": true
+  },
+  "checks": {
+    "FastQC_counts": true,
+    "PEAR_counts": true,
+    "BAM_counts": true,
+    "MultiQC_report": true,
+    "extraction_diagnostics": true,
+    "clustering_conserves_reads": true,
+    "native_palette_plot": true
+  },
+  "unit_tests": {
+    "cases": 40,
+    "assertions_passed": 488,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "warnings": 0
+  },
+  "source_hashes": {
+    "DESCRIPTION": "8dca3bb7f8da6b1595da8eaa493625b07141af361d4e29374ca2a96ee26e9579",
+    "NAMESPACE": "66f9e1e0980cbb55147265563ab6c615620de16c7b0f4822e9b342fb398df5d8",
+    "R/01_configure_environment.R": "eb61e4673c680bd4d3743047a5c92a22f569f32362fe652cf0533973dc2f91b7",
+    "R/02_use_barbac_env.R": "f5c678444cccbce23c463ef3bc572bed63b48808a6a16cae150464ce907ce202",
+    "R/03_check-barbac-tools.R": "25d2a6f9fb167364d12754b82fd68e611c8700010c656279c613c532128f3e1d",
+    "R/04_run_fastqc.R": "27de29bb0478b9a301e6801c0bf2dd08e15b7e146a53bfdf0e435362a8a658f3",
+    "R/05_run_multiqc.R": "e7ede42a2ff6a473c1f5224133bec411319aaf1139f7dec0142ffeecb3e32c6a",
+    "R/06_run_pear.R": "1f0cbf42223a7f6b1ba23e80229efeccbaa460f3baee8ec4a168e9b79b71bf80",
+    "R/07_run_minimap2.R": "2c26d01a8ad89a8eb71a2faff4ad3722495863768c3805d33512316eaff28ccf",
+    "R/08_summarise_bam_stats.R": "974f357b2f654310f25f3196344608b4eb7ac88241b0046e372c52919f10b7e5",
+    "R/09_run_cli_pipeline.R": "8bd7993f6a11e115fddc700c1897f3a215410fcb520ff5936991f856bf6ba780",
+    "R/10_barbac_xtr.R": "d15597a4541b4d6cc5dd487e07f91cb14b4ac06df8c6113b0f5daf4ffc69371c",
+    "R/10a_extract_flanked_bam.R": "7fd6e98001d8de236fc9f1aad1623ea3068864550810a502d685f849520baa88",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+    "R/12_barbac_ts_area.R": "6a8d174a3f078d897b011246dec5ed160355927d119296f5ac19394a19689d8b",
+    "R/13_theme_barbac.R": "c71d0b2674a592a2a1d47022a9c432cbfef9835fa7c0770c6b521bab63d61a33",
+    "R/14_barbac_palettes.R": "9ed56e3e48d8f54a503c66644c4aaf7b4a12d1bbf53cf5bc0846838f016cf245",
+    "R/14_cluster_stats.R": "08fd00a0c74462e255e239682c4cdf40638bbf4169f44b0f1535f2a68bf11212",
+    "R/barbac-package.R": "db5aa4bdd19c4f581864fe41322ac238253b5d2ab4d0c788555f76e8011377a6",
+    "R/RcppExports.R": "c46d8468ba91e7db9cb22d450034ea65ebea57c83d16ac516c8f15e47c592e83",
+    "src/clustering.cpp": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+    "src/RcppExports.cpp": "480e2a802534003f3af01e8ce86feb6ab18fae35bccfe62d45ac789419f51c61",
+    "tests/testthat/test-barbac_ts_area.R": "309f0d19c5129159fe61d28f114d1088b559ada91a7bed1849cd08ad3241748f",
+    "tests/testthat/test-barbac-palettes.R": "49d60d7b79bcd1aeffe4958781138a98348892a41733f5c7efded4171790d250",
+    "tests/testthat/test-extraction-stats.R": "f80942298703bae3275624dedd76ee8e14e64c2e9b61fcaf4bd52115fdd5df27",
+    "tests/testthat/test-flanked-bam-extraction.R": "1cfb39e830da545fd29a7a0175a89a2bad3f2a35f77486fcf498332c42423971",
+    "tests/testthat/test-lv-indel-model.R": "b4488282117c7d4d94c905826b9ed27f945ffdfe7770eb673c2817f41d59e25f",
+    "tests/testthat/test-super_cluster2.R": "47c933fd9dd27ee0a1520c2c3e9a18930afad8508fdc2beda81650afa710a7ba",
+    "benchmark/validation/verify_pipeline_extraction.R": "46d780f7a1f2b399c9225afa99a78b9473215a06d955c410378b30e8b965bc14"
+  },
+  "artifact_hashes": {
+    "barcode_counts.csv": "7a80e375df070d7725e8e23138d5e2b7259be65cac168da14dbf2b2c80a23e3e",
+    "lineage_counts.csv": "70f06f03f722ea5882930092462d1271a71cd3cd6a915f07889774046f0f591d",
+    "bam_summary.csv": "58779cfedb16fe793159674f55c9a9b8a4732224b31dada09c562c5a8a1956fd",
+    "extraction_diagnostics.pdf": "d3e4d9f92c0cf91886d5204b88ae785a1ff0e0adb7ccb6172f41cfd10be515e8",
+    "barcode_time_series.pdf": "98a7a8716db6613192d727b437b514873ee8e7d8c046a3be6bf63e33174b1c1d",
+    "mapping_qc.pdf": "01cbd40f6f3fed5622471c65936cf20f4d37f2c64e151a22538e601de7c573c6"
+  },
+  "scope": "Small paired-end synthetic integration check using real executables; not an accuracy benchmark or verification of every input design."
+}

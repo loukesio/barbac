@@ -3,7 +3,9 @@ url: https://loukesio.github.io/barbac/
 template:
   bootstrap: 5
   bslib:
-    primary: "#2C4A63"
+    primary: "#24574B"
+    bg: "#F7F6F0"
+    fg: "#193E37"
     base_font: {google: "Inter"}
     heading_font: {google: "Inter"}
     code_font: {google: "JetBrains Mono"}
@@ -28,6 +30,8 @@ reference:
   contents:
   - barbac_ts_area
   - theme_barbac
+  - barbac_palettes
+  - barbac_palette
 
 - title: Barcode extraction
   contents:
@@ -73,5 +77,9 @@ articles:
 
 navbar:
   structure:
-    left:  [intro, reference, articles, news]
+    left:  [intro, reference, articles, studio, news]
     right: [search, github]
+  components:
+    studio:
+      text: Studio
+      href: app/media/watch.html

@@ -1,0 +1,125 @@
+{
+  "datasets": [
+    {
+      "condition": "random_substitutions",
+      "configuration": {
+        "n_barcodes": 10000,
+        "barcode_length": 20,
+        "n_reads": 1000000,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 20260909,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "input_sha256": "192625487355858a9b6f040518e11911839b2bd944d6e8b0eff59b175122f12b",
+      "truth_sha256": "0ebe16d38cf9632b3788cbc3001f4c69151a284654a55fcd08f3bff9cc9d3c6f"
+    },
+    {
+      "condition": "random_low_indels",
+      "configuration": {
+        "n_barcodes": 10000,
+        "barcode_length": 20,
+        "n_reads": 1000000,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 20260909,
+        "template": null,
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "input_sha256": "280cd5a3b04d1aba6abb4afed7b48789f403cbc347adc071115ff01c90952c96",
+      "truth_sha256": "0ebe16d38cf9632b3788cbc3001f4c69151a284654a55fcd08f3bff9cc9d3c6f"
+    },
+    {
+      "condition": "anchored_substitutions",
+      "configuration": {
+        "n_barcodes": 10000,
+        "barcode_length": 28,
+        "n_reads": 1000000,
+        "sub_rate": 0.005,
+        "ins_rate": 0.0,
+        "del_rate": 0.0,
+        "sigma": 1.5,
+        "seed": 20260909,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "input_sha256": "19afc545f0dc511c3273b81983171cc6f78d488d225bd99df26c1779540d3056",
+      "truth_sha256": "f01734204978573545504c101aee362db4561cb6b3cbc7e7d077ea734f5f9d54"
+    },
+    {
+      "condition": "anchored_low_indels",
+      "configuration": {
+        "n_barcodes": 10000,
+        "barcode_length": 28,
+        "n_reads": 1000000,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 20260909,
+        "template": "NNNNNNNNATGCNNNNNNNNATCGTTAA",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "input_sha256": "db9a297ee2ace790400975872cefc1daa1423dda9883e1c8995e5c491b44ea31",
+      "truth_sha256": "f01734204978573545504c101aee362db4561cb6b3cbc7e7d077ea734f5f9d54"
+    },
+    {
+      "condition": "homopolymer_stress",
+      "configuration": {
+        "n_barcodes": 1000,
+        "barcode_length": 30,
+        "n_reads": 1000000,
+        "sub_rate": 0.005,
+        "ins_rate": 0.005,
+        "del_rate": 0.005,
+        "sigma": 1.5,
+        "seed": 20260909,
+        "template": "NNNNNNNNNNCCCCCCCCCCNNNNNNNNNN",
+        "abundance": "lognormal",
+        "tie_order": "sequence"
+      },
+      "input_sha256": "9e508a3e5bd5e69c8d642bcd548dd064ac5370a463c0acc3ede147dacf05470b",
+      "truth_sha256": "06cdd7c430385f17f2624f6b88996b228125d36fc9b252de743eae3463582627"
+    }
+  ],
+  "source_sha256": {
+    "benchmark/lv_optimization/run_holdout.py": "cf32372deafeabe1c490f9301cd2cf1dbd2253e38a5a9f4d042347e56a5e7e77",
+    "benchmark/indel_experiment/simulate.py": "db5fb969cce98f7a1114d5e5f2aeda6199dfa62794c3c6435e8802852a1ab873",
+    "src/clustering.cpp": "9f79a81f3dcdde2682ea0e04fa08b5d1de7078e87258156669ff6ad70bd5eb58",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058"
+  },
+  "library_sha256": {
+    "barbac/NAMESPACE": "0eb3256ba194b62f10efb603eefff3ecb6146386acb65b54b8e20679b826d405",
+    "barbac/DESCRIPTION": "27ce22c244c20810e0dcdc3913e085d674e346ca877c4646a6b90910013c08b4",
+    "barbac/INDEX": "523a242af65b20193d3a320375f0516b849072d668685ab7cf574dfdb414e66d",
+    "barbac/R/barbac.rdb": "27e8daec60b2475c691ec6be900f63967c4d77e6298b4885c60c9de99fd66a82",
+    "barbac/R/barbac.rdx": "f906dfc2d542b95d3a2d70c60f9940b1709c78921b081aae3d3c8ea9c90fae06",
+    "barbac/R/barbac": "570ca456b280cdeb201ef5ebdf22dc8f80092e2c0c68e33c7f73340e420f3759",
+    "barbac/Meta/links.rds": "5e9a5d6868693ad6879bc2d52b2ce58a7d1f6c79c0a4794e0216d93cef44ed1e",
+    "barbac/Meta/features.rds": "b93acb524dc15de6489965f64f7b2f78fb786471c4b44abbed873873df97ce3d",
+    "barbac/Meta/nsInfo.rds": "dd156db18469e3a0b4ecaa3e0bd88285397ee2ba5166b0ffb3e34a42117117df",
+    "barbac/Meta/package.rds": "42908c8646c89bea94dd960caa396521cc08e219bfab3b7264030ba45256c9a7",
+    "barbac/Meta/hsearch.rds": "04113ccace040268592f3904cb6c39d67104477bd543092f85a97b22e96b205f",
+    "barbac/Meta/Rd.rds": "fd9f4a43edb8d4eb85f8fadd76fbdc4e88d419e0edbea1f330c71c035d65b7c9",
+    "barbac/html/R.css": "52144cf4c349f7f2cf131342f81bbc43c6514ba2274556815df88918fdeb189b",
+    "barbac/html/00Index.html": "d3aa4073a83c5aa0c2566a7f19874481b55b903780ff75e709840653df9b3390",
+    "barbac/libs/barbac.so": "da8ba182a114c26bbb721021b0acfd2a4b97b1977a341a4f52e2ca632a740326",
+    "barbac/help/barbac.rdb": "dd7c56cc24933720e27915a301f694e9ff13fa75fec1e253fe1710b91e628148",
+    "barbac/help/AnIndex": "9a37a5c38ea6be68fdf5557a6555ebfb33103df53b2198bbc178413a1a30de12",
+    "barbac/help/barbac.rdx": "6ffe5b47f9cbbf4da2ed490d691bf106a0b0cdfde19967c12b8c04ec2c891129",
+    "barbac/help/aliases.rds": "dc80b1ff4654e0cd8a612a78afb7390772f5e295be953b2d7b0d3d9d22ebf36d",
+    "barbac/help/paths.rds": "d6fb5ee0fbc74fb24f21fd1cf7b392d2a4a85620cdacd843584ed2db062699a0",
+    "barbac/help/figures/logo.png": "690f525cd69a4859f3009501a91ee740e20985ae8509ce61f7e9ddce37e4051b",
+    "barbac/help/figures/pipeline.svg": "ba4f1ba788d7da73d8a923974c919c502f86ebeaa4787500b47d1bb163d1653e"
+  },
+  "scope": "Four original categories with a fresh seed fixed before results, plus a synthetic homopolymer-enriched stress test; the latter is not representative of every dataset."
+}

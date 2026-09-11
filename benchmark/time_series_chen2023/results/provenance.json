@@ -1,0 +1,74 @@
+{
+  "status": "complete",
+  "samples": 8,
+  "generations": [
+    8,
+    16,
+    24,
+    40
+  ],
+  "replicates": [
+    "R1",
+    "R2"
+  ],
+  "input_molecules": 16051344,
+  "methods": [
+    "barbac_lv",
+    "barbac_hamming",
+    "shepherd",
+    "starcode_sphere",
+    "starcode_mp",
+    "bartender"
+  ],
+  "distance": 3,
+  "repeats": 3,
+  "barbac_tie_break": "support",
+  "barbac_merge_ratio": 20,
+  "barbac_error_rate": 0.005,
+  "barbac_LV_indel_model": "poisson",
+  "barbac_Hamming_indel_model": "none",
+  "barbac_use_design": false,
+  "shepherd_error_rate": 0.005,
+  "shepherd_configuration_note": "Automatic error-rate estimation failed on BC1. Both components use the documented -e 0.005 option, matching the pre-existing barbac configured rate; no publication agreement was used to choose it. Automatic attempts are retained outside the timed comparison.",
+  "publication_used_for_clustering": false,
+  "publication_sha256": "3dc3ec353c593c38fd50cdc4ef3fc3343aa0338f8562e2515493eb879dc8ad7f",
+  "membership_source": "First timing repeat; subsequent repeats measure stability and runtime",
+  "timing_scope": "Sum of two separately pooled component workflows: process startup, clustering, required format conversion and centroid/member exports; excludes shared extraction, staging, trajectory reconstruction and evaluation. Serial after preprocessing.",
+  "normalization": "frequency_assigned uses all assigned molecules; frequency_published_set conditions on the same 2314 published barcode pairs in every method/sample. Unmatched and unassigned mass reported separately.",
+  "interpretation": "Publication agreement, not known-truth accuracy; pooled retrospective clustering uses all four generations.",
+  "files": {
+    "benchmark/time_series_chen2023/cluster_time_series.py": "1a6cc905fcde1ed996b4a8c401f0ca63794c53c9ba4badabf1a9e63ee6c5e66c",
+    "benchmark/time_series_chen2023/extract_mapped_pairs.py": "cb627174696ff430fac522258247c764515a4b255f8e5f875e3d6b8f98139bc9",
+    "benchmark/time_series_chen2023/extract_mapped_components.R": "73b6d84e5fa01cd7bd8098da8a9df0ea21725198b3da57d7df0229afd936a824",
+    "benchmark/time_series_chen2023/extract_barcodes.py": "993fe8090a5b9c2cf7a9e0b2c59f4516228002915d80984740ff728c370be143",
+    "benchmark/time_series_chen2023/map_sample.R": "eb23d0716260d96265ffab45e7b351419a60bc4784ffd7e763b99d5415a91cf3",
+    "benchmark/time_series_chen2023/mapped_workflow.py": "7c84b73c7c717fb9b5073e02b47f5bb44dc63959c9af73d394d219e74e9f9b33",
+    "benchmark/time_series_chen2023/samples.tsv": "77caff90bd21c2fea7bfc8f24f8aaf99fcf801471ae75585e7e3df573a4f1bad",
+    "benchmark/time_series_chen2023/reference/chen2023_masked_amplicon.fasta": "c10682a5a5312e43cd1dabbb3f52f121f6959bcd05fec5e7121038296d6adf7f",
+    "R/10_barbac_xtr.R": "ad56944537699e26a8f04f62885c92f52e12d1434cdec29ba92fc1650b074621",
+    "R/10a_extract_flanked_bam.R": "7fd6e98001d8de236fc9f1aad1623ea3068864550810a502d685f849520baa88",
+    "R/09_run_cli_pipeline.R": "8bd7993f6a11e115fddc700c1897f3a215410fcb520ff5936991f856bf6ba780",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+    "src/clustering.cpp": "9f79a81f3dcdde2682ea0e04fa08b5d1de7078e87258156669ff6ad70bd5eb58",
+    "benchmark/latest_four_conditions/run_barbac.R": "69ee1fafdde1c09aa750ca925bf569c03ed3928359caaf0a321ccabb8f858533",
+    "benchmark/reference_comparison/run_comparison.py": "b87cc3083c45eb71acc24274e659756506f8bfb5ed452d6859e1090deacbecc1"
+  },
+  "extraction_inputs": {
+    "hBFA1-YPD-R1-Time8": "6df41ed9771ec750bb460db603e9f3d316c804987e84f86450bec2ac07ba6513",
+    "hBFA1-YPD-R1-Time16": "2e975aa088c4bd95761afec9092c268ae8aab59c11d01ffa29e14d29f70599d3",
+    "hBFA1-YPD-R1-Time24": "4129682a09f3cc0887f69ecd114d019a648fd7b14143da7a4728a7c491dc4065",
+    "hBFA1-YPD-R1-Time40": "7df150cb43aeb0b7e4a623a67764a6654d62beb294ec0ed50e7d9ebefc1deb72",
+    "hBFA1-YPD-R2-Time8": "42e86cf7baac14274582e4b1a33f05e65c4ee1108ea89abf148151ec4fcef442",
+    "hBFA1-YPD-R2-Time16": "f0ba2e25a0630a4e1f7a77b96171d6ef28a755e31bb42fc1c0b176747efc0016",
+    "hBFA1-YPD-R2-Time24": "ae6ad4e170416d806b753e29fd4cc4a989b568118f45f267930fdf728be8aca0",
+    "hBFA1-YPD-R2-Time40": "fc000ba104105d5bcfbb6f0b719eff6221bb4885c97dfca0c743285ab1aa2216"
+  },
+  "tool_sha256": {
+    "Shepherd/shepherd_t0.py": "0e5b88bb1849a34538c6c497889d9463ddb3a7a918cf644861274c46f828cfc4",
+    "starcode/starcode": "37f4eb89544f5efa08ba12111f8dfd554d4b667d0a1b1da0e578b5c7f8064e5a",
+    "bartender-1.1/bartender_single_com": "ad71e1c4164fe4c46a86fc364783f68d082b991dc1de9c91ea01061303a912f1",
+    "bartender-1.1/bartender_single": "73944552457812f34e324fe7e94d53f1d2e0f17e57b5e5057c61b33a942e8da8"
+  },
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "platform": "macOS-26.6.2-arm64-arm-64bit"
+}

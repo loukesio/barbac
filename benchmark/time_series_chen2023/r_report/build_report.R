@@ -1,0 +1,31 @@
+# Usage: Rscript benchmark/time_series_chen2023/r_report/build_report.R [work-dir]
+# R preparation, validation and package plotting; Quarto renders portable HTML.
+args <- commandArgs(trailingOnly = TRUE)
+script <- sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])
+here <- dirname(normalizePath(script))
+kit <- dirname(here)
+root <- normalizePath(file.path(kit, "..", ".."))
+work <- if (length(args)) normalizePath(args[1]) else file.path(kit, "generated", "time_series")
+required <- c("devtools", "rmarkdown", "knitr", "htmltools", "htmlwidgets", "ggiraph", "plotly",
+              "DT", "ragg", "digest", "jsonlite", "base64enc")
+missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing)) stop("Install report dependencies in your existing R library: ", paste(missing, collapse = ", "))
+stopifnot(rmarkdown::pandoc_available())
+if (!nzchar(Sys.which("quarto"))) stop("Quarto CLI is required to render report.qmd")
+devtools::load_all(root, quiet = TRUE, export_all = FALSE)
+source(file.path(here, "report_helpers.R"))
+report <- prepare_r_report(root, kit, work, here)
+cache <- file.path(kit, "generated", "r_report")
+dir.create(cache, recursive = TRUE, showWarnings = FALSE)
+saveRDS(report, file.path(cache, "report_data.rds"))
+writeLines(trimws(capture.output(sessionInfo()), which = "right"), file.path(here, "session_info.txt"))
+Sys.setenv(BARBAC_REPORT_DATA = file.path(cache, "report_data.rds"))
+status <- (function() {
+  previous <- setwd(here)
+  on.exit(setwd(previous))
+  system2(Sys.which("quarto"), c("render", "report.qmd", "--to", "html", "--output", "report.html", "--self-contained", "--quiet"))
+})()
+if (status != 0) stop("Quarto rendering failed with exit code ", status)
+source(file.path(here, "finalize_report.R"))
+finalize_r_report(report, root, kit, here)
+message("Created ", file.path(here, "report.html"))

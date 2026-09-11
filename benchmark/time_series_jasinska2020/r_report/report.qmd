@@ -1,0 +1,907 @@
+---
+title: "E. coli lineages under antibiotic exposure"
+subtitle: "An explained barbac reconstruction of the Jasinska et al. time series"
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 2
+    embed-resources: true
+    self-contained: true
+    code-fold: true
+    smooth-scroll: false
+    html-math-method: plain
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+source('../load_release.R');invisible(load_release(normalizePath('..')))
+source('report_helpers.R')
+r <- readRDS('../generated/report_data.rds')
+q <- r$qc[r$qc$passage>0, ]
+fmt <- function(x) format(round(x),big.mark=',',trim=TRUE)
+treatment_colors <- c('Chloramphenicol'=blue,'No antibiotic'=gold)
+show_length_summary <- function(sample) {
+  d <- Filter(function(x)identical(x$sample,sample),r$diagnostics)
+  stopifnot(length(d)==1)
+  s <- d[[1]]$summary
+  names(s) <- c('Length_group','Sequences','Reads','Sequence_share','Read_share')
+  report_gt(s,'D · Length summary') |>
+    gt::cols_label(Length_group='Length group',Sequence_share='Of sequences',Read_share='Of reads') |>
+    gt::fmt_integer(columns=c(Sequences,Reads)) |>
+    gt::tab_source_note('Sequence share = group sequences / all extracted sequences. Read share = group reads / all extracted reads. Rounded shares may not sum to exactly 100%.')
+}
+```
+
+```{=html}
+<style>
+html { scroll-behavior:auto!important; }
+body { color:#263746; }
+h2 { color:#2C4A63; margin-top:2em; }
+.note { padding:1em 1.2em; background:#f1f4f6; border-left:4px solid #B07D22; margin:1em 0; }
+.diagnostic-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2em; align-items:start; }
+.diagnostic-grid img { width:100%; }
+details { margin:1em 0; border-bottom:1px solid #dce2e7; padding-bottom:.8em; }
+summary { cursor:pointer; font-weight:600; }
+.html-widget { max-width:100%; }
+.cell-output-display { max-width:100%; overflow-x:auto; }
+.diagnostic-grid > * { min-width:0; }
+.diagnostic-grid > div { overflow-x:auto; }
+.gt_table { margin:0!important; }
+.diagnostic-columns .column { min-width:0; }
+.composition-pair .column { min-width:0; }
+.composition-pair img { width:100%; }
+@media(max-width:700px) { .diagnostic-columns, .composition-pair { flex-direction:column; } .diagnostic-columns > .column, .composition-pair > .column { width:100%!important; margin-left:0!important; } }
+</style>
+```
+
+## What this analysis establishes
+
+We reconstructed **six bacterial populations**: three grown with a constant low
+chloramphenicol concentration and three grown without antibiotic. The selected
+time series contain **`r fmt(sum(q$input_reads))` reads across 75 samples**;
+barbac extraction retained **`r sprintf('%.2f%%',100*sum(q$extracted_reads)/sum(q$input_reads))`**.
+The three shared initial samples add **`r fmt(sum(r$qc$input_reads[r$qc$passage==0]))` reads**.
+They are processed once and reused as the baseline for all six populations.
+
+All 75 input-read totals match the corresponding published sample totals exactly.
+For the **20 published dominant barcodes in each population**, the median
+population-level Spearman rank correlation of final frequencies is **`r sprintf('%.4f',median(r$final_summary$Spearman))`**.
+A value near 1 means the two analyses rank these barcodes in a similar order.
+The mean absolute difference across the 120 entries is
+**`r sprintf('%.3f',100*mean(abs(r$top$barbac_final-r$top$published_final)))` percentage points**
+when dividing by all input reads, and
+**`r sprintf('%.3f',100*mean(abs(r$top$barbac_final_extracted-r$top$published_final)))` percentage points**
+when dividing by extracted barcode reads. Both calculations include absent calls.
+This is agreement with published measurements, not an accuracy percentage.
+
+**The publication's final-frequency denominator is unresolved.** One population's
+published top-20 frequencies exceed its reported fraction of reads with barcodes.
+The report therefore shows both explicit normalizations and the source discrepancy.
+
+The publication provides per-sample summary statistics and average/final
+frequencies for its dominant barcodes. Those tables support the numerical checks
+shown here. They do not supply the complete author count matrix needed to verify
+every reconstructed trajectory or every diversity value.
+
+## The experiment, starting from the beginning
+
+The study asks how bacterial lineages compete during prolonged growth under
+different antibiotic regimens. A **lineage** is a family of cells descended from
+a labelled ancestor. The researchers inserted a DNA identification tag into the
+chromosome, mixed many tagged lineages, and followed their relative abundance
+by sequencing the tags at successive passages. The tag identifies a lineage;
+its sequence is not itself a measurement of antibiotic resistance.
+[Jasinska et al., Nature Ecology & Evolution (2020)](https://doi.org/10.1038/s41559-020-1103-z)
+
+Our selected experiment uses **one barcode per lineage, nominally 15 bases long**.
+The original mixture contains many more lineages than could be studied one by
+one. We selected two conditions from the constant-concentration experiment:
+**chloramphenicol at 1 µg/mL** and **no antibiotic**, both in the same supplemented
+M9 medium. A passage is a transfer into fresh growth medium; the authors use
+approximately six generations per passage.
+
+```{r experiment-table}
+scope <- q |>
+  group_by(treatment,population) |>
+  summarise(Samples=n(),First_passage=min(passage),Last_passage=max(passage),
+    Sequenced_reads=sum(input_reads),.groups='drop')
+report_gt(scope,'Selected populations','All deposited timepoints and sequencing subsamples for these populations') |>
+  gt::cols_label(treatment='Condition',population='Biological replicate',First_passage='First passage',
+    Last_passage='Last passage',Sequenced_reads='Sequenced reads') |>
+  gt::fmt_integer(columns=c(Samples,First_passage,Last_passage,Sequenced_reads))
+```
+
+There are three biological repeats per condition. Each sample was deposited in
+four sequencing subsamples; these four files are pooled into one observation.
+They do not increase the number of biological replicates. The three initial
+population samples are pooled into a shared passage-zero reference.
+
+```{r sampling-timeline}
+timeline <- q
+timeline$population <- factor(timeline$population,levels=rev(sort(unique(timeline$population))))
+p <- ggplot(timeline,aes(passage,population,color=treatment))+
+  geom_line(aes(group=population),linewidth=.5)+geom_point(size=2.7)+
+  scale_color_manual(values=treatment_colors)+scale_x_continuous(breaks=c(0,2,6,10,14,18,22,30))+
+  labs(x='Passage',y=NULL,color=NULL,title='Sampling times for the six populations')+
+  barbac::theme_barbac(base_size=12,family='Arial')
+report_widget(p,400)
+```
+
+Each dot is a sampled timepoint. Connecting segments show the sampling schedule,
+not observations between samples. The longest gap is between passages 22 and 30.
+The no-antibiotic populations also have a passage-one sample.
+
+## How DNA reads become lineage counts
+
+The workflow is **FASTQ quality checks → minimum base-quality filtering → mapping
+to the barcode cassette → barbac extraction → barbac LV clustering → counts over time**.
+These are single-end reads; there is no paired-read merging or UMI deduplication.
+Every count in this report is a sequencing-read count, not a direct cell count.
+
+The mapping reference is the **288-base barcode cassette transcribed from the
+study's Methods**, stored in [`reference/cassette.fasta`](../reference/cassette.fasta).
+Its FASTA identifier is `Jasinska2020_barcode_cassette`, and positions **11–25**
+contain the 15 `N` placeholders for the variable barcode. Actual
+barcodes are extracted from the observed read sequence, preserving variable
+lengths. Because these reads begin near the barcode, mapping identifies the
+downstream constant sequence and extraction captures the barcode immediately
+before it. Our explicitly documented flank rule differs from the authors'
+custom alignment rule; the extraction comparison measures that difference.
+
+```{r retention-summary}
+ret <- q |>
+  group_by(treatment) |>
+  summarise(Samples=n(),Input=sum(input_reads),Quality_passed=sum(quality_passed),
+    Mapped=sum(mapped),Extracted=sum(extracted_reads),.groups='drop') |>
+  mutate(Retained=Extracted/Input)
+report_gt(ret,'Read accounting','Each percentage uses all input reads in the same condition') |>
+  gt::cols_label(treatment='Condition',Input='Input reads',Quality_passed='Quality passed',
+    Mapped='Mapped reads',Extracted='Extracted barcode reads',Retained='Retained') |>
+  gt::fmt_integer(columns=c(Samples,Input,Quality_passed,Mapped,Extracted)) |>
+  gt::fmt_percent(columns=Retained,decimals=2)
+```
+
+Reads must have Phred quality at least 10 at every sequenced base. Only primary
+alignments enter the mapping count, so supplementary alignments cannot count a
+read twice. “Retained” describes extraction yield and does not measure correct
+clustering.
+
+```{r mapping-diagnostic}
+mapping <- q |> group_by(population) |>
+  summarise(mapped=sum(mapped),unmapped=sum(unmapped),.groups='drop') |>
+  rename(sample=population)
+p <- barbac::plot_bam_stats(mapping)+barbac::theme_barbac(base_size=12,family='Arial')+
+  scale_y_continuous(labels=scales::label_number(scale=1e-6,suffix='M'))+
+  labs(y='Quality-passed reads',title='Mapping outcomes by biological population')
+report_widget(p,450)
+```
+
+These bars use barbac's own mapping plot. They partition quality-passed reads
+into mapped and unmapped observations. Reads rejected by the quality filter are
+already excluded here; the table above retains the original-input denominator.
+
+```{r extraction-comparison}
+ex <- r$comparison |> group_by(population) |>
+  summarise(Barbac=sum(extracted_reads)/sum(input_reads_barbac),
+    Publication=sum(extracted_fraction*input_reads_publication)/sum(input_reads_publication),.groups='drop') |>
+  mutate(Difference_pp=100*(Barbac-Publication))
+report_gt(ex,'Extraction yield compared with the publication','Weighted by input reads within each population') |>
+  gt::cols_label(population='Population',Barbac='Barbac retained',Publication='Published retained',
+    Difference_pp='Difference (pp)') |>
+  gt::fmt_percent(columns=c(Barbac,Publication),decimals=2) |>
+  gt::fmt_number(columns=Difference_pp,decimals=2) |>
+  gt::tab_source_note('The publication reports rounded extraction fractions. A higher yield is not evidence of higher accuracy; the extraction rules differ.')
+```
+
+## Extraction diagnostics explained: A, B, C and D
+
+These panels use the existing **`barbac_xtr.stats()`** calculations. They describe
+distinct extracted sequences **before clustering**, when several sequences may
+still be errors derived from the same lineage. Each sequence contributes once
+to each histogram, regardless of its read count.
+
+- **A — Length:** the horizontal axis is barcode length in bases; the vertical
+  axis counts distinct sequences. The design length is 15. Dashed lines at 14
+  and 16 delimit the near-nominal group used in panel D; they are not extraction
+  filters. Extraction accepts 10–20 bases, and the published dominant-barcode
+  table itself contains some shorter-than-15 sequences.
+- **B — Abundance:** how many sequences have each read count. On the log₁₀ axis,
+  0 means one read, 1 means ten reads, and 2 means one hundred reads.
+- **C — Base-composition entropy:** how evenly A, C, G and T occur within an
+  individual sequence. `AAAA` has 0 bits; `ACGT` has 2 bits. This measure ignores
+  base order: a repetitive `ACGTACGT` also has 2 bits. It is not a direct score
+  of sequence randomness, sequencing accuracy, or population diversity.
+- **D — Length summary:** a native `gt` table. “Sequences” counts distinct DNA
+  strings; “Reads” sums their observations. The two percentage columns therefore
+  have different denominators, explicitly named in the footnote.
+
+Expand a population/timepoint below. Early and final samples are shown for all
+six populations. The complete sample statistics are available in the accompanying
+[extraction summary CSV](../results/extraction_summary.csv).
+
+:::::: {.callout-note title="Low CMP r1 · passage 2" collapse="false"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, A3_p02](figures/A3_p02_1.png)
+
+![Panel C: base-composition entropy, A3_p02](figures/A3_p02_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, A3_p02](figures/A3_p02_2.png)
+
+```{r diagnostic-table-a3_p02}
+show_length_summary('A3_p02')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="Low CMP r1 · passage 30" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, A3_p30](figures/A3_p30_1.png)
+
+![Panel C: base-composition entropy, A3_p30](figures/A3_p30_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, A3_p30](figures/A3_p30_2.png)
+
+```{r diagnostic-table-a3_p30}
+show_length_summary('A3_p30')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="Low CMP r2 · passage 2" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, B3_p02](figures/B3_p02_1.png)
+
+![Panel C: base-composition entropy, B3_p02](figures/B3_p02_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, B3_p02](figures/B3_p02_2.png)
+
+```{r diagnostic-table-b3_p02}
+show_length_summary('B3_p02')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="Low CMP r2 · passage 30" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, B3_p30](figures/B3_p30_1.png)
+
+![Panel C: base-composition entropy, B3_p30](figures/B3_p30_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, B3_p30](figures/B3_p30_2.png)
+
+```{r diagnostic-table-b3_p30}
+show_length_summary('B3_p30')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="Low CMP r3 · passage 2" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, C3_p02](figures/C3_p02_1.png)
+
+![Panel C: base-composition entropy, C3_p02](figures/C3_p02_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, C3_p02](figures/C3_p02_2.png)
+
+```{r diagnostic-table-c3_p02}
+show_length_summary('C3_p02')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="Low CMP r3 · passage 30" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, C3_p30](figures/C3_p30_1.png)
+
+![Panel C: base-composition entropy, C3_p30](figures/C3_p30_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, C3_p30](figures/C3_p30_2.png)
+
+```{r diagnostic-table-c3_p30}
+show_length_summary('C3_p30')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="No drug r1 · passage 1" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, A1_p01](figures/A1_p01_1.png)
+
+![Panel C: base-composition entropy, A1_p01](figures/A1_p01_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, A1_p01](figures/A1_p01_2.png)
+
+```{r diagnostic-table-a1_p01}
+show_length_summary('A1_p01')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="No drug r1 · passage 30" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, A1_p30](figures/A1_p30_1.png)
+
+![Panel C: base-composition entropy, A1_p30](figures/A1_p30_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, A1_p30](figures/A1_p30_2.png)
+
+```{r diagnostic-table-a1_p30}
+show_length_summary('A1_p30')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="No drug r2 · passage 1" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, B1_p01](figures/B1_p01_1.png)
+
+![Panel C: base-composition entropy, B1_p01](figures/B1_p01_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, B1_p01](figures/B1_p01_2.png)
+
+```{r diagnostic-table-b1_p01}
+show_length_summary('B1_p01')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="No drug r2 · passage 30" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, B1_p30](figures/B1_p30_1.png)
+
+![Panel C: base-composition entropy, B1_p30](figures/B1_p30_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, B1_p30](figures/B1_p30_2.png)
+
+```{r diagnostic-table-b1_p30}
+show_length_summary('B1_p30')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="No drug r3 · passage 1" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, C1_p01](figures/C1_p01_1.png)
+
+![Panel C: base-composition entropy, C1_p01](figures/C1_p01_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, C1_p01](figures/C1_p01_2.png)
+
+```{r diagnostic-table-c1_p01}
+show_length_summary('C1_p01')
+```
+
+::::
+
+:::::
+
+::::::
+
+:::::: {.callout-note title="No drug r3 · passage 30" collapse="true"}
+
+::::: {.columns .diagnostic-columns}
+
+:::: {.column width="50%"}
+
+![Panel A: barcode length, C1_p30](figures/C1_p30_1.png)
+
+![Panel C: base-composition entropy, C1_p30](figures/C1_p30_3.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![Panel B: barcode abundance, C1_p30](figures/C1_p30_2.png)
+
+```{r diagnostic-table-c1_p30}
+show_length_summary('C1_p30')
+```
+
+::::
+
+:::::
+
+::::::
+
+
+::: {.note}
+**Three different uses of “entropy”.**
+Panel C measures base composition within one barcode, in bits. The paper's
+Extended Data Figure 1 instead measures nucleotide variation across the barcode
+library at each sequence position, using natural logarithms. The population
+diversity plots below use abundances of whole lineages. These measurements answer
+different questions and must not be compared as though they were the same score.
+:::
+
+## Following the mixture over time
+
+**Every inferred barcode lineage has its own band.** All barcodes are included,
+without an abundance cutoff or a combined remainder. Colours are sampled from
+the **plasma** palette in barcode order, with one shared colour mapping across
+all six populations and all passages. Colour identifies a barcode; it does not
+encode its abundance, treatment or a mutation.
+
+Read the **thickness of a coloured band** as that barcode's count divided by
+**all extracted barcode reads at that passage**. Thus each vertical slice sums
+to 100%. Reads without an extracted barcode are accounted for in the extraction
+section above. Zero counts stay zero. The publication's final-frequency
+denominator is examined separately below.
+
+Treatment and control are shown side by side, starting with **replicate 1**.
+The tabs compare the same replicate number. Click a plot to open its full-size
+image from the accompanying figures folder.
+
+:::::: {.panel-tabset}
+### Replicate 1
+::::: {.columns .composition-pair}
+:::: {.column width="50%"}
+**Chloramphenicol · replicate 1**
+
+[![Every barcode separately, chloramphenicol replicate 1](figures/A3_composition.png)](figures/A3_composition.png)
+::::
+:::: {.column width="50%"}
+**No antibiotic · replicate 1**
+
+[![Every barcode separately, no-antibiotic replicate 1](figures/A1_composition.png)](figures/A1_composition.png)
+::::
+:::::
+### Replicate 2
+::::: {.columns .composition-pair}
+:::: {.column width="50%"}
+**Chloramphenicol · replicate 2**
+
+[![Every barcode separately, chloramphenicol replicate 2](figures/B3_composition.png)](figures/B3_composition.png)
+::::
+:::: {.column width="50%"}
+**No antibiotic · replicate 2**
+
+[![Every barcode separately, no-antibiotic replicate 2](figures/B1_composition.png)](figures/B1_composition.png)
+::::
+:::::
+### Replicate 3
+::::: {.columns .composition-pair}
+:::: {.column width="50%"}
+**Chloramphenicol · replicate 3**
+
+[![Every barcode separately, chloramphenicol replicate 3](figures/C3_composition.png)](figures/C3_composition.png)
+::::
+:::: {.column width="50%"}
+**No antibiotic · replicate 3**
+
+[![Every barcode separately, no-antibiotic replicate 3](figures/C1_composition.png)](figures/C1_composition.png)
+::::
+:::::
+::::::
+
+Each population contains approximately 192,000–219,000 inferred lineages across
+its full series. These panels render every band as an R figure; very thin bands
+and neighbouring plasma colours cannot all be distinguished at screen resolution.
+The panels have no individual-band hover. The other charts and the comparison
+table remain interactive. The [barcode colour mapping](barcode_colours.csv.gz)
+and full count matrices linked below retain the individual identifiers.
+
+[Compare LTC palette options from ggvmap](palette_comparison.html) using these
+same full barcode counts, with treatment and control shown side by side.
+
+The areas interpolate between measured passages; they do not imply observations
+at every intervening generation. A rise means an increasing share of extracted
+barcode reads. Inferring resistance or assigning a causal mutation would require
+additional evidence.
+
+::: {.callout-note collapse="true" title="Reproduce the barcode colours with barbac_ts_area"}
+`barbac_ts_area()` already keeps each supplied barcode separate. Its `palette`
+argument accepts colours sampled from a continuous palette. For a count table
+with columns `barcode`, `time` and `counts`:
+
+```r
+ids <- sort(unique(as.character(counts$barcode)))
+barbac_ts_area(
+  counts, min_total_count = 0, fill_missing = "zero",
+  palette = viridisLite::plasma(length(ids)), show_legend = FALSE
+)
+```
+
+This includes every barcode. To reproduce a strict `sum(count) > 10` filter for
+integer read counts, use `min_total_count = 11`; frequencies would then be
+normalised among the retained barcodes. The figures above use no such filter.
+:::
+
+## Diversity asks how many lineages contribute
+
+All diversity calculations use the **complete lineage counts**, also used in
+the individual-barcode area plots. The three panels answer different
+questions: how many lineages are detected; how many equally abundant lineages
+would give the observed Shannon diversity; and how strongly one lineage dominates.
+For example, four equally abundant lineages give a value of four for all three.
+In the bottom panel, a value of 2 means the largest lineage accounts for half
+the extracted barcode reads; a value near 1 means one lineage dominates.
+
+For this constant-concentration experiment, the authors reported faster loss of
+lineage diversity under low chloramphenicol than in the other conditions
+(Extended Data Figure 6). The comparison here focuses on chloramphenicol and the
+untreated control. It can check that contrast, while all three replicates remain
+visible. [Study, constant-drug results](https://doi.org/10.1038/s41559-020-1103-z)
+
+```{r diversity}
+long <- tidyr::pivot_longer(r$diversity,
+  c(richness,assigned_shannon_effective,assigned_inverse_dominance),names_to='metric',values_to='value')
+long$metric <- factor(long$metric,levels=c('richness','assigned_shannon_effective','assigned_inverse_dominance'),
+  labels=c('Detected lineages','Effective lineages · Shannon','Inverse dominant-lineage share'))
+p <- ggplot(long,aes(passage,value,color=treatment,group=population,
+    text=paste(population,'· passage',passage)))+
+  geom_line(aes(linetype=factor(replicate)),linewidth=.7)+geom_point(size=1.5)+
+  facet_wrap(~metric,ncol=1,scales='free_y')+scale_y_log10(labels=scales::label_number(big.mark=','))+
+  scale_color_manual(values=treatment_colors)+
+  labs(x='Passage',y='Number / effective number (log scale)',color=NULL,linetype='Replicate',
+    title='Lineage diversity through time')+barbac::theme_barbac(base_size=12,family='Arial')
+report_widget(p,800)
+```
+
+```{r diversity-findings}
+end_cmp <- r$diversity$assigned_shannon_effective[r$diversity$passage==30 & r$diversity$treatment=='Chloramphenicol']
+end_control <- r$diversity$assigned_shannon_effective[r$diversity$passage==30 & r$diversity$treatment=='No antibiotic']
+stopifnot(length(end_cmp)==3,length(end_control)==3)
+shared <- r$diversity |> filter(passage>0) |> group_by(passage,treatment) |>
+  summarise(effective=median(assigned_shannon_effective),.groups='drop') |>
+  tidyr::pivot_wider(names_from=treatment,values_from=effective)
+shared <- shared[complete.cases(shared),]
+```
+
+At passage 30, the median Shannon effective number is
+**`r sprintf('%.1f',median(end_cmp))` lineages with chloramphenicol** and
+**`r sprintf('%.1f',median(end_control))` without antibiotic**. Across
+**`r sum(shared[['Chloramphenicol']]<shared[['No antibiotic']])` of `r nrow(shared)`**
+matched sampled passages, the chloramphenicol populations have the lower median.
+This describes the contrast in the reconstructed observations. It is not a
+formal test of the rate of diversity loss or a replication of all the authors'
+diversity calculations.
+
+Replicates differ substantially: at passage 30, the chloramphenicol values range
+from **`r sprintf('%.1f',min(end_cmp))` to `r sprintf('%.1f',max(end_cmp))`**, and
+the untreated values range from **`r sprintf('%.1f',min(end_control))` to
+`r sprintf('%.1f',max(end_control))`**. The median contrast does not mean that every
+treated population has lower diversity than every untreated population.
+
+For the effective-number panels, frequencies are normalized **among extracted
+barcode reads**, so they describe the observed lineage mixture. The exported data
+also contain calculations using all input reads as an alternative denominator.
+Sequencing depth and extraction yield affect detection of rare lineages, so a
+lower richness value alone is not proof of biological extinction. The shared
+initial sample does not provide six independent baseline observations.
+Because clustering is performed separately for each pooled population, its
+assignments of the shared initial reads can differ. Differences between
+passage-zero diversity values therefore do not represent different starting
+biological populations.
+
+```{r cluster-summary}
+cs <- r$diversity |> filter(passage %in% c(2,30)) |>
+  select(population,passage,n_clusters,n_singletons,largest_cluster_frac,top10_frac)
+report_gt(cs,'Cluster summaries at matched early and final passages',
+  'Calculated with barbac::cluster_stats() after reconstructing each sample') |>
+  gt::cols_label(population='Population',passage='Passage',n_clusters='Detected lineages',
+    n_singletons='One-read lineages',largest_cluster_frac='Largest lineage',top10_frac='Top 10 lineages') |>
+  gt::fmt_integer(columns=c(passage,n_clusters,n_singletons)) |>
+  gt::fmt_percent(columns=c(largest_cluster_frac,top10_frac),decimals=2) |>
+  gt::tab_source_note('The last two columns are shares of extracted barcode reads. One-read lineages are detected clusters supported by one read in this sample. Their count is not a false-positive count.')
+```
+
+The last two columns show concentration of the observed population: a larger
+share held by one or ten lineages means fewer lineages dominate the read counts.
+Passages 2 and 30 are available in every selected population. Rare lineages can
+be missed at finite sequencing depth, so absence of reads is not proof of absence
+of cells.
+
+## What agrees with the published measurements?
+
+The strongest available numerical checks are the sample statistics in
+Supplementary Table 1c and the 20 dominant-barcode entries per population in
+Supplementary Table 4b. We use the **same treatment, replicate and passage** for
+each comparison. The comparison includes all 120 selected population/barcode
+entries, including the shorter barcode reported for one untreated replicate.
+
+There is a source discrepancy to resolve before calling the final frequencies
+an exact reproduction. For **Low CMP r1 at passage 30**, Table 4b's 20 final
+frequencies sum to **86.94%**, while Table 1c reports barcode extraction from
+**80.24%** of input reads. If both use all input reads, the subset of 20 lineages
+cannot exceed the total fraction with identified barcodes. The difference is
+far larger than rounding. Different denominators or a mismatch between the
+published tables could explain it; the supplied material does not resolve which.
+
+```{r denominator-audit}
+audit <- r$denominator_audit |>
+  mutate(Interpretation=ifelse(Incompatible_with_all_input,'Cannot reconcile','Not ruled out')) |>
+  select(Population,Published_top20_sum,Published_extracted_fraction,Interpretation)
+report_gt(audit,'Can the published final frequencies use all input reads?',
+  'A consistency check between Supplementary Tables 4b and 1c') |>
+  gt::cols_label(Published_top20_sum='Top-20 frequencies summed',
+    Published_extracted_fraction='All reads with identified barcodes',Interpretation='All-input interpretation') |>
+  gt::fmt_percent(columns=c(Published_top20_sum,Published_extracted_fraction),decimals=2) |>
+  gt::tab_source_note('Not ruled out does not establish the denominator. The check allows for rounding of the extraction fraction.')
+```
+
+```{r richness-comparison}
+x <- merge(r$diversity[r$diversity$passage>0,],r$comparison[c('population','passage','clustered_sequences')],
+  by=c('population','passage'))
+long <- tidyr::pivot_longer(x,c(richness,clustered_sequences),names_to='Source',values_to='Lineages')
+long$Source <- factor(long$Source,levels=c('richness','clustered_sequences'),labels=c('Barbac LV','Publication'))
+p <- ggplot(long,aes(passage,Lineages,color=Source,linetype=Source))+
+  geom_line()+geom_point(size=1.4)+facet_wrap(~population,ncol=2)+scale_y_log10(labels=scales::label_number(big.mark=','))+
+  scale_color_manual(values=c('Barbac LV'=blue,'Publication'='#6B6B6B'))+
+  labs(x='Passage',y='Detected lineages (log scale)',title='Reported and reconstructed lineage richness')+
+  barbac::theme_barbac(base_size=11,family='Arial')
+report_widget(p,750)
+```
+
+Solid and dashed lines compare the number of detected lineages. Differences can
+come from extraction rules and clustering, including different treatment of rare
+sequences. Fewer clusters do not by themselves establish better correction.
+
+```{r final-frequencies}
+x <- tidyr::pivot_longer(r$top,c(barbac_final,barbac_final_extracted),
+  names_to='Normalization',values_to='Barbac_frequency')
+x$Normalization <- factor(x$Normalization,levels=c('barbac_final','barbac_final_extracted'),
+  labels=c('All input reads','Extracted barcode reads'))
+p <- ggplot(x,aes(100*published_final,100*Barbac_frequency,color=Normalization,
+    text=paste(population,barcode)))+
+  geom_abline(slope=1,intercept=0,color='#6B6B6B',linetype=2)+
+  geom_point(alpha=.7,size=2)+facet_wrap(~population,ncol=2,scales='free')+
+  scale_color_manual(values=c('All input reads'=blue,'Extracted barcode reads'=gold))+
+  labs(x='Published final frequency (%)',y='Barbac final frequency (%)',
+    title='Final frequencies under two explicit normalizations',color='Barbac denominator')+
+  barbac::theme_barbac(base_size=11,family='Arial')
+report_widget(p,750)
+```
+
+Each barcode has two points at the last sampled passage, corresponding to the
+two barbac denominators. Published values are plotted as provided; their
+denominator remains unresolved. The dashed line indicates equal numeric
+frequencies. A barcode absent under its exact published identifier is assigned
+zero in both versions and retained in every calculation.
+For example, a published frequency of 10% and a barbac frequency of 9% differ
+by **one percentage point**.
+
+```{r agreement-table}
+report_gt(select(r$final_summary,Population,Published_barcodes,Spearman,
+    Mean_absolute_difference_input_pp,Mean_absolute_difference_extracted_pp),
+  'Final-frequency comparison with both denominators','Twenty published barcode entries per population') |>
+  gt::cols_label(Published_barcodes='Barcodes',Mean_absolute_difference_input_pp='Mean absolute difference: all input (pp)',
+    Mean_absolute_difference_extracted_pp='Mean absolute difference: extracted (pp)') |>
+  gt::fmt_number(columns=Spearman,decimals=4) |>
+  gt::fmt_number(columns=c(Mean_absolute_difference_input_pp,Mean_absolute_difference_extracted_pp),decimals=3) |>
+  gt::tab_source_note('pp = percentage points. Spearman measures rank agreement and is unchanged by positive rescaling within a population. It is not an accuracy percentage. The source discrepancy prevents attributing all absolute differences to clustering.')
+```
+
+The selected barcodes were defined by the publication, not chosen because barbac
+agreed with them. They are abundant lineages, so these checks do not establish
+accuracy for the much larger set of rare lineages. Author mean frequencies are
+also retained in the exported table; we do not claim exact agreement of means
+without resolving the denominator, initial-timepoint and averaging conventions.
+
+## Inspect the observations behind the plots
+
+Search by population, barcode or passage. Both barbac denominators are available.
+“Published final” is populated only at
+the final passage because a full published per-timepoint count matrix was not
+available in the supplementary tables. Blank reference entries mean unavailable
+reference measurements, not zero abundance.
+
+```{r explorer}
+report_explorer(r$explorer)
+```
+
+The complete reconstructed count matrices, including explicit zero counts, are
+saved separately as one compressed CSV per population in the accompanying results
+folder. The explorer above covers the publication's dominant barcode entries.
+
+Complete count matrices: chloramphenicol
+[replicate 1](../results/A3_barcode_counts.csv.gz),
+[replicate 2](../results/B3_barcode_counts.csv.gz),
+[replicate 3](../results/C3_barcode_counts.csv.gz); no antibiotic
+[replicate 1](../results/A1_barcode_counts.csv.gz),
+[replicate 2](../results/B1_barcode_counts.csv.gz),
+[replicate 3](../results/C1_barcode_counts.csv.gz).
+These links require the accompanying results folder. The filtered explorer CSV
+is embedded in the report and can also be downloaded offline.
+
+## Processing time and interpretation limits
+
+```{r timing}
+report_gt(r$times,'Barbac LV clustering time','One pooled trajectory reconstruction per population') |>
+  gt::cols_label(population='Population',unique_input_sequences='Input sequences',clusters='Pooled clusters',
+    clustering_seconds='Elapsed (s)',clustering_cpu_seconds='CPU time (s)',input_read_observations='Pooled read observations') |>
+  gt::fmt_integer(columns=c(unique_input_sequences,clusters,input_read_observations)) |>
+  gt::fmt_number(columns=c(clustering_seconds,clustering_cpu_seconds),decimals=2) |>
+  gt::tab_source_note(paste0('Times cover the optimized release clustering call, including support ordering, with up to ',r$release$workers,' concurrent release-clustering processes. Recorded R platform: ',r$release$build$platform,'. Elapsed time includes scheduling; CPU time reports active process computation. Download, quality checks, mapping, extraction and report generation are excluded. Each population includes the shared baseline once; pooled read totals must not be summed as unique sequencing input.'))
+```
+
+The release package was compiled with optimization enabled. Its complete
+compiler command and binary hash are saved with the timing validation.
+
+```{r timing-provenance, results='asis'}
+reruns <- sum(grepl('^Release rerun:',unlist(r$release$populations,use.names=FALSE)))
+if(reruns>0)cat(sprintf('%d complete release reruns were compared with existing clustering results. Every barcode assignment and centroid count matched exactly.\n\n',reruns))
+if(reruns<nrow(r$times))cat('The remaining timings came from original clustering runs using the same verified release binary.\n\n')
+```
+
+The [result notes](../results/README.md) record the hardware and concurrent work
+for the checked-in local measurements, including the earlier unoptimized
+development timings archived separately from the release table.
+
+Clustering uses barbac LV at distance 3, support ordering, merge ratio 20 and the
+Poisson indel option, with an assumed error rate of 0.005. These settings were
+fixed before evaluating publication agreement. Each population is pooled over
+its timepoints with the shared initial population, so reconstruction uses future
+samples retrospectively. It is not a prospective prediction.
+
+Distance 3 allows candidate barcodes to differ by up to three insertions,
+deletions or substitutions. The assumed 0.005 error rate (0.5% per base) is a
+separate parameter used when scoring possible parents; it is not estimated from
+the publication-agreement percentage. Abundance guards also constrain merging,
+so being within three edits does not automatically put two barcodes together.
+
+This analysis uses build **`r r$provenance$build`**. An exact search optimization
+skips wider-search parents that cannot satisfy the existing abundance guard,
+after all distance-one candidates have been examined. The old and new builds
+give identical assignments on a 12,000-sequence real-data check, and indexed
+search agrees with exhaustive scans in the regression tests. The scoring and
+merge rules are unchanged. These application timings are not a replacement for
+the separate controlled method benchmark.
+
+This report tests whether barbac reconstructs the selected study measurements.
+It does not establish the correctness of every barcode assignment, identify causal
+mutations, or reproduce the paper's entire analysis. Complete author count tables
+and alignment code would allow a more exact reconciliation of extraction,
+individual trajectories and diversity. The published methods state that their
+custom analysis scripts are available on request; no request has been sent.
+False-positive and false-negative counts require known true labels; the
+publication's processed output is not such a truth set.
+
+## Sources and reproducibility
+
+- [Study and Methods](https://doi.org/10.1038/s41559-020-1103-z): experimental
+  design, barcode construct, processing conventions and biological interpretation.
+- [BioProject PRJNA592529](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA592529):
+  raw reads from the constant-concentration experiment. The accompanying sample
+  manifests record every selected run and its checksum.
+- [Author supplementary tables](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41559-020-1103-z/MediaObjects/41559_2020_1103_MOESM3_ESM.xlsx):
+  Table 1c supplies sample totals and processing summaries; Table 4b supplies
+  dominant barcode identities and mean/final frequencies.
+
+The accompanying analysis folder contains the R scripts, cassette FASTA,
+checksum receipts, complete reconstructed count matrices and a SLURM script.
+The report embeds its figures and interactive tables for offline viewing.
+The SLURM script is prepared for reuse and has not been submitted to a cluster.

@@ -1,0 +1,6 @@
+{
+  "initial_attempt_has_no_retained_process_timing": true,
+  "centroid_tables_identical": true,
+  "changed_sequence_cluster_ids": 0,
+  "note": "Initial Shepherd output preceded a wrapper output-path fix. Both executions used the same staged input. PYTHONHASHSEED was not fixed; equal-distance/count candidate ties can depend on set iteration order."
+}

@@ -1,0 +1,44 @@
+{
+  "input_sequences": 1544850,
+  "true_barcodes": 100000,
+  "input_reads": 24996128,
+  "absent_truth": 439,
+  "zero_read_truth": 409,
+  "parent_count_mismatches": [
+    {
+      "barcode": "GGTTACTCGTCTTTTCCTGG",
+      "true_count": 1412,
+      "label_count": 1410
+    },
+    {
+      "barcode": "CTCATCCAAGGGCATCGATG",
+      "true_count": 333,
+      "label_count": 332
+    },
+    {
+      "barcode": "CTAATCCAATGGAATCGATG",
+      "true_count": 206,
+      "label_count": 207
+    },
+    {
+      "barcode": "GGTTACTCGTATTTTCGTGG",
+      "true_count": 165,
+      "label_count": 167
+    }
+  ],
+  "parent_count_absolute_difference": 6,
+  "length_distribution": {
+    "20": 1544248,
+    "19": 490,
+    "21": 104,
+    "18": 6,
+    "22": 2
+  },
+  "off_modal_reads": 1001,
+  "checks": "PASS: unique nonnull ACGT keys; positive integer observed counts/nonnegative truth counts; exact input and source counts; valid parent keys; grand totals reconcile. Per-parent differences reported separately.",
+  "source_sha256": {
+    "barbac_benchmark_input.csv": "d68ae53243590563c777d523129d6209af32f35c645338531b728bd6f814e105",
+    "simulated_reads.csv": "ec70569f1a9c41bc4ac9318b6ab05f5032792aedabc45ea3e75ad62b638771a9",
+    "true_counts.csv": "905de18db48a76b7b6135651bd023a4e073fc4e441957670b7a17f6dcbdd474b"
+  }
+}

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="864pt" height="518.4pt" viewBox="0 0 864 518.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.8.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 518.4
+L 864 518.4
+L 864 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 194.4 147.12192
+L 422.496 147.12192
+L 422.496 122.75712
+L 194.4 122.75712
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #d9e7f1; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 194.4 210.4704
+L 422.496 210.4704
+L 422.496 186.1056
+L 194.4 186.1056
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #d9e7f1; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 194.4 273.81888
+L 285.6384 273.81888
+L 285.6384 249.45408
+L 194.4 249.45408
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #d9e7f1; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 285.6384 273.81888
+L 331.2576 273.81888
+L 331.2576 249.45408
+L 285.6384 249.45408
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #e5e5e5; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 331.2576 273.81888
+L 422.496 273.81888
+L 422.496 249.45408
+L 331.2576 249.45408
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #d9e7f1; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 422.496 273.81888
+L 513.7344 273.81888
+L 513.7344 249.45408
+L 422.496 249.45408
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #e5e5e5; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 194.4 337.16736
+L 285.6384 337.16736
+L 285.6384 312.80256
+L 194.4 312.80256
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #d9e7f1; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 285.6384 337.16736
+L 331.2576 337.16736
+L 331.2576 312.80256
+L 285.6384 312.80256
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #e5e5e5; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 331.2576 337.16736
+L 422.496 337.16736
+L 422.496 312.80256
+L 331.2576 312.80256
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #d9e7f1; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 422.496 337.16736
+L 513.7344 337.16736
+L 513.7344 312.80256
+L 422.496 312.80256
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #e5e5e5; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 194.4 400.51584
+L 422.496 400.51584
+L 422.496 376.15104
+L 194.4 376.15104
+z
+" clip-path="url(#pfa4fd91b03)" style="fill: #d9e7f1; stroke: #242424; stroke-width: 0.65; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 29.8944 117.88416
+L 842.7456 117.88416
+" clip-path="url(#pfa4fd91b03)" style="fill: none; stroke: #dddddd; stroke-width: 0.7; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 29.8944 181.23264
+L 842.7456 181.23264
+" clip-path="url(#pfa4fd91b03)" style="fill: none; stroke: #dddddd; stroke-width: 0.7; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 29.8944 244.58112
+L 842.7456 244.58112
+" clip-path="url(#pfa4fd91b03)" style="fill: none; stroke: #dddddd; stroke-width: 0.7; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 29.8944 307.9296
+L 842.7456 307.9296
+" clip-path="url(#pfa4fd91b03)" style="fill: none; stroke: #dddddd; stroke-width: 0.7; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 29.8944 371.27808
+L 842.7456 371.27808
+" clip-path="url(#pfa4fd91b03)" style="fill: none; stroke: #dddddd; stroke-width: 0.7; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="fill: #242424; font: 700 18px 'DejaVu Sans'; text-anchor: start" x="28.512" y="35.04384" transform="rotate(-0 28.512 35.04384)">Five benchmark datasets</text>
+   </g>
+   <g id="text_2">
+    <text style="fill: #242424; font: 10px 'DejaVu Sans'; text-anchor: start" x="28.512" y="59.40864" transform="rotate(-0 28.512 59.40864)">Designed barcode architecture, error regimes and input scale</text>
+   </g>
+   <g id="text_3">
+    <text style="font: 700 10px 'DejaVu Sans'; text-anchor: start" x="28.512" y="98.39232" transform="rotate(-0 28.512 98.39232)">Dataset</text>
+   </g>
+   <g id="text_4">
+    <text style="font: 700 10px 'DejaVu Sans'; text-anchor: start" x="194.4" y="98.39232" transform="rotate(-0 194.4 98.39232)">Barcode design (N = variable base)</text>
+   </g>
+   <g id="text_5">
+    <text style="font: 700 10px 'DejaVu Sans'; text-anchor: start" x="546.912" y="98.39232" transform="rotate(-0 546.912 98.39232)">Errors and scale</text>
+   </g>
+   <g id="text_6">
+    <text style="font: 700 12px 'DejaVu Sans'; text-anchor: start" x="28.512" y="142.24896" transform="rotate(-0 28.512 142.24896)">R-S</text>
+   </g>
+   <g id="text_7">
+    <text style="font: 8.5px 'DejaVu Sans'; text-anchor: start" x="28.512" y="160.278912" transform="rotate(-0 28.512 160.278912)">Random / substitutions</text>
+   </g>
+   <g id="text_8">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="308.448" y="137.307567" transform="rotate(-0 308.448 137.307567)">NNNNNNNNNNNNNNNNNNNN</text>
+   </g>
+   <g id="text_9">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="194.4" y="161.7408" transform="rotate(-0 194.4 161.7408)">20 bases; 20 variable positions</text>
+   </g>
+   <g id="text_10">
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 139.154889)">Substitutions: 0.5% per base</text>
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 151.284498)">10,000 truth barcodes; 1 million reads / seed</text>
+   </g>
+   <g id="text_11">
+    <text style="font: 700 12px 'DejaVu Sans'; text-anchor: start" x="28.512" y="205.59744" transform="rotate(-0 28.512 205.59744)">R-I</text>
+   </g>
+   <g id="text_12">
+    <text style="font: 8.5px 'DejaVu Sans'; text-anchor: start" x="28.512" y="223.627392" transform="rotate(-0 28.512 223.627392)">Random / mixed errors</text>
+   </g>
+   <g id="text_13">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="308.448" y="200.656047" transform="rotate(-0 308.448 200.656047)">NNNNNNNNNNNNNNNNNNNN</text>
+   </g>
+   <g id="text_14">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="194.4" y="225.08928" transform="rotate(-0 194.4 225.08928)">20 bases; 20 variable positions</text>
+   </g>
+   <g id="text_15">
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 202.503369)">Substitutions + insertions + deletions</text>
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 214.632978)">0.5% each; same scale as R-S</text>
+   </g>
+   <g id="text_16">
+    <text style="font: 700 12px 'DejaVu Sans'; text-anchor: start" x="28.512" y="268.94592" transform="rotate(-0 28.512 268.94592)">A-S</text>
+   </g>
+   <g id="text_17">
+    <text style="font: 8.5px 'DejaVu Sans'; text-anchor: start" x="28.512" y="286.975872" transform="rotate(-0 28.512 286.975872)">Anchored / substitutions</text>
+   </g>
+   <g id="text_18">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="240.0192" y="264.004527" transform="rotate(-0 240.0192 264.004527)">NNNNNNNN</text>
+   </g>
+   <g id="text_19">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="308.448" y="264.004527" transform="rotate(-0 308.448 264.004527)">ATGC</text>
+   </g>
+   <g id="text_20">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="376.8768" y="264.004527" transform="rotate(-0 376.8768 264.004527)">NNNNNNNN</text>
+   </g>
+   <g id="text_21">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="468.1152" y="264.004527" transform="rotate(-0 468.1152 264.004527)">ATCGTTAA</text>
+   </g>
+   <g id="text_22">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="194.4" y="288.43776" transform="rotate(-0 194.4 288.43776)">28 bases; 16 variable positions</text>
+   </g>
+   <g id="text_23">
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 265.851849)">Substitutions: 0.5% per base</text>
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 277.981458)">10,000 truth barcodes; 1 million reads / seed</text>
+   </g>
+   <g id="text_24">
+    <text style="font: 700 12px 'DejaVu Sans'; text-anchor: start" x="28.512" y="332.2944" transform="rotate(-0 28.512 332.2944)">A-I</text>
+   </g>
+   <g id="text_25">
+    <text style="font: 8.5px 'DejaVu Sans'; text-anchor: start" x="28.512" y="350.324352" transform="rotate(-0 28.512 350.324352)">Anchored / mixed errors</text>
+   </g>
+   <g id="text_26">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="240.0192" y="327.353007" transform="rotate(-0 240.0192 327.353007)">NNNNNNNN</text>
+   </g>
+   <g id="text_27">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="308.448" y="327.353007" transform="rotate(-0 308.448 327.353007)">ATGC</text>
+   </g>
+   <g id="text_28">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="376.8768" y="327.353007" transform="rotate(-0 376.8768 327.353007)">NNNNNNNN</text>
+   </g>
+   <g id="text_29">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="468.1152" y="327.353007" transform="rotate(-0 468.1152 327.353007)">ATCGTTAA</text>
+   </g>
+   <g id="text_30">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="194.4" y="351.78624" transform="rotate(-0 194.4 351.78624)">28 bases; 16 variable positions</text>
+   </g>
+   <g id="text_31">
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 329.200329)">Substitutions + insertions + deletions</text>
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 341.329938)">0.5% each; same scale as A-S</text>
+   </g>
+   <g id="text_32">
+    <text style="font: 700 12px 'DejaVu Sans'; text-anchor: start" x="28.512" y="395.64288" transform="rotate(-0 28.512 395.64288)">Milos</text>
+   </g>
+   <g id="text_33">
+    <text style="font: 8.5px 'DejaVu Sans'; text-anchor: start" x="28.512" y="413.672832" transform="rotate(-0 28.512 413.672832)">Johnson reference simulation</text>
+   </g>
+   <g id="text_34">
+    <text style="font: 8.5px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle" x="308.448" y="390.701487" transform="rotate(-0 308.448 390.701487)">NNNNNNNNNNNNNNNNNNNN</text>
+   </g>
+   <g id="text_35">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="194.4" y="415.13472" transform="rotate(-0 194.4 415.13472)">20 bases; 20 variable positions</text>
+   </g>
+   <g id="text_36">
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 392.548809)">Substitutions + sparse length-changing errors</text>
+    <text style="font: 9px 'DejaVu Sans'" transform="translate(546.912 404.678418)">100,000 truth barcodes; 24,996,128 reads</text>
+   </g>
+   <g id="text_37">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="28.512" y="449.24544" transform="rotate(-0 28.512 449.24544)">R-S, R-I, A-S, A-I: independent seeds 42, 43, 44; lognormal abundance (sigma = 1.5).</text>
+   </g>
+   <g id="text_38">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="28.512" y="468.73728" transform="rotate(-0 28.512 468.73728)">Milos: one fixed input; 1,544,850 observed unique sequences. 1,001 reads differ in length from their parent.</text>
+   </g>
+   <g id="text_39">
+    <text style="font: 9px 'DejaVu Sans'; text-anchor: start" x="28.512" y="488.22912" transform="rotate(-0 28.512 488.22912)">Schematics show the truth designs. Indels change observed lengths; matching length does not exclude an indel history.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pfa4fd91b03">
+   <rect x="21.6" y="15.552" width="829.44" height="487.296"/>
+  </clipPath>
+ </defs>
+</svg>

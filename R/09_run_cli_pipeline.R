@@ -1,342 +1,187 @@
-#' Run Full Barbac CLI Pipeline
+#' Map Single-End or Overlapping Paired-End Reads
 #'
-#' This function runs the full CLI pipeline for barcode analysis: FastQC -> PEAR -> Minimap2 -> BAM Stats.
+#' Run FastQC, merge overlapping pairs with PEAR when R2 is supplied, and map
+#' each sample with minimap2/samtools to a sorted, indexed BAM. R1-only samples
+#' map directly. Extract barcodes from the returned BAMs with [barbac_xtr()].
 #'
-#' @param sample_table Path to samples.csv or a data.frame/tibble containing `sample`, `R1`, and optionally `R2`.
-#' @param reference Path to reference FASTA file.
-#' @param output_dir Directory to write output files. Default: "results".
-#' @param verbose Whether to print progress messages to console. Default: TRUE.
-#' @param log_file File path for logging. If NULL, uses output_dir/pipeline.log. Default: NULL.
-#' @param create_output_dir Whether to create output_dir if it doesn't exist. Default: TRUE.
+#' @param sample_table A data.frame with `sample`, `R1`, and optional `R2`, or
+#'   the path to a CSV (or directory containing `samples.csv`). Missing, NA or
+#'   empty R2 entries select single-end mode for that row. Sample names must
+#'   be unique, start with a letter or digit, and contain only letters, digits,
+#'   underscores, dots or hyphens. Read paths are relative to the working directory.
+#' @param reference Path to the mapping-reference FASTA.
+#' @param output_dir New or empty output directory. Existing results are never
+#'   discovered as inputs or silently overwritten. Default: `"results"`.
+#' @param verbose Print progress messages. Default: TRUE.
+#' @param log_file New log-file path; defaults to `output_dir/pipeline.log`.
+#' @param create_output_dir Create the output directory if needed. Default: TRUE.
 #'
-#' @return Invisible list containing:
-#'   \itemize{
-#'     \item commands: Character vector of system commands executed
-#'     \item output_dir: Path to output directory
-#'     \item stats: Data frame with BAM statistics
-#'   }
-#' @importFrom utils read.csv txtProgressBar setTxtProgressBar
+#' @details
+#' PEAR is required only when at least one sample has R2. Paired mode maps the
+#' assembled reads and excludes unmerged pairs. It is intended for overlapping
+#' reads, not general paired-end mapping. A table may mix paired and R1-only rows.
+#'
+#' Mapping uses minimap2's short-read preset (`-x sr`) with secondary alignments
+#' disabled. Secondary and supplementary alignments are removed from the BAM;
+#' mapping statistics therefore count primary reads or merged molecules.
+#' FastQC input filenames must produce unique report names within a run.
+#'
+#' Required commands stop the pipeline on failure, with their output recorded
+#' in the log. MultiQC runs when available; its failure raises a warning and is
+#' reported as `multiqc_status = "failed"`. This wrapper does not extract barcodes,
+#' deduplicate UMIs, or apply study-specific filtering.
+#'
+#' @return An invisible list containing `commands`, `output_dir`, `fastqc_dir`,
+#'   `merged_dir`, `bam_dir`, `stats`, `summary_file`, `log_file`, `multiqc_status`,
+#'   and `samples`. The `samples` table links original sample labels to mode,
+#'   mapping input and indexed BAM. `bam_files` is a vector named by sample.
+#'   Paired BAM names retain `<sample>_ANC.assembled_sorted.bam`; R1-only BAMs
+#'   use `<sample>_sorted.bam`. The `stats$sample` column retains these basenames
+#'   without `_sorted.bam` for compatibility with earlier paired runs.
+#' @md
 #' @export
-#'
 #' @examples
 #' \dontrun{
-#' # Run with default output directory (./results)
-#' run_cli_pipeline(
-#'   sample_table = "samples.csv",
-#'   reference = "barcodes.fasta"
-#' )
-#'
-#' # Run with custom output directory
-#' run_cli_pipeline(
-#'   sample_table = "samples.csv",
-#'   reference = "barcodes.fasta",
-#'   output_dir = "/path/to/my_results"
-#' )
+#' samples <- data.frame(sample = "sample1", R1 = "sample1_R1.fastq.gz")
+#' pipeline <- run_cli_pipeline(samples, "cassette.fasta", "results")
+#' pipeline$bam_files[["sample1"]]
+#' pipeline$stats
 #' }
-run_cli_pipeline <- function(sample_table,
-                             reference,
-                             output_dir = "results",
-                             verbose = TRUE,
-                             log_file = NULL,
+run_cli_pipeline <- function(sample_table, reference, output_dir = "results",
+                             verbose = TRUE, log_file = NULL,
                              create_output_dir = TRUE) {
-  
-  # -----------------------------
-  # Validate and create output directory
-  # -----------------------------
-  if (create_output_dir) {
-    if (!dir.exists(output_dir)) {
-      dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-      if (verbose) message("\u2713 Created output directory: ", output_dir)
-    }
-  } else {
-    if (!dir.exists(output_dir)) {
-      stop("\u274C Output directory does not exist: ", output_dir, 
-           "\n   Set create_output_dir = TRUE to create it automatically.")
-    }
+  scalar_path <- function(x, label) {
+    if (!is.character(x) || length(x) != 1L || is.na(x) || !nzchar(x))
+      stop(label, " must be a nonempty path.", call. = FALSE)
+    path.expand(x)
   }
-  
-  # Make output_dir absolute path for clarity
-  output_dir <- normalizePath(output_dir, mustWork = TRUE)
-  
-  # Set default log file location
-  if (is.null(log_file)) {
-    log_file <- file.path(output_dir, "pipeline.log")
-  }
-  
-  # -----------------------------
-  # Handle sample_table
-  # -----------------------------
   if (is.character(sample_table)) {
-    if (dir.exists(sample_table)) {
-      sample_path <- file.path(sample_table, "samples.csv")
-    } else {
-      sample_path <- sample_table
-    }
-    if (!file.exists(sample_path)) {
-      stop("\u274C Could not find samples.csv at: ", sample_path)
-    }
-    sample_table <- read.csv(sample_path)
+    sample_path <- scalar_path(sample_table, "sample_table")
+    if (dir.exists(sample_path)) sample_path <- file.path(sample_path, "samples.csv")
+    if (!file.exists(sample_path)) stop("Sample table not found: ", sample_path, call. = FALSE)
+    sample_table <- utils::read.csv(sample_path, stringsAsFactors = FALSE)
   }
-  
-  if (!("sample" %in% names(sample_table)) || !("R1" %in% names(sample_table))) {
-    stop("\u274C samples.csv must have at least 'sample' and 'R1' columns.")
-  }
-  
-  # -----------------------------
-  # Validate reference file
-  # -----------------------------
-  if (!file.exists(reference)) {
-    stop("\u274C Reference file not found: ", reference)
-  }
-  
-  # -----------------------------
-  # Prepare logging
-  # -----------------------------
-  log_conn <- NULL
-  try({
-    log_conn <- file(log_file, open = "wt")
-  }, silent = TRUE)
-  
-  if (is.null(log_conn) || !isOpen(log_conn)) {
-    stop("\u274C Failed to open log file: ", log_file)
-  }
-  
-  on.exit({
-    if (!is.null(log_conn) && isOpen(log_conn)) close(log_conn)
-  }, add = TRUE)
-  
+  if (!is.data.frame(sample_table) || !all(c("sample", "R1") %in% names(sample_table)) ||
+      nrow(sample_table) == 0L || anyDuplicated(names(sample_table)))
+    stop("sample_table must have at least one row and unique 'sample' and 'R1' columns.", call. = FALSE)
+  labels <- as.character(sample_table$sample)
+  if (anyNA(labels) || any(!grepl("^[A-Za-z0-9][A-Za-z0-9_.-]*$", labels)) ||
+      anyDuplicated(tolower(labels)))
+    stop("Sample names must be unique (ignoring case), start with a letter or digit, and contain only letters, digits, '.', '_' or '-'.", call. = FALSE)
+  r1 <- as.character(sample_table$R1)
+  r2 <- if ("R2" %in% names(sample_table)) as.character(sample_table$R2) else rep(NA_character_, length(r1))
+  paired <- !is.na(r2) & nzchar(trimws(r2))
+  read_paths <- c(r1, r2[paired])
+  if (anyNA(read_paths) || any(!nzchar(read_paths)) ||
+      any(!file.exists(read_paths) | dir.exists(read_paths)))
+    stop("Every supplied R1/R2 must point to an existing FASTQ file.", call. = FALSE)
+  r1 <- normalizePath(r1, mustWork = TRUE)
+  r2[paired] <- normalizePath(r2[paired], mustWork = TRUE)
+  read_paths <- unique(c(r1, r2[paired]))
+  qc_names <- tolower(sub("[.](fastq|fq)([.]gz)?$", "", basename(read_paths), ignore.case = TRUE))
+  if (anyDuplicated(qc_names))
+    stop("FASTQ filenames must produce unique FastQC report names; rename files with repeated basenames.", call. = FALSE)
+  reference <- scalar_path(reference, "reference")
+  if (!file.exists(reference) || dir.exists(reference)) stop("Reference file not found: ", reference, call. = FALSE)
+  reference <- normalizePath(reference, mustWork = TRUE)
+  bases <- ifelse(paired, paste0(labels, "_ANC.assembled"), labels)
+  if (anyDuplicated(tolower(bases))) stop("Sample names produce colliding BAM filenames.", call. = FALSE)
+  output_dir <- scalar_path(output_dir, "output_dir")
+  if (dir.exists(output_dir) && length(list.files(output_dir, all.files = TRUE, no.. = TRUE)))
+    stop("output_dir must be new or empty; choose a new directory to preserve existing results.", call. = FALSE)
+  if (!dir.exists(output_dir) && !isTRUE(create_output_dir))
+    stop("Output directory does not exist; set create_output_dir = TRUE.", call. = FALSE)
+  required <- c("fastqc", if (any(paired)) "pear", "minimap2", "samtools")
+  bins <- .barbac_require_tools(required)
+  multiqc_bin <- .barbac_tool("multiqc")
+  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  output_dir <- normalizePath(output_dir, mustWork = TRUE)
+  if (is.null(log_file)) log_file <- file.path(output_dir, "pipeline.log")
+  log_file <- scalar_path(log_file, "log_file")
+  if (file.exists(log_file)) stop("Log file already exists: ", log_file, call. = FALSE)
+  log_conn <- file(log_file, open = "wt")
+  on.exit(close(log_conn), add = TRUE)
   log_msg <- function(msg) {
-    timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-    line <- sprintf("[%s] %s\n", timestamp, msg)
-    try(cat(line, file = log_conn, append = TRUE), silent = TRUE)
+    cat(sprintf("[%s] %s\n", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), msg), file = log_conn)
+    flush(log_conn)
     if (verbose) message(msg)
   }
-  
-  # Log initial setup
-  log_msg("=" %R% 60)
-  log_msg("BARBAC PIPELINE STARTED")
-  log_msg("=" %R% 60)
-  log_msg(paste("Output directory:", output_dir))
-  log_msg(paste("Reference file:", reference))
-  log_msg(paste("Number of samples:", nrow(sample_table)))
-  log_msg("")
-  
-  # -----------------------------
-  # Start progress
-  # -----------------------------
-  steps <- c("FastQC", "PEAR", "minimap2", "BAM stats")
-  if (verbose) pb <- txtProgressBar(min = 0, max = length(steps), style = 3)
-  all_cmds <- character()
-  
-  # -----------------------------
-  # Step 1: FastQC
-  # -----------------------------
-  log_msg("\u25B6 STEP 1/4: Running FastQC")
+  commands <- character()
+  run <- function(tool, args, stdout = NULL, required = TRUE) {
+    bin <- if (tool == "multiqc") multiqc_bin else bins[[tool]]
+    cmd <- paste(c(shQuote(bin), shQuote(as.character(args))), collapse = " ")
+    if (!is.null(stdout)) cmd <- paste(cmd, ">", shQuote(stdout))
+    commands <<- c(commands, cmd)
+    log_msg(cmd)
+    diagnostic <- tempfile("barbac-command-")
+    on.exit(unlink(diagnostic), add = TRUE)
+    status <- system2(bin, shQuote(as.character(args)),
+      stdout = if (is.null(stdout)) diagnostic else stdout, stderr = diagnostic)
+    if (file.exists(diagnostic)) {
+      cat(readLines(diagnostic, warn = FALSE), sep = "\n", file = log_conn)
+      flush(log_conn)
+    }
+    if (status != 0L) {
+      msg <- paste(tool, "failed with exit code", status, "- see", log_file)
+      log_msg(msg)
+      if (required) stop(msg, call. = FALSE) else warning(msg, call. = FALSE)
+    }
+    status
+  }
+  log_msg(paste("BARBAC PIPELINE:", length(labels), "samples;", sum(paired), "paired;", sum(!paired), "R1-only"))
   fastqc_dir <- file.path(output_dir, "fastQC")
-  dir.create(fastqc_dir, recursive = TRUE, showWarnings = FALSE)
-  
-  fastq_files <- sample_table$R1
-  if ("R2" %in% names(sample_table)) {
-    fastq_files <- unique(c(fastq_files, sample_table$R2[!is.na(sample_table$R2)]))
-  }
-  
-  fastqc_cmds <- vapply(fastq_files, function(fq) {
-    if (!file.exists(fq)) {
-      log_msg(paste("\u26A0 Warning: FASTQ file not found:", fq))
-      return("")
-    }
-    cmd <- sprintf("fastqc %s -o %s", shQuote(fq), shQuote(fastqc_dir))
-    log_msg(paste("  Running:", cmd))
-    exit_code <- system(cmd)
-    if (exit_code != 0) {
-      log_msg(paste("  \u26A0 FastQC failed with exit code:", exit_code))
-    }
-    cmd
-  }, character(1))
-  
-  all_cmds <- c(all_cmds, fastqc_cmds[fastqc_cmds != ""])
-  if (verbose) setTxtProgressBar(pb, 1)
-  log_msg(paste("\u2713 FastQC completed. Results in:", fastqc_dir))
-  log_msg("")
-  
-  # -----------------------------
-  # Step 2: PEAR
-  # -----------------------------
-  log_msg("\u25B6 STEP 2/4: Merging reads with PEAR")
   merged_dir <- file.path(output_dir, "merged")
-  dir.create(merged_dir, recursive = TRUE, showWarnings = FALSE)
-  
-  pear_cmds <- character()
-  for (i in seq_len(nrow(sample_table))) {
-    sample <- sample_table$sample[i]
-    r1 <- sample_table$R1[i]
-    
-    if (!file.exists(r1)) {
-      log_msg(paste("  \u26A0 Skipping sample", sample, "- R1 file not found:", r1))
-      next
-    }
-    
-    if ("R2" %in% names(sample_table) && 
-        !is.na(sample_table$R2[i]) && 
-        sample_table$R2[i] != "") {
-      r2 <- sample_table$R2[i]
-      
-      if (!file.exists(r2)) {
-        log_msg(paste("  \u26A0 Skipping sample", sample, "- R2 file not found:", r2))
-        next
-      }
-      
-      out_pref <- file.path(merged_dir, paste0(sample, "_ANC"))
-      cmd <- sprintf("pear -f %s -r %s -o %s", 
-                     shQuote(r1), shQuote(r2), shQuote(out_pref))
-      log_msg(paste("  Merging sample:", sample))
-      exit_code <- system(cmd)
-      if (exit_code != 0) {
-        log_msg(paste("  \u26A0 PEAR failed with exit code:", exit_code))
-      }
-      pear_cmds <- c(pear_cmds, cmd)
-    } else {
-      log_msg(paste("  \u26A0 Skipping PEAR merge for sample", sample, "(single-end or R2 missing)"))
-    }
-  }
-  
-  all_cmds <- c(all_cmds, pear_cmds)
-  if (verbose) setTxtProgressBar(pb, 2)
-  log_msg(paste("\u2713 PEAR completed. Results in:", merged_dir))
-  log_msg("")
-  
-  # -----------------------------
-  # Step 3: Minimap2
-  # -----------------------------
-  log_msg("\u25B6 STEP 3/4: Mapping with minimap2 + samtools")
   bam_dir <- file.path(merged_dir, "bam")
-  dir.create(bam_dir, recursive = TRUE, showWarnings = FALSE)
-  
-  merged_files <- list.files(merged_dir, 
-                             pattern = "([_.])assembled\\.fastq$", 
-                             full.names = TRUE)
-  
-  if (length(merged_files) == 0) {
-    stop("\u274C No merged FASTQ files found in: ", merged_dir)
+  for (path in c(fastqc_dir, merged_dir, bam_dir)) dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  for (fq in read_paths) run("fastqc", c(fq, "-o", fastqc_dir))
+  mapping_files <- r1
+  for (i in which(paired)) {
+    prefix <- file.path(merged_dir, paste0(labels[i], "_ANC"))
+    run("pear", c("-f", r1[i], "-r", r2[i], "-o", prefix))
+    mapping_files[i] <- paste0(prefix, ".assembled.fastq")
+    if (!file.exists(mapping_files[i]) || file.info(mapping_files[i])$size == 0)
+      stop("PEAR produced no assembled reads for sample ", labels[i], "; overlapping pairs are required.", call. = FALSE)
   }
-  
-  log_msg(paste("  Found", length(merged_files), "merged files to process"))
-  
-  map_cmds <- vapply(merged_files, function(fq) {
-    base <- tools::file_path_sans_ext(basename(fq))
-    sam <- file.path(bam_dir, paste0(base, ".sam"))
-    bam <- file.path(bam_dir, paste0(base, ".bam"))
-    sorted_bam <- file.path(bam_dir, paste0(base, "_sorted.bam"))
-    
-    cmds <- c(
-      sprintf("minimap2 -a %s %s > %s", 
-              shQuote(reference), shQuote(fq), shQuote(sam)),
-      sprintf("samtools view -S -b %s > %s", 
-              shQuote(sam), shQuote(bam)),
-      sprintf("samtools sort %s -o %s", 
-              shQuote(bam), shQuote(sorted_bam)),
-      sprintf("samtools index %s", 
-              shQuote(sorted_bam))
-    )
-    
-    log_msg(paste("  Processing:", basename(fq)))
-    for (cmd in cmds) {
-      exit_code <- system(cmd)
-      if (exit_code != 0) {
-        log_msg(paste("  \u26A0 Command failed with exit code:", exit_code))
-      }
+  bam_files <- stats::setNames(file.path(bam_dir, paste0(bases, "_sorted.bam")), labels)
+  stats <- vector("list", length(labels))
+  for (i in seq_along(labels)) {
+    sam <- file.path(bam_dir, paste0(bases[i], ".sam"))
+    primary <- file.path(bam_dir, paste0(bases[i], ".bam"))
+    run("minimap2", c("-a", "-x", "sr", "--secondary=no", reference, mapping_files[i]), stdout = sam)
+    run("samtools", c("view", "-b", "-F", "2304", "-o", primary, sam))
+    run("samtools", c("sort", "-o", bam_files[i], primary))
+    run("samtools", c("index", bam_files[i]))
+    if (!file.exists(bam_files[i]) || !file.exists(paste0(bam_files[i], ".bai")))
+      stop("Missing indexed BAM for sample ", labels[i], call. = FALSE)
+    count_file <- tempfile("barbac-count-")
+    on.exit(unlink(count_file), add = TRUE)
+    read_count <- function(args) {
+      run("samtools", c("view", "-c", args, bam_files[i]), stdout = count_file)
+      value <- suppressWarnings(as.numeric(readLines(count_file, warn = FALSE)))
+      if (length(value) != 1L || !is.finite(value) || value < 0 || value != floor(value))
+        stop("Invalid samtools count for sample ", labels[i], call. = FALSE)
+      value
     }
-    
-    # Clean up intermediate files
-    if (file.exists(sam)) file.remove(sam)
-    if (file.exists(bam)) file.remove(bam)
-    
-    paste(cmds, collapse = " && ")
-  }, character(1))
-  
-  all_cmds <- c(all_cmds, map_cmds)
-  if (verbose) setTxtProgressBar(pb, 3)
-  log_msg(paste("\u2713 Minimap2 completed. Results in:", bam_dir))
-  log_msg("")
-  
-  # -----------------------------
-  # Step 4: BAM Stats
-  # -----------------------------
-  log_msg("\u25B6 STEP 4/4: Summarising BAM stats")
-  bam_files <- list.files(bam_dir, pattern = "_sorted\\.bam$", full.names = TRUE)
-  
-  if (length(bam_files) == 0) {
-    warning("No sorted BAM files found for statistics")
-    stats_df <- data.frame(sample = character(), mapped = integer(), unmapped = integer())
-  } else {
-    stats <- lapply(bam_files, function(bam) {
-      sample <- gsub("_sorted\\.bam$", "", basename(bam))
-      mapped <- as.integer(system2("samtools", c("view", "-c", "-F", "4", bam), stdout = TRUE))
-      unmapped <- as.integer(system2("samtools", c("view", "-c", "-f", "4", bam), stdout = TRUE))
-      tibble::tibble(sample, mapped, unmapped)
-    })
-    stats_df <- dplyr::bind_rows(stats)
+    stats[[i]] <- tibble::tibble(sample = bases[i], mapped = read_count(c("-F", "2308")),
+                                unmapped = read_count(c("-f", "4", "-F", "2304")))
+    unlink(c(sam, primary, count_file))
   }
-  
+  stats_df <- dplyr::bind_rows(stats)
   summary_file <- file.path(output_dir, "bam_summary.csv")
   readr::write_csv(stats_df, summary_file)
-  log_msg(paste("\u2713 BAM stats saved to:", summary_file))
-  
-  if (verbose) setTxtProgressBar(pb, 4)
-  log_msg("")
-  
-  # -----------------------------
-  # Step 5: MultiQC (optional)
-  # -----------------------------
-  if (Sys.which("multiqc") != "") {
-    log_msg("\u25B6 Running MultiQC on FastQC results...")
+  multiqc_status <- "unavailable"
+  if (nzchar(multiqc_bin)) {
     mqc_dir <- file.path(output_dir, "multiqc")
-    dir.create(mqc_dir, recursive = TRUE, showWarnings = FALSE)
-    mqc_cmd <- sprintf("multiqc %s -o %s", shQuote(fastqc_dir), shQuote(mqc_dir))
-    system(mqc_cmd)
-    log_msg(paste("\u2713 MultiQC report generated in:", mqc_dir))
-    all_cmds <- c(all_cmds, mqc_cmd)
-  } else {
-    log_msg("\u26A0 MultiQC not found in PATH \u2014 skipping.")
+    dir.create(mqc_dir, showWarnings = FALSE)
+    status <- run("multiqc", c(fastqc_dir, "-o", mqc_dir), required = FALSE)
+    multiqc_status <- if (status == 0L) "completed" else "failed"
   }
-  
-  # -----------------------------
-  # Summary
-  # -----------------------------
-  if (verbose) close(pb)
-  log_msg("")
-  log_msg("=" %R% 60)
-  log_msg("PIPELINE SUMMARY")
-  log_msg("=" %R% 60)
-  log_msg(paste("Total samples processed:", nrow(sample_table)))
-  log_msg(paste("Merged files created:", length(merged_files)))
-  log_msg(paste("BAM files created:", length(bam_files)))
-  if (nrow(stats_df) > 0) {
-    log_msg(paste("Total mapped reads:", sum(stats_df$mapped)))
-    log_msg(paste("Total unmapped reads:", sum(stats_df$unmapped)))
-  }
-  log_msg("")
-  log_msg("OUTPUT STRUCTURE:")
-  log_msg(paste("\u251C\u2500\u2500 FastQC results:", fastqc_dir))
-  log_msg(paste("\u251C\u2500\u2500 Merged reads:", merged_dir))
-  log_msg(paste("\u251C\u2500\u2500 BAM files:", bam_dir))
-  log_msg(paste("\u2514\u2500\u2500 Summary:", summary_file))
-  log_msg("")
-  log_msg("\u2705 Barbac pipeline completed successfully!")
-  log_msg("=" %R% 60)
-  
-  # Return results invisibly
-  invisible(list(
-    commands = all_cmds,
-    output_dir = output_dir,
-    fastqc_dir = fastqc_dir,
-    merged_dir = merged_dir,
-    bam_dir = bam_dir,
-    stats = stats_df,
-    summary_file = summary_file,
-    log_file = log_file
-  ))
+  samples <- tibble::tibble(sample = labels, mode = ifelse(paired, "paired", "single"),
+    mapping_input = mapping_files, bam_file = unname(bam_files))
+  readr::write_csv(samples, file.path(output_dir, "sample_outputs.csv"))
+  log_msg(paste("Mapping complete:", sum(stats_df$mapped), "mapped;", sum(stats_df$unmapped), "unmapped."))
+  invisible(list(commands = commands, output_dir = output_dir, fastqc_dir = fastqc_dir,
+    merged_dir = merged_dir, bam_dir = bam_dir, stats = stats_df, summary_file = summary_file,
+    log_file = normalizePath(log_file), samples = samples, bam_files = bam_files,
+    multiqc_status = multiqc_status))
 }
-
-# Helper operator for string repetition (for log formatting)
-`%R%` <- function(x, n) paste(rep(x, n), collapse = "")

@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cmath>
 #include <cstdint>
@@ -17,7 +18,7 @@ namespace {
 // =============================================================================
 // Build marker
 // =============================================================================
-const char* BUILD_ID = "barbac-2026-05-31-two-tier-lv-v7";
+const char* BUILD_ID = "barbac-2026-09-10-eligible-parent-v14";
 
 // =============================================================================
 // Distance routines
@@ -60,6 +61,7 @@ int levenshtein_banded(const char* s1, int len1,
     
     curr[0] = (i <= max_dist) ? i : INF;
     if (j_min > 1) curr[j_min - 1] = INF;
+    if (j_max < len2) curr[j_max + 1] = INF;
     
     int row_min = INF;
     const char c1 = s1[i - 1];
@@ -164,18 +166,6 @@ inline bool pack_seq(const char* s, int len, uint64_t& out) {
   return true;
 }
 
-inline bool encode_subseq(const char* s, int pos, int len, uint64_t& out) {
-  if (len < 0 || len > 32) return false;
-  uint64_t v = 0;
-  for (int i = 0; i < len; ++i) {
-    const int b = dna_base(s[pos + i]);
-    if (b < 0) return false;
-    v = (v << 2) | static_cast<uint64_t>(b);
-  }
-  out = v;
-  return true;
-}
-
 inline int hamming_packed(uint64_t a, uint64_t b) {
   uint64_t x = a ^ b;
   x = (x | (x >> 1)) & 0x5555555555555555ULL;
@@ -186,6 +176,27 @@ inline bool hamming_bit_prefilter(uint64_t a, uint64_t b, int max_dist) {
   // Safe only for Hamming rejection. If more than 2D packed bits differ,
   // more than D bases must differ.
   return __builtin_popcountll(a ^ b) <= 2 * max_dist;
+}
+
+// Every edit changes the A/C/G/T composition vector by an L1 distance of at
+// most two: two for a substitution and one for an insertion or deletion.
+// Therefore composition_l1 > 2D proves that Levenshtein distance is > D.
+// Counting only A/C/G/T remains safe for sequences containing other symbols;
+// it can make the bound weaker, never reject a reachable sequence.
+using BaseComposition = std::array<int, 4>;
+
+inline BaseComposition base_composition(const char* seq, int len) {
+  BaseComposition out = {{0, 0, 0, 0}};
+  for (int i = 0; i < len; ++i) {
+    const int base = dna_base(seq[i]);
+    if (base >= 0) ++out[base];
+  }
+  return out;
+}
+
+inline int composition_l1(const BaseComposition& a, const BaseComposition& b) {
+  return std::abs(a[0] - b[0]) + std::abs(a[1] - b[1]) +
+    std::abs(a[2] - b[2]) + std::abs(a[3] - b[3]);
 }
 
 // =============================================================================
@@ -201,38 +212,6 @@ bool parse_lv_method(const std::string& method) {
 // =============================================================================
 // Candidate indexes
 // =============================================================================
-struct BlockSpec {
-  int start;
-  int len;
-};
-
-std::vector<BlockSpec> make_blocks(int len, int n_blocks) {
-  n_blocks = std::max(1, std::min(n_blocks, len));
-  std::vector<BlockSpec> out;
-  out.reserve(n_blocks);
-  for (int b = 0; b < n_blocks; ++b) {
-    const int start = (b * len) / n_blocks;
-    const int stop = ((b + 1) * len) / n_blocks;
-    out.push_back(BlockSpec{start, stop - start});
-  }
-  return out;
-}
-
-inline uint64_t partition_key(int seq_len, int block_id, int block_len, uint64_t code) {
-  // block_len <= 32, code consumes at most 64 low bits; barcodes here are 15-30 bp.
-  // This key is intended for block_len <= 12 in the partition index.
-  return (static_cast<uint64_t>(seq_len & 0x3f) << 56) |
-    (static_cast<uint64_t>(block_id & 0x0f) << 52) |
-    (static_cast<uint64_t>(block_len & 0x0f) << 48) |
-    code;
-}
-
-inline uint64_t seed_key(int seed_len, int pos, uint64_t code) {
-  return (static_cast<uint64_t>(seed_len & 0x3f) << 58) |
-    (static_cast<uint64_t>(pos & 0x3f) << 52) |
-    code;
-}
-
 class CandidateAccumulator {
   mutable std::vector<int> hit_counts;
   mutable std::vector<int> touched;
@@ -256,155 +235,163 @@ public:
   }
 };
 
-class HammingPartitionIndex {
-  std::unordered_map<uint64_t, std::vector<int> > buckets;
+// A fixed partition of the query into D+1 disjoint blocks guarantees one
+// untouched block under D edits. For LV its position can shift by at most D.
+// Partition boundaries affect search cost only, never the candidate guarantee.
+// Learn collision probabilities from observed sequences, without a template or
+// truth labels, and avoid putting an entire block inside a constant anchor.
+class ExactPartitionIndex {
+  struct Block {
+    std::vector<int> positions;
+    std::unordered_map<uint64_t, std::vector<int> > buckets;
+  };
+  struct Plan { std::vector<Block> blocks; };
+  std::vector<Plan> plans;
+  std::vector<int> fallback;
+  std::vector<int> abundance;
+  bool abundance_descending = true;
   int D;
+  bool lv;
   mutable CandidateAccumulator acc;
-  
-public:
-  explicit HammingPartitionIndex(int max_dist) : D(max_dist) {
-    buckets.reserve(1 << 16);
-  }
-  
-  int block_count(int len) const {
-    // For D=3,L=20 this gives 5 blocks of 4 bp, requiring 2 shared blocks.
-    return std::max(D + 2, 1);
-  }
-  
-  int min_shared_blocks(int len) const {
-    return std::max(1, block_count(len) - D);
-  }
-  
-  void add(const char* seq, int len, int centroid_id) {
-    if (len <= 0) return;
-    const int B = block_count(len);
-    std::vector<BlockSpec> blocks = make_blocks(len, B);
-    for (int b = 0; b < static_cast<int>(blocks.size()); ++b) {
-      uint64_t code = 0;
-      if (!encode_subseq(seq, blocks[b].start, blocks[b].len, code)) continue;
-      buckets[partition_key(len, b, blocks[b].len, code)].push_back(centroid_id);
-    }
-  }
-  
-  void query(const char* seq, int len, int n_centroids, std::vector<int>& out) const {
-    if (len <= 0) {
-      out.clear();
-      return;
-    }
-    const int B = block_count(len);
-    std::vector<BlockSpec> blocks = make_blocks(len, B);
-    for (int b = 0; b < static_cast<int>(blocks.size()); ++b) {
-      uint64_t code = 0;
-      if (!encode_subseq(seq, blocks[b].start, blocks[b].len, code)) continue;
-      std::unordered_map<uint64_t, std::vector<int> >::const_iterator it =
-        buckets.find(partition_key(len, b, blocks[b].len, code));
-      if (it == buckets.end()) continue;
-      const std::vector<int>& bucket = it->second;
-      for (int idx : bucket) acc.add_hit(idx, n_centroids);
-    }
-    acc.flush(min_shared_blocks(len), out);
-  }
-};
 
-class LevenshteinSeedIndex {
-  std::unordered_map<uint64_t, std::vector<int> > buckets;
-  int D;
-  int user_k;
-  mutable CandidateAccumulator acc;
-  
-  int seed_len_for_query(int len) const {
-    // Pigeonhole intuition: with D edits and D+1 query segments, at least one
-    // segment has no edits. For short 15 bp barcodes at D=3 this is 3 bp.
-    int seed = len / (D + 1);
-    seed = std::max(3, seed);
-    if (user_k > 0) seed = std::min(seed, user_k);
-    return std::max(1, std::min(seed, len));
+  bool supported(const char* seq, int len) const {
+    if (len <= D || len > (lv ? 64 : 32)) return false;
+    for (int p = 0; p < len; ++p) {
+      if (dna_base(seq[p]) < 0) return false;
+      // Packed Hamming is case insensitive; edit distance compares characters.
+      if (lv && seq[p] != "ACGT"[dna_base(seq[p])]) return false;
+    }
+    return true;
   }
-  
+
+  uint64_t code_at(const char* seq, const Block& block, int shift = 0) const {
+    uint64_t code = 0;
+    for (int p : block.positions)
+      code = (code << 2) | static_cast<uint64_t>(dna_base(seq[p + shift]));
+    return code;
+  }
+
 public:
-  LevenshteinSeedIndex(int max_dist, int kmer_size) : D(max_dist), user_k(kmer_size) {
-    buckets.reserve(1 << 17);
-  }
-  
-  void add(const char* seq, int len, int centroid_id) {
-    if (len <= 0) return;
-    
-    // Index both sensitive seeds and longer, more specific seeds. LV lookup is
-    // two-tiered: try longer seeds first for speed, then fall back to the
-    // pigeonhole-style sensitive seed length only when needed.
-    const int min_k = std::max(3, std::min(user_k, 3));
-    const int max_k = std::min(len, std::max(user_k + 2, len / (D + 1)));
-    for (int k = min_k; k <= max_k; ++k) {
-      uint64_t last_key = std::numeric_limits<uint64_t>::max();
-      bool have_last = false;
-      for (int pos = 0; pos <= len - k; ++pos) {
-        uint64_t code = 0;
-        if (!encode_subseq(seq, pos, k, code)) continue;
-        const uint64_t key = seed_key(k, pos, code);
-        // Avoid obvious adjacent duplicate spam for homopolymers.
-        if (have_last && key == last_key) continue;
-        buckets[key].push_back(centroid_id);
-        last_key = key;
-        have_last = true;
+  ExactPartitionIndex(int distance, bool is_lv,
+                      const std::vector<const char*>& seqs,
+                      const std::vector<int>& lengths,
+                      const IntegerVector& counts, bool enabled = true) : plans(65), D(distance), lv(is_lv) {
+    if (!enabled) return;
+    std::vector<std::vector<std::array<double, 4> > > hist(65);
+    for (size_t i = 0; i < seqs.size(); ++i) {
+      int len = lengths[i];
+      if (!supported(seqs[i], len)) continue;
+      if (hist[len].empty()) hist[len].resize(len, {{0, 0, 0, 0}});
+      for (int p = 0; p < len; ++p)
+        hist[len][p][dna_base(seqs[i][p])] += counts[i];
+    }
+    for (int len = 1; len < 65; ++len) {
+      if (hist[len].empty()) continue;
+      const int B = D + 1;
+      std::vector<double> info(len);
+      for (int p = 0; p < len; ++p) {
+        double total = 0, squares = 0;
+        for (double x : hist[len][p]) { total += x; squares += x*x; }
+        info[p] = total > 0 ? -std::log(std::max(1e-12, squares/(total*total))) : 0;
       }
-    }
-  }
-  
-  void query_specific_seed(const char* seq, int len, int n_centroids,
-                           int seed_len, std::vector<int>& out) const {
-    out.clear();
-    if (len <= 0) return;
-    
-    const int k = std::max(1, std::min(seed_len, len));
-    for (int pos = 0; pos <= len - k; ++pos) {
-      uint64_t code = 0;
-      if (!encode_subseq(seq, pos, k, code)) continue;
-      for (int shift = -D; shift <= D; ++shift) {
-        const int cpos = pos + shift;
-        if (cpos < 0 || cpos > 63) continue;
-        std::unordered_map<uint64_t, std::vector<int> >::const_iterator it =
-          buckets.find(seed_key(k, cpos, code));
-        if (it == buckets.end()) continue;
-        const std::vector<int>& bucket = it->second;
-        for (int idx : bucket) acc.add_hit(idx, n_centroids);
-      }
-    }
-    
-    acc.flush(1, out);
-  }
-  
-  void query(const char* seq, int len, int n_centroids, std::vector<int>& out) const {
-    if (len <= 0) {
-      out.clear();
-      return;
-    }
-    const int seed = seed_len_for_query(len);
-    const int segments = std::max(1, D + 1);
-    std::vector<BlockSpec> blocks = make_blocks(len, segments);
-    
-    for (int b = 0; b < static_cast<int>(blocks.size()); ++b) {
-      if (blocks[b].len < seed) continue;
-      // Use the longest seed inside this segment for specificity.
-      const int k = std::min(blocks[b].len, std::max(seed, user_k > 0 ? std::min(user_k, blocks[b].len) : seed));
-      const int local_extra = blocks[b].len - k;
-      for (int off = 0; off <= local_extra; ++off) {
-        uint64_t code = 0;
-        if (!encode_subseq(seq, blocks[b].start + off, k, code)) continue;
-        const int qpos = blocks[b].start + off;
-        for (int shift = -D; shift <= D; ++shift) {
-          const int cpos = qpos + shift;
-          if (cpos < 0 || cpos > 63) continue;
-          std::unordered_map<uint64_t, std::vector<int> >::const_iterator it =
-            buckets.find(seed_key(k, cpos, code));
-          if (it == buckets.end()) continue;
-          const std::vector<int>& bucket = it->second;
-          for (int idx : bucket) acc.add_hit(idx, n_centroids);
+      Plan& plan = plans[len];
+      plan.blocks.resize(B);
+      if (!lv) {
+        // Hamming blocks need not be contiguous. Spread informative positions
+        // over the blocks; fixed anchor positions then cost no extra postings.
+        std::vector<int> order(len);
+        std::iota(order.begin(), order.end(), 0);
+        std::stable_sort(order.begin(), order.end(), [&](int a, int b) { return info[a] > info[b]; });
+        std::vector<double> load(B, 0);
+        for (int p : order) {
+          int best = 0;
+          for (int b = 1; b < B; ++b)
+            if (load[b] < load[best] ||
+                (load[b] == load[best] && plan.blocks[b].positions.size() < plan.blocks[best].positions.size())) best = b;
+          plan.blocks[best].positions.push_back(p);
+          load[best] += info[p];
+        }
+      } else {
+        // Minimise expected total posting-list size. LV blocks are contiguous
+        // so an unchanged substring survives insertion/deletion shifts.
+        std::vector<double> prefix(len + 1, 0);
+        for (int p = 0; p < len; ++p) prefix[p+1] = prefix[p] + info[p];
+        std::vector<std::vector<double> > cost(B+1, std::vector<double>(len+1, std::numeric_limits<double>::infinity()));
+        std::vector<std::vector<int> > cut(B+1, std::vector<int>(len+1, -1));
+        cost[0][0] = 0;
+        for (int b = 1; b <= B; ++b)
+          for (int end = b; end <= len; ++end)
+            for (int start = std::max(b-1, end-32); start < end; ++start) {
+              double value = cost[b-1][start] + std::exp(-(prefix[end]-prefix[start]));
+              if (value < cost[b][end]) { cost[b][end] = value; cut[b][end] = start; }
+            }
+        if (cut[B][len] < 0) { plan.blocks.clear(); continue; }
+        int end = len;
+        for (int b = B; b > 0; --b) {
+          int start = cut[b][end];
+          for (int p = start; p < end; ++p) plan.blocks[b-1].positions.push_back(p);
+          end = start;
         }
       }
     }
-    
-    // One exact shared seed is enough; banded LV verifies all candidates.
+  }
+
+  void add(const char* seq, int len, int id, int count = 0) {
+    // Posting lists follow insertion order. Abundance-ranked centroids let a
+    // bounded query stop at the first ineligible count, without visiting the
+    // rest of a long list. Unsorted native callers retain exact filtering.
+    if (!abundance.empty() && count > abundance.back()) abundance_descending = false;
+    abundance.push_back(count);
+    if (!supported(seq, len)) { fallback.push_back(id); return; }
+    int first = lv ? std::max(1, len-D) : len;
+    int last = lv ? std::min(64, len+D) : len;
+    for (int qlen = first; qlen <= last; ++qlen) {
+      for (Block& block : plans[qlen].blocks) {
+        int lo = lv ? std::max(-D, -block.positions.front()) : 0;
+        int hi = lv ? std::min(D, len-1-block.positions.back()) : 0;
+        for (int shift = lo; shift <= hi; ++shift) {
+          std::vector<int>& bucket = block.buckets[code_at(seq, block, shift)];
+          // Multiple shifts of a repeated substring must count only once.
+          if (bucket.empty() || bucket.back() != id) bucket.push_back(id);
+        }
+      }
+    }
+  }
+
+  void query(const char* seq, int len, int n_centroids, std::vector<int>& out,
+             int minimum_count = 0) const {
+    if (!supported(seq, len) || plans[len].blocks.empty()) {
+      out.clear();
+      for (int id = 0; id < n_centroids; ++id) {
+        if (abundance[id] < minimum_count) {
+          if (abundance_descending) break;
+          continue;
+        }
+        out.push_back(id);
+      }
+      return;
+    }
+    for (const Block& block : plans[len].blocks) {
+      auto it = block.buckets.find(code_at(seq, block));
+      if (it != block.buckets.end()) {
+        for (int id : it->second) {
+          if (abundance[id] < minimum_count) {
+            if (abundance_descending) break;
+            continue;
+          }
+          acc.add_hit(id, n_centroids);
+        }
+      }
+    }
+    for (int id : fallback) {
+      if (abundance[id] < minimum_count) {
+        if (abundance_descending) break;
+        continue;
+      }
+      acc.add_hit(id, n_centroids);
+    }
     acc.flush(1, out);
+
   }
 };
 
@@ -456,6 +443,140 @@ inline double distance_log_likelihood_score(int dist, int parent_count,
     0.15 * std::log1p(static_cast<double>(child_count));
 }
 
+// All distance-1 candidates have already been inspected. For any remaining
+// parent, distance >= 2 and comparison length >= query length, so this is an
+// upper bound on its score. Invert the monotone bound with integer bisection
+// rather than exp/rounding: equal-score candidates must remain eligible for
+// the count/id tie break. No absorbing parent means no pruning is allowed.
+inline int minimum_competitive_count(double best_score, int highest_count,
+                                     int child_count, int query_length,
+                                     double error_rate) {
+  int lo = 0, hi = highest_count;
+  while (lo < hi) {
+    const int mid = lo + (hi - lo) / 2;
+    if (distance_log_likelihood_score(2, mid, child_count, query_length,
+                                       error_rate, true) < best_score) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo;
+}
+
+// Number of single-base deletion positions producing exactly `shorter`.
+// Identical adjacent bases are multiple error opportunities yielding the
+// same observed variant. For insertions, these are the equivalent insertion
+// gaps in the shorter parent. No alignment matrix or truth labels are needed.
+inline int single_gap_multiplicity(const char* longer, int n,
+                                    const char* shorter, int m) {
+  if (n != m + 1 || m < 0) return 0;
+  int gap = 0;
+  while (gap < m && longer[gap] == shorter[gap]) ++gap;
+  for (int p = gap; p < m; ++p)
+    if (longer[p + 1] != shorter[p]) return 0;
+  int left = gap, right = gap;
+  while (left > 0 && longer[left - 1] == longer[gap]) --left;
+  while (right + 1 < n && longer[right + 1] == longer[gap]) ++right;
+  return right - left + 1;
+}
+
+inline bool repeated_indel_consistent(const char* parent, int parent_len,
+                                       int parent_count, const char* child,
+                                       int child_len, int child_count,
+                                       double error_rate) {
+  if (parent_count <= child_count || child_count <= 0 ||
+      std::abs(parent_len - child_len) != 1) return false;
+  const bool deletion = parent_len > child_len;
+  const int ways = deletion
+    ? single_gap_multiplicity(parent, parent_len, child, child_len)
+    : single_gap_multiplicity(child, child_len, parent, parent_len);
+  if (ways < 2) return false; // Only repeated-base single indels in this model.
+  const double e = clamp_error_rate(error_rate);
+  // Configured per-base error rate is an upper-bound proxy for a deletion
+  // event; an inserted specific base receives one fourth of that rate.
+  // This is a model assumption, not an inferred platform-specific indel rate.
+  const double relative_rate = ways * e / (1.0 - e) / (deletion ? 1.0 : 4.0);
+  const double expected = parent_count * relative_rate;
+  // Reject an error explanation when the upper Poisson tail is below 1%.
+  // This predictive consistency check is not a posterior probability or a
+  // multiple-testing guarantee. It only relaxes an otherwise blocked merge.
+  return R::ppois(child_count - 1.0, expected, false, false) >= 0.01;
+}
+
+// =============================================================================
+// Barcode design
+// =============================================================================
+// A designed library fixes some positions and randomises others. A read that
+// differs from a centroid only at a fixed position cannot be a different
+// barcode -- no barcode varies there -- so the difference is a sequencing
+// error and the read belongs to that centroid. A read differing at a random
+// position may genuinely be another barcode.
+//
+// Edit distance cannot express that: it counts both mismatches as one. Knowing
+// which positions carry identity is information the distance metric does not
+// have, and it is recoverable from the library itself, because a fixed
+// position shows one base in nearly every read while a random one shows four.
+struct DesignMask {
+  uint64_t variable_bits;   // packed layout, low bit of each 2-bit lane
+  int len;
+  int n_variable;
+  bool usable;
+};
+
+// A position counts as fixed when one base covers at least this share of reads.
+// Sequencing error puts a designed anchor near 1 - error_rate; a randomised
+// position sits near 0.25, so the two are far apart and the threshold is not
+// delicate.
+const double DESIGN_FIXED_SHARE = 0.90;
+
+DesignMask learn_design(const std::vector<const char*>& ptr,
+                        const std::vector<int>& slen,
+                        const IntegerVector& counts,
+                        int n, int modal_len) {
+  DesignMask m;
+  m.variable_bits = 0;
+  m.len = modal_len;
+  m.n_variable = 0;
+  m.usable = false;
+  if (modal_len <= 0 || modal_len > 32) return m;
+
+  std::vector<std::array<double, 4> > freq(modal_len, {{0.0, 0.0, 0.0, 0.0}});
+  std::vector<double> total(modal_len, 0.0);
+  for (int i = 0; i < n; ++i) {
+    if (slen[i] != modal_len) continue;
+    const double w = static_cast<double>(std::max(1, counts[i]));
+    for (int p = 0; p < modal_len; ++p) {
+      const int b = dna_base(ptr[i][p]);
+      if (b < 0) continue;
+      freq[p][b] += w;
+      total[p] += w;
+    }
+  }
+
+  for (int p = 0; p < modal_len; ++p) {
+    if (total[p] <= 0.0) continue;
+    double best = 0.0;
+    for (int b = 0; b < 4; ++b) best = std::max(best, freq[p][b]);
+    if (best / total[p] < DESIGN_FIXED_SHARE) {
+      // pack_seq writes position 0 into the highest lane
+      m.variable_bits |= (1ULL << (2 * (modal_len - 1 - p)));
+      ++m.n_variable;
+    }
+  }
+
+  // Only meaningful when the design actually fixes something. An all-random
+  // library has nothing to exploit, and treating it as designed would be a
+  // licence to merge on noise.
+  m.usable = (m.n_variable > 0 && m.n_variable < modal_len);
+  return m;
+}
+
+// Mismatches that fall on identity-carrying positions. The rest are errors by
+// construction, so they should not count towards "these may be two barcodes".
+inline int variable_mismatches(const DesignMask& m, uint64_t a, uint64_t b) {
+  uint64_t x = a ^ b;
+  x = (x | (x >> 1)) & 0x5555555555555555ULL;   // one low bit per differing base
+  return __builtin_popcountll(x & m.variable_bits);
+}
+
 inline double effective_merge_ratio(int dist, double base_ratio, bool is_lv) {
   if (dist <= 0) return 0.0;
   
@@ -500,9 +621,9 @@ inline double edit_sequence_probability(int dist, int len, double error_rate) {
     std::pow(std::max(1e-12, 1.0 - e), static_cast<double>(std::max(0, len - dist)));
 }
 
-inline bool shepherd_style_emerging_barcode(int dist, int child_count,
-                                            int parent_count, int len,
-                                            double error_rate) {
+inline bool local_error_expectation_promotes(int dist, int child_count,
+                                             int parent_count, int len,
+                                             double error_rate) {
   if (dist <= 1) return false;
   
   const int floor = (dist == 2) ? 5 : 2;
@@ -511,15 +632,50 @@ inline bool shepherd_style_emerging_barcode(int dist, int child_count,
   const double p_err = edit_sequence_probability(dist, len, error_rate);
   const double expected = std::max(1e-12, static_cast<double>(parent_count) * p_err);
   
-  // Conservative Poisson upper-tail surrogate for Shepherd's binomial Bayes
+  // Conservative local Poisson-style rule, not Shepherd's exact binomial Bayes
   // factor: promote only when the observed child count is far above the number
-  // expected from this exact edit path. This catches nearby true barcodes at d=3
-  // without promoting the many singleton errors.
+  // expected from this exact edit path. This catches nearby true barcodes at
+  // d=3 without promoting the many singleton errors.
   if (static_cast<double>(child_count) >= std::max(2.0, 25.0 * expected + 2.0)) {
     return true;
   }
   
   return false;
+}
+
+inline double log_binomial_pmf(int observed, int trials, double probability) {
+  if (observed < 0 || trials < observed || probability <= 0.0 || probability >= 1.0) {
+    return -std::numeric_limits<double>::infinity();
+  }
+  return std::lgamma(static_cast<double>(trials) + 1.0) -
+    std::lgamma(static_cast<double>(observed) + 1.0) -
+    std::lgamma(static_cast<double>(trials - observed) + 1.0) +
+    static_cast<double>(observed) * std::log(probability) +
+    static_cast<double>(trials - observed) * std::log1p(-probability);
+}
+
+inline bool shepherd_hamming_bayes_promotes(int dist, int child_count,
+                                            int parent_count, int len,
+                                            int highest_count,
+                                            double error_rate) {
+  // Shepherd merges every distance-1 neighbor. At d>=2 it merges only when
+  // its single-time-point Bayes score exceeds -4; the complementary decision
+  // here promotes an already-absorbed sequence back to a centroid. Keeping the
+  // exact score makes Hamming refinement faithful to the published algorithm,
+  // while barbac's later cleanup can still improve on its one-pass ordering.
+  if (dist <= 1) return false;
+
+  const double e = clamp_error_rate(error_rate);
+  const double p_no_error = std::pow(1.0 - e, static_cast<double>(len));
+  const int inferred_reads = static_cast<int>(static_cast<double>(parent_count) / p_no_error);
+  const int trials = std::max(inferred_reads, parent_count + child_count);
+  const double p_exact = std::pow(e / 3.0, static_cast<double>(dist)) *
+    std::pow(1.0 - e, static_cast<double>(std::max(0, len - dist)));
+  const double log_denom = static_cast<double>(len) * std::log(4.0) +
+    std::log(static_cast<double>(std::max(1, highest_count)));
+  const double log_k = log_binomial_pmf(child_count, trials, p_exact) +
+    std::log(p_exact) + log_denom;
+  return log_k <= -4.0;
 }
 
 void add_cluster(std::vector<Cluster>& clusters,
@@ -548,6 +704,77 @@ std::string barbac_build_id() {
   return std::string(BUILD_ID);
 }
 
+// Deterministic salted FNV-1a hash of each sequence, as a non-negative integer.
+//
+// super_cluster2() uses this to place count-tied barcodes in an order that does
+// not depend on their bases. Any tie order is arbitrary, so varying `salt`
+// resamples that arbitrary choice and lets a caller measure how much of a
+// result rests on it. The value is a pure function of the sequence and the
+// salt, so each salt still gives a fully reproducible clustering.
+// [[Rcpp::export]]
+IntegerVector barbac_seq_order_key(CharacterVector seqs, int salt) {
+  const R_xlen_t n = seqs.size();
+  IntegerVector out(n);
+  const uint64_t basis = 1469598103934665603ULL ^
+    (static_cast<uint64_t>(static_cast<uint32_t>(salt)) * 1099511628211ULL);
+  for (R_xlen_t i = 0; i < n; ++i) {
+    if (seqs[i] == NA_STRING) { out[i] = NA_INTEGER; continue; }
+    const char* p = CHAR(STRING_ELT(seqs, i));
+    uint64_t h = basis;
+    while (*p) {
+      h ^= static_cast<unsigned char>(*p++);
+      h *= 1099511628211ULL;
+    }
+    // Fold to 31 bits so the result is a valid non-negative R integer.
+    out[i] = static_cast<int>((h ^ (h >> 32)) & 0x7FFFFFFFULL);
+  }
+  return out;
+}
+
+// Order equal-abundance observations using their one-edit error cloud. More
+// abundant neighbours are excluded: proximity to a large unrelated lineage
+// is not independent evidence that a low-count observation is real.
+// [[Rcpp::export]]
+NumericVector barbac_support_order_key(CharacterVector seqs, IntegerVector counts,
+                                      std::string method) {
+  const int n = seqs.size();
+  if (counts.size() != n) stop("Sequences and counts must have equal length.");
+  const bool lv = parse_lv_method(method);
+  std::vector<const char*> ptr(n);
+  std::vector<int> len(n);
+  std::vector<uint64_t> packed(n);
+  std::vector<bool> packable(n);
+  std::unordered_map<int, int> count_frequency;
+  for (int i = 0; i < n; ++i) {
+    if (seqs[i] == NA_STRING) stop("Sequences must not contain NA.");
+    ptr[i] = CHAR(STRING_ELT(seqs, i));
+    len[i] = std::strlen(ptr[i]);
+    packable[i] = pack_seq(ptr[i], len[i], packed[i]);
+    ++count_frequency[counts[i]];
+  }
+  ExactPartitionIndex index(1, lv, ptr, len, counts);
+  for (int i = 0; i < n; ++i) index.add(ptr[i], len[i], i, counts[i]);
+  NumericVector support(n);
+  std::vector<int> candidates;
+  for (int i = 0; i < n; ++i) {
+    if (count_frequency[counts[i]] < 2) continue;
+    if (i % 10000 == 0) checkUserInterrupt();
+    index.query(ptr[i], len[i], n, candidates);
+    for (int j : candidates) {
+      if (j == i || counts[j] > counts[i]) continue;
+      int dist = 2;
+      if (lv) {
+        if (std::abs(len[i]-len[j]) > 1) continue;
+        dist = levenshtein_fast(ptr[i], len[i], ptr[j], len[j], 1);
+      } else if (len[i] == len[j] && packable[i] && packable[j]) {
+        dist = hamming_packed(packed[i], packed[j]);
+      }
+      if (dist == 1) support[i] += counts[j];
+    }
+  }
+  return support;
+}
+
 // Fast abundance-ranked barcode centroid clustering.
  //
  // Internal Rcpp export -- not part of the user-facing R API.
@@ -558,7 +785,7 @@ std::string barbac_build_id() {
  // counts:            Integer read counts in the same order as `barcodes`.
  // max_distance:      Maximum Hamming or Levenshtein distance.
  // method:            One of "lv", "levenshtein", "hamming", or "ham".
- // kmer_size:         Seed size used by the Levenshtein seed index.
+ // kmer_size:         Retained for API compatibility; partitions are learned.
  // min_shared_kmers:  Retained for API compatibility; the Hamming partition
  //                    index computes its own lossless threshold.
  // use_kmer_filter:   If FALSE, scan all centroids; useful for debugging.
@@ -577,7 +804,9 @@ std::string barbac_build_id() {
      bool use_kmer_filter = true,
      double merge_ratio = 20.0,
      double error_rate = 0.005,
-     bool verbose = true) {
+     bool verbose = true,
+     bool use_design = false,
+     bool use_indel_model = false) {
    
    const int n = barcodes.size();
    if (counts.size() != n) stop("`barcodes` and `counts` must have the same length.");
@@ -599,10 +828,12 @@ std::string barbac_build_id() {
        Named("build_id") = barbac_build_id());
    }
    
+   const int highest_count = *std::max_element(counts.begin(), counts.end());
    std::vector<const char*> ptr(n);
    std::vector<int> slen(n);
    std::vector<uint64_t> packed(n, 0);
    std::vector<bool> packable(n, false);
+   std::vector<BaseComposition> composition(n);
    
    for (int i = 0; i < n; ++i) {
      if (barcodes[i] == NA_STRING) stop("`barcodes` contains NA at position %d.", i + 1);
@@ -610,9 +841,60 @@ std::string barbac_build_id() {
      slen[i] = static_cast<int>(std::strlen(ptr[i]));
      uint64_t p = 0;
      packable[i] = pack_seq(ptr[i], slen[i], p);
+     if (is_lv && packable[i]) {
+       for (int pos = 0; pos < slen[i]; ++pos)
+         if (ptr[i][pos] != "ACGT"[dna_base(ptr[i][pos])]) packable[i] = false;
+     }
      packed[i] = packable[i] ? p : 0;
+     composition[i] = base_composition(ptr[i], slen[i]);
    }
-   
+
+   // Hamming mode assumes one barcode length. Reads carrying an indel break
+   // that assumption, and the partition index -- keyed by length -- will never
+   // offer them their parent, so each founds a cluster of its own. Rescuing
+   // them by edit distance is worth it while they are a trace contaminant, and
+   // is the wrong thing to do once they are common: at that point the data
+   // wants Levenshtein, and scanning every length from every read would be both
+   // slower and less accurate than simply asking for it.
+   double off_length_fraction = 0.0;
+   int modal_len = 0;
+   if (n > 0) {
+     std::unordered_map<int, int> len_hist;
+     for (int i = 0; i < n; ++i) ++len_hist[slen[i]];
+     int modal_count = 0;
+     for (std::unordered_map<int, int>::const_iterator it = len_hist.begin();
+          it != len_hist.end(); ++it) {
+       if (it->second > modal_count) { modal_count = it->second; modal_len = it->first; }
+     }
+     off_length_fraction = 1.0 - static_cast<double>(modal_count) / static_cast<double>(n);
+   }
+
+   // Which positions carry barcode identity, read off the library itself.
+   DesignMask design;
+   design.usable = false;
+   if (use_design) {
+     design = learn_design(ptr, slen, counts, n, modal_len);
+   }
+   if (verbose && use_design) {
+     if (design.usable) {
+       Rcout << "  Design            : " << design.n_variable << " of "
+             << design.len << " positions carry identity ("
+             << (design.len - design.n_variable) << " fixed)\n";
+     } else {
+       Rcout << "  Design            : no fixed positions found; scoring unchanged\n";
+     }
+   }
+   const double off_length_limit = 0.02;
+   const bool hamming_rescue_indels = !is_lv && off_length_fraction > 0.0 &&
+     off_length_fraction <= off_length_limit;
+   if (!is_lv && off_length_fraction > off_length_limit) {
+     Rf_warning("%.1f%% of sequences differ from the modal barcode length. Hamming "
+                "distance is undefined between sequences of different lengths, so "
+                "these cannot be compared and will each form their own cluster. "
+                "Use method = \"lv\" for data containing indels.",
+                100.0 * off_length_fraction);
+   }
+
    if (verbose) {
      Rcout << "  Build ID          : " << BUILD_ID << "\n";
      Rcout << "  Assignment        : likelihood best-parent + distance-aware merge guard\n";
@@ -621,9 +903,10 @@ std::string barbac_build_id() {
        Rcout << "  Note              : Hamming mode is substitution-only; use LV for indel/shift-sensitive benchmarks\n";
      }
      Rcout << "  Index             : "
-           << (use_kmer_filter ? (is_lv ? "hybrid Hamming-first + LV seed index" : "lossless Hamming partition index") : "OFF/full scan")
+           << (use_kmer_filter ? (is_lv ? "exact information-balanced LV partitions" : "exact information-balanced Hamming partitions") : "OFF/full scan")
            << "\n";
      Rcout << "  Error rate        : " << err << "\n";
+     Rcout << "  Indel model       : " << (is_lv && use_indel_model ? "repeated-indel Poisson consistency" : "off") << "\n";
      Rcout << "  Merge rules (base_ratio=" << merge_ratio << "):\n";
      for (int d = 1; d <= D; ++d) {
        Rcout << "    d=" << d
@@ -636,25 +919,46 @@ std::string barbac_build_id() {
    
    std::vector<Cluster> clusters;
    clusters.reserve(std::max(16, n / 8));
+
+   // Centroid ids grouped by length, used only by Hamming mode's cross-length
+   // rescue below. The Hamming partition index is keyed by sequence length, so
+   // it can only ever propose same-length candidates; this is what lets a read
+   // carrying an indel still find the parent it came from.
+   std::unordered_map<int, std::vector<int> > centroids_by_len;
+   // A cross-length comparison is only worth making while they stay rare. On
+   // predominantly fixed-length data (what Hamming mode is for) the indel-
+   // bearing reads are a fraction of a percent and this costs almost nothing;
+   // the budget stops it degenerating into a full scan on data that is really
+   // Levenshtein's job, where the user should be in LV mode anyway.
+   const long long cross_len_budget = 400LL * 1000LL * 1000LL;
+   long long cross_len_comparisons = 0;
+   bool cross_len_budget_hit = false;
    
-   HammingPartitionIndex h_index(std::max(1, D));
-   LevenshteinSeedIndex lv_index(std::max(1, D), std::max(3, kmer_size));
+   ExactPartitionIndex index(D, is_lv, ptr, slen, counts, use_kmer_filter && D > 0);
+   ExactPartitionIndex lv_near_index(1, true, ptr, slen, counts, use_kmer_filter && is_lv && D > 1);
    
    std::vector<int> candidates;
+   std::vector<int> cross_len_candidates;
    candidates.reserve(4096);
    std::vector<int> blocked_by_dist(D + 1, 0);
    std::vector<int> best_by_dist(D + 1, 0);
    long long total_candidates_seen = 0;
    long long lv_verifications = 0;
+   long long lv_composition_rejects = 0;
    long long lv_fast_accepts = 0;
    long long hamming_prefilter_rejects = 0;
    long long lv_seed_queries = 0;
+   long long cross_len_queries = 0;
+   long long design_anchor_only_absorbs = 0;
    long long lv_seed_candidates = 0;
    long long lv_long_seed_queries = 0;
    long long lv_long_seed_candidates = 0;
+   long long lv_guard_bounded_queries = 0;
    long long lv_hamming_stage_assignments = 0;
    long long shepherd_promoted = 0;
    long long shepherd_reassigned = 0;
+   long long indel_guard_passes = 0;
+   long long post_promotion_absorbed = 0;
    int no_candidate_count = 0;
    
    if (verbose) {
@@ -669,6 +973,7 @@ std::string barbac_build_id() {
    const auto t0 = std::chrono::steady_clock::now();
    
    for (int i = 0; i < n; ++i) {
+     if (i % 10000 == 0) checkUserInterrupt();
      if (verbose && i > 0 && i % 100000 == 0) {
        const auto tn = std::chrono::steady_clock::now();
        const double elapsed = std::chrono::duration<double>(tn - t0).count();
@@ -701,9 +1006,10 @@ std::string barbac_build_id() {
      
      if (clusters.empty()) {
        add_cluster(clusters, i, sl, cnt, pv, pk);
-       if (use_kmer_filter) {
-         h_index.add(s, sl, 0);
-         if (is_lv) lv_index.add(s, sl, 0);
+       centroids_by_len[sl].push_back(0);
+       if (use_kmer_filter && D > 0) {
+         index.add(s, sl, 0, cnt);
+         if (is_lv && D > 1) lv_near_index.add(s, sl, 0, cnt);
        }
        continue;
      }
@@ -727,19 +1033,31 @@ std::string barbac_build_id() {
              dist = hamming_packed(pv, cl.centroid_pack);
            } else {
              const int ham = hamming_packed(pv, cl.centroid_pack);
-             if (ham <= D) {
+             if (ham <= std::min(D, 2)) {
                // This is the common case on fixed-length barcode data and is as
                // cheap as Hamming mode while still running under the LV method.
                dist = ham;
                ++lv_fast_accepts;
              } else if (allow_lv_verify) {
+               if (composition_l1(composition[i], composition[cl.centroid_idx]) > 2 * D) {
+                 ++lv_composition_rejects;
+                 continue;
+               }
                ++lv_verifications;
                dist = levenshtein_fast(s, sl, ptr[cl.centroid_idx], cl.centroid_len, D);
              } else {
                continue;
              }
            }
-         } else if (is_lv && allow_lv_verify) {
+         } else if (allow_lv_verify) {
+           // Sequences of different lengths have no Hamming distance, so both
+           // modes measure this pair by edit distance. In Hamming mode this is
+           // reached only from the cross-length rescue below, where the pair
+           // differs in length precisely because one of them carries an indel.
+           if (composition_l1(composition[i], composition[cl.centroid_idx]) > 2 * D) {
+             ++lv_composition_rejects;
+             continue;
+           }
            ++lv_verifications;
            dist = levenshtein_fast(s, sl, ptr[cl.centroid_idx], cl.centroid_len, D);
          } else {
@@ -751,12 +1069,32 @@ std::string barbac_build_id() {
          const double score = distance_log_likelihood_score(
            dist, cl.centroid_count, cnt, std::max(sl, cl.centroid_len), err, is_lv);
          
-         CandidateChoice& target = merge_blocked_by_ratio(dist, cnt, cl.centroid_count, merge_ratio, is_lv)
-           ? best_blocked
-         : best_absorb;
+         // With a known design, a mismatch on a fixed position is a sequencing
+         // error rather than evidence of a second barcode, so only mismatches
+         // on identity-carrying positions argue against absorbing. When none
+         // of them do, the pair cannot be two different barcodes and the
+         // abundance guard has nothing to protect.
+         int guard_dist = dist;
+         if (design.usable && pk && cl.centroid_packable &&
+             sl == design.len && cl.centroid_len == design.len) {
+           guard_dist = variable_mismatches(design, pv, cl.centroid_pack);
+           if (guard_dist == 0) ++design_anchor_only_absorbs;
+         }
+
+         bool blocked = guard_dist > 0 &&
+           merge_blocked_by_ratio(guard_dist, cnt, cl.centroid_count, merge_ratio, is_lv);
+         if (blocked && is_lv && use_indel_model && dist == 1 &&
+             repeated_indel_consistent(ptr[cl.centroid_idx], cl.centroid_len,
+                                       cl.centroid_count, s, sl, cnt, err)) {
+           blocked = false;
+           ++indel_guard_passes;
+         }
+         CandidateChoice& target = blocked ? best_blocked : best_absorb;
          
          if (target.cluster_id < 0 || score > target.score ||
-             (score == target.score && cl.centroid_count > clusters[target.cluster_id].centroid_count)) {
+             (score == target.score &&
+              (cl.centroid_count > clusters[target.cluster_id].centroid_count ||
+               (cl.centroid_count == clusters[target.cluster_id].centroid_count && j < target.cluster_id)))) {
            target.cluster_id = j;
            target.dist = dist;
            target.score = score;
@@ -767,35 +1105,83 @@ std::string barbac_build_id() {
      bool used_lv_seed_this_query = false;
      
      if (use_kmer_filter && D > 0) {
-       // LV mode is deliberately hybrid: first try the lossless Hamming partition
-       // index and the packed-Hamming fast path. Most reads in fixed-length barcode
-       // simulations are exact/substitution-like, so this avoids the expensive LV
-       // seed index for the majority of observations. Only sequences that cannot
-       // be absorbed in this fast stage fall back to the broader LV seed index.
-       h_index.query(s, sl, static_cast<int>(clusters.size()), candidates);
-       total_candidates_seen += static_cast<long long>(candidates.size());
-       if (candidates.empty()) ++no_candidate_count;
-       scan_candidates(candidates, !is_lv);
-       
-       if (is_lv && best_absorb.cluster_id < 0) {
-         used_lv_seed_this_query = true;
-         
-         // Tier 1: longer, more specific seeds. This is not the sensitivity
-         // guarantee; it is a fast path to reduce the number of broad LV seed
-         // lookups and Myers verifications on common easy cases.
-         ++lv_long_seed_queries;
-         const int long_seed = std::min(sl, std::max(kmer_size + 2, kmer_size));
-         lv_index.query_specific_seed(s, sl, static_cast<int>(clusters.size()), long_seed, candidates);
-         lv_long_seed_candidates += static_cast<long long>(candidates.size());
+       // The Hamming partition is lossless within the configured radius.
+       // LV uses its own shift-aware partitions and the score bound below.
+       if (!is_lv) {
+         index.query(s, sl, static_cast<int>(clusters.size()), candidates);
          total_candidates_seen += static_cast<long long>(candidates.size());
-         scan_candidates(candidates, true);
-         
-         // Tier 2: sensitive fallback. Only run this broader query if the longer
-         // seed fast path did not find an absorbable parent; this preserves the
-         // strong LV result while avoiding the broadest lookup for many reads.
-         if (best_absorb.cluster_id < 0) {
+         if (candidates.empty()) ++no_candidate_count;
+         scan_candidates(candidates, false);
+       }
+
+       // Hamming mode: rescue reads carrying an indel.
+       //
+       // The partition index is keyed by sequence length, so a read one base
+       // shorter than its parent is never even offered as a candidate and ends
+       // up founding a cluster of its own -- a false positive for every indel
+       // in the data. Same-length candidates were already settled losslessly
+       // above, so only the other lengths need looking at, and on the
+       // fixed-length data this mode is meant for those centroid lists are
+       // nearly empty. Cost is therefore paid per indel-bearing read rather
+       // than per read.
+       if (hamming_rescue_indels && D > 0 && best_absorb.cluster_id < 0 &&
+           !cross_len_budget_hit) {
+         cross_len_candidates.clear();
+         for (int cand_len = sl - D; cand_len <= sl + D; ++cand_len) {
+           if (cand_len == sl || cand_len <= 0) continue;
+           std::unordered_map<int, std::vector<int> >::const_iterator it =
+             centroids_by_len.find(cand_len);
+           if (it == centroids_by_len.end()) continue;
+           cross_len_candidates.insert(cross_len_candidates.end(),
+                                       it->second.begin(), it->second.end());
+         }
+         if (!cross_len_candidates.empty()) {
+           cross_len_comparisons += static_cast<long long>(cross_len_candidates.size());
+           if (cross_len_comparisons > cross_len_budget) {
+             cross_len_budget_hit = true;
+           } else {
+             ++cross_len_queries;
+             total_candidates_seen += static_cast<long long>(cross_len_candidates.size());
+             scan_candidates(cross_len_candidates, true);
+           }
+         }
+       }
+
+       if (is_lv) {
+         // First find every distance-1 parent. Skip the wider search only if
+         // even the most abundant possible distance-2 parent cannot beat it.
+         // This is a likelihood upper bound, not the old first-hit heuristic.
+         if (D > 1) {
+           ++lv_long_seed_queries;
+           lv_near_index.query(s, sl, static_cast<int>(clusters.size()), candidates);
+           lv_long_seed_candidates += static_cast<long long>(candidates.size());
+           total_candidates_seen += static_cast<long long>(candidates.size());
+           scan_candidates(candidates, true);
+         }
+         const double unseen_upper = distance_log_likelihood_score(
+           2, highest_count, cnt, sl, err, true);
+         if (D <= 1 || best_absorb.cluster_id < 0 || best_absorb.score <= unseen_upper) {
+           used_lv_seed_this_query = true;
            ++lv_seed_queries;
-           lv_index.query(s, sl, static_cast<int>(clusters.size()), candidates);
+           int minimum_count = D > 1 && best_absorb.cluster_id >= 0
+             ? minimum_competitive_count(best_absorb.score, highest_count, cnt, sl, err) : 0;
+           // Every distance-1 parent was already covered by lv_near_index,
+           // including the Poisson indel exception. For count >= 5 and no
+           // design override, every still-unseen parent (d >= 2) must satisfy
+           // at least the distance-2 abundance guard. Larger distances have
+           // lower count floors and stronger ratios, so this is a necessary
+           // condition, not a heuristic. Ineligible parents cannot change an
+           // assignment; omitted blocked candidates only affect diagnostics.
+           if (D > 1 && !design.usable && cnt >= effective_count_floor(2, true)) {
+             const double required = effective_merge_ratio(2, merge_ratio, true) *
+               static_cast<double>(cnt);
+             if (std::isfinite(required) && required > minimum_count) {
+               minimum_count = static_cast<int>(std::min(
+                 std::ceil(required), static_cast<double>(std::numeric_limits<int>::max())));
+               ++lv_guard_bounded_queries;
+             }
+           }
+           index.query(s, sl, static_cast<int>(clusters.size()), candidates, minimum_count);
            lv_seed_candidates += static_cast<long long>(candidates.size());
            total_candidates_seen += static_cast<long long>(candidates.size());
            scan_candidates(candidates, true);
@@ -829,23 +1215,25 @@ std::string barbac_build_id() {
      if (!assigned) {
        const int new_id = static_cast<int>(clusters.size());
        add_cluster(clusters, i, sl, cnt, pv, pk);
-       if (use_kmer_filter) {
-         h_index.add(s, sl, new_id);
-         if (is_lv) lv_index.add(s, sl, new_id);
+       centroids_by_len[sl].push_back(new_id);
+       if (use_kmer_filter && D > 0) {
+         index.add(s, sl, new_id, cnt);
+         if (is_lv && D > 1) lv_near_index.add(s, sl, new_id, cnt);
        }
      }
    }
    
    
-   // Shepherd-style local refinement: greedy centroid assignment is good at
+   // Local statistical refinement: greedy centroid assignment is good at
    // absorbing errors, but it can hide real nearby barcodes inside a larger
-   // parent. Shepherd fixes this with a statistical "separate emerging" pass.
-   // Here we conservatively promote only d>=2 children whose counts are far above
-   // the exact-edit error expectation, then let those promoted barcodes reclaim
-   // better-explained later members from the same local cluster.
+   // parent. Conservatively promote only d>=2 children whose counts are far
+   // above the exact-edit error expectation, then let those promoted barcodes
+   // reclaim better-explained later members from the same local cluster.
    if (D > 1) {
      std::vector<Cluster> refined;
      refined.reserve(clusters.size() + 256);
+     std::vector<bool> is_promoted;
+     is_promoted.reserve(clusters.size() + 256);
      
      for (const Cluster& cl : clusters) {
        if (cl.members.empty()) continue;
@@ -854,17 +1242,26 @@ std::string barbac_build_id() {
        const int root_cluster = static_cast<int>(refined.size());
        add_cluster(refined, root_seq, cl.centroid_len, cl.centroid_count,
                    cl.centroid_pack, cl.centroid_packable);
+       is_promoted.push_back(false);
        
        std::vector<int> promoted_cluster_for_pos(cl.members.size(), -1);
+       std::vector<int> promoted_positions;
        for (int pos = 1; pos < static_cast<int>(cl.members.size()); ++pos) {
          const int seq_id = cl.members[pos];
          const int dist = pos < static_cast<int>(cl.member_dists.size()) ? cl.member_dists[pos] : D + 1;
          const int child_count = counts[seq_id];
-         if (shepherd_style_emerging_barcode(dist, child_count, cl.centroid_count,
-                                             std::max(slen[seq_id], cl.centroid_len), err)) {
+         const int comparison_len = std::max(slen[seq_id], cl.centroid_len);
+         const bool promote = is_lv
+           ? local_error_expectation_promotes(dist, child_count, cl.centroid_count,
+                                              comparison_len, err)
+           : shepherd_hamming_bayes_promotes(dist, child_count, cl.centroid_count,
+                                             comparison_len, counts[0], err);
+         if (promote) {
            const int new_cluster = static_cast<int>(refined.size());
            add_cluster(refined, seq_id, slen[seq_id], counts[seq_id], packed[seq_id], packable[seq_id]);
+           is_promoted.push_back(true);
            promoted_cluster_for_pos[pos] = new_cluster;
+           promoted_positions.push_back(pos);
            ++shepherd_promoted;
          }
        }
@@ -881,7 +1278,7 @@ std::string barbac_build_id() {
                                                                       std::max(slen[seq_id], refined[root_cluster].centroid_len), err, is_lv)
              : -std::numeric_limits<double>::infinity();
          
-         for (int ppos = 1; ppos < static_cast<int>(cl.members.size()); ++ppos) {
+         for (int ppos : promoted_positions) {
            const int promoted_cluster = promoted_cluster_for_pos[ppos];
            if (promoted_cluster < 0) continue;
            const int promoted_seq = cl.members[ppos];
@@ -893,7 +1290,7 @@ std::string barbac_build_id() {
              const int ham = hamming_packed(packed[seq_id], packed[promoted_seq]);
              if (!is_lv) {
                d_new = (ham <= D) ? ham : D + 1;
-             } else if (ham <= D) {
+             } else if (ham <= std::min(D, 2)) {
                d_new = ham;
              } else {
                d_new = levenshtein_fast(ptr[seq_id], slen[seq_id], ptr[promoted_seq], slen[promoted_seq], D);
@@ -919,6 +1316,67 @@ std::string barbac_build_id() {
          if (best_cluster != root_cluster) ++shepherd_reassigned;
        }
      }
+
+     // A promoted barcode was not available as a parent during pass 1. Its
+     // low-count error variants may therefore already have founded separate
+     // clusters. Revisit only those pre-existing roots and only against newly
+     // promoted Hamming centroids. Shepherd's conservative unconditional cases
+     // are used here: distance 1, or a singleton within the requested radius.
+     // This closes the ordering hole without re-merging protected d>=2
+     // multi-read barcodes or changing LV behavior.
+     if (!is_lv && shepherd_promoted > 0) {
+       std::vector<int> promoted_ids;
+       promoted_ids.reserve(static_cast<size_t>(shepherd_promoted));
+       for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+         if (is_promoted[cid]) promoted_ids.push_back(cid);
+       }
+
+       std::vector<int> absorb_into(refined.size(), -1);
+       for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+         if (is_promoted[cid]) continue;
+         const Cluster& child = refined[cid];
+         int best_parent = -1;
+         int best_dist = D + 1;
+         int best_parent_count = -1;
+         for (int pid : promoted_ids) {
+           const Cluster& parent = refined[pid];
+           if (child.centroid_len != parent.centroid_len ||
+               !child.centroid_packable || !parent.centroid_packable) continue;
+           if (!hamming_bit_prefilter(child.centroid_pack, parent.centroid_pack, D)) continue;
+           const int dist = hamming_packed(child.centroid_pack, parent.centroid_pack);
+           if (dist <= 0 || dist > D) continue;
+           if (dist != 1 && child.centroid_count != 1) continue;
+           if (dist < best_dist ||
+               (dist == best_dist && parent.centroid_count > best_parent_count)) {
+             best_parent = pid;
+             best_dist = dist;
+             best_parent_count = parent.centroid_count;
+           }
+         }
+         absorb_into[cid] = best_parent;
+       }
+
+       for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+         const int pid = absorb_into[cid];
+         if (pid < 0) continue;
+         Cluster& parent = refined[pid];
+         Cluster& child = refined[cid];
+         parent.members.insert(parent.members.end(), child.members.begin(), child.members.end());
+         parent.member_dists.insert(parent.member_dists.end(),
+                                    child.member_dists.begin(), child.member_dists.end());
+         parent.sum_counts += child.sum_counts;
+         ++post_promotion_absorbed;
+       }
+
+       if (post_promotion_absorbed > 0) {
+         std::vector<Cluster> cleaned;
+         cleaned.reserve(refined.size() - static_cast<size_t>(post_promotion_absorbed));
+         for (int cid = 0; cid < static_cast<int>(refined.size()); ++cid) {
+           if (absorb_into[cid] < 0) cleaned.push_back(std::move(refined[cid]));
+         }
+         refined.swap(cleaned);
+       }
+     }
      
      clusters.swap(refined);
    }
@@ -934,13 +1392,17 @@ std::string barbac_build_id() {
            << " no_cand=" << no_candidate_count
            << " avg_cand=" << (n > 0 ? static_cast<double>(total_candidates_seen) / n : 0.0)
            << " lv_dp=" << lv_verifications
+           << " lv_comp_reject=" << lv_composition_rejects
            << " lv_fast=" << lv_fast_accepts
            << " lv_seed_q=" << lv_seed_queries
            << " lv_seed_cand=" << lv_seed_candidates
            << " lv_long_q=" << lv_long_seed_queries
            << " lv_long_cand=" << lv_long_seed_candidates
-           << " promoted=" << shepherd_promoted
+           << " lv_guard_bound_q=" << lv_guard_bounded_queries
+           << " indel_guard_passes=" << indel_guard_passes
+             << " promoted=" << shepherd_promoted
            << " reassigned=" << shepherd_reassigned
+           << " post_promote_absorb=" << post_promotion_absorbed
            << " ham_reject=" << hamming_prefilter_rejects
            << " blocked[";
      for (int d = 1; d <= D; ++d) {
@@ -1000,16 +1462,20 @@ std::string barbac_build_id() {
        Named("no_candidate") = no_candidate_count),
        Named("distance_count") = NumericVector::create(
          Named("lv_verifications") = static_cast<double>(lv_verifications),
+         Named("lv_composition_rejects") = static_cast<double>(lv_composition_rejects),
          Named("lv_fast_accepts") = static_cast<double>(lv_fast_accepts),
          Named("lv_seed_queries") = static_cast<double>(lv_seed_queries),
          Named("lv_seed_candidates") = static_cast<double>(lv_seed_candidates),
          Named("lv_long_seed_queries") = static_cast<double>(lv_long_seed_queries),
          Named("lv_long_seed_candidates") = static_cast<double>(lv_long_seed_candidates),
+         Named("lv_guard_bounded_queries") = static_cast<double>(lv_guard_bounded_queries),
          Named("lv_hamming_stage_assignments") = static_cast<double>(lv_hamming_stage_assignments),
-         Named("hamming_prefilter_rejects") = static_cast<double>(hamming_prefilter_rejects)),
+         Named("hamming_prefilter_rejects") = static_cast<double>(hamming_prefilter_rejects),
+         Named("cross_length_queries") = static_cast<double>(cross_len_queries)),
          Named("refinement_count") = NumericVector::create(
            Named("shepherd_promoted") = static_cast<double>(shepherd_promoted),
-           Named("shepherd_reassigned") = static_cast<double>(shepherd_reassigned)),
+           Named("shepherd_reassigned") = static_cast<double>(shepherd_reassigned),
+           Named("post_promotion_absorbed") = static_cast<double>(post_promotion_absorbed)),
            Named("method") = is_lv ? "levenshtein" : "hamming",
            Named("build_id") = barbac_build_id());
  }

@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "table_data_rows": 30,
+  "table_columns": 6,
+  "all_cells_match_markdown": true,
+  "embedded_figures": 9,
+  "restored_reference_content_types": [
+    "ttf",
+    "png"
+  ],
+  "time_series_table_data_cells": 30,
+  "source_sha256": "11751f6389bace7bf851e6df3261ba68fae94f9f6e2403aa8617e375f2158ba1",
+  "output_sha256": "a6e75941bd762c985fbc05d34d03ef84f22f0e4da6f08db52b10afa99e23027e",
+  "validation": "DOCX opens successfully; all 180 data cells match the paper table; repeated headers and fixed column widths applied. All source images, including benchmark/time-series figures when present, are embedded with matching hashes. No visual Word/PDF rendering performed."
+}

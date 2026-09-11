@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "sampled_alignments": 13657,
+  "sampler": "samtools view -s 42.01 on complete first-sample BAM",
+  "vectorized_PCRE_matches_original_PCRE_calls_exactly": true,
+  "component_matches": {
+    "diverse_reads.csv": 13473,
+    "environment_reads.csv": 13637
+  },
+  "synthetic_checks": "Insertions, deletions, reverse orientation, query windows, secondary/supplementary filtering, read IDs, chunk boundaries, legacy fixed-width behavior",
+  "paired_join_checks": "Quality filtering before UMI deduplication; original FASTQ order even when BAM rows are reversed; duplicate IDs rejected"
+}

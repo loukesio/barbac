@@ -2,7 +2,7 @@
 % Please edit documentation in R/03_check-barbac-tools.R
 \name{check_barbac_tools}
 \alias{check_barbac_tools}
-\title{Check availability of tools in barbac conda environment}
+\title{Report which external command-line tools barbac can find}
 \usage{
 check_barbac_tools(
   env_name = "barbac_env",
@@ -10,13 +10,18 @@ check_barbac_tools(
 )
 }
 \arguments{
-\item{env_name}{Name of the conda environment (default: "barbac_env")}
+\item{env_name}{Conda environment to search first. Default: "barbac_env".}
 
-\item{tools}{Character vector of tool names to check}
+\item{tools}{Character vector of tool names to look for.}
 }
 \value{
-A data.frame with tool names and availability
+A data.frame with one row per tool: \code{tool}, \code{available},
+  \code{source} (the environment name, \code{"PATH"}, or NA when missing),
+  \code{version} (NA when the tool reports none), and \code{path}.
 }
 \description{
-Check availability of tools in barbac conda environment
+The CLI pipeline shells out to FastQC, MultiQC, PEAR, minimap2 and samtools.
+They may come from the conda environment \code{configure_environment()}
+creates, or already be installed system-wide; either works, so both are
+searched and the result says which one supplied each tool.
 }

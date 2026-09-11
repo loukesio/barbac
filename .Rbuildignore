@@ -18,3 +18,12 @@
 ^doc$
 ^Meta$
 ^LICENSE\.md$
+^HANDOFF\.md$
+^\.codex$
+^\.agents$
+^data$
+^raw$
+^private$
+^app$
+^documentation$
+^tools$

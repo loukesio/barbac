@@ -14,6 +14,15 @@
 .RDataTmp*
 .Ruserdata
 
+# Private working notes stay on the local machine.
+HANDOFF.md
+.codex/
+.agents/
+benchmark/**/plan.md
+benchmark/**/*_plan.md
+benchmark/**/report_notes.md
+benchmark/**/*.log
+
 # Compiled C++ artefacts inside src/ -- regenerated on install
 src/*.o
 src/*.so
@@ -46,10 +55,26 @@ pkgdown/
 # but drop the ~700 MB of simulation output. Regenerate any time with:
 #   python3 benchmark/indel_experiment/run_experiment.py --reuse-sim
 benchmark/indel_experiment/results/
+benchmark/four_condition_comparison/generated/
+benchmark/time_series_chen2023/generated/
+benchmark/**/generated/
 benchmark/**/*.bam
 benchmark/**/*.bam.bai
 benchmark/**/*.fastq
 benchmark/**/*.fastq.gz
+
+# Full data exports and rendered reports are reproduced locally from the scripts.
+# Keep source code, references, compact summaries and small verification fixtures.
+benchmark/**/*.html
+benchmark/**/results/*_barcode_counts.csv.gz
+benchmark/**/results/time_series_*.csv.gz
+benchmark/**/r_report/barcode_colours.csv.gz
+benchmark/**/r_report/figures/
+benchmark/**/r_report/qa/
+benchmark/**/r_report/palette_preview/*.png
+benchmark/**/r_report/session_info.txt
+benchmark/**/r_report/report_files/
+benchmark/**/r_report/.quarto/
 
 # Cached shepherd/starcode/bartender intermediates
 benchmark/**/shepherd_input*
@@ -108,3 +133,7 @@ __pycache__/
 *.swo
 /doc/
 /Meta/
+
+# Shiny workspace: private uploads, release library and browser verification.
+app/.runtime/
+app/.qa/

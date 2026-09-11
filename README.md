@@ -1,311 +1,200 @@
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![License: GPL (>= 2)](https://img.shields.io/badge/License-GPL%20(%E2%89%A5%202)-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
-[![R CMD check](https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml)
-[![Docker image](https://img.shields.io/badge/docker-ghcr.io%2Floukesio%2Fbarbac-2496ed?logo=docker&logoColor=white)](https://github.com/loukesio/barbac/pkgs/container/barbac)
-[![Vignettes](https://img.shields.io/badge/docs-pkgdown-blue)](https://loukesio.github.io/barbac/)
-[![GitHub stars](https://img.shields.io/github/stars/loukesio/barbac?style=social)](https://github.com/loukesio/barbac/stargazers)
+# barbac
 
-## Installation
+[![R CMD check](https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/loukesio/barbac/actions/workflows/R-CMD-check.yaml)
+[![Documentation](https://img.shields.io/badge/docs-barbac-24574B)](https://loukesio.github.io/barbac/)
+[![License: GPL ≥ 2](https://img.shields.io/badge/license-GPL%20%E2%89%A5%202-24574B)](LICENSE.md)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-D8BD82)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
-**[barbac](https://loukesio.github.io/barbac/)** is an R package for end-to-end DNA barcode lineage tracking.
-<img align="right" src="man/figures/logo.png" width=400>
+<img align="right" src="man/figures/logo.png" width="25%" alt="barbac logo">
+
+**Fast DNA barcode clustering. From sequencing reads to lineage trajectories.**
+
+barbac is an R package for extracting DNA barcodes, correcting sequencing errors,
+and following lineages through time. Its native C++ engine combines
+abundance-aware clustering with Hamming or Levenshtein distances, retaining the
+members and counts behind every inferred lineage.
+
+Start with a barcode-count table or with **R1-only or overlapping paired-end
+FASTQ reads**. Work in R, or explore your analysis in **barbac Studio**, the local
+Shiny app.
+
+[Get started](#quick-start) · [Explore Studio](#barbac-studio) ·
+[Read the workflow](documentation/workflow.md) ·
+[Inspect the evidence](documentation/validation.md)
+
+<br clear="right">
+
+## Quick start
+
+Install from GitHub with a working C++ toolchain and the Bioconductor dependencies:
 
 ```r
-# Install development version from GitHub
-if (!require("remotes")) install.packages("remotes")
-remotes::install_github("loukesio/barbac")
-
+install.packages(c("remotes", "BiocManager"))  # once, if missing
+BiocManager::install(
+  c("GenomicAlignments", "GenomicRanges", "Rsamtools", "Biostrings"),
+  ask = FALSE, update = FALSE
+)
+remotes::install_github("loukesio/barbac", upgrade = "never")
 library(barbac)
 ```
 
-`barbac` links to Rcpp and requires a working C++ toolchain. It also depends on the Bioconductor packages `GenomicAlignments` and `GenomicRanges` (installed automatically). The upstream CLI pipeline (FastQC, PEAR, minimap2, samtools) is optional and provisioned via `configure_environment()` on demand.
-
-## Prefer a container? Use the pre-built image
-
-Every push to `main` builds and publishes a Docker image with R,
-Bioconductor, and the full FASTQ→BAM CLI stack (FastQC, PEAR,
-minimap2, samtools, MultiQC) already installed, alongside the latest
-`barbac`. Zero conda dance:
-
-```bash
-docker pull ghcr.io/loukesio/barbac:latest
-
-# Start an R session with your working directory mounted at /data
-docker run --rm -it -v "$(pwd)":/data ghcr.io/loukesio/barbac:latest R
-
-# Or run a script non-interactively
-docker run --rm -v "$(pwd)":/data ghcr.io/loukesio/barbac:latest \
-  Rscript /data/my_analysis.R
-```
-
-Tags: `latest` on `main`, `<short-sha>` per commit, `0.1.0` /
-`0.1` on version tags.
-
-## Environment setup (optional — only for the FASTQ→BAM pipeline, native install)
+Cluster a CSV with `barcode,counts` columns, or pass a data frame directly:
 
 ```r
-# One-time: create the conda environment with FastQC, PEAR, minimap2, samtools
-configure_environment()
+reads <- data.frame(
+  barcode = c("ACGTACGTACGTACGTACGTACGTAC",
+              "ACGTACGTACGTACGTACGTACGTAA",
+              "TGCATGCATGCATGCATGCATGCATG"),
+  counts = c(1000, 12, 800)
+)
 
-# Activate for this R session (adds the tools to PATH)
+clusters <- super_cluster2(reads, method = "lv", distance = 3)
+cluster_stats(clusters)
+```
+
+Each result row contains a `central_barcode`, its `all_barcodes` and `all_counts`,
+and the combined `sum_counts`. Member sequences remain available for inspection
+and for mapping the original samples back to a shared lineage identity.
+
+## Built around the clustering
+
+| Capability | What it gives you |
+|---|---|
+| **Native C++ search** | Bit-parallel distances, exact candidate partitions and abundance bounds that reduce unnecessary comparisons |
+| **Hamming and Levenshtein** | Substitution-focused comparisons or edit distances that also handle insertions, deletions and shifts |
+| **Explicit correction settings** | Distance and count-ratio guards, reproducible tie ordering, and an optional Poisson indel model |
+| **Inspectable results** | Centroids, complete memberships, conserved counts and cluster diagnostics |
+| **Lineages through time** | Shared memberships across samples and `barbac_ts_area()` plots with 32 built-in LTC palettes |
+
+Use LV for indel-containing or variable-length libraries. Hamming is useful for
+fixed-length substitution-focused designs. The Poisson model and support-based
+tie ordering are explicit options; choose settings using your library design
+and controls. See the [function reference](https://loukesio.github.io/barbac/reference/super_cluster2.html).
+
+## From FASTQ to barcodes
+
+```mermaid
+flowchart LR
+    R1["R1-only reads"] --> Map["Map · sort · index"]
+    PE["Overlapping R1 + R2"] --> Merge["PEAR merge"] --> Map
+    Ref["Reference cassette"] --> Map
+    Map --> Extract["Extract barcodes"]
+    Extract --> Cluster["super_cluster2"]
+    Counts["Barcode counts"] --> Cluster
+    Cluster --> Results["Lineages · statistics · plots"]
+```
+
+Set up the external tools once with `configure_environment()`, or use equivalent
+tools already on your system. FastQC, minimap2 and samtools are required; PEAR is
+needed for paired reads, and MultiQC is optional.
+
+```r
+configure_environment()  # needs an existing conda installation
 use_barbac_env()
 
-# Sanity-check
-check_barbac_tools()
-```
+# R1-only reads map directly. Add R2 for overlapping paired reads.
+samples <- data.frame(sample = "sample1", R1 = "data/sample1_R1.fastq.gz")
+pipeline <- run_cli_pipeline(samples, "data/cassette.fasta", "results")
 
----
-
-## Quick start — clustering
-
-```r
-result <- super_cluster2(
-  "path/to/reads.csv",   # or a data.frame with columns `barcode`, `counts`
-  distance    = 3,       # max Levenshtein distance
-  merge_ratio = 20       # distance-aware count-ratio merge guard
+barcode_csv <- barbac_xtr(
+  pipeline$bam_files[["sample1"]],
+  ref_name = "my_cassette", start_pos = 171, end_pos = 196,
+  output_file = "results/sample1_barcodes.csv"
 )
-
-result
-#> # A tibble: N x 5
-#>   cluster_id central_barcode      all_barcodes all_counts sum_counts
-#>   ...
+clusters <- super_cluster2(barcode_csv)
 ```
 
-`super_cluster2()` returns one row per cluster: the abundance-ranked centroid, the list of member barcodes and their counts, and the summed abundance.
+Use your construct's reference name and **one-based, inclusive** coordinates.
+For indel-preserving extraction, supply a `flank_pattern` whose capture group
+matches the observed barcode between constant flanks. The
+[complete workflow](documentation/workflow.md) explains both extraction modes,
+QC, mixed single/paired sample tables and time-series joins.
 
-## Quick start — time-series visualisation
+## barbac Studio
 
-```r
-# Long-format input: (barcode, time, counts)
-barbac_ts_area(reads_long,
-               min_total_count = 10,
-               include_late    = TRUE,   # keep barcodes appearing at later timepoints
-               fill_missing    = "epsilon")
+A local workspace for the same native barbac engine. Upload extracted counts or
+FASTQs, cluster your sequences, explore lineage plots and statistics, then
+download the analysis.
 
-# Bartender-wide format is auto-detected
-barbac_ts_area("path/to/cluster_output.csv")
+[![barbac Studio showing lineage plots and clustering results](app/media/studio-preview.gif)](app/media/studio-walkthrough.mp4)
+
+| Watch the workflow | What you will see |
+|---|---|
+| [Barcode counts → complete analysis · 44 s](app/media/studio-walkthrough.mp4) | Upload, clustering, lineage plots, LTC palettes, memberships and exports |
+| [FASTQ → extracted barcodes · 24 s](app/media/studio-fastq.mp4) | Paired-read extraction, downloading counts before clustering, and clustering |
+
+These are actual app recordings using small synthetic examples. Their timings
+illustrate the interface and are not benchmarks for large libraries.
+
+From a repository checkout, launch Studio with:
+
+```sh
+git clone https://github.com/loukesio/barbac.git
+cd barbac
+Rscript app/run.R
 ```
 
-Accepts either long-format or Bartender-wide input. If neither layout matches, `barbac_ts_area()` errors with the expected schema. Late-appearing lineages are carried through the full series with missing cells filled by ε (default `1e-6`) or by zero.
+Open **http://127.0.0.1:3838** on the same computer. The
+[Studio guide](app/README.md) covers the additional R dependencies and optional
+Quarto installation. Studio builds an isolated release installation of the
+current package and runs locally; no public upload service is provided.
 
----
+Download extracted counts **before clustering**, or export centroids, complete
+memberships, per-sample lineage counts, clustering statistics, figures and a
+self-contained Quarto HTML report. The [offline video viewer](app/media/watch.html)
+plays both walkthroughs without R or Shiny.
 
-## The full FASTQ→lineage pipeline
+## Plot every lineage
 
-<div align="center">
-
-<img src="man/figures/pipeline.svg" alt="barbac pipeline: samples.csv and reference.fasta flow through FastQC/MultiQC, PEAR, minimap2, BAM stats, barcode extraction, super_cluster2 clustering, and barbac_ts_area, with QC branches (plot_bam_stats, barbac_xtr.stats, cluster_stats) alongside." width="820" />
-
-</div>
-
-<sub>Diagram source: [`man/figures/pipeline.mmd`](man/figures/pipeline.mmd). To regenerate the SVG after editing, run <code>npx --yes -p @mermaid-js/mermaid-cli mmdc -i man/figures/pipeline.mmd -o man/figures/pipeline.svg -b transparent</code>.</sub>
-
-### Define your samples
-
-Provide a `samples.csv` file listing one sample per row. `sample` and `R1` are required; `R2` is optional (single-end mode is used when it's missing).
+Pool counts within each independent population, cluster once, and map the
+memberships back to each sample. Then plot the resulting long table:
 
 ```r
-sample_table <- data.frame(
-  sample = c("sample1", "sample2", "sample3"),
-  R1     = c("data/sample1_R1.fastq.gz", "data/sample2_R1.fastq.gz", "data/sample3_R1.fastq.gz"),
-  R2     = c("data/sample1_R2.fastq.gz", "data/sample2_R2.fastq.gz", "data/sample3_R2.fastq.gz")
+# lineage_counts: barcode, time, counts
+barbac_ts_area(
+  lineage_counts,
+  min_total_count = 0,
+  fill_missing = "zero",
+  palette = "alger"
 )
-write.csv(sample_table, "samples.csv", row.names = FALSE)
+names(barbac_palettes())  # all 32 native LTC palettes
 ```
 
-| sample  | R1                        | R2                        |
-|---------|---------------------------|---------------------------|
-| sample1 | data/sample1_R1.fastq.gz  | data/sample1_R2.fastq.gz  |
-| sample2 | data/sample2_R1.fastq.gz  | data/sample2_R2.fastq.gz  |
-| sample3 | data/sample3_R1.fastq.gz  | data/sample3_R2.fastq.gz  |
+These explicit settings keep every lineage as its own band and missing counts
+at zero. Pooling across timepoints is retrospective. See the
+[time-series workflow](documentation/workflow.md#cluster-and-construct-a-time-series)
+and [R vignette](https://loukesio.github.io/barbac/articles/barbac.html).
 
-### One-command pipeline
+## Evidence and reproducibility
 
-```r
-run_cli_pipeline(
-  sample_table = "samples.csv",
-  reference    = "data/Reference_barcodes.fasta",
-  output_dir   = "results",
-  log_file     = "barbac.log"
-)
+A barbac mode achieved the highest centroid F1 in **four of five datasets** in
+the recorded comparison with Shepherd, Starcode and Bartender. Rankings depend
+on the dataset, mode and metric. The [benchmark evidence](documentation/validation.md)
+provides settings, complete tables, timings and limitations; the comparison's
+v13 measurements remain separate from the current v14 search improvements.
+
+The repository also includes reproducible workflows for the
+[Chen 2023](benchmark/time_series_chen2023/README.md) and
+[Jasinska 2020](benchmark/time_series_jasinska2020/README.md) applications,
+known-truth extraction checks, and tests of indexed versus exhaustive clustering.
+Raw study data and large generated analyses are recreated locally from the
+provided scripts. [Verification instructions and receipts](documentation/validation.md)
+explain exactly what was checked.
+
+## Containers and help
+
+The [container workflow](.github/workflows/docker.yml) builds the R package and
+FASTQ toolchain for `linux/amd64`:
+
+```sh
+docker pull ghcr.io/loukesio/barbac:latest
+docker run --rm -it -v "$PWD":/data ghcr.io/loukesio/barbac:latest R
 ```
 
-### Step-by-step
+[Documentation](https://loukesio.github.io/barbac/) ·
+[Issues](https://github.com/loukesio/barbac/issues) ·
+[Source](https://github.com/loukesio/barbac)
 
-<details>
-<summary>Prefer to run each stage explicitly? Click to expand.</summary>
-
-```r
-samples <- "samples.csv"
-ref     <- "data/Reference_barcodes.fasta"
-
-# 1. Quality control
-run_fastqc(samples)                            # -> results/fastQC/
-run_multiqc()                                  # -> results/multiqc_report.html
-
-# 2. Merge paired-end reads
-run_pear_merge(samples)                        # -> results/merged/
-
-# 3. Reference mapping
-run_minimap2(merged_dir = "results/merged/",   # -> results/merged/bam/
-             reference  = ref)
-
-# 4. Mapping statistics (+ QC plot)
-bam_stats <- summarise_bam_stats(bam_dir = "results/merged/bam/")
-plot_bam_stats(bam_stats)                      # per-sample mapped/unmapped bars
-
-# 5. Extract barcodes at fixed coordinates (+ QC plot)
-barbac_xtr("results/merged/bam/sample1_sorted.bam",
-           start_pos = 54, end_pos = 78)       # -> sample1_barcodes.csv
-barbac_xtr.stats("sample1_barcodes.csv",
-                 barcode_length = c(20, 30))   # histograms + summary table
-
-# 6. Cluster (+ QC summary)
-result <- super_cluster2("sample1_barcodes.csv", distance = 3)
-cluster_stats(result)                          # n_clusters, singleton_frac, topK_frac
-
-# 7. Visualise (once joined across timepoints)
-barbac_ts_area(result_time_series)
-```
-
-</details>
-
-### Output structure
-
-```
-results/
-├── fastQC/                       # Quality control reports
-│   ├── sample1_R1_fastqc.html
-│   └── sample1_R2_fastqc.html
-├── merged/                       # PEAR merged reads
-│   ├── sample1_ANC.assembled.fastq   # "_ANC" tag added by run_pear_merge()
-│   └── bam/                      # Alignment results
-│       ├── *_sorted.bam
-│       └── *_sorted.bam.bai
-├── bam_summary.csv               # per-sample mapped / unmapped counts
-└── pipeline.log
-```
-
----
-
-## Benchmarks
-
-### Parity with Shepherd on the Johnson et al. (2023) reference dataset
-
-Same input (100,000 true barcodes, ~1.5M unique reads), same parameters (max distance 3), same evaluation protocol.
-
-| Method  | Pearson R | FN%  | FP%  | WS%  | Time    |
-|---------|----------:|-----:|-----:|-----:|--------:|
-| barbac  | 1.00      | 0.47 | 0.09 | 0.06 | **1.4 min** |
-| Shepherd | 1.00     | 0.47 | 0.09 | 0.06 | 2.4 min |
-
-470 of the 471 false negatives are shared between the two methods — both fail on the same hard cases (mostly barcodes with count = 0 in the input). See `benchmark/compare_with_shepherd.ipynb` for the full analysis.
-
-### Robustness on Illumina-quality data
-
-We benchmarked barbac against Shepherd, Starcode, and Bartender on 10,000-barcode / 1M-read datasets under Illumina-quality error regimes typical of experimental-evolution barcode sequencing: **0.5% per-base substitution rate**, insertion+deletion rates of **0% and 0.5%**. Higher indel rates typical of long-read platforms (PacBio, nanopore) are outside the scope of this comparison.
-
-| Condition | Method   | Pearson R | FN%   | FP%     | WS%     | Wall (s) | Algo (s) |
-|:----------|:---------|----------:|------:|--------:|--------:|---------:|---------:|
-| **sub_only** (0% ins, 0% del) | barbac    | 1.0000 | 0.44 | 0.47 | 0.43 | 4.3 | **0.7** |
-| | Shepherd  | 1.0000 | 0.44 | 0.47 | 0.43 | 2.7 | 2.7 |
-| | Starcode  | 1.0000 | 0.48 | 0.51 | 0.47 | 2.8 | 2.8 |
-| | Bartender | 1.0000 | 0.48 | 0.52 | 0.48 | 1.0 | 1.0 |
-| **low_indel** (0.5% ins, 0.5% del) | **barbac** | **1.0000** | 1.55 | **3.36** | **1.57** | 5.7 | **2.4** |
-| | Shepherd  | 0.9993 | 0.95 | 49.15  | 48.81  | 3.5  | 3.5 |
-| | Starcode  | 1.0000 | 1.58 | 3.38   | 1.59   | 17.2 | 17.2 |
-| | Bartender | 0.9959 | 0.94 | 511.14 | 509.41 | 2.0  | 2.0 |
-
-*Wall = end-to-end wall time. Algo = pure clustering time, excluding R boot + package loading for barbac (Shepherd/Starcode/Bartender pay a negligible boot tax so wall ≈ algo for them).*
-
-**No-indel baseline.** All four methods are statistically indistinguishable (R = 1.0000, FN/FP/WS all within 5 barcodes out of 10,000). Confirms the four-way validity check.
-
-**Realistic Illumina indel regime (0.5%).** Two-tier picture:
-
-- **barbac and Starcode are essentially tied for clustering accuracy** — both preserve R = 1.0000 and confine WS to ~1.6%. Both use Levenshtein natively.
-- **Shepherd and Bartender break.** Shepherd's WS rises 113-fold to 48.81% (a **31-fold** gap versus barbac); Bartender's rises to **509.41% (a 324-fold gap)**. Both rely on Hamming-based indexing that fragments indel variants into spurious centroids.
-
-**Where barbac beats its Levenshtein peer (Starcode).**
-
-- **~7× faster algorithm time** (2.4 s vs 17.2 s at low_indel; wall-time gap smaller because barbac pays a fixed ~3 s R-boot tax that Starcode does not).
-- **R-native**, with an in-package Rcpp binding — no shelling out to a standalone C binary and parsing text output.
-- **Integrated with the FASTQ→lineage pipeline** (`run_cli_pipeline`, `barbac_xtr`) and the time-series visualisation (`barbac_ts_area`) in the same package.
-
-### Structured (mixed-anchor) barcode designs
-
-Many real barcode libraries are not fully random: they interleave random
-positions with fixed anchor sequences (e.g. `NNNNNNNN-ATGC-NNNNNNNN-ATCGTTAA`).
-We benchmarked this case with a 28 bp template carrying 16 variable positions,
-2,000 barcodes and 200k reads, clustered at distance 3. The fixed anchors are
-the interesting stress: indels shift them out of register, which fragments
-Hamming-indexed methods. The variable region is deliberately wide enough that
-only 28 of 2,000 true barcodes fall within distance 3 of another, so the numbers
-reflect the tools, not the design.
-
-**sub_only (0% indel — representative of Illumina):**
-
-| Method    | Pearson R | FN%  | FP%  | WS%  |
-|:----------|----------:|-----:|-----:|-----:|
-| **barbac**| 1.0000    | 0.55 | 0.55 | **0.50** |
-| Shepherd  | 1.0000    | 0.75 | 0.75 | 0.70 |
-| Starcode  | 1.0000    | 1.35 | 1.25 | 1.20 |
-| Bartender | 1.0000    | 0.65 | 0.75 | 0.70 |
-
-**low_indel (0.5% ins, 0.5% del):**
-
-| Method    | Pearson R | FN%  | FP%    | WS%    |
-|:----------|----------:|-----:|-------:|-------:|
-| **barbac**| 1.0000    | 2.25 | **9.15**  | **2.50**  |
-| Shepherd  | 0.9989    | 1.70 | 101.30 | 100.35 |
-| Starcode  | 1.0000    | 3.15 | 10.10  | 3.45   |
-| Bartender | 0.9944    | 1.45 | 772.55 | 765.75 |
-
-- **barbac has the lowest wrong-sequence rate of all four tools on both
-  conditions** — the anchors don't trip it up because the Levenshtein kernel
-  realigns indel-shifted reads.
-- **Shepherd and Bartender fragment on indels**, WS jumping to 100% and 766% as
-  soon as indels appear, because Hamming-based indexing splits each
-  anchor-shifted variant into its own centroid.
-- **Starcode is barbac's closest competitor** (also Levenshtein-based), but
-  barbac edges it on every metric here.
-- FP at nonzero indel rates is inflated for every tool by harmless singleton
-  error-reads that drift more than 3 edits from any true barcode; **WS**
-  (spurious centroids *near* a true barcode) is the metric that separates safe
-  tools from fragmenting ones.
-
-Full reproducibility scripts are in [`benchmark/indel_experiment/`](benchmark/indel_experiment/). The experiment runner also produces mid- and high-indel conditions; those regimes (2%+ indels) are outside the Illumina scope of the current paper and treated as future work.
-
----
-
-## Documentation
-
-- 📖 **Package website:** <https://loukesio.github.io/barbac/>
-- 📘 **Getting-started vignette:** `vignette("barbac", package = "barbac")` or `browseVignettes("barbac")`
-- 💻 **Function help:** `?super_cluster2`, `?barbac_ts_area`, `?run_cli_pipeline`, `?barbac_xtr`, `?configure_environment`
-
-## Support
-
-<table>
-  <tr>
-    <td>🐛 <b>Issues</b></td>
-    <td><a href="https://github.com/loukesio/barbac/issues">Report a bug or problem</a></td>
-  </tr>
-  <tr>
-    <td>💡 <b>Discussions</b></td>
-    <td><a href="https://github.com/loukesio/barbac/discussions">Feature requests & questions</a></td>
-  </tr>
-  <tr>
-    <td>📧 <b>Email</b></td>
-    <td><a href="mailto:loukesio@gmail.com">loukesio@gmail.com</a></td>
-  </tr>
-  <tr>
-    <td>🦋 <b>Bluesky</b></td>
-    <td><a href="https://bsky.app/profile/bioinformatician.bsky.social">@bioinformatician.bsky.social</a></td>
-  </tr>
-</table>
-
-
-## License
-
-GPL (≥ 2). See [LICENSE.md](LICENSE.md).
-
+Developed by Loukas Theodosiou. Use `citation("barbac")` for the package citation.
+GPL (≥ 2); see [LICENSE.md](LICENSE.md). Bundled LTC palettes retain their
+[attribution and permission notice](inst/COPYRIGHTS).

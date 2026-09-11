@@ -1,0 +1,98 @@
+---
+title: "barbac Studio · Analysis report"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: true
+    code-fold: true
+    html-math-method: plain
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+x <- readRDS('analysis.rds')
+plots <- readRDS('plots.rds')
+```
+
+```{=html}
+<style>
+body{color:#173e3b;background:#fbfaf6;font-family:Arial,sans-serif}
+h1,h2,h3{color:#123f3b}h1{font-weight:700;letter-spacing:-1.4px}
+.quarto-title-block{border-bottom:3px solid #d5b574;padding-bottom:22px}
+table{font-size:.9rem} a{color:#247b70}
+</style>
+```
+
+## Analysis overview
+
+This report contains a completed clustering run from barbac Studio.
+`r if(isTRUE(x$provenance$synthetic)) '**The input is a synthetic demonstration dataset.**' else ''`
+
+The analysis contains **`r format(sum(x$input$counts),big.mark=',')` barcode reads**,
+**`r length(unique(x$input$sample))` samples**, and
+**`r nrow(x$centroids)` inferred clusters** across
+**`r length(unique(x$input$population))` populations**.
+
+Clustering took `r sprintf('%.3f',x$seconds)` seconds on the machine running the app;
+this excludes upload, extraction, plotting and report rendering.
+
+## Clustering settings
+
+```{r}
+knitr::kable(data.frame(Setting=names(x$settings),Value=unlist(x$settings)),row.names=FALSE)
+```
+
+Counts were pooled across all supplied timepoints within each population.
+Independent populations were clustered separately. This retrospective analysis
+uses information from later timepoints to define the shared cluster memberships.
+
+The experimental Poisson option, if enabled, modifies the LV merge guard and may
+merge genuine length variants. It is not an estimated sequencing error rate.
+
+## Cluster statistics
+
+```{r}
+knitr::kable(x$stats,digits=6,row.names=FALSE)
+```
+
+Singletons have a total count of one. Largest-cluster and top-K fractions use all
+barcode counts in the population as their denominator. Cluster counts are inferred
+lineages, not known-truth accuracy estimates.
+
+## Lineage trajectories
+
+Frequencies divide each lineage's counts by all supplied barcode counts in that
+sample. No abundance cutoff is applied. Missing lineage counts are filled with zero.
+Plots require at least two numeric timepoints in a population.
+
+```{r, results='asis'}
+if(!length(plots))cat('No trajectory plots are available for this input.\n')
+for(p in plots){
+  cat('\n### ',htmltools::htmlEscape(p$population),'\n\n',sep='')
+  cat('![](',p$file,')\n\n',sep='')
+}
+```
+
+## Most abundant clusters
+
+The table shows the 30 most abundant clusters. Complete centroids, memberships
+and per-sample counts are available in the app's CSV and ZIP downloads.
+
+```{r}
+knitr::kable(head(x$centroids[order(-x$centroids$sum_counts),],30),row.names=FALSE)
+```
+
+## Reproducibility
+
+Package version: `r x$provenance$package_version`  
+Clustering build: `r x$provenance$build_id`  
+Created: `r x$provenance$created_utc`  
+Normalized input SHA-256: `r x$provenance$input_sha256`
+
+```{r}
+cat(jsonlite::toJSON(list(settings=x$settings,provenance=x$provenance),pretty=TRUE,auto_unbox=TRUE,na='null'))
+```

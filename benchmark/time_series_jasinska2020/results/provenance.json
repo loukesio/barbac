@@ -1,0 +1,28 @@
+{
+  "status": "complete",
+  "method": "barbac LV + Poisson",
+  "build": "barbac-2026-09-10-eligible-parent-v14",
+  "distance": 3,
+  "tie_break": "support",
+  "merge_ratio": 20,
+  "error_rate": 0.005,
+  "use_design": false,
+  "baseline": "Three shared initial samples pooled, reused once within each population clustering",
+  "primary_frequency_denominator": "All FASTQ reads in the sample for read accounting; author final-frequency normalization is unresolved. The report also compares frequencies among extracted barcode reads.",
+  "reference": "Published 288-base masked cassette; positions 11–25 are the barcode",
+  "package_sources": {
+    "src/clustering.cpp": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+    "R/10_barbac_xtr.R": "d15597a4541b4d6cc5dd487e07f91cb14b4ac06df8c6113b0f5daf4ffc69371c",
+    "R/10a_extract_flanked_bam.R": "7fd6e98001d8de236fc9f1aad1623ea3068864550810a502d685f849520baa88"
+  },
+  "source_hashes": {
+    "cluster_time_series.R": "bde8b62766d41bf923f7417bd944e6fe73c00258f06483db463b0c6598d987e0",
+    "process_samples.R": "7b479878f83bbd924dfd85bb33cf85bb33dec19bf9135a5b972736586719ef65",
+    "analysis_helpers.R": "260c8bb30c1207443f3c856dbd93d912cfb2010ddb8970fec313d7aec38d32e9",
+    "samples.tsv": "692c612eb2edad01c07fad40a258a4b50a85d67f2cf39f6a45452bcfbfa65fca",
+    "baseline_samples.tsv": "895c1ebb671148084920b9852148ca3e4a2ea44f4d199b06cdeb0364a3c284c5",
+    "reference/cassette.fasta": "9b2cc7f1ceaab56d235cdde42c5ba742caec36ad98af7891ed34ce639a000481",
+    "sources/supplementary_tables.xlsx": "b4d66fb6fadc25f41f8793b7a5bf8a2e559b8a60128e61d8445364ab9c820478"
+  }
+}

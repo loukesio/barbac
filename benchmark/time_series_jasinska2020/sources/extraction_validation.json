@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "known_boundary_barcodes": 5,
+  "insertion_deletion_and_reverse_orientation": true,
+  "altered_flank_rejected": true,
+  "reference_sha256": "9b2cc7f1ceaab56d235cdde42c5ba742caec36ad98af7891ed34ce639a000481"
+}
