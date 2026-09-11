@@ -63,7 +63,7 @@
 <p><strong>Fast DNA barcode clustering. From sequencing reads to lineage trajectories.</strong></p>
 <p>barbac is an R package for extracting DNA barcodes, correcting sequencing errors, and following lineages through time. Its native C++ engine combines abundance-aware clustering with Hamming or Levenshtein distances, retaining the members and counts behind every inferred lineage.</p>
 <p>Start with a barcode-count table or with <strong>R1-only or overlapping paired-end FASTQ reads</strong>. Work in R, or explore your analysis in <strong>barbac Studio</strong>, the local Shiny app.</p>
-<p><a href="#quick-start">Get started</a> · <a href="#barbac-studio">Explore Studio</a> · <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.html">Read the workflow</a> · <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.html">Inspect the evidence</a></p>
+<p><a href="#quick-start">Get started</a> · <a href="#barbac-studio">Explore Studio</a> · <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.md">Read the workflow</a> · <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.md">Inspect the evidence</a></p>
 <p><br clear="right"></p>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -153,7 +153,7 @@
 <span>  output_file <span class="op">=</span> <span class="st">"results/sample1_barcodes.csv"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/super_cluster2.html">super_cluster2</a></span><span class="op">(</span><span class="va">barcode_csv</span><span class="op">)</span></span></code></pre></div>
-<p>Use your construct’s reference name and <strong>one-based, inclusive</strong> coordinates. For indel-preserving extraction, supply a <code>flank_pattern</code> whose capture group matches the observed barcode between constant flanks. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.html">complete workflow</a> explains both extraction modes, QC, mixed single/paired sample tables and time-series joins.</p>
+<p>Use your construct’s reference name and <strong>one-based, inclusive</strong> coordinates. For indel-preserving extraction, supply a <code>flank_pattern</code> whose capture group matches the observed barcode between constant flanks. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.md">complete workflow</a> explains both extraction modes, QC, mixed single/paired sample tables and time-series joins.</p>
 </div>
 <div class="section level2">
 <h2 id="barbac-studio">barbac Studio<a class="anchor" aria-label="anchor" href="#barbac-studio"></a>
@@ -185,7 +185,7 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/loukesio/barbac.git</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="bu">cd</span> barbac</span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="ex">Rscript</span> app/run.R</span></code></pre></div>
-<p>Open <strong><a href="http://127.0.0.1:3838" class="external-link uri">http://127.0.0.1:3838</a></strong> on the same computer. The <a href="app/README.html">Studio guide</a> covers the additional R dependencies and optional Quarto installation. Studio builds an isolated release installation of the current package and runs locally; no public upload service is provided.</p>
+<p>Open <strong><a href="http://127.0.0.1:3838" class="external-link uri">http://127.0.0.1:3838</a></strong> on the same computer. The <a href="https://github.com/loukesio/barbac/blob/main/app/README.md">Studio guide</a> covers the additional R dependencies and optional Quarto installation. Studio builds an isolated release installation of the current package and runs locally; no public upload service is provided.</p>
 <p>Download extracted counts <strong>before clustering</strong>, or export centroids, complete memberships, per-sample lineage counts, clustering statistics, figures and a self-contained Quarto HTML report. The <a href="app/media/watch.html">offline video viewer</a> plays both walkthroughs without R or Shiny.</p>
 </div>
 <div class="section level2">
@@ -201,22 +201,22 @@
 <span>  palette <span class="op">=</span> <span class="st">"alger"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="reference/barbac_palettes.html">barbac_palettes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  <span class="co"># all 32 native LTC palettes</span></span></code></pre></div>
-<p>These explicit settings keep every lineage as its own band and missing counts at zero. Pooling across timepoints is retrospective. See the <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.html#cluster-and-construct-a-time-series">time-series workflow</a> and <a href="https://loukesio.github.io/barbac/articles/barbac.html">R vignette</a>.</p>
+<p>These explicit settings keep every lineage as its own band and missing counts at zero. Pooling across timepoints is retrospective. See the <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.md#cluster-and-construct-a-time-series">time-series workflow</a> and <a href="https://loukesio.github.io/barbac/articles/barbac.html">R vignette</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="evidence-and-reproducibility">Evidence and reproducibility<a class="anchor" aria-label="anchor" href="#evidence-and-reproducibility"></a>
 </h2>
-<p>A barbac mode achieved the highest centroid F1 in <strong>four of five datasets</strong> in the recorded comparison with Shepherd, Starcode and Bartender. Rankings depend on the dataset, mode and metric. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.html">benchmark evidence</a> provides settings, complete tables, timings and limitations; the comparison’s v13 measurements remain separate from the current v14 search improvements.</p>
-<p>The repository also includes reproducible workflows for the <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_chen2023/README.html">Chen 2023</a> and <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_jasinska2020/README.html">Jasinska 2020</a> applications, known-truth extraction checks, and tests of indexed versus exhaustive clustering. Raw study data and large generated analyses are recreated locally from the provided scripts. <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.html">Verification instructions and receipts</a> explain exactly what was checked.</p>
+<p>A barbac mode achieved the highest centroid F1 in <strong>four of five datasets</strong> in the recorded comparison with Shepherd, Starcode and Bartender. Rankings depend on the dataset, mode and metric. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.md">benchmark evidence</a> provides settings, complete tables, timings and limitations; the comparison’s v13 measurements remain separate from the current v14 search improvements.</p>
+<p>The repository also includes reproducible workflows for the <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_chen2023/README.md">Chen 2023</a> and <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_jasinska2020/README.md">Jasinska 2020</a> applications, known-truth extraction checks, and tests of indexed versus exhaustive clustering. Raw study data and large generated analyses are recreated locally from the provided scripts. <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.md">Verification instructions and receipts</a> explain exactly what was checked.</p>
 </div>
 <div class="section level2">
 <h2 id="containers-and-help">Containers and help<a class="anchor" aria-label="anchor" href="#containers-and-help"></a>
 </h2>
-<p>The <a href="https://github.com/loukesio/barbac/blob/main/.github/workflows/docker.yml">container workflow</a> builds the R package and FASTQ toolchain for <code>linux/amd64</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/loukesio/barbac:latest</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-it</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">"</span>:/data ghcr.io/loukesio/barbac:latest R</span></code></pre></div>
+<p>The <a href="https://github.com/loukesio/barbac/blob/main/.github/workflows/docker.yml">container workflow</a> builds the R package and FASTQ toolchain for <code>linux/amd64</code>. Build the current release from a checkout:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">--platform</span> linux/amd64 <span class="at">-t</span> barbac:0.2.0 .</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--platform</span> linux/amd64 <span class="at">--rm</span> <span class="at">-it</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">"</span>:/data barbac:0.2.0 R</span></code></pre></div>
 <p><a href="https://loukesio.github.io/barbac/">Documentation</a> · <a href="https://github.com/loukesio/barbac/issues" class="external-link">Issues</a> · <a href="https://github.com/loukesio/barbac" class="external-link">Source</a></p>
-<p>Developed by Loukas Theodosiou. Use <code>citation("barbac")</code> for the package citation. GPL (≥ 2); see <a href="LICENSE.html">LICENSE.md</a>. Bundled LTC palettes retain their <a href="inst/COPYRIGHTS">attribution and permission notice</a>.</p>
+<p>Developed by Loukas Theodosiou. Use <code>citation("barbac")</code> for the package citation. GPL (≥ 2); see <a href="LICENSE.html">LICENSE.md</a>. Bundled LTC palettes retain their <a href="https://github.com/loukesio/barbac/blob/main/inst/COPYRIGHTS">attribution and permission notice</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

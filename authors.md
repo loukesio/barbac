@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/loukesio/barbac/blob/v0.2.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/loukesio/barbac/blob/main/DESCRIPTION)
 
 Theodosiou L (2026). *barbac: End-to-end DNA barcode lineage analysis*.
 R package version 0.2.0, <https://loukesio.github.io/barbac>.
