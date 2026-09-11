@@ -26,6 +26,18 @@ jobs:
       - name: Install tools for real R1 mapping and extraction tests
         run: sudo apt-get update && sudo apt-get install -y fastqc minimap2 samtools
 
+      - uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: barbac-cli
+          create-args: >-
+            -c conda-forge -c bioconda pear=0.9.6
+          init-shell: bash
+          cache-environment: true
+
+      - name: Use the sequencing PEAR executable for package checks
+        shell: bash -el {0}
+        run: echo "$CONDA_PREFIX/bin" >> "$GITHUB_PATH"
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r@v2
