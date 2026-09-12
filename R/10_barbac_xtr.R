@@ -58,8 +58,6 @@
 #' }
 #'
 #' @import dplyr
-#' @importFrom GenomicRanges GRanges
-#' @importFrom GenomicAlignments stackStringsFromBam
 #' @importFrom stringr str_length
 #' @importFrom readr write_csv
 #' @export

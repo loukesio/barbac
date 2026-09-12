@@ -1,0 +1,10 @@
+{
+  "cases": 44,
+  "assertions": 526,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "warnings": 0,
+  "native_build": "barbac-2026-09-10-eligible-parent-v14",
+  "library": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library"
+}

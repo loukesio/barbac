@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "runs": 18,
+  "paired_repetitions_per_condition": 3,
+  "all_centroids_memberships_counts_identical": true,
+  "competitor_runs": 0,
+  "final_seeds_evaluated": false
+}

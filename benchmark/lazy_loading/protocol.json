@@ -1,0 +1,20 @@
+{
+  "source_sha256": {
+    "NAMESPACE": "87aaa8e559ef947c87a0db70de2c510ad2337827e2421051644dfc67b7332020",
+    "R/10_barbac_xtr.R": "9397b039bc0eed87fd485b744bf189486ac5646d96510881f3a8e00b248fb9b4",
+    "src/clustering.cpp": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+    "benchmark/lazy_loading/measure.py": "f4f033e643761c9398424a825b2e6a1b41fcabb957408cd6094cfdc123b384fa",
+    "benchmark/lazy_loading/startup.R": "2eeefae2e303537da2677e7fc64743e104eda26b5ce62f16522ce9cd0c44817d"
+  },
+  "candidate_library_sha256": {
+    "libs/barbac.so": "29cdcc18fadf5b408ce849db41d589a59e7b63e4e39a1c9a3694fbcd30db171e",
+    "R/barbac.rdb": "b551637ab73f189e922442e265f3d95589a987391dc2f54839773cd5958c6c20",
+    "R/barbac.rdx": "94665f146f78f975fa20b5d492b9b1d6a16344b211f3be021185523dc310a0ca",
+    "NAMESPACE": "87aaa8e559ef947c87a0db70de2c510ad2337827e2421051644dfc67b7332020"
+  },
+  "repetitions": 5,
+  "order": "baseline/candidate on even pairs; reversed on odd pairs",
+  "workflow_observations": 1,
+  "timing_claim": "Paired startup only. Workflow compatibility timings are descriptive."
+}

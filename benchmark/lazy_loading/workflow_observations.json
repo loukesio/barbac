@@ -1,0 +1,560 @@
+[
+  {
+    "condition": "random_mixed",
+    "pair": 0,
+    "variant": "baseline",
+    "workflow_seconds": 5.1161569579999195,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/0_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/0_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 4.637306666991208,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.712,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "random_mixed",
+    "pair": 0,
+    "variant": "candidate",
+    "workflow_seconds": 1.9144323749933392,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/0_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/0_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 1.4935984170006122,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.746,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "random_mixed",
+    "pair": 1,
+    "variant": "candidate",
+    "workflow_seconds": 2.1686179590033134,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/1_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/1_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 1.705981499995687,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.739,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "random_mixed",
+    "pair": 1,
+    "variant": "baseline",
+    "workflow_seconds": 4.882692041996052,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/1_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/1_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 4.466244833995006,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.655,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "random_mixed",
+    "pair": 2,
+    "variant": "baseline",
+    "workflow_seconds": 4.922957250004401,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/2_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/2_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 4.518681749992538,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.653,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "random_mixed",
+    "pair": 2,
+    "variant": "candidate",
+    "workflow_seconds": 1.7580457909934921,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/2_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/random_mixed/2_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 1.3199860000022454,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.639,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "anchored_mixed",
+    "pair": 0,
+    "variant": "baseline",
+    "workflow_seconds": 5.123397666000528,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/0_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "26"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/0_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 4.679985290989862,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.942,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "anchored_mixed",
+    "pair": 0,
+    "variant": "candidate",
+    "workflow_seconds": 2.0759354580077343,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/0_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/0_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 1.647751917000278,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.984,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "anchored_mixed",
+    "pair": 1,
+    "variant": "candidate",
+    "workflow_seconds": 2.0253137499967124,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/1_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/1_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 1.5951118750090245,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.932,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "anchored_mixed",
+    "pair": 1,
+    "variant": "baseline",
+    "workflow_seconds": 5.14640016600606,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/1_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "26"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/1_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 4.742791958997259,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.957,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "anchored_mixed",
+    "pair": 2,
+    "variant": "baseline",
+    "workflow_seconds": 5.186710583002423,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/2_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "26"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/2_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 4.741632332996232,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 1.04,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "anchored_mixed",
+    "pair": 2,
+    "variant": "candidate",
+    "workflow_seconds": 2.0407712919986807,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/2_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/anchored_mixed/2_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 1.5887935000064317,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 0.941,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "milos",
+    "pair": 0,
+    "variant": "baseline",
+    "workflow_seconds": 38.310005250008544,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/0_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/0_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 37.90308633299719,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 33.471,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "milos",
+    "pair": 0,
+    "variant": "candidate",
+    "workflow_seconds": 34.75305579099222,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/0_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/0_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 34.22462695800641,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 32.985,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "milos",
+    "pair": 1,
+    "variant": "candidate",
+    "workflow_seconds": 35.03176574999816,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/1_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/1_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 34.59059233299922,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 33.392,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "milos",
+    "pair": 1,
+    "variant": "baseline",
+    "workflow_seconds": 38.27880866700434,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/1_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/1_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 37.700783249994856,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 33.12,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "milos",
+    "pair": 2,
+    "variant": "baseline",
+    "workflow_seconds": 38.59434049999982,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/2_baseline",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/app/.runtime/library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/2_baseline",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 38.06046870800492,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 33.273,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  },
+  {
+    "condition": "milos",
+    "pair": 2,
+    "variant": "candidate",
+    "workflow_seconds": 35.24379595799837,
+    "worker_command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/worker.py",
+      "lv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/2_candidate",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "outputs_byte_identical": true,
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/paired_complete/milos/2_candidate",
+      "lv",
+      "3",
+      "poisson"
+    ],
+    "tool_seconds": 34.73064170801081,
+    "input_preparation_seconds": 0.0,
+    "barbac_core_seconds": 33.516,
+    "build_id": "barbac-2026-09-10-eligible-parent-v14"
+  }
+]

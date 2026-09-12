@@ -1,0 +1,85 @@
+{
+  "observations": [
+    {
+      "pair": 0,
+      "variant": "baseline",
+      "wall_seconds": 3.4038787919998867,
+      "output": "LOAD_SECONDS=3.275000\nGENOMIC_ALIGNMENTS_LOADED=TRUE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 0,
+      "variant": "candidate",
+      "wall_seconds": 0.635886042000493,
+      "output": "LOAD_SECONDS=0.527000\nGENOMIC_ALIGNMENTS_LOADED=FALSE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 1,
+      "variant": "candidate",
+      "wall_seconds": 0.6142238339962205,
+      "output": "LOAD_SECONDS=0.497000\nGENOMIC_ALIGNMENTS_LOADED=FALSE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 1,
+      "variant": "baseline",
+      "wall_seconds": 3.832415291995858,
+      "output": "LOAD_SECONDS=3.692000\nGENOMIC_ALIGNMENTS_LOADED=TRUE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 2,
+      "variant": "baseline",
+      "wall_seconds": 3.9049571250070585,
+      "output": "LOAD_SECONDS=3.734000\nGENOMIC_ALIGNMENTS_LOADED=TRUE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 2,
+      "variant": "candidate",
+      "wall_seconds": 0.6038039590057451,
+      "output": "LOAD_SECONDS=0.484000\nGENOMIC_ALIGNMENTS_LOADED=FALSE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 3,
+      "variant": "candidate",
+      "wall_seconds": 0.6004896249942249,
+      "output": "LOAD_SECONDS=0.478000\nGENOMIC_ALIGNMENTS_LOADED=FALSE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 3,
+      "variant": "baseline",
+      "wall_seconds": 3.6181159999978263,
+      "output": "LOAD_SECONDS=3.487000\nGENOMIC_ALIGNMENTS_LOADED=TRUE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 4,
+      "variant": "baseline",
+      "wall_seconds": 3.729458165995311,
+      "output": "LOAD_SECONDS=3.594000\nGENOMIC_ALIGNMENTS_LOADED=TRUE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    },
+    {
+      "pair": 4,
+      "variant": "candidate",
+      "wall_seconds": 0.6479772090096958,
+      "output": "LOAD_SECONDS=0.520000\nGENOMIC_ALIGNMENTS_LOADED=FALSE\nBUILD_ID=barbac-2026-09-10-eligible-parent-v14\n",
+      "stderr": ""
+    }
+  ],
+  "medians": {
+    "baseline": 3.729458165995311,
+    "candidate": 0.6142238339962205
+  },
+  "paired_savings_seconds": [
+    2.7679927499993937,
+    3.2181914579996374,
+    3.3011531660013134,
+    3.0176263750036014,
+    3.081480956985615
+  ]
+}

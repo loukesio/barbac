@@ -1,0 +1,202 @@
+[
+  {
+    "condition": "random_substitutions",
+    "method": "hamming",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.042947499998263,
+    "output_sha256": {
+      "centroids.csv": "622a2389804f3d7a045f30992df9d6d426846f6028e0df252e291437704abd50",
+      "members.csv": "41d411c0addbe53d1b93f1beea498864829c945433055d30cd2eb4ba02e3a320"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_substitutions/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/random_substitutions/hamming",
+      "hamming",
+      "3",
+      "none"
+    ]
+  },
+  {
+    "condition": "random_substitutions",
+    "method": "lv",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.2066659580013948,
+    "output_sha256": {
+      "centroids.csv": "622a2389804f3d7a045f30992df9d6d426846f6028e0df252e291437704abd50",
+      "members.csv": "41d411c0addbe53d1b93f1beea498864829c945433055d30cd2eb4ba02e3a320"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_substitutions/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/random_substitutions/lv",
+      "lv",
+      "3",
+      "poisson"
+    ]
+  },
+  {
+    "condition": "random_mixed",
+    "method": "hamming",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.0477779580105562,
+    "output_sha256": {
+      "centroids.csv": "55185c6ddca3a491f2720bcdbca5062b660f291ace8208637e553d738ab7f7ae",
+      "members.csv": "ddd3158a128358d270d4b9614b32a6f0bb6ea3d539954d404a0e68e250acf8c9"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/random_mixed/hamming",
+      "hamming",
+      "3",
+      "none"
+    ]
+  },
+  {
+    "condition": "random_mixed",
+    "method": "lv",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.3841660420002881,
+    "output_sha256": {
+      "centroids.csv": "cc1e54e714fb588b6e58da5fbeb402b802a196db8e972c6af319a235c35433a6",
+      "members.csv": "f424a524ba2430675dd9c32cc2c5b3b74d8d60b7753b8683e045daed10e6d1b4"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/random_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/random_mixed/lv",
+      "lv",
+      "3",
+      "poisson"
+    ]
+  },
+  {
+    "condition": "anchored_substitutions",
+    "method": "hamming",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.102550625000731,
+    "output_sha256": {
+      "centroids.csv": "049a37825903736247d195c8a3cf2c36e2489f080ea272dcab451d66333496b8",
+      "members.csv": "b58b2add0261ea8a6538cbe3ff576d785cfde470861e007a1112f901d22662f9"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_substitutions/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/anchored_substitutions/hamming",
+      "hamming",
+      "3",
+      "none"
+    ]
+  },
+  {
+    "condition": "anchored_substitutions",
+    "method": "lv",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.377674957999261,
+    "output_sha256": {
+      "centroids.csv": "049a37825903736247d195c8a3cf2c36e2489f080ea272dcab451d66333496b8",
+      "members.csv": "b58b2add0261ea8a6538cbe3ff576d785cfde470861e007a1112f901d22662f9"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_substitutions/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/anchored_substitutions/lv",
+      "lv",
+      "3",
+      "poisson"
+    ]
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "hamming",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.1588162499974715,
+    "output_sha256": {
+      "centroids.csv": "669134b7dedb94155d1e6a3ded2f7aeaf2c799a6b870eeb93a23576b90377119",
+      "members.csv": "006a0c0e6c410832744cb02f793cecb050c7cd16f102299cd988b83391c2ce49"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/anchored_mixed/hamming",
+      "hamming",
+      "3",
+      "none"
+    ]
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "lv",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 1.7592212080053287,
+    "output_sha256": {
+      "centroids.csv": "5540cb1c473ad5df1946976485b62a542b04272b060ad483e35341d9edab47b0",
+      "members.csv": "1c879e59ad654b914af8e73ec1d5f73a54cc76bf34f80d184556d0541f09065a"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/anchored_mixed/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/anchored_mixed/lv",
+      "lv",
+      "3",
+      "poisson"
+    ]
+  },
+  {
+    "condition": "milos",
+    "method": "hamming",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 16.128951374994358,
+    "output_sha256": {
+      "centroids.csv": "8bdd2480c2612e142ac1c40fe534f405031face33826bd532d373a999cbabb69",
+      "members.csv": "e28f37a7be8a7d3fe7818df58da7f86636ae98c8cfe8fe8b2c74a1a2f62e6b3d"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/milos/hamming",
+      "hamming",
+      "3",
+      "none"
+    ]
+  },
+  {
+    "condition": "milos",
+    "method": "lv",
+    "canonical_outputs_byte_identical": true,
+    "R_process_seconds": 32.655750291000004,
+    "output_sha256": {
+      "centroids.csv": "ed39739f0825532f00c9bb00b72d263dd3fa6673edc0541e8682c17b047da377",
+      "members.csv": "399633e20f3f540f3ff9add70cfa0451e83b1ed2271c998ad3c38ccbe654ca31"
+    },
+    "command": [
+      "Rscript",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/latest_four_conditions/run_barbac.R",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos/input.csv",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-source/benchmark/lazy_loading/generated/milos/lv",
+      "lv",
+      "3",
+      "poisson"
+    ]
+  }
+]
