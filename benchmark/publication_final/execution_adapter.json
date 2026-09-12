@@ -1,0 +1,8 @@
+{
+  "registered_at": "2026-09-12T20:24:56.018740+00:00",
+  "adapter_sha256": "b92d7c34b9c99e9ae009a4cd46cb4a9f9b4e3fdb72d50576a1cf53e1d0cce728",
+  "original_run_sha256": "6316a0d5d822441257085bf940fcde77dd843f9d7e669f082f2f6ff5fc611adf",
+  "original_freeze_sha256": "dbd487bb31502b2e20968797adeaf9675948bfa97795d54536a8e48055d6d83f",
+  "generation_validation_sha256": "aa4bac7b6f04fb8f55881f0ea2e40c817877e7232d875514d68a53e235730309",
+  "correction": "Supply missing json module binding before execute(); original frozen source retained unchanged."
+}

@@ -31,7 +31,10 @@ Inputs, source, binaries, commands, mappings, counts and receipts are retained.
 The five previously reserved seeds are included, plus 55 newly registered
 seeds. No final seed is used in the variance pilot or in model selection.
 Failed cells remain failures. No seeds, rates, tools or thresholds are changed
-after examining final results.
+after examining final results. The [failure-reporting addendum](FAILURE_REPORTING.md),
+introduced after Shepherd's first automatic error-estimation failure, explains
+how unavailable comparisons are represented. It preserves all registered cells
+and limits statistical tests to contrasts with every required pair present.
 
 ## Replication and statistical claims
 
@@ -97,13 +100,30 @@ python3 -m unittest discover -s benchmark/publication_final -p 'test_*.py' -v
 python3 benchmark/publication_final/pilot.py
 python3 benchmark/publication_final/run.py freeze
 python3 benchmark/publication_final/run.py generate
-python3 benchmark/publication_final/run.py run
-python3 benchmark/publication_final/analyze.py
+python3 benchmark/publication_final/resume.py
+python3 benchmark/publication_final/analyze_available.py
+python3 benchmark/publication_final/report.py
 ```
 
 The exact execution fingerprint is created after committing the protocol and
 code and before any final generation. Keep frozen inputs and measurements;
 do not amend them to fit later implementation changes.
+
+The original launcher omitted a standard-library `json` import and stopped
+after generating all inputs, before the first tool call. `resume.py` provides
+that binding while preserving the original frozen script. Its separate
+`execution_adapter.json` fingerprint is registered before measurement. No
+generator, model, input, tool command, scoring or analysis changes accompany
+this operational repair.
+
+The original `analyze.py` is retained and refuses a campaign containing tool
+failures. The separately recorded `analyze_available.py` reporting driver keeps
+that frozen function's complete-pair calculations, fixed seeds and correction
+family. Four additional checks verify failure propagation, unavailable means,
+unchanged complete contrasts and preservation of the correction family.
+`reporting_addendum.json` records when this addition was made and its hashes.
+It is explicitly a post-start reporting decision, not retrospectively called
+predeclared.
 
 The main publication scope was chosen after development inspection; this
 selection is disclosed. Background: [Johnson et al. barcode study](https://pmc.ncbi.nlm.nih.gov/articles/PMC10276077/),

@@ -1,0 +1,8 @@
+{
+  "inputs": 120,
+  "all_reads_and_parent_totals_reconcile": true,
+  "boundary_reads": 249,
+  "inputs_reaching_boundary": 16,
+  "total_reads": 119992068,
+  "all_registered_seeds_retained": true
+}

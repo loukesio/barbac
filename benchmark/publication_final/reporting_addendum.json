@@ -1,0 +1,13 @@
+{
+  "recorded_at": "2026-09-12T20:40:26.371220+00:00",
+  "stage": "During final execution; after first tool failure",
+  "attempted_at_record": 253,
+  "failures_observed": 4,
+  "files": {
+    "FAILURE_REPORTING.md": "2fde38c7efe7c656e196e1cb34b3db7ca93017ac15f6d052bf922b58c3eb5883",
+    "analyze_available.py": "bd6290e4ae990d3f78654e66c75f655dfd0d8ff1ac692a9ae0e989857cd0bbdb",
+    "test_retained_failures.py": "3ae763ba9b0046110107d3bf1d9d099e433ce35b439116e46e2520a24d82884c"
+  },
+  "original_frozen_analysis_sha256": "cb420bd500270dc668ea4a4983515059809c605bc20cf7522946c34307297800",
+  "original_freeze_sha256": "dbd487bb31502b2e20968797adeaf9675948bfa97795d54536a8e48055d6d83f"
+}

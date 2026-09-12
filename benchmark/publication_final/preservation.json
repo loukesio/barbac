@@ -1,0 +1,61 @@
+{
+  "main_commit": "3e3c91a230e3bf397c8cd323a8e219574580cf9b",
+  "release_code_commit": "fe05e8e873da0980ed1f100ff79217de791f7f77",
+  "critical_files": [
+    {
+      "file": "src/clustering.cpp",
+      "sha256": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+      "matches_main": true
+    },
+    {
+      "file": "R/11_super_cluster2.R",
+      "sha256": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+      "matches_main": true
+    },
+    {
+      "file": "R/09_run_cli_pipeline.R",
+      "sha256": "d9490fc4cc7fee57fc097372d978877032283990691dedd814a031e7e22aebb4",
+      "matches_main": true
+    },
+    {
+      "file": "R/10a_extract_flanked_bam.R",
+      "sha256": "7fd6e98001d8de236fc9f1aad1623ea3068864550810a502d685f849520baa88",
+      "matches_main": true
+    },
+    {
+      "file": "R/12_barbac_ts_area.R",
+      "sha256": "6a8d174a3f078d897b011246dec5ed160355927d119296f5ac19394a19689d8b",
+      "matches_main": true
+    },
+    {
+      "file": "R/14_cluster_stats.R",
+      "sha256": "08fd00a0c74462e255e239682c4cdf40638bbf4169f44b0f1535f2a68bf11212",
+      "matches_main": true
+    },
+    {
+      "file": "app/app.R",
+      "sha256": "073c1d0b6ce9290550f4b4606c7c214f33991ecfa37f51c78f3763c79425d5e6",
+      "matches_main": true
+    },
+    {
+      "file": "app/run.R",
+      "sha256": "fa2aff7333e0e8cb4a9b9fb675aa913ff964cec97b7b28bf45e8f09e48ffc90f",
+      "matches_main": true
+    },
+    {
+      "file": "app/media/studio-walkthrough.mp4",
+      "sha256": "c1011ef172ae1f30f5c93ae0985891fe0f086669ce6624423ce6b0a8db70ea25",
+      "matches_main": true
+    },
+    {
+      "file": "app/media/studio-fastq.mp4",
+      "sha256": "9d5e26be0b8e290d056efbd5873941e5488ef043364638787423f0d142133235",
+      "matches_main": true
+    }
+  ],
+  "only_package_changes_from_main": [
+    "NAMESPACE",
+    "R/10_barbac_xtr.R"
+  ],
+  "purpose": "Two redundant BAM imports removed; native algorithm, pipeline, app and media preserved"
+}
