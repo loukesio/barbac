@@ -1,0 +1,140 @@
+{
+  "selected_n_per_design": 60,
+  "normal_approx_required_n": 3851,
+  "target_difference_percentage_points": 0.01,
+  "familywise_alpha": 0.05,
+  "power_target": 0.9,
+  "budget_cap_binding": true,
+  "contrasts": [
+    {
+      "condition": "random_mixed",
+      "competitor": "shepherd",
+      "n": 4,
+      "mean_difference": 0.20167164449310349,
+      "sd": 0.14135050006099528,
+      "differences": {
+        "2026091201": 0.15466572134459966,
+        "20260912101": 0.26377651076921893,
+        "20260912102": 0.3580723655709619,
+        "20260912103": 0.03017198028763346
+      },
+      "normal_approx_required_n": 2854,
+      "approx_power_at_selected_n": 0.024765602897646694,
+      "approx_90pct_detectable_difference": 0.06896490698573046
+    },
+    {
+      "condition": "random_mixed",
+      "competitor": "starcode_sphere",
+      "n": 4,
+      "mean_difference": 0.03145726350356526,
+      "sd": 0.027647106528935556,
+      "differences": {
+        "2026091201": 0.025166798680501756,
+        "20260912101": -0.00498849357195752,
+        "20260912102": 0.055278129096734574,
+        "20260912103": 0.05037261980898222
+      },
+      "normal_approx_required_n": 110,
+      "approx_power_at_selected_n": 0.5909027611950042,
+      "approx_90pct_detectable_difference": 0.013489022885450388
+    },
+    {
+      "condition": "random_mixed",
+      "competitor": "starcode_mp",
+      "n": 4,
+      "mean_difference": 0.6098098522491568,
+      "sd": 0.16418788404654333,
+      "differences": {
+        "2026091201": 0.7607901533372257,
+        "20260912101": 0.485459923837837,
+        "20260912102": 0.45113229214086914,
+        "20260912103": 0.7418570396806956
+      },
+      "normal_approx_required_n": 3851,
+      "approx_power_at_selected_n": 0.020763970382341797,
+      "approx_90pct_detectable_difference": 0.08010726631011274
+    },
+    {
+      "condition": "random_mixed",
+      "competitor": "bartender",
+      "n": 4,
+      "mean_difference": 0.15688937303395534,
+      "sd": 0.03110663158693951,
+      "differences": {
+        "2026091201": 0.14942223000893762,
+        "20260912101": 0.15439496502402505,
+        "20260912102": 0.12451194302526858,
+        "20260912103": 0.1992283540775901
+      },
+      "normal_approx_required_n": 139,
+      "approx_power_at_selected_n": 0.47076781055826356,
+      "approx_90pct_detectable_difference": 0.015176925112447054
+    },
+    {
+      "condition": "anchored_mixed",
+      "competitor": "shepherd",
+      "n": 4,
+      "mean_difference": 0.003799705820174637,
+      "sd": 0.0063132979835285,
+      "differences": {
+        "2026091201": 0.005063250205395775,
+        "20260912101": 0.005065795319552535,
+        "20260912102": -0.004987549006798986,
+        "20260912103": 0.010057326762549224
+      },
+      "normal_approx_required_n": 6,
+      "approx_power_at_selected_n": 1.0,
+      "approx_90pct_detectable_difference": 0.003080257997101966
+    },
+    {
+      "condition": "anchored_mixed",
+      "competitor": "starcode_sphere",
+      "n": 4,
+      "mean_difference": 0.02515910679888478,
+      "sd": 0.044177639750385474,
+      "differences": {
+        "2026091201": 0.005063250205395775,
+        "20260912101": -0.02509102012072617,
+        "20260912102": 0.07536197140700551,
+        "20260912103": 0.045302225703863996
+      },
+      "normal_approx_required_n": 279,
+      "approx_power_at_selected_n": 0.21464298663106743,
+      "approx_90pct_detectable_difference": 0.021554269810999848
+    },
+    {
+      "condition": "anchored_mixed",
+      "competitor": "starcode_mp",
+      "n": 4,
+      "mean_difference": 0.7528744516072834,
+      "sd": 0.10005121756106526,
+      "differences": {
+        "2026091201": 0.7548038412868294,
+        "20260912101": 0.6664243092981508,
+        "20260912102": 0.6977143220108104,
+        "20260912103": 0.892555333833343
+      },
+      "normal_approx_required_n": 1430,
+      "approx_power_at_selected_n": 0.040604466458855695,
+      "approx_90pct_detectable_difference": 0.048814987636622884
+    },
+    {
+      "condition": "anchored_mixed",
+      "competitor": "bartender",
+      "n": 4,
+      "mean_difference": 0.5824992582141384,
+      "sd": 0.059293355819437864,
+      "differences": {
+        "2026091201": 0.4961316751452216,
+        "20260912101": 0.6095377206600006,
+        "20260912102": 0.5948910654237949,
+        "20260912103": 0.6294365716275365
+      },
+      "normal_approx_required_n": 503,
+      "approx_power_at_selected_n": 0.11018390998754304,
+      "approx_90pct_detectable_difference": 0.02892922746785335
+    }
+  ],
+  "caveat": "Four pilot libraries per design give uncertain variance estimates. Approximate power is planning information, not guaranteed superiority. Final n will not increase after examining outcomes.",
+  "final_seeds_evaluated": false
+}

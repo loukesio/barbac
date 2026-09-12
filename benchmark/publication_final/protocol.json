@@ -1,0 +1,89 @@
+{
+  "suite_id": "barbac-publication-final-v1",
+  "purpose": "Immutable generator and worker settings; final schedule and inference are in final_protocol.json",
+  "development_seed": 2026091201,
+  "reserved_final_seeds": [
+    2026091202,
+    2026091203,
+    2026091204,
+    2026091205,
+    2026091206
+  ],
+  "n_barcodes": 10000,
+  "expected_reads": 1000000,
+  "abundance": {
+    "distribution": "scaled Johnson exponential mixture",
+    "ordinary": 9989,
+    "medium": 10,
+    "high": 1,
+    "means": [
+      1,
+      10,
+      1000
+    ]
+  },
+  "designs": {
+    "random": "NNNNNNNNNNNNNNNNNNNN",
+    "anchored": "NNNNNAANNNNNAANNNNNTTNNNNN"
+  },
+  "substitution_probability": 0.004,
+  "indel_model": "Recursive homopolymer Poisson allocations with measured rates and explicit terminal states outside calibrated support",
+  "homopolymer_min_length": 5,
+  "homopolymer_max_measured_length": 13,
+  "outside_measured_range": "Stop further indel recursion for affected reads, retain and substitute them, save boundary labels and count affected reads; do not interpret unmeasured rates as biologically zero",
+  "conditions": [
+    "random_mixed",
+    "anchored_mixed"
+  ],
+  "methods": [
+    "hamming",
+    "lv",
+    "shepherd",
+    "starcode_sphere",
+    "starcode_mp",
+    "bartender"
+  ],
+  "barbac": {
+    "build_id": "barbac-2026-09-10-eligible-parent-v14",
+    "distance": 3,
+    "tie_break": "support",
+    "merge_ratio": 20,
+    "error_rate": 0.005,
+    "use_design": false,
+    "hamming_indel_model": "none",
+    "lv_indel_model": "poisson"
+  },
+  "shepherd": {
+    "eps": 3,
+    "bft": 4,
+    "length": "nominal design length"
+  },
+  "starcode": {
+    "distance": 3,
+    "threads": 1,
+    "mp_ratio": 5
+  },
+  "bartender": {
+    "distance": 3,
+    "threads": 1,
+    "seed_length": 5,
+    "seed_step": 1,
+    "frequency_cutoff": 1,
+    "z": 5,
+    "direction": "forward"
+  },
+  "observations_per_method_input": 1,
+  "run_order_seed": 2026091211,
+  "timeout_seconds": 900,
+  "primary_accuracy": "exact centroid FN, FP and F1 against all designed barcodes, including zero-read truth",
+  "secondary_accuracy": [
+    "positive-read truth FN/FP/F1",
+    "read-origin assignment accuracy",
+    "unassigned reads",
+    "abundance total variation distance"
+  ],
+  "timing": "Fresh worker wall time including Python worker startup, tool startup, required conversion and canonical centroid/member exports; excludes common input staging, scoring, hashing and downloads",
+  "cache_policy": "Reuse verified outputs and timings only under their exact frozen signature. Never rerun a completed competitor cell automatically.",
+  "reference_paper": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10276077/",
+  "reference_deposit": "https://zenodo.org/records/7411747"
+}

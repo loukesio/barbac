@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-09-12T20:09:28.266846+00:00",
+  "seeds": [
+    2026091201,
+    20260912101,
+    20260912102,
+    20260912103
+  ],
+  "designs": [
+    "random_mixed",
+    "anchored_mixed"
+  ],
+  "methods": [
+    "hamming",
+    "lv",
+    "shepherd",
+    "starcode_sphere",
+    "starcode_mp",
+    "bartender"
+  ],
+  "reuse": "Existing original seed and new-seed barbac observations are read from validated caches; run only missing competitors on six 1x development inputs. Pilot timing is not part of final timing results.",
+  "final_sample_size_rule": {
+    "primary_contrasts": 8,
+    "minimum_per_design": 30,
+    "maximum_per_design": 60,
+    "target_effect_F1_percentage_points": 0.01,
+    "power_target": 0.9,
+    "alpha_familywise": 0.05,
+    "approach": "Use the largest paired F1 difference SD across 8 contrasts and a Bonferroni paired-t approximation. Minimum 30, round up to a multiple of 5, cap at 60. Report target power as unmet if the cap is binding; never increase n after final results."
+  },
+  "boundary": "No final input generated before a separately fixed boundary model, tests and sample-size record."
+}

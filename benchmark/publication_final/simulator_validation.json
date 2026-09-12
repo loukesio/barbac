@@ -1,0 +1,15 @@
+{
+  "unit_tests": 5,
+  "full_dataset_checks": [
+    {
+      "condition": "random_mixed",
+      "all_original_files_byte_identical": true,
+      "boundary_reads": 0
+    },
+    {
+      "condition": "anchored_mixed",
+      "all_original_files_byte_identical": true,
+      "boundary_reads": 0
+    }
+  ]
+}
