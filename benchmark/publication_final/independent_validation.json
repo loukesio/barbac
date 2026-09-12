@@ -1,0 +1,15 @@
+{
+  "registered_rows": 726,
+  "successful_row_arithmetic_checked": 716,
+  "every_summary_mean_sd_and_median_checked": true,
+  "available_paired_t_and_holm_checked_with_base_R": true,
+  "sampled_mapping_cells": 24,
+  "sample_selection": "All successful methods on first registered seed in both designs, highest boundary-read input, and fixed Milo",
+  "sampled_mapping_counts_and_origins_reconcile": true,
+  "bootstrap_scope": "Implementation and frozen-seed checks; no independent bootstrap implementation",
+  "reporting_addendum_hashes_match": true,
+  "original_frozen_reference_preserved": true,
+  "selected_timing_medians_and_log_time_intervals_checked": true,
+  "timing_intervals_independently_checked_with_base_R": true,
+  "sleep_affected_observations_repaired_without_selecting_minimum_time": true
+}

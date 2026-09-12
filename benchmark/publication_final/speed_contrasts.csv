@@ -1,0 +1,9 @@
+condition,competitor,planned_n,n,status,missing_seeds,geometric_time_ratio,ci95_lower,ci95_upper,inference_scope
+random_mixed,shepherd,60,55,unavailable_missing_pairs,"[20260912301, 20260912302, 20260912311, 20260912326, 20260912343]",,,,
+random_mixed,starcode_sphere,60,60,complete,,0.5450857948354423,0.5327869080766966,0.5576685898757382,Secondary descriptive paired log-time interval; no primary multiplicity guarantee
+random_mixed,starcode_mp,60,60,complete,,0.5573654339017342,0.5444519033238878,0.5705852528238161,Secondary descriptive paired log-time interval; no primary multiplicity guarantee
+random_mixed,bartender,60,60,complete,,0.9350200118879559,0.9166378512852368,0.95377080643695,Secondary descriptive paired log-time interval; no primary multiplicity guarantee
+anchored_mixed,shepherd,60,55,unavailable_missing_pairs,"[20260912301, 20260912302, 20260912311, 20260912326, 20260912343]",,,,
+anchored_mixed,starcode_sphere,60,60,complete,,0.5459776001785644,0.5316200745481039,0.5607228811856528,Secondary descriptive paired log-time interval; no primary multiplicity guarantee
+anchored_mixed,starcode_mp,60,60,complete,,0.5525689128056264,0.5174143869039114,0.5901119318042755,Secondary descriptive paired log-time interval; no primary multiplicity guarantee
+anchored_mixed,bartender,60,60,complete,,0.8761039994554962,0.854367969141327,0.8983930175113447,Secondary descriptive paired log-time interval; no primary multiplicity guarantee

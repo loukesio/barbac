@@ -1,0 +1,60 @@
+{
+  "no_unrepaired_sleep_overlap": true,
+  "no_sleep_or_partial_wake_during_repairs": true,
+  "all_known_sleep_events_retained": true,
+  "sleep_events": [
+    "2026-09-12 22:44:52 +0200 Sleep               \tEntering Sleep state due to 'Idle Sleep':TCPKeepAlive=active Using AC (Charge:97%) 19 secs   ",
+    "2026-09-12 22:45:55 +0200 Sleep               \tEntering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:97%) 900 secs  ",
+    "2026-09-12 23:01:56 +0200 Sleep               \tEntering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 239 secs  ",
+    "2026-09-12 23:06:41 +0200 Sleep               \tEntering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 92 secs   ",
+    "2026-09-12 23:36:50 +0200 Sleep               \tEntering Sleep state due to 'Idle Sleep':TCPKeepAlive=active Using AC (Charge:100%) 208 secs  ",
+    "2026-09-12 23:41:02 +0200 Sleep               \tEntering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 344 secs  "
+  ],
+  "windows": [
+    {
+      "start": "2026-09-12T22:44:52+02:00",
+      "end": "2026-09-12T23:08:13+02:00",
+      "affected_original_cells": [
+        "20260912346/random_mixed/starcode_sphere",
+        "20260912346/random_mixed/lv",
+        "20260912303/anchored_mixed/shepherd",
+        "20260912303/anchored_mixed/starcode_sphere",
+        "20260912303/anchored_mixed/starcode_mp",
+        "20260912303/anchored_mixed/hamming",
+        "20260912303/anchored_mixed/bartender",
+        "20260912303/anchored_mixed/lv",
+        "20260912312/anchored_mixed/hamming",
+        "20260912312/anchored_mixed/bartender",
+        "20260912312/anchored_mixed/starcode_sphere",
+        "20260912312/anchored_mixed/lv",
+        "20260912312/anchored_mixed/starcode_mp",
+        "20260912312/anchored_mixed/shepherd",
+        "20260912316/anchored_mixed/shepherd",
+        "20260912316/anchored_mixed/bartender",
+        "20260912316/anchored_mixed/starcode_sphere",
+        "20260912316/anchored_mixed/lv",
+        "20260912316/anchored_mixed/hamming",
+        "20260912316/anchored_mixed/starcode_mp",
+        "2026091202/random_mixed/hamming",
+        "2026091202/random_mixed/bartender",
+        "2026091202/random_mixed/starcode_sphere",
+        "2026091202/random_mixed/shepherd",
+        "2026091202/random_mixed/starcode_mp",
+        "2026091202/random_mixed/lv",
+        "milos/lv",
+        "milos/bartender"
+      ],
+      "affected_repair_cells": [],
+      "between_measurements_only": false
+    },
+    {
+      "start": "2026-09-12T23:36:50+02:00",
+      "end": "2026-09-12T23:46:46+02:00",
+      "affected_original_cells": [],
+      "affected_repair_cells": [],
+      "between_measurements_only": true
+    }
+  ],
+  "first_call": "2026-09-12T20:24:56.131862+00:00",
+  "last_repair": "2026-09-12T21:54:22.359624+00:00"
+}

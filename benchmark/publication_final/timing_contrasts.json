@@ -1,0 +1,90 @@
+[
+  {
+    "condition": "random_mixed",
+    "competitor": "shepherd",
+    "n": 55,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "unavailable_missing_pairs",
+    "geometric_time_ratio": null,
+    "ci95_lower": null,
+    "ci95_upper": null
+  },
+  {
+    "condition": "random_mixed",
+    "competitor": "starcode_sphere",
+    "n": 60,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "complete",
+    "geometric_time_ratio": 0.5448235380189536,
+    "ci95_lower": 0.5324066208532722,
+    "ci95_upper": 0.5575300455575952
+  },
+  {
+    "condition": "random_mixed",
+    "competitor": "starcode_mp",
+    "n": 60,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "complete",
+    "geometric_time_ratio": 0.5594147510791514,
+    "ci95_lower": 0.546105029563493,
+    "ci95_upper": 0.5730488583397386
+  },
+  {
+    "condition": "random_mixed",
+    "competitor": "bartender",
+    "n": 60,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "complete",
+    "geometric_time_ratio": 0.9395911702043879,
+    "ci95_lower": 0.9205476227267841,
+    "ci95_upper": 0.9590286752476606
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "shepherd",
+    "n": 55,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "unavailable_missing_pairs",
+    "geometric_time_ratio": null,
+    "ci95_lower": null,
+    "ci95_upper": null
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "starcode_sphere",
+    "n": 60,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "complete",
+    "geometric_time_ratio": 0.5480331850611196,
+    "ci95_lower": 0.5334603501620853,
+    "ci95_upper": 0.5630041142457556
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "starcode_mp",
+    "n": 60,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "complete",
+    "geometric_time_ratio": 0.5528107274258997,
+    "ci95_lower": 0.5176238173478315,
+    "ci95_upper": 0.5903895649990855
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "bartender",
+    "n": 60,
+    "planned_n": 60,
+    "inference_scope": "Secondary descriptive paired log-time interval; registered sleep-affected observations repaired",
+    "status": "complete",
+    "geometric_time_ratio": 0.8798521470291014,
+    "ci95_lower": 0.8576415092983349,
+    "ci95_upper": 0.9026379812995164
+  }
+]

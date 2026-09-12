@@ -1,0 +1,200 @@
+[
+  {
+    "condition": "random_mixed",
+    "method": "hamming",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 1,
+    "timing_complete_population": true,
+    "workflow_seconds": 1.3984363959971233,
+    "workflow_q25": 1.347718551998696,
+    "workflow_q75": 1.4514989895033068
+  },
+  {
+    "condition": "random_mixed",
+    "method": "lv",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 2,
+    "timing_complete_population": true,
+    "workflow_seconds": 1.7611077709952951,
+    "workflow_q25": 1.6980577709982754,
+    "workflow_q75": 1.8273218437425385
+  },
+  {
+    "condition": "random_mixed",
+    "method": "shepherd",
+    "planned_n": 60,
+    "valid_time_n": 55,
+    "repaired_time_n": 1,
+    "timing_complete_population": false,
+    "workflow_seconds": null,
+    "workflow_q25": null,
+    "workflow_q75": null
+  },
+  {
+    "condition": "random_mixed",
+    "method": "starcode_sphere",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 2,
+    "timing_complete_population": true,
+    "workflow_seconds": 3.285018750000745,
+    "workflow_q25": 3.1810172400073498,
+    "workflow_q75": 3.3865085729921702
+  },
+  {
+    "condition": "random_mixed",
+    "method": "starcode_mp",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 1,
+    "timing_complete_population": true,
+    "workflow_seconds": 3.217145791495568,
+    "workflow_q25": 3.0999735005061666,
+    "workflow_q75": 3.3300806462466426
+  },
+  {
+    "condition": "random_mixed",
+    "method": "bartender",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 1,
+    "timing_complete_population": true,
+    "workflow_seconds": 1.8876703750065644,
+    "workflow_q25": 1.8465150517477014,
+    "workflow_q75": 1.9362049689989362
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "hamming",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 3,
+    "timing_complete_population": true,
+    "workflow_seconds": 1.5184069165043184,
+    "workflow_q25": 1.4898279580047529,
+    "workflow_q75": 1.5590923017480236
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "lv",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 3,
+    "timing_complete_population": true,
+    "workflow_seconds": 2.0541687500008265,
+    "workflow_q25": 1.9812431145001028,
+    "workflow_q75": 2.1231523642563843
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "shepherd",
+    "planned_n": 60,
+    "valid_time_n": 55,
+    "repaired_time_n": 3,
+    "timing_complete_population": false,
+    "workflow_seconds": null,
+    "workflow_q25": null,
+    "workflow_q75": null
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "starcode_sphere",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 3,
+    "timing_complete_population": true,
+    "workflow_seconds": 3.7744777289917693,
+    "workflow_q25": 3.611066135006695,
+    "workflow_q75": 3.889176010245137
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "starcode_mp",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 3,
+    "timing_complete_population": true,
+    "workflow_seconds": 3.6670016040006885,
+    "workflow_q25": 3.4943741672504984,
+    "workflow_q75": 3.7624848647501494
+  },
+  {
+    "condition": "anchored_mixed",
+    "method": "bartender",
+    "planned_n": 60,
+    "valid_time_n": 60,
+    "repaired_time_n": 3,
+    "timing_complete_population": true,
+    "workflow_seconds": 2.3141273750079563,
+    "workflow_q25": 2.2690082287444966,
+    "workflow_q75": 2.35771877024672
+  },
+  {
+    "condition": "milos",
+    "method": "hamming",
+    "planned_n": 1,
+    "valid_time_n": 1,
+    "repaired_time_n": 0,
+    "timing_complete_population": true,
+    "workflow_seconds": 17.497622625000076,
+    "workflow_q25": 17.497622625000076,
+    "workflow_q75": 17.497622625000076
+  },
+  {
+    "condition": "milos",
+    "method": "lv",
+    "planned_n": 1,
+    "valid_time_n": 1,
+    "repaired_time_n": 1,
+    "timing_complete_population": true,
+    "workflow_seconds": 33.64522941700125,
+    "workflow_q25": 33.64522941700125,
+    "workflow_q75": 33.64522941700125
+  },
+  {
+    "condition": "milos",
+    "method": "shepherd",
+    "planned_n": 1,
+    "valid_time_n": 1,
+    "repaired_time_n": 0,
+    "timing_complete_population": true,
+    "workflow_seconds": 120.1191690830019,
+    "workflow_q25": 120.1191690830019,
+    "workflow_q75": 120.1191690830019
+  },
+  {
+    "condition": "milos",
+    "method": "starcode_sphere",
+    "planned_n": 1,
+    "valid_time_n": 1,
+    "repaired_time_n": 0,
+    "timing_complete_population": true,
+    "workflow_seconds": 170.682208541999,
+    "workflow_q25": 170.682208541999,
+    "workflow_q75": 170.682208541999
+  },
+  {
+    "condition": "milos",
+    "method": "starcode_mp",
+    "planned_n": 1,
+    "valid_time_n": 1,
+    "repaired_time_n": 0,
+    "timing_complete_population": true,
+    "workflow_seconds": 193.38634170799924,
+    "workflow_q25": 193.38634170799924,
+    "workflow_q75": 193.38634170799924
+  },
+  {
+    "condition": "milos",
+    "method": "bartender",
+    "planned_n": 1,
+    "valid_time_n": 1,
+    "repaired_time_n": 1,
+    "timing_complete_population": true,
+    "workflow_seconds": 41.77313162499922,
+    "workflow_q25": 41.77313162499922,
+    "workflow_q75": 41.77313162499922
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "condition": "random_mixed",
+    "competitor": "shepherd",
+    "n": 55,
+    "lv_f1_percent": 99.29301673764813,
+    "competitor_f1_percent": 99.05236301438207,
+    "scope": "Descriptive matched subset conditional on competitor success; no full-design inference"
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "shepherd",
+    "n": 55,
+    "lv_f1_percent": 99.25246835612217,
+    "competitor_f1_percent": 99.23908694632257,
+    "scope": "Descriptive matched subset conditional on competitor success; no full-design inference"
+  }
+]

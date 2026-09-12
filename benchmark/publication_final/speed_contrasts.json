@@ -1,0 +1,102 @@
+[
+  {
+    "condition": "random_mixed",
+    "competitor": "shepherd",
+    "planned_n": 60,
+    "n": 55,
+    "status": "unavailable_missing_pairs",
+    "missing_seeds": [
+      20260912301,
+      20260912302,
+      20260912311,
+      20260912326,
+      20260912343
+    ],
+    "geometric_time_ratio": null,
+    "ci95_lower": null,
+    "ci95_upper": null
+  },
+  {
+    "condition": "random_mixed",
+    "competitor": "starcode_sphere",
+    "planned_n": 60,
+    "n": 60,
+    "status": "complete",
+    "geometric_time_ratio": 0.5450857948354423,
+    "ci95_lower": 0.5327869080766966,
+    "ci95_upper": 0.5576685898757382,
+    "inference_scope": "Secondary descriptive paired log-time interval; no primary multiplicity guarantee"
+  },
+  {
+    "condition": "random_mixed",
+    "competitor": "starcode_mp",
+    "planned_n": 60,
+    "n": 60,
+    "status": "complete",
+    "geometric_time_ratio": 0.5573654339017342,
+    "ci95_lower": 0.5444519033238878,
+    "ci95_upper": 0.5705852528238161,
+    "inference_scope": "Secondary descriptive paired log-time interval; no primary multiplicity guarantee"
+  },
+  {
+    "condition": "random_mixed",
+    "competitor": "bartender",
+    "planned_n": 60,
+    "n": 60,
+    "status": "complete",
+    "geometric_time_ratio": 0.9350200118879559,
+    "ci95_lower": 0.9166378512852368,
+    "ci95_upper": 0.95377080643695,
+    "inference_scope": "Secondary descriptive paired log-time interval; no primary multiplicity guarantee"
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "shepherd",
+    "planned_n": 60,
+    "n": 55,
+    "status": "unavailable_missing_pairs",
+    "missing_seeds": [
+      20260912301,
+      20260912302,
+      20260912311,
+      20260912326,
+      20260912343
+    ],
+    "geometric_time_ratio": null,
+    "ci95_lower": null,
+    "ci95_upper": null
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "starcode_sphere",
+    "planned_n": 60,
+    "n": 60,
+    "status": "complete",
+    "geometric_time_ratio": 0.5459776001785644,
+    "ci95_lower": 0.5316200745481039,
+    "ci95_upper": 0.5607228811856528,
+    "inference_scope": "Secondary descriptive paired log-time interval; no primary multiplicity guarantee"
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "starcode_mp",
+    "planned_n": 60,
+    "n": 60,
+    "status": "complete",
+    "geometric_time_ratio": 0.5525689128056264,
+    "ci95_lower": 0.5174143869039114,
+    "ci95_upper": 0.5901119318042755,
+    "inference_scope": "Secondary descriptive paired log-time interval; no primary multiplicity guarantee"
+  },
+  {
+    "condition": "anchored_mixed",
+    "competitor": "bartender",
+    "planned_n": 60,
+    "n": 60,
+    "status": "complete",
+    "geometric_time_ratio": 0.8761039994554962,
+    "ci95_lower": 0.854367969141327,
+    "ci95_upper": 0.8983930175113447,
+    "inference_scope": "Secondary descriptive paired log-time interval; no primary multiplicity guarantee"
+  }
+]

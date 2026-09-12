@@ -1,0 +1,9 @@
+{
+  "rows": 18,
+  "main_pdf_pages": 1,
+  "all_displayed_aggregates_reconciled": true,
+  "all_execution_output_hashes_verified": true,
+  "main_pdf_text_rows_verified": true,
+  "pdf_sha256": "6a7f84f06785869c16490341678526306dc23d364caaa74a7c8fdcc0eafdaecb",
+  "supplement_sha256": "7adcc2aa75bebc84131bcbd38e599d8988d440129107a3f548fcc6df610a8c28"
+}

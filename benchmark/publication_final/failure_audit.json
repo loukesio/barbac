@@ -1,0 +1,262 @@
+[
+  {
+    "condition": "random_mixed",
+    "seed": 20260912343,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912343/random_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912343/random_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '20']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912343/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912343/random_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912343/random_mixed/shepherd/input.tsv', '-l', '20', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "2e2e1703d63fa43de91966a359d5e92b9eec1fad2bf9c85b8cc240f2ba07fed8",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "5c0b615410de3202a8e1fa3bf99754fdba49c3321d325bb841a52a8c2d878f06",
+      "input.tsv": "74c5314e04ddc9c1e104f7eefad4b3d6182b42af9140e91ae42681e9c072700b"
+    }
+  },
+  {
+    "condition": "random_mixed",
+    "seed": 20260912301,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912301/random_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912301/random_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '20']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912301/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912301/random_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912301/random_mixed/shepherd/input.tsv', '-l', '20', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "13a0ebd3dc404cfdbc833f8ef8fb5c178dfec71eb02a3a12ea4b8e7fd31b4a5a",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "82f7b879a3dc9748ec4d08574c8c0b0da19b6cf3761adda24e0ffb1d7cdf9ef1",
+      "input.tsv": "d5dd0657ee997300083f093160c67d8a88224fe66a4288e8db9c26959e3e4231"
+    }
+  },
+  {
+    "condition": "anchored_mixed",
+    "seed": 20260912302,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912302/anchored_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912302/anchored_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '26']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912302/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912302/anchored_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912302/anchored_mixed/shepherd/input.tsv', '-l', '26', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "3e72a5b1e460d161bf3fd0fe663d57fd01aa5b23b80aa6db00da40804f101f16",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "a0b563d2ee1cd769e5b014c73e9f77d38b93fa11afb359d0c7ecae9f3d3f873e",
+      "input.tsv": "db5f60a0660d6c2f049bd4d3de51eef686f76785a7c9f0293bfbe71024c3d72c"
+    }
+  },
+  {
+    "condition": "random_mixed",
+    "seed": 20260912302,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912302/random_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912302/random_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '20']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912302/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912302/random_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912302/random_mixed/shepherd/input.tsv', '-l', '20', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "46ab5970700e5fcb308b2f754af8a733f0ba218fc1f26c3a5575282253e52732",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "8263649f466fe111776bc0721e312cf0422fb043518273c9e88f6ef4bd57e08f",
+      "input.tsv": "8ab0b76976bca187d7de01ed705121c02bd53689e8f6cf61ccf055875838ef28"
+    }
+  },
+  {
+    "condition": "random_mixed",
+    "seed": 20260912311,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912311/random_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912311/random_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '20']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912311/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912311/random_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912311/random_mixed/shepherd/input.tsv', '-l', '20', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "4862fa4e0d355fe61d0d57d4fe920724421da2b072ea076de1aaba80f186fc80",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "9a1fd29539d975548f5b0942151941b5bce1b0d19508d906c3bac4f3c876459a",
+      "input.tsv": "6defe0c08e4c6f2e5656f1f35d7f1032e0efcc3367565ffdd44fca213b9978c1"
+    }
+  },
+  {
+    "condition": "random_mixed",
+    "seed": 20260912326,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912326/random_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912326/random_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '20']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912326/random_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912326/random_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "20"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912326/random_mixed/shepherd/input.tsv', '-l', '20', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "7d083d52becfbf7f56ba73c8d1d2a876f71617b58c34d73bc44febf807498e7b",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "c8a6a9a5b6b68dca3eb49a1d3da9f550d07c7dbba966b4f0e889dd526d604a8d",
+      "input.tsv": "f2c1b84f4a3a413ab6395df525e839b5f5a259116573830c716868d95b61a1fd"
+    }
+  },
+  {
+    "condition": "anchored_mixed",
+    "seed": 20260912311,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912311/anchored_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912311/anchored_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '26']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912311/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912311/anchored_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912311/anchored_mixed/shepherd/input.tsv', '-l', '26', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "8d80d04e3e48d34ad80b299e5bb4e4885834043f52a0378ae6c360500d6c14af",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "abeebcff397e1ef7b5d1ce38cc75f737891f563bab4b284c3d9741ba8654a822",
+      "input.tsv": "6c5355fc498a06a89fe05a55027bcf97269152e639c5eb7ad59e5722ddc97508"
+    }
+  },
+  {
+    "condition": "anchored_mixed",
+    "seed": 20260912326,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912326/anchored_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912326/anchored_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '26']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912326/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912326/anchored_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912326/anchored_mixed/shepherd/input.tsv', '-l', '26', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "e0640eebe718a1d71faaad1667bdd302656be00d7c468906983610c1836324e1",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "97780c0375b63d110bf17a2ee3f48b85bf7d06381a96767de42a2a81607deed0",
+      "input.tsv": "6cae23948764c5c9ae2e6ed6716bb4bc16f6a5ff632def996084f85ef26589e5"
+    }
+  },
+  {
+    "condition": "anchored_mixed",
+    "seed": 20260912343,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912343/anchored_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912343/anchored_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '26']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912343/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912343/anchored_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912343/anchored_mixed/shepherd/input.tsv', '-l', '26', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "8513e23a5ef40667d46316fc1392264b7e9afd64d37699af7ba175ba59b89f4b",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "a2f1778379a9fa8fb90c892c667c1326df98398bdbfafff26e399b5a217d21a0",
+      "input.tsv": "bf9718e9402c383759a2a9ff6ab0bcbf1c4a7cfd77fd01c2c459a08544954fa7"
+    }
+  },
+  {
+    "condition": "anchored_mixed",
+    "seed": 20260912301,
+    "method": "shepherd",
+    "error": "Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py', 'shepherd', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912301/anchored_mixed', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912301/anchored_mixed/shepherd', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library', '26']' returned non-zero exit status 1.",
+    "command": [
+      "/Users/theodosiou/miniforge3/bin/python3",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py",
+      "shepherd",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912301/anchored_mixed",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912301/anchored_mixed/shepherd",
+      "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools",
+      "/Users/theodosiou/Documents/Projects/test_barbac/.codex/count-learning-speed-2026-09-12/speed-library",
+      "26"
+    ],
+    "logs": {
+      "tool.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py\", line 256, in <module>\n    raise ValueError('Error rate could not be reliably estimated from the data. Please provide an error rate estimate.')\nValueError: Error rate could not be reliably estimated from the data. Please provide an error rate estimate.\n",
+      "worker.log": "Traceback (most recent call last):\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 95, in <module>\n    run(method, Path(source), Path(dest), Path(tools), Path(library), int(length))\n  File \"/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/worker.py\", line 51, in run\n    subprocess.run(command, cwd=dest, stdout=stream, stderr=subprocess.STDOUT,\n  File \"/Users/theodosiou/miniforge3/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['/Users/theodosiou/miniforge3/bin/python3', '/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py', '-f', '/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/results/20260912301/anchored_mixed/shepherd/input.tsv', '-l', '26', '-eps', '3', '-bft', '4']' returned non-zero exit status 1.\n"
+    },
+    "preserved_sha256": {
+      "result.json": "a6b408bfaf611538c228ffd05a6c15bd01ce25e6ec6d389f784ff5f945f6afd7",
+      "tool.log": "1216ac84bd7ee34759fb732ba48dc4831bda47a698158e01f87559b7633dd54c",
+      "worker.log": "5956fa8d7f90193a618b2ecdc240a31f6c61baa466c62b49c762fd30ac291cf8",
+      "input.tsv": "d57dd0109a18026d5f2b6640551a66d38e07bad71d0fbaab0f96c1e8c17b73e5"
+    }
+  }
+]

@@ -1,0 +1,9 @@
+condition,competitor,n,planned_n,inference_scope,status,geometric_time_ratio,ci95_lower,ci95_upper
+random_mixed,shepherd,55,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,unavailable_missing_pairs,,,
+random_mixed,starcode_sphere,60,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,complete,0.5448235380189536,0.5324066208532722,0.5575300455575952
+random_mixed,starcode_mp,60,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,complete,0.5594147510791514,0.546105029563493,0.5730488583397386
+random_mixed,bartender,60,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,complete,0.9395911702043879,0.9205476227267841,0.9590286752476606
+anchored_mixed,shepherd,55,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,unavailable_missing_pairs,,,
+anchored_mixed,starcode_sphere,60,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,complete,0.5480331850611196,0.5334603501620853,0.5630041142457556
+anchored_mixed,starcode_mp,60,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,complete,0.5528107274258997,0.5176238173478315,0.5903895649990855
+anchored_mixed,bartender,60,60,Secondary descriptive paired log-time interval; registered sleep-affected observations repaired,complete,0.8798521470291014,0.8576415092983349,0.9026379812995164

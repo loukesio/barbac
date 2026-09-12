@@ -1,0 +1,21 @@
+{
+  "primary_contrasts": 8,
+  "available_contrasts": 6,
+  "independent_libraries_per_design": 60,
+  "rows": 726,
+  "failed_cells": 10,
+  "supported_contrasts": 6,
+  "all_final_cells_included": true,
+  "milo_inferentially_excluded": true,
+  "plan_unchanged": false,
+  "reporting_addendum": "FAILURE_REPORTING.md",
+  "original_analysis_unchanged": true,
+  "complete_contrast_method_unchanged": true,
+  "family_size_retained": 8,
+  "no_failed_scores_imputed": true,
+  "no_reduced_sample_inference": true,
+  "all_receipts_and_successful_output_hashes_verified": true,
+  "addendum_sha256": "2fde38c7efe7c656e196e1cb34b3db7ca93017ac15f6d052bf922b58c3eb5883",
+  "driver_sha256": "bd6290e4ae990d3f78654e66c75f655dfd0d8ff1ac692a9ae0e989857cd0bbdb",
+  "completed_at": "2026-09-12T21:51:12.978238+00:00"
+}

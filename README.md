@@ -167,11 +167,15 @@ and [R vignette](https://loukesio.github.io/barbac/articles/barbac.html).
 
 ## Evidence and reproducibility
 
-A barbac mode achieved the highest centroid F1 in **four of five datasets** in
-the recorded comparison with Shepherd, Starcode and Bartender. Rankings depend
-on the dataset, mode and metric. The [benchmark evidence](documentation/validation.md)
-provides settings, complete tables, timings and limitations; the comparison's
-v13 measurements remain separate from the current v14 search improvements.
+Across **60 independent libraries per design**, statistical comparisons support
+higher centroid F1 for barbac LV than Bartender and both Starcode configurations
+in random and anchored simulations with substitutions and repeat-dependent
+indels. The [full comparison](benchmark/publication_final/RESULTS.md) includes
+the Milo reference, Shepherd's incomplete runs, workflow timings and limitations.
+See the [one-page table](benchmark/publication_final/benchmark_table.pdf) and
+[statistical supplement](benchmark/publication_final/benchmark_supplement.pdf).
+Results depend on the design, settings and metric; the
+[verification record](documentation/validation.md) also preserves earlier evidence.
 
 The repository also includes reproducible workflows for the
 [Chen 2023](benchmark/time_series_chen2023/README.md) and

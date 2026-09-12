@@ -1,5 +1,47 @@
 # Verification and benchmark evidence
 
+## Replicated v14 benchmark · 12 September 2026
+
+The [publication comparison](../benchmark/publication_final/RESULTS.md) evaluates
+the preserved v14 engine with the verified package-startup improvement. It
+includes 60 independent random-barcode libraries and 60 anchored libraries,
+each with 10,000 true identities and one million expected reads, plus the fixed
+Milo/Johnson reference. Both new designs contain substitutions at 0.004 per
+base and indels from the unscaled archived repeat-specific calibration.
+
+Barbac LV with its existing Poisson option has higher mean exact-centroid F1
+than Bartender, Starcode sphere and Starcode message passing in each new design.
+All six fully observed contrasts meet both specified positive lower-bound
+criteria, retaining the correction for eight comparisons. Mean LV F1 is
+99.28038% for random barcodes and 99.23726% for anchored barcodes. LV retains
+99.72246% on Milo, a fixed development reference excluded from independent-library
+significance claims. This is not a claim of winning every metric or dataset.
+
+All 726 original registered cells were attempted. There are 716 successful
+results; Shepherd's automatic error-rate estimator failed on five libraries
+in each new design. Those failures remain in the record. The
+[reporting addendum](../benchmark/publication_final/FAILURE_REPORTING.md), added
+during execution, leaves incomplete full-design comparisons unavailable and
+reports successful-only summaries separately. It does not retune a tool,
+replace a failed score, reduce the paired sample for a test or drop a registered
+comparison from the correction family.
+
+System sleep affected one timing block. The separately registered
+[timing repair](../benchmark/publication_final/TIMING_REPAIR.md) repeats only
+the 28 affected successful calls with idle sleep prevented, retains both
+measurements and requires identical mappings. The displayed timing uses that
+repair rather than choosing the faster observation. The full
+[protocol](../benchmark/publication_final/README.md) and
+[statistical supplement](../benchmark/publication_final/benchmark_supplement.pdf)
+explain timing boundaries, the sample-size cap, the finite-support indel
+simulation boundary and the development-informed choice of publication scope.
+
+The R/C++ clustering, R1 pipeline, Studio app, plots and walkthrough videos
+remain preserved. The package change removes two redundant BAM namespace
+imports; it does not introduce a new merge rule. The experimental merge
+candidates that lost genuine nearby identities were not adopted. Earlier
+measurements below retain their own settings and source versions.
+
 ## Publication candidate · 11 September 2026
 
 The [release receipt](../benchmark/validation/release_2026-09-11/validation.json)

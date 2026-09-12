@@ -165,17 +165,32 @@ write.csv(out,args[2],row.names=FALSE,na="")
     campaign_start=min(datetime.fromisoformat(r['started_at']) for r in rows)
     campaign_end=max(datetime.fromisoformat(r['finished_at']) for r in repairs.values())
     power_log=subprocess.check_output(['pmset','-g','log'],text=True)
-    sleeps=[]
+    sleeps=[];windows=[];window_start=None
     for line in power_log.splitlines():
-        if 'Entering Sleep state' not in line:continue
-        when=datetime.strptime(line[:25],'%Y-%m-%d %H:%M:%S %z')
-        if campaign_start<=when<=campaign_end:
-            assert START<=when<=END, 'Additional unregistered sleep interval: '+line
-            sleeps.append(line)
+        if not line.startswith('2026-09-12 '):continue
+        if 'Entering Sleep state' in line:
+            when=datetime.strptime(line[:25],'%Y-%m-%d %H:%M:%S %z')
+            if campaign_start<=when<=campaign_end:
+                sleeps.append(line)
+                if window_start is None:window_start=when
+        elif 'Wake from Deep Idle' in line and 'DarkWake' not in line:
+            when=datetime.strptime(line[:25],'%Y-%m-%d %H:%M:%S %z')
+            if window_start is not None:
+                windows.append((window_start,when));window_start=None
+    assert window_start is None, 'Power log must show return to full wake'
     expected_sleeps=[s for s in load(HERE/'timing_repair_protocol.json')['power_log_excerpt'] if 'Entering Sleep state' in s]
-    assert len(sleeps)==len(expected_sleeps)==4, 'Power log coverage must retain every known sleep event'
-    save(HERE/'timing_environment_validation.json',dict(no_additional_sleep_intervals=True,
-        registered_interval_sleep_events=sleeps,first_call=campaign_start.isoformat(),last_repair=campaign_end.isoformat()))
+    assert len([s for s in sleeps if START<=datetime.strptime(s[:25],'%Y-%m-%d %H:%M:%S %z')<=END])==len(expected_sleeps)==4
+    window_audit=[]
+    for start,end in windows:
+        affected=[key(r) for r in rows if datetime.fromisoformat(r['started_at'])<end and datetime.fromisoformat(r['finished_at'])>start]
+        affected_repairs=[r['key'] for r in repairs.values() if datetime.fromisoformat(r['started_at'])<end and datetime.fromisoformat(r['finished_at'])>start]
+        assert not affected_repairs, 'Sleep overlapped a timing repair'
+        assert all(k in repairs for k in affected), 'Unregistered original observation overlaps sleep/partial wake'
+        window_audit.append(dict(start=start.isoformat(),end=end.isoformat(),affected_original_cells=affected,
+            affected_repair_cells=affected_repairs,between_measurements_only=not affected))
+    save(HERE/'timing_environment_validation.json',dict(no_unrepaired_sleep_overlap=True,
+        no_sleep_or_partial_wake_during_repairs=True,all_known_sleep_events_retained=True,
+        sleep_events=sleeps,windows=window_audit,first_call=campaign_start.isoformat(),last_repair=campaign_end.isoformat()))
     datasets=load(HERE/'datasets.json')
     first=load(HERE/'final_protocol.json')['final_seeds'][0]
     keys={(first,'random_mixed'),(first,'anchored_mixed')}
@@ -183,9 +198,9 @@ write.csv(out,args[2],row.names=FALSE,na="")
     keys.add((largest['seed'],largest['condition']))
     selected=[r for r in rows if r['status']=='complete' and (r['condition']=='milos' or (r['seed'],r['condition']) in keys)]
     for row in selected:
-        key='milos' if row['condition']=='milos' else f"{row['seed']}/{row['condition']}"
-        source=REFERENCE/'generated/datasets/milos' if key=='milos' else HERE/'generated/datasets'/key
-        check_mapping(source,HERE/'generated/results'/key/row['method'],row)
+        data_key='milos' if row['condition']=='milos' else f"{row['seed']}/{row['condition']}"
+        source=REFERENCE/'generated/datasets/milos' if data_key=='milos' else HERE/'generated/datasets'/data_key
+        check_mapping(source,HERE/'generated/results'/data_key/row['method'],row)
     save(HERE/'independent_validation.json',dict(registered_rows=len(rows),successful_row_arithmetic_checked=validation['successful_cells'],
         every_summary_mean_sd_and_median_checked=True,available_paired_t_and_holm_checked_with_base_R=True,
         sampled_mapping_cells=len(selected),sample_selection='All successful methods on first registered seed in both designs, highest boundary-read input, and fixed Milo',

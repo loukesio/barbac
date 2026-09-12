@@ -146,7 +146,8 @@ def main():
         srows.append([design+' / '+NAMES[row['method']],number(row['read_assignment_accuracy_percent'],6),
             number(row['incorrect_reads'],2),number(row['unassigned_reads'],2),number(row['abundance_total_variation'],8)])
     st=Table(srows,colWidths=[68*mm,31*mm,26*mm,24*mm,29*mm]);st.setStyle(TableStyle(table_style()))
-    supplement += [st,Spacer(1,8),Paragraph('Simulation entries are means over all 60 independent libraries; Milo entries are one fixed reference. Wrong reads exclude unassigned reads, which are counted separately. Read accuracy counts both as failures. Abundance TV is half the normalized absolute count difference, including unassigned reads.',styles['Tiny']),PageBreak(),
+    supplement += [st,Spacer(1,8),Paragraph('Simulation entries are means over all 60 independent libraries; Milo entries are one fixed reference. Wrong reads exclude unassigned reads, which are counted separately. Read accuracy counts both as failures. Abundance TV is half the normalized absolute count difference, including unassigned reads.',styles['Tiny']),
+        Paragraph('The archived Milo truth counts and origin labels differ at four parents (six reads in total absolute count difference); total reads and identities reconcile. This preserved source discrepancy limits interpretation of very small abundance differences.',styles['Tiny']),PageBreak(),
         Paragraph('Timing, simulation limits and reproducibility',styles['Title'])]
     speeds=load(HERE/'timing_contrasts.json')
     trows=[['Design / competitor','LV / competitor time','95% interval']]
@@ -185,11 +186,26 @@ def main():
             selected=raw[(raw.condition==row['condition'])&(raw.method==row['method'])&(raw.status=='complete')]
             for metric in ['fn','fp','f1_percent']:
                 assert np.isclose(row[metric],selected[metric].mean(),rtol=0,atol=1e-10)
+            selected_times=timing_raw[(timing_raw.condition==row['condition'])&(timing_raw.method==row['method'])].selected_workflow_seconds.dropna()
+            assert np.isclose(row['workflow_seconds'],selected_times.median(),rtol=0,atol=1e-10)
             urows.append([row['condition']+' / '+NAMES[row['method']],f"{row['n_successful']}/{row['planned_n']}",
                 number(row['fn'],2),number(row['fp'],2),number(row['f1_percent'],5),number(row['workflow_seconds'],2)])
         ut=Table(urows,colWidths=[71*mm,24*mm,20*mm,20*mm,25*mm,18*mm]);ut.setStyle(TableStyle(table_style()))
         supplement += [ut,Spacer(1,10),Paragraph('FN, FP and F1 above are means over successful calls only; time is their median. They use fewer libraries than the main table and must not be compared as if they represented the same complete population. Full per-input results retain every failure.',styles['Note']),
             Paragraph('Failure handling: FAILURE_REPORTING.md and analyze_available.py were added after the first failure. The original frozen analyze.py is retained. The complete-pair calculations, bootstrap seeds and correction family are unchanged; unavailable contrasts have no superiority conclusion. Pawel et al. (2025), Handling Missingness, Failures, and Non-Convergence in Simulation Studies, arXiv:2409.18527v3, discusses the consequences of excluding or replacing failed outputs.',styles['Note'])]
+        matched=[]
+        for row in conditional:
+            good=raw[(raw.condition==row['condition'])&(raw.method==row['method'])&(raw.status=='complete')]
+            same=raw[(raw.condition==row['condition'])&(raw.method=='lv')&(raw.seed.isin(good.seed))]
+            assert len(same)==len(good) and (same.status=='complete').all()
+            matched.append(dict(condition=row['condition'],competitor=row['method'],n=len(good),
+                lv_f1_percent=float(same.f1_percent.mean()),competitor_f1_percent=float(good.f1_percent.mean()),
+                scope='Descriptive matched subset conditional on competitor success; no full-design inference'))
+        save(HERE/'matched_successful_only.json',matched)
+        supplement += [Spacer(1,8),Paragraph('Comparison on the same successful inputs',styles['Heading2'])]
+        for row in matched:
+            design='Random' if row['condition']=='random_mixed' else 'Anchored'
+            supplement.append(Paragraph(f"{design}, the same {row['n']} successful inputs: LV mean F1 {row['lv_f1_percent']:.5f}%; {NAMES[row['competitor']]} {row['competitor_f1_percent']:.5f}%. These matched-subset means exclude failed inputs and are descriptive only; they do not replace the unavailable full-design test.",styles['Note']))
     spdf=HERE/'benchmark_supplement.pdf'
     SimpleDocTemplate(str(spdf),pagesize=A4,leftMargin=16*mm,rightMargin=16*mm,topMargin=12*mm,bottomMargin=15*mm,title='Barbac benchmark statistical supplement').build(supplement,onFirstPage=footer,onLaterPages=footer)
     subprocess.run(['pdftoppm','-png','-singlefile','-scale-to','1800',str(pdf),str(HERE/'benchmark_table')],check=True)
@@ -207,6 +223,11 @@ def main():
         lines.append(f"| {row['condition']} | {NAMES[row['competitor']]} | {number(row['mean_difference'],signed=True)} | {number(row['simultaneous_one_sided_lower'],signed=True)} | {number(row['bootstrap_lower'],signed=True)} | {outcome} |")
     lines += ['', '## Interpretation and scope','']+notes
     lines += ['', 'The [timing repair](TIMING_REPAIR.md) retains both original and selected measurements. Original accuracy and timing receipts remain in [all_results.csv](all_results.csv).']
+    if failures:
+        lines += ['', '## Matched successful-only context', '', 'These are descriptive comparisons on the same inputs where the competitor completed. They do not replace full-design tests, and failed inputs remain retained.', '',
+            '| Design | Completed inputs | LV F1 % | Competitor | Competitor F1 % |','|---|---:|---:|---|---:|']
+        for row in matched:
+            lines.append(f"| {row['condition']} | {row['n']} | {row['lv_f1_percent']:.5f} | {NAMES[row['competitor']]} | {row['competitor_f1_percent']:.5f} |")
     (HERE/'RESULTS.md').write_text('\n'.join(lines)+'\n')
     print('VERIFIED',pdf,spdf,flush=True)
 

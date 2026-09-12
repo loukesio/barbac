@@ -1,0 +1,9 @@
+{
+  "phase": "execution",
+  "completed": 726,
+  "total": 726,
+  "latest_condition": "random_mixed",
+  "latest_method": "shepherd",
+  "started_at": "2026-09-12T20:24:56.041710+00:00",
+  "updated_at": "2026-09-12T21:36:41.812272+00:00"
+}
