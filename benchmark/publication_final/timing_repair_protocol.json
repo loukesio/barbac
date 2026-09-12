@@ -1,0 +1,1294 @@
+{
+  "registered_at": "2026-09-12T21:17:46.369963+00:00",
+  "reason": "Sleep and partial wake; objective timestamp overlap, not result-based selection",
+  "window_start_utc": "2026-09-12T20:44:51+00:00",
+  "window_end_utc": "2026-09-12T21:08:14+00:00",
+  "timestamp_margin_seconds": 1,
+  "original_campaign_attempted_at_registration": 372,
+  "cells": [
+    {
+      "key": "20260912346/random_mixed/starcode_sphere",
+      "condition": "random_mixed",
+      "seed": 20260912346,
+      "method": "starcode_sphere",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 20260912346,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 103,
+        "input_sequences": 76429,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 45,
+          "substitution_events": 79773,
+          "insertion_events": 7,
+          "deletion_events": 41
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "3a1b9d78f14f3e54d88c85b5105916bb6dfce8e2088f5bb84b6749e0865c228d",
+          "input.csv": "f4a6120ed01650d23fc2775f952601797eaea17b2c8954e53bfd3f3be01cb93a",
+          "input.tsv": "15924249fdad081c8cd2159ed9338695d0d3c37d754e3062b48eed10475f1725",
+          "labels.csv": "6e041d97e199685e7a3b072dd2b8374ed3b24dbbe0fe14d0f350572b53635952",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912346/random_mixed"
+      },
+      "original_receipt_sha256": "e6fb89327a8035c5b5ff1bbf904d92765937240e43abd1aad7d939eef010e019",
+      "original_workflow_seconds": 3.333030791996862,
+      "original_output_sha256": {
+        "centroids.csv": "b99e6a0402814c2670eea1b85dbfd754fbd51234f94a4ef904d6145763022c1e",
+        "members.csv": "cacbf95c02ebf1815d51896bcd1afad3bc57bddebbd79ef36338056904b72dbe",
+        "worker.json": "a90ddbf40327b5ae46bdd04cb7d53cb00c68ac12e0021c9379b2333bdad45f72"
+      }
+    },
+    {
+      "key": "20260912346/random_mixed/lv",
+      "condition": "random_mixed",
+      "seed": 20260912346,
+      "method": "lv",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 20260912346,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 103,
+        "input_sequences": 76429,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 45,
+          "substitution_events": 79773,
+          "insertion_events": 7,
+          "deletion_events": 41
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "3a1b9d78f14f3e54d88c85b5105916bb6dfce8e2088f5bb84b6749e0865c228d",
+          "input.csv": "f4a6120ed01650d23fc2775f952601797eaea17b2c8954e53bfd3f3be01cb93a",
+          "input.tsv": "15924249fdad081c8cd2159ed9338695d0d3c37d754e3062b48eed10475f1725",
+          "labels.csv": "6e041d97e199685e7a3b072dd2b8374ed3b24dbbe0fe14d0f350572b53635952",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912346/random_mixed"
+      },
+      "original_receipt_sha256": "fe01782cb73f4033f4af3ace67cf40343b18feb01d111e4e531a530ada51f5ea",
+      "original_workflow_seconds": 1.702915750007378,
+      "original_output_sha256": {
+        "centroids.csv": "c04feaa9b16596b5af8808636921d0795e4bf9e3be41458caedb3a05162c7ba4",
+        "members.csv": "4bbf9306e8d2021257308a903e3837c3621b4009e92f9a2ab4fb3bbcd25e5ab6",
+        "worker.json": "443e512608744ac5de79394e76a87a40031dacf90a057a0c27cf07c1a607004d"
+      }
+    },
+    {
+      "key": "20260912303/anchored_mixed/shepherd",
+      "condition": "anchored_mixed",
+      "seed": 20260912303,
+      "method": "shepherd",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912303,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 95,
+        "input_sequences": 95430,
+        "input_reads": 1002454,
+        "event_counts": {
+          "max_indel_depth": 2,
+          "max_boundary_repeat_length": 14,
+          "reads_with_net_length_change": 161,
+          "substitution_events": 104078,
+          "deletion_events": 131,
+          "insertion_events": 31,
+          "boundary_reads": 126,
+          "boundary_states": 1
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.00012569155292911196,
+        "sha256": {
+          "truth.csv": "2901f484127447cc7287e6f7f845f0438395bdfc3968b1e72b031e6fa8e35476",
+          "input.csv": "f3549faee8e6c08f1c25a78540b3435a7af1a9352304446861cf13095eac967c",
+          "input.tsv": "1d579f96196c44a0e73d747ceb70aaa3f9c06982c89390c52fe957c5aba44866",
+          "labels.csv": "ef9e49c539015e72f8ff8631ea89b0ee804ef83297e1bc754ecda8d25fe87929",
+          "boundary_labels.csv": "ded37fbb3139aa909ba9b8a657801bbc9563f2147f6313384d98e2ac95d2ebe2"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912303/anchored_mixed"
+      },
+      "original_receipt_sha256": "34bcb8dc326fc90569b8475b17a0acd3bf4c16bac676f09b72c4acc77a34db35",
+      "original_workflow_seconds": 11.832787584004109,
+      "original_output_sha256": {
+        "centroids.csv": "089f7113d6b0b2c8ed356512dba5114383acab58bfdb125b084a44959f6586d4",
+        "members.csv": "52939111319095e03fa6039522587339c4bf1b26da9337ae4b52decd4dd9470a",
+        "worker.json": "a8d2b289bd022c2d2a64d4585695679123bffeae422672e504bf02a31ceb0792"
+      }
+    },
+    {
+      "key": "20260912303/anchored_mixed/starcode_sphere",
+      "condition": "anchored_mixed",
+      "seed": 20260912303,
+      "method": "starcode_sphere",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912303,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 95,
+        "input_sequences": 95430,
+        "input_reads": 1002454,
+        "event_counts": {
+          "max_indel_depth": 2,
+          "max_boundary_repeat_length": 14,
+          "reads_with_net_length_change": 161,
+          "substitution_events": 104078,
+          "deletion_events": 131,
+          "insertion_events": 31,
+          "boundary_reads": 126,
+          "boundary_states": 1
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.00012569155292911196,
+        "sha256": {
+          "truth.csv": "2901f484127447cc7287e6f7f845f0438395bdfc3968b1e72b031e6fa8e35476",
+          "input.csv": "f3549faee8e6c08f1c25a78540b3435a7af1a9352304446861cf13095eac967c",
+          "input.tsv": "1d579f96196c44a0e73d747ceb70aaa3f9c06982c89390c52fe957c5aba44866",
+          "labels.csv": "ef9e49c539015e72f8ff8631ea89b0ee804ef83297e1bc754ecda8d25fe87929",
+          "boundary_labels.csv": "ded37fbb3139aa909ba9b8a657801bbc9563f2147f6313384d98e2ac95d2ebe2"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912303/anchored_mixed"
+      },
+      "original_receipt_sha256": "9b6596c363d253503828ca8f1b7bb8d02b2bff2e69e0ef0a8eba6f98bd242ccd",
+      "original_workflow_seconds": 3.7521847919997526,
+      "original_output_sha256": {
+        "centroids.csv": "a7450328c6006d76ac8b26a3a7576f51448f102cf65a56b4af4ffd180e0a28f9",
+        "members.csv": "383aa05927132c139c74f3b0f3f0289c8a0133e450f864b73629cbe8af51d133",
+        "worker.json": "bd1eb2c6e3daca7f8137d6b3160e42b5970eeee022cfb3910e54d4888cb1dee1"
+      }
+    },
+    {
+      "key": "20260912303/anchored_mixed/starcode_mp",
+      "condition": "anchored_mixed",
+      "seed": 20260912303,
+      "method": "starcode_mp",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912303,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 95,
+        "input_sequences": 95430,
+        "input_reads": 1002454,
+        "event_counts": {
+          "max_indel_depth": 2,
+          "max_boundary_repeat_length": 14,
+          "reads_with_net_length_change": 161,
+          "substitution_events": 104078,
+          "deletion_events": 131,
+          "insertion_events": 31,
+          "boundary_reads": 126,
+          "boundary_states": 1
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.00012569155292911196,
+        "sha256": {
+          "truth.csv": "2901f484127447cc7287e6f7f845f0438395bdfc3968b1e72b031e6fa8e35476",
+          "input.csv": "f3549faee8e6c08f1c25a78540b3435a7af1a9352304446861cf13095eac967c",
+          "input.tsv": "1d579f96196c44a0e73d747ceb70aaa3f9c06982c89390c52fe957c5aba44866",
+          "labels.csv": "ef9e49c539015e72f8ff8631ea89b0ee804ef83297e1bc754ecda8d25fe87929",
+          "boundary_labels.csv": "ded37fbb3139aa909ba9b8a657801bbc9563f2147f6313384d98e2ac95d2ebe2"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912303/anchored_mixed"
+      },
+      "original_receipt_sha256": "1f7a9f566e77625ed7a6830b0a7fadc0b1455d3fd97bd72614f61855d5a84ebf",
+      "original_workflow_seconds": 3.595887000003131,
+      "original_output_sha256": {
+        "centroids.csv": "4b5b6109462d298ebdf98e6fe4430116f055afa8cab313a6acb3467ed7d6f349",
+        "members.csv": "f6d3b5ef6c5e02e75147245582c8f20085d17f0a25ba19c981a9f18e3163de40",
+        "worker.json": "3d71a479b20dc847028daf40ef3cfb1d90689b0e301ab6bc9fbbbfdb4a443e9b"
+      }
+    },
+    {
+      "key": "20260912303/anchored_mixed/hamming",
+      "condition": "anchored_mixed",
+      "seed": 20260912303,
+      "method": "hamming",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912303,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 95,
+        "input_sequences": 95430,
+        "input_reads": 1002454,
+        "event_counts": {
+          "max_indel_depth": 2,
+          "max_boundary_repeat_length": 14,
+          "reads_with_net_length_change": 161,
+          "substitution_events": 104078,
+          "deletion_events": 131,
+          "insertion_events": 31,
+          "boundary_reads": 126,
+          "boundary_states": 1
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.00012569155292911196,
+        "sha256": {
+          "truth.csv": "2901f484127447cc7287e6f7f845f0438395bdfc3968b1e72b031e6fa8e35476",
+          "input.csv": "f3549faee8e6c08f1c25a78540b3435a7af1a9352304446861cf13095eac967c",
+          "input.tsv": "1d579f96196c44a0e73d747ceb70aaa3f9c06982c89390c52fe957c5aba44866",
+          "labels.csv": "ef9e49c539015e72f8ff8631ea89b0ee804ef83297e1bc754ecda8d25fe87929",
+          "boundary_labels.csv": "ded37fbb3139aa909ba9b8a657801bbc9563f2147f6313384d98e2ac95d2ebe2"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912303/anchored_mixed"
+      },
+      "original_receipt_sha256": "edd783454d7ae617a0ba63b15d47605f89c5413b1706f8c764c24b938c3fdd24",
+      "original_workflow_seconds": 1.4674102090066299,
+      "original_output_sha256": {
+        "centroids.csv": "1c7cc683be8bff89a3362eec057db2be8e08a5593d93f3da8977e2f00b8cefec",
+        "members.csv": "20782c573ae1620efa16ca24b52bb4a096a7b1f65e111d342a268b869adf55d2",
+        "worker.json": "8f55cb22bdea349811b5e37f13ba3421806f4a660a23d349f1010a90b4fdb80a"
+      }
+    },
+    {
+      "key": "20260912303/anchored_mixed/bartender",
+      "condition": "anchored_mixed",
+      "seed": 20260912303,
+      "method": "bartender",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912303,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 95,
+        "input_sequences": 95430,
+        "input_reads": 1002454,
+        "event_counts": {
+          "max_indel_depth": 2,
+          "max_boundary_repeat_length": 14,
+          "reads_with_net_length_change": 161,
+          "substitution_events": 104078,
+          "deletion_events": 131,
+          "insertion_events": 31,
+          "boundary_reads": 126,
+          "boundary_states": 1
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.00012569155292911196,
+        "sha256": {
+          "truth.csv": "2901f484127447cc7287e6f7f845f0438395bdfc3968b1e72b031e6fa8e35476",
+          "input.csv": "f3549faee8e6c08f1c25a78540b3435a7af1a9352304446861cf13095eac967c",
+          "input.tsv": "1d579f96196c44a0e73d747ceb70aaa3f9c06982c89390c52fe957c5aba44866",
+          "labels.csv": "ef9e49c539015e72f8ff8631ea89b0ee804ef83297e1bc754ecda8d25fe87929",
+          "boundary_labels.csv": "ded37fbb3139aa909ba9b8a657801bbc9563f2147f6313384d98e2ac95d2ebe2"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912303/anchored_mixed"
+      },
+      "original_receipt_sha256": "af603155965d828f640f058daf625ccf9b416a5cfbf956df568327564583bcd9",
+      "original_workflow_seconds": 2.29480025000521,
+      "original_output_sha256": {
+        "centroids.csv": "b43bd088b5d360142c7affcced405b02b96ff3d028686d76e2054a739caecf78",
+        "members.csv": "1956ce9f324380ed9c271de565f344579509a66908b56582acce2a26eb739dc6",
+        "worker.json": "9297bf5049c3ad6e3eec902ac2f3a8647c49649f15abfd67489d0e26a31fdaca"
+      }
+    },
+    {
+      "key": "20260912303/anchored_mixed/lv",
+      "condition": "anchored_mixed",
+      "seed": 20260912303,
+      "method": "lv",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912303,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 95,
+        "input_sequences": 95430,
+        "input_reads": 1002454,
+        "event_counts": {
+          "max_indel_depth": 2,
+          "max_boundary_repeat_length": 14,
+          "reads_with_net_length_change": 161,
+          "substitution_events": 104078,
+          "deletion_events": 131,
+          "insertion_events": 31,
+          "boundary_reads": 126,
+          "boundary_states": 1
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.00012569155292911196,
+        "sha256": {
+          "truth.csv": "2901f484127447cc7287e6f7f845f0438395bdfc3968b1e72b031e6fa8e35476",
+          "input.csv": "f3549faee8e6c08f1c25a78540b3435a7af1a9352304446861cf13095eac967c",
+          "input.tsv": "1d579f96196c44a0e73d747ceb70aaa3f9c06982c89390c52fe957c5aba44866",
+          "labels.csv": "ef9e49c539015e72f8ff8631ea89b0ee804ef83297e1bc754ecda8d25fe87929",
+          "boundary_labels.csv": "ded37fbb3139aa909ba9b8a657801bbc9563f2147f6313384d98e2ac95d2ebe2"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912303/anchored_mixed"
+      },
+      "original_receipt_sha256": "8f895e6a2e49729391e7b9aecb4789f9402aebdfb0a1d815dbad1f31cbdd9c4d",
+      "original_workflow_seconds": 1.9333368749939837,
+      "original_output_sha256": {
+        "centroids.csv": "e063281343a10ecec8be575b1377419d9ab3b75ffab2d4eeb76c9fa42236de3e",
+        "members.csv": "f0348c7b6a0e608c16bb02bd0170cb154607c564ac092c0d4846de33f1a2d155",
+        "worker.json": "a101d041ac5702f4467ad059e6afe8a45d7a8f689010d327f83855d84592f0bd"
+      }
+    },
+    {
+      "key": "20260912312/anchored_mixed/hamming",
+      "condition": "anchored_mixed",
+      "seed": 20260912312,
+      "method": "hamming",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912312,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 97,
+        "input_sequences": 92798,
+        "input_reads": 1000945,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 196,
+          "substitution_events": 104431,
+          "deletion_events": 172,
+          "insertion_events": 37
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "1cf9556669ce221e6bdd551bbb5ea620cbe1f8ce8b0655295c7cfeea352eb3dd",
+          "input.csv": "2a459bb2b91703b72994d88c3c86c7822acf6ad3cd737e0ea3550d09ebd26224",
+          "input.tsv": "33f40c12aadf146a056ddbc1cff3a2093d4aae5f0e970344db70ce0cc36b29fb",
+          "labels.csv": "c633d3431e102140a875a2ba839dfef529e3c280cdab5ffd92b54b3ae8fe3954",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912312/anchored_mixed"
+      },
+      "original_receipt_sha256": "6a2f8f7ddc7d4e729e12b561cfa6bdda2546c813c13a485c6403c912d82e586a",
+      "original_workflow_seconds": 1.5106807920092251,
+      "original_output_sha256": {
+        "centroids.csv": "640975f27b0d2215ce54f628a55f46606002c9d5dde5736b2649c4ff7f3222cd",
+        "members.csv": "77321e5fca616f42086a9548014c2b9a50c10abf89594b7d1b5ce5c91e4be2a7",
+        "worker.json": "43abb47d60806c0777215cd21cc8a8048a103416bb2174f03080cf7104dbee95"
+      }
+    },
+    {
+      "key": "20260912312/anchored_mixed/bartender",
+      "condition": "anchored_mixed",
+      "seed": 20260912312,
+      "method": "bartender",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912312,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 97,
+        "input_sequences": 92798,
+        "input_reads": 1000945,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 196,
+          "substitution_events": 104431,
+          "deletion_events": 172,
+          "insertion_events": 37
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "1cf9556669ce221e6bdd551bbb5ea620cbe1f8ce8b0655295c7cfeea352eb3dd",
+          "input.csv": "2a459bb2b91703b72994d88c3c86c7822acf6ad3cd737e0ea3550d09ebd26224",
+          "input.tsv": "33f40c12aadf146a056ddbc1cff3a2093d4aae5f0e970344db70ce0cc36b29fb",
+          "labels.csv": "c633d3431e102140a875a2ba839dfef529e3c280cdab5ffd92b54b3ae8fe3954",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912312/anchored_mixed"
+      },
+      "original_receipt_sha256": "8b33eec8f53d7fa0457265248efa4b9d8c08959d73e0b7417ad40d865043d8d8",
+      "original_workflow_seconds": 2.276801333995536,
+      "original_output_sha256": {
+        "centroids.csv": "4bde4228adbd424e1b1f797cc9096641a97c94ff932fb73cd43fda578e116328",
+        "members.csv": "fb96b20b40f651abffc823e369a5ab437ee991040d2ef39cbf38c9cd840fad6f",
+        "worker.json": "10942e17b820c24000ee2a5c2a5b08697543b16d1d7ee58fa52e19822efaae41"
+      }
+    },
+    {
+      "key": "20260912312/anchored_mixed/starcode_sphere",
+      "condition": "anchored_mixed",
+      "seed": 20260912312,
+      "method": "starcode_sphere",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912312,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 97,
+        "input_sequences": 92798,
+        "input_reads": 1000945,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 196,
+          "substitution_events": 104431,
+          "deletion_events": 172,
+          "insertion_events": 37
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "1cf9556669ce221e6bdd551bbb5ea620cbe1f8ce8b0655295c7cfeea352eb3dd",
+          "input.csv": "2a459bb2b91703b72994d88c3c86c7822acf6ad3cd737e0ea3550d09ebd26224",
+          "input.tsv": "33f40c12aadf146a056ddbc1cff3a2093d4aae5f0e970344db70ce0cc36b29fb",
+          "labels.csv": "c633d3431e102140a875a2ba839dfef529e3c280cdab5ffd92b54b3ae8fe3954",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912312/anchored_mixed"
+      },
+      "original_receipt_sha256": "b7efc9ad573eec1a32db782bef7b70138fbd9fa5ee7ed964a1f7225351068a28",
+      "original_workflow_seconds": 3.609369625002728,
+      "original_output_sha256": {
+        "centroids.csv": "45deb40d140f296908cd99864912cb0a7e2bd444f9437b70a9bd60acc36c09b9",
+        "members.csv": "a10e3d7e2deb696366e601ae1839e36a4120367bf6945a519835746fc4fc569b",
+        "worker.json": "992da029756638ccc7eb0c6adf06041e94c0ff27fac6792b3f53fc0add12e363"
+      }
+    },
+    {
+      "key": "20260912312/anchored_mixed/lv",
+      "condition": "anchored_mixed",
+      "seed": 20260912312,
+      "method": "lv",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912312,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 97,
+        "input_sequences": 92798,
+        "input_reads": 1000945,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 196,
+          "substitution_events": 104431,
+          "deletion_events": 172,
+          "insertion_events": 37
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "1cf9556669ce221e6bdd551bbb5ea620cbe1f8ce8b0655295c7cfeea352eb3dd",
+          "input.csv": "2a459bb2b91703b72994d88c3c86c7822acf6ad3cd737e0ea3550d09ebd26224",
+          "input.tsv": "33f40c12aadf146a056ddbc1cff3a2093d4aae5f0e970344db70ce0cc36b29fb",
+          "labels.csv": "c633d3431e102140a875a2ba839dfef529e3c280cdab5ffd92b54b3ae8fe3954",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912312/anchored_mixed"
+      },
+      "original_receipt_sha256": "dc5afbdbcd1e26c79c07ab950602c1673bdd5964e5b2f683115df322f457d185",
+      "original_workflow_seconds": 1.9492632089968538,
+      "original_output_sha256": {
+        "centroids.csv": "1fd08ae68675bb4e4908204e71059f6afcf7af84ccbb83954000ba4265af3b44",
+        "members.csv": "69ab9ff2214280fc0078e4a2ea528563d82699fd77677997b1250d3bbd96388d",
+        "worker.json": "03cecd73ec8457624e8a3f151e408a96c51f095737f73cee892e1a1e8a5b65c7"
+      }
+    },
+    {
+      "key": "20260912312/anchored_mixed/starcode_mp",
+      "condition": "anchored_mixed",
+      "seed": 20260912312,
+      "method": "starcode_mp",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912312,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 97,
+        "input_sequences": 92798,
+        "input_reads": 1000945,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 196,
+          "substitution_events": 104431,
+          "deletion_events": 172,
+          "insertion_events": 37
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "1cf9556669ce221e6bdd551bbb5ea620cbe1f8ce8b0655295c7cfeea352eb3dd",
+          "input.csv": "2a459bb2b91703b72994d88c3c86c7822acf6ad3cd737e0ea3550d09ebd26224",
+          "input.tsv": "33f40c12aadf146a056ddbc1cff3a2093d4aae5f0e970344db70ce0cc36b29fb",
+          "labels.csv": "c633d3431e102140a875a2ba839dfef529e3c280cdab5ffd92b54b3ae8fe3954",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912312/anchored_mixed"
+      },
+      "original_receipt_sha256": "1961e53aa5f574b512ac781f241b525ea915130a9fa0cee0481354ec5c697407",
+      "original_workflow_seconds": 3.471731625002576,
+      "original_output_sha256": {
+        "centroids.csv": "a76deac2b3696549a983d77257b7ae2bb7dbfb7c8cf7e1515c104552cfade7ff",
+        "members.csv": "98a56f429121028379fb1b4244d456ef4f7d2c5a75cea79df72684b857fa107f",
+        "worker.json": "f670dffe96aec4ea9b3c6312037f1f42f0728c33ad18b3b0dccc6ac43ba1be31"
+      }
+    },
+    {
+      "key": "20260912312/anchored_mixed/shepherd",
+      "condition": "anchored_mixed",
+      "seed": 20260912312,
+      "method": "shepherd",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912312,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 97,
+        "input_sequences": 92798,
+        "input_reads": 1000945,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 196,
+          "substitution_events": 104431,
+          "deletion_events": 172,
+          "insertion_events": 37
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "1cf9556669ce221e6bdd551bbb5ea620cbe1f8ce8b0655295c7cfeea352eb3dd",
+          "input.csv": "2a459bb2b91703b72994d88c3c86c7822acf6ad3cd737e0ea3550d09ebd26224",
+          "input.tsv": "33f40c12aadf146a056ddbc1cff3a2093d4aae5f0e970344db70ce0cc36b29fb",
+          "labels.csv": "c633d3431e102140a875a2ba839dfef529e3c280cdab5ffd92b54b3ae8fe3954",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912312/anchored_mixed"
+      },
+      "original_receipt_sha256": "04fa5f5b63481f3d54b9988fc511dd875e8c58852bb2e66ca93bcc14c74a4a73",
+      "original_workflow_seconds": 9.441973000008147,
+      "original_output_sha256": {
+        "centroids.csv": "12ab1def08c99633a2f8860d0e1669a3bf7993d53ecfe303225af3a3d6d9a4f3",
+        "members.csv": "ae5ee305e3f462f1280afa3e609ca709d93f33fd9b363bc31071000982ff1e19",
+        "worker.json": "3bc0ed5c998c1aaf7bebd100765c69016673752a6e2df4806178c67ec8189a5e"
+      }
+    },
+    {
+      "key": "20260912316/anchored_mixed/shepherd",
+      "condition": "anchored_mixed",
+      "seed": 20260912316,
+      "method": "shepherd",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912316,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 98554,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 4,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 239,
+          "substitution_events": 104345,
+          "insertion_events": 58,
+          "deletion_events": 208
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "c25ee5ebdb4425c0b9e4c62ffbb4d4c111fccdf60d79f3d5f8766a999d73f1ab",
+          "input.csv": "59886d67d40f660bd754fc6674d0e507611a5ba0690e97c1f0aa3a7367d9a264",
+          "input.tsv": "b57fc1f386bb45bb472895d84df377a9acd20795042f0bd65a58eccc20d2066a",
+          "labels.csv": "d091acd71b3dbabc2521e377ce98f4d7165f4fdd9db9776076fb10fec8fbafea",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912316/anchored_mixed"
+      },
+      "original_receipt_sha256": "1dc5f7412b70b282a66bbfa55c5fb1091ac345848605626ba82b03bc220ee457",
+      "original_workflow_seconds": 9.5423960420012,
+      "original_output_sha256": {
+        "centroids.csv": "ee5252940ef68d87ca44208fbab8369bd3f75f20485b91d78a6649213bd7b9f1",
+        "members.csv": "7abea2e97a8e65d0b514495daa46838f1c55fc1c59fd13e389755f3bdb2aa91b",
+        "worker.json": "19470729c769a011dc03b35236f4cd7771f4a6505cfa71b8637335c7738c94d9"
+      }
+    },
+    {
+      "key": "20260912316/anchored_mixed/bartender",
+      "condition": "anchored_mixed",
+      "seed": 20260912316,
+      "method": "bartender",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912316,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 98554,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 4,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 239,
+          "substitution_events": 104345,
+          "insertion_events": 58,
+          "deletion_events": 208
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "c25ee5ebdb4425c0b9e4c62ffbb4d4c111fccdf60d79f3d5f8766a999d73f1ab",
+          "input.csv": "59886d67d40f660bd754fc6674d0e507611a5ba0690e97c1f0aa3a7367d9a264",
+          "input.tsv": "b57fc1f386bb45bb472895d84df377a9acd20795042f0bd65a58eccc20d2066a",
+          "labels.csv": "d091acd71b3dbabc2521e377ce98f4d7165f4fdd9db9776076fb10fec8fbafea",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912316/anchored_mixed"
+      },
+      "original_receipt_sha256": "f87341b24e9aa0d8d3aae370dc10057036de35b6ec60161cc58b633e27a19835",
+      "original_workflow_seconds": 2.231601082996349,
+      "original_output_sha256": {
+        "centroids.csv": "b4890e1636fcf27938206d7331cc7ee557f5a30866ea550fdf08c0134d60d869",
+        "members.csv": "f4e3e534a082d8ec9d216c1b765880b0c2c69fdf4b14a088fb8a44b09addc284",
+        "worker.json": "731442ea069d09abe993e5a8ff3456655c18e2727661c390e84929d18e7afe56"
+      }
+    },
+    {
+      "key": "20260912316/anchored_mixed/starcode_sphere",
+      "condition": "anchored_mixed",
+      "seed": 20260912316,
+      "method": "starcode_sphere",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912316,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 98554,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 4,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 239,
+          "substitution_events": 104345,
+          "insertion_events": 58,
+          "deletion_events": 208
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "c25ee5ebdb4425c0b9e4c62ffbb4d4c111fccdf60d79f3d5f8766a999d73f1ab",
+          "input.csv": "59886d67d40f660bd754fc6674d0e507611a5ba0690e97c1f0aa3a7367d9a264",
+          "input.tsv": "b57fc1f386bb45bb472895d84df377a9acd20795042f0bd65a58eccc20d2066a",
+          "labels.csv": "d091acd71b3dbabc2521e377ce98f4d7165f4fdd9db9776076fb10fec8fbafea",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912316/anchored_mixed"
+      },
+      "original_receipt_sha256": "78ea5129145122c2ca01549e29d4d5440005ad10de410fe5fdaf443e85e95cbf",
+      "original_workflow_seconds": 3.757201290994999,
+      "original_output_sha256": {
+        "centroids.csv": "ccdbe0ad3eaedce81956593c24748a0ea22db2184259c0534c8c0dbf3df907df",
+        "members.csv": "dfbb9f4ab54378be492f232f7b466d17180a5820fe91ab2348ad9ed88674039b",
+        "worker.json": "f7c9459ed3828c52ae387da7928b2c80860e4f20db0eb5f152f3391f828f7917"
+      }
+    },
+    {
+      "key": "20260912316/anchored_mixed/lv",
+      "condition": "anchored_mixed",
+      "seed": 20260912316,
+      "method": "lv",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912316,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 98554,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 4,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 239,
+          "substitution_events": 104345,
+          "insertion_events": 58,
+          "deletion_events": 208
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "c25ee5ebdb4425c0b9e4c62ffbb4d4c111fccdf60d79f3d5f8766a999d73f1ab",
+          "input.csv": "59886d67d40f660bd754fc6674d0e507611a5ba0690e97c1f0aa3a7367d9a264",
+          "input.tsv": "b57fc1f386bb45bb472895d84df377a9acd20795042f0bd65a58eccc20d2066a",
+          "labels.csv": "d091acd71b3dbabc2521e377ce98f4d7165f4fdd9db9776076fb10fec8fbafea",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912316/anchored_mixed"
+      },
+      "original_receipt_sha256": "1f1b5d5ac22ba71b2b6e9be89fbf881b1425db0870c244ad010596d3a2428ed9",
+      "original_workflow_seconds": 1.936309541008086,
+      "original_output_sha256": {
+        "centroids.csv": "e8bc6ee629d840105e1f43e4b8f9636eb44c685ae7310561418ecbc9bd173b90",
+        "members.csv": "186304ddc3d018e781d30a32179337d730508ec235e6c28ce230d28b442bbb66",
+        "worker.json": "b3441c2c72802f0fb24d6bf081b402d30c583ae7ae096e95766fc5a1a3c9a621"
+      }
+    },
+    {
+      "key": "20260912316/anchored_mixed/hamming",
+      "condition": "anchored_mixed",
+      "seed": 20260912316,
+      "method": "hamming",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912316,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 98554,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 4,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 239,
+          "substitution_events": 104345,
+          "insertion_events": 58,
+          "deletion_events": 208
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "c25ee5ebdb4425c0b9e4c62ffbb4d4c111fccdf60d79f3d5f8766a999d73f1ab",
+          "input.csv": "59886d67d40f660bd754fc6674d0e507611a5ba0690e97c1f0aa3a7367d9a264",
+          "input.tsv": "b57fc1f386bb45bb472895d84df377a9acd20795042f0bd65a58eccc20d2066a",
+          "labels.csv": "d091acd71b3dbabc2521e377ce98f4d7165f4fdd9db9776076fb10fec8fbafea",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912316/anchored_mixed"
+      },
+      "original_receipt_sha256": "35b4dda9a86eca5a14bccc186377f7c2c649c4a1afb50b0c7b5bcdbda51f0c53",
+      "original_workflow_seconds": 1.4762501250079367,
+      "original_output_sha256": {
+        "centroids.csv": "d00f5239ddd5d787c67be0845123ae8a6a1e6f9d1864b9b835216cc403041b3a",
+        "members.csv": "21d33160f44921eebfabc84145d75203dab8969d1f30f301cbd562f8eb260b63",
+        "worker.json": "6386006b04cba7805b60b4f535e658a180bb3e0a83e34dc351037c688f93391f"
+      }
+    },
+    {
+      "key": "20260912316/anchored_mixed/starcode_mp",
+      "condition": "anchored_mixed",
+      "seed": 20260912316,
+      "method": "starcode_mp",
+      "source": {
+        "condition": "anchored_mixed",
+        "seed": 20260912316,
+        "nominal_length": 26,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 98554,
+        "input_reads": 999192,
+        "event_counts": {
+          "max_indel_depth": 4,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 239,
+          "substitution_events": 104345,
+          "insertion_events": 58,
+          "deletion_events": 208
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "c25ee5ebdb4425c0b9e4c62ffbb4d4c111fccdf60d79f3d5f8766a999d73f1ab",
+          "input.csv": "59886d67d40f660bd754fc6674d0e507611a5ba0690e97c1f0aa3a7367d9a264",
+          "input.tsv": "b57fc1f386bb45bb472895d84df377a9acd20795042f0bd65a58eccc20d2066a",
+          "labels.csv": "d091acd71b3dbabc2521e377ce98f4d7165f4fdd9db9776076fb10fec8fbafea",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/20260912316/anchored_mixed"
+      },
+      "original_receipt_sha256": "ffe6fbfc2650d8f5fb27b7e10e56909a41a998d6fe042fb94e000e8fa2e496b8",
+      "original_workflow_seconds": 3.63684999999532,
+      "original_output_sha256": {
+        "centroids.csv": "33a6a99888bb79c7335d85f6a9493a29d55711b0161ae13ffb9c62aa378de05a",
+        "members.csv": "7e1955e34de19d9966562bc4b18ae33dbee2f2443aadee9751fc6ff8752ad69c",
+        "worker.json": "8b84f487925b34f90550a1b07b420f0ab174f2bea7fd29574cc72ead626789da"
+      }
+    },
+    {
+      "key": "2026091202/random_mixed/hamming",
+      "condition": "random_mixed",
+      "seed": 2026091202,
+      "method": "hamming",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 2026091202,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 75912,
+        "input_reads": 999537,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 34,
+          "substitution_events": 79625,
+          "deletion_events": 25,
+          "insertion_events": 11
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "f2217af9a12ed5c757ef129ee86b10cc55785b35260bbb1440931ab3a59bc82e",
+          "input.csv": "11ff1bf96f3305d2c68e0d0419d9689c14a8ab07a0e7a2528c3505b1f006d2ba",
+          "input.tsv": "460f9a6234f41c862105a5f02d61f3d15eb41a7fe7d26e1f5563861ffd5a8c2d",
+          "labels.csv": "12c397881e4087b97392c274854d3abcbf182886d268837f36772935e1c9c04c",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/2026091202/random_mixed"
+      },
+      "original_receipt_sha256": "6a9e0ecc26e5675e0aaac04e31dee5d557ffc371b6bf836b97d35c60ef204c91",
+      "original_workflow_seconds": 1.3474172090063803,
+      "original_output_sha256": {
+        "centroids.csv": "6178c84f74582cf46a74637e17c79559d6adb96ffa4dae1dbfba55659132ac8e",
+        "members.csv": "e690b0681f142423c376badf7338a03a1fd120beba2ea50389258f327f090c52",
+        "worker.json": "70ea46469380f1e9ebf3b42c877c19fa7d664045c1a00b1f084a4edd43d2a23d"
+      }
+    },
+    {
+      "key": "2026091202/random_mixed/bartender",
+      "condition": "random_mixed",
+      "seed": 2026091202,
+      "method": "bartender",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 2026091202,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 75912,
+        "input_reads": 999537,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 34,
+          "substitution_events": 79625,
+          "deletion_events": 25,
+          "insertion_events": 11
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "f2217af9a12ed5c757ef129ee86b10cc55785b35260bbb1440931ab3a59bc82e",
+          "input.csv": "11ff1bf96f3305d2c68e0d0419d9689c14a8ab07a0e7a2528c3505b1f006d2ba",
+          "input.tsv": "460f9a6234f41c862105a5f02d61f3d15eb41a7fe7d26e1f5563861ffd5a8c2d",
+          "labels.csv": "12c397881e4087b97392c274854d3abcbf182886d268837f36772935e1c9c04c",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/2026091202/random_mixed"
+      },
+      "original_receipt_sha256": "44cf26c59473a0f3a2218df39063f4c5fbb81a1e166a6ee56af5c4f958ae8b1d",
+      "original_workflow_seconds": 1.8383831669925712,
+      "original_output_sha256": {
+        "centroids.csv": "f3b077975db5381d5bcd3337ffea2e02182c46f24217cb270e973a5df91f5bf3",
+        "members.csv": "329f70a7013f1da4f3939c8ada217f8e9cc3b867d65ac417cae2d1bbfc71bbde",
+        "worker.json": "964e5aaa75885bd2e6c7e74536d937db93f6bc8814de47a825f806c6b13dd0bb"
+      }
+    },
+    {
+      "key": "2026091202/random_mixed/starcode_sphere",
+      "condition": "random_mixed",
+      "seed": 2026091202,
+      "method": "starcode_sphere",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 2026091202,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 75912,
+        "input_reads": 999537,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 34,
+          "substitution_events": 79625,
+          "deletion_events": 25,
+          "insertion_events": 11
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "f2217af9a12ed5c757ef129ee86b10cc55785b35260bbb1440931ab3a59bc82e",
+          "input.csv": "11ff1bf96f3305d2c68e0d0419d9689c14a8ab07a0e7a2528c3505b1f006d2ba",
+          "input.tsv": "460f9a6234f41c862105a5f02d61f3d15eb41a7fe7d26e1f5563861ffd5a8c2d",
+          "labels.csv": "12c397881e4087b97392c274854d3abcbf182886d268837f36772935e1c9c04c",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/2026091202/random_mixed"
+      },
+      "original_receipt_sha256": "2228e0a20a87b1cd84324b9b8d54624e7907ac6429c0491ec45e8fdc536cd7cd",
+      "original_workflow_seconds": 3.21419870799582,
+      "original_output_sha256": {
+        "centroids.csv": "49be9c841fcc78ab9948ff1df106e31c825e8b97159dc82d77532001cc7d12d4",
+        "members.csv": "1b097ac09f8ea559653625828a780dc35b79c78d70bb8050a68c52f5fe3bc31c",
+        "worker.json": "7ed540ed44bdfa05da16922ec08f02b28b4fcc22cb5702d8e51fc2f4a8b07d89"
+      }
+    },
+    {
+      "key": "2026091202/random_mixed/shepherd",
+      "condition": "random_mixed",
+      "seed": 2026091202,
+      "method": "shepherd",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 2026091202,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 75912,
+        "input_reads": 999537,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 34,
+          "substitution_events": 79625,
+          "deletion_events": 25,
+          "insertion_events": 11
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "f2217af9a12ed5c757ef129ee86b10cc55785b35260bbb1440931ab3a59bc82e",
+          "input.csv": "11ff1bf96f3305d2c68e0d0419d9689c14a8ab07a0e7a2528c3505b1f006d2ba",
+          "input.tsv": "460f9a6234f41c862105a5f02d61f3d15eb41a7fe7d26e1f5563861ffd5a8c2d",
+          "labels.csv": "12c397881e4087b97392c274854d3abcbf182886d268837f36772935e1c9c04c",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/2026091202/random_mixed"
+      },
+      "original_receipt_sha256": "24db3cb55a96add240ba46e3c37c82ce4f6457ee15ae51baf8b54f2e936ea93b",
+      "original_workflow_seconds": 3.070803958995384,
+      "original_output_sha256": {
+        "centroids.csv": "44e6f7a27622499cbdff59c8c31260c97e3706bf1ce16c59de392301e061662e",
+        "members.csv": "fd5aac3343315d252aed0a50ba17136f9fb359871c32426a381152bd4b112b3e",
+        "worker.json": "c00326c5481627bbac722af67c9326fa70733e653e465f7b556cfe401db81c0f"
+      }
+    },
+    {
+      "key": "2026091202/random_mixed/starcode_mp",
+      "condition": "random_mixed",
+      "seed": 2026091202,
+      "method": "starcode_mp",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 2026091202,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 75912,
+        "input_reads": 999537,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 34,
+          "substitution_events": 79625,
+          "deletion_events": 25,
+          "insertion_events": 11
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "f2217af9a12ed5c757ef129ee86b10cc55785b35260bbb1440931ab3a59bc82e",
+          "input.csv": "11ff1bf96f3305d2c68e0d0419d9689c14a8ab07a0e7a2528c3505b1f006d2ba",
+          "input.tsv": "460f9a6234f41c862105a5f02d61f3d15eb41a7fe7d26e1f5563861ffd5a8c2d",
+          "labels.csv": "12c397881e4087b97392c274854d3abcbf182886d268837f36772935e1c9c04c",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/2026091202/random_mixed"
+      },
+      "original_receipt_sha256": "18c306f3f10e55bc18ee49a773b835d98b904c0b9d89f07b9e05485800a852c8",
+      "original_workflow_seconds": 3.1476363749970915,
+      "original_output_sha256": {
+        "centroids.csv": "f4373d2257bc8718b8bec0bd9ee91226d0527d5fa8d8ed0ecf74905577098591",
+        "members.csv": "9517813785172cf29807324d8177b93638f7bea228adb5782b0d22519a011bee",
+        "worker.json": "0b4094bf0594ee390f289c720565f288bea7498e50bb8aafda3a74711448e698"
+      }
+    },
+    {
+      "key": "2026091202/random_mixed/lv",
+      "condition": "random_mixed",
+      "seed": 2026091202,
+      "method": "lv",
+      "source": {
+        "condition": "random_mixed",
+        "seed": 2026091202,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 10000,
+        "zero_read_truth": 102,
+        "input_sequences": 75912,
+        "input_reads": 999537,
+        "event_counts": {
+          "max_indel_depth": 3,
+          "max_boundary_repeat_length": 0,
+          "reads_with_net_length_change": 34,
+          "substitution_events": 79625,
+          "deletion_events": 25,
+          "insertion_events": 11
+        },
+        "truth_parent_totals_reconcile": true,
+        "boundary_policy": "Terminal state for further indels outside measured repeat lengths; retain reads and substitutions, report censoring explicitly",
+        "boundary_read_fraction": 0.0,
+        "sha256": {
+          "truth.csv": "f2217af9a12ed5c757ef129ee86b10cc55785b35260bbb1440931ab3a59bc82e",
+          "input.csv": "11ff1bf96f3305d2c68e0d0419d9689c14a8ab07a0e7a2528c3505b1f006d2ba",
+          "input.tsv": "460f9a6234f41c862105a5f02d61f3d15eb41a7fe7d26e1f5563861ffd5a8c2d",
+          "labels.csv": "12c397881e4087b97392c274854d3abcbf182886d268837f36772935e1c9c04c",
+          "boundary_labels.csv": "ace14e21cf75b4dce6fa34c70675995cb35fa5aa950c1fdeec62f7e8982d5a27"
+        },
+        "parent_count_mismatches": 0,
+        "parent_count_absolute_difference": 0,
+        "multi_parent_observed_sequences": 0,
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/generated/datasets/2026091202/random_mixed"
+      },
+      "original_receipt_sha256": "d851d48f85d5a5f906dccf54425f1de108b11a9945c056a9b3778b1ed4a470da",
+      "original_workflow_seconds": 1.657923959006439,
+      "original_output_sha256": {
+        "centroids.csv": "943106ac638dd93ef31c6b94bf26114c4509de84093a4028edce72a0c9db310a",
+        "members.csv": "79ae3cac62707740a1e0714d733bc22abc7e2af810494ed32bf2b94c27547006",
+        "worker.json": "4285178f13ea93d62fe1a6e0196649fce5d521d9d94c81c9fd23588939b08c67"
+      }
+    },
+    {
+      "key": "milos/lv",
+      "condition": "milos",
+      "seed": null,
+      "method": "lv",
+      "source": {
+        "condition": "milos",
+        "seed": null,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 100000,
+        "zero_read_truth": 409,
+        "input_reads": 24996128,
+        "input_sequences": 1544850,
+        "original_source_sha256": {
+          "simulated_reads.csv": "ec70569f1a9c41bc4ac9318b6ab05f5032792aedabc45ea3e75ad62b638771a9",
+          "true_counts.csv": "905de18db48a76b7b6135651bd023a4e073fc4e441957670b7a17f6dcbdd474b"
+        },
+        "sha256": {
+          "input.csv": "94e5f9223fa1c229ec6bca4d46881a450b17088a819fc9b622fbb63dfa0194c8",
+          "input.tsv": "cf583b8b4d1e6b3d51d5d9a71a25d68bb513978975e18641600e874f91b2b1cf",
+          "truth.csv": "c00bde44fda1d2118c2743d07aa8d4eb373983a5214857795a671be94c0d1eb9",
+          "labels.csv": "df8e14a66b5f23d809dfed4fd9f5a42a4252489df2c591a94fdbeae3f6794485"
+        },
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos"
+      },
+      "original_receipt_sha256": "d669e1a5e78f543a431446f86e51ac0a2cbb447a08536f52e37edc905a3f29b5",
+      "original_workflow_seconds": 28.37248487501347,
+      "original_output_sha256": {
+        "centroids.csv": "ed39739f0825532f00c9bb00b72d263dd3fa6673edc0541e8682c17b047da377",
+        "members.csv": "399633e20f3f540f3ff9add70cfa0451e83b1ed2271c998ad3c38ccbe654ca31",
+        "worker.json": "8f3a56bdef23d00406b62425e54c93db9513763667b5d402fc28ba1458ce7168"
+      }
+    },
+    {
+      "key": "milos/bartender",
+      "condition": "milos",
+      "seed": null,
+      "method": "bartender",
+      "source": {
+        "condition": "milos",
+        "seed": null,
+        "nominal_length": 20,
+        "variable_bases": 20,
+        "true_barcodes": 100000,
+        "zero_read_truth": 409,
+        "input_reads": 24996128,
+        "input_sequences": 1544850,
+        "original_source_sha256": {
+          "simulated_reads.csv": "ec70569f1a9c41bc4ac9318b6ab05f5032792aedabc45ea3e75ad62b638771a9",
+          "true_counts.csv": "905de18db48a76b7b6135651bd023a4e073fc4e441957670b7a17f6dcbdd474b"
+        },
+        "sha256": {
+          "input.csv": "94e5f9223fa1c229ec6bca4d46881a450b17088a819fc9b622fbb63dfa0194c8",
+          "input.tsv": "cf583b8b4d1e6b3d51d5d9a71a25d68bb513978975e18641600e874f91b2b1cf",
+          "truth.csv": "c00bde44fda1d2118c2743d07aa8d4eb373983a5214857795a671be94c0d1eb9",
+          "labels.csv": "df8e14a66b5f23d809dfed4fd9f5a42a4252489df2c591a94fdbeae3f6794485"
+        },
+        "path": "/Users/theodosiou/Documents/Projects/test_barbac/benchmark/frozen_reference_v1/generated/datasets/milos"
+      },
+      "original_receipt_sha256": "aac30d4d678fbe0a53f4beb15801b3d407f4670e238f9793084ec19430a3ee92",
+      "original_workflow_seconds": 41.01829354200163,
+      "original_output_sha256": {
+        "centroids.csv": "600b9ae3da7baa55cd45eb516ad16db69ab3706439da405bb6cb581df9c99f78",
+        "members.csv": "d62f3e7757bc5d73ba6b0427aa718936cd74b0e847ab19d9c249b61e607a389b",
+        "worker.json": "a4f0d59549bbb4412b63837043c7a2860cbb06a7f0c85565edced8c5424e2555"
+      }
+    }
+  ],
+  "n_cells": 28,
+  "order": "Original relative order",
+  "maximum_new_invocations_per_selected_cell": 1,
+  "source_sha256": {
+    "timing_repair.py": "248ddd46e0b83c2e67ede96a28d97744de06149804f907bdd13d48bb99e28d22",
+    "TIMING_REPAIR.md": "a1c20d82694ebf133caa16cf7a6a9c89f29a32715ad7982fb7f16ca76d6c4c94",
+    "worker.py": "90b0290d7ee487b5975b8acda17c0724a2cdc0c554c20c357b32d04f88d3ad33",
+    "freeze.json": "dbd487bb31502b2e20968797adeaf9675948bfa97795d54536a8e48055d6d83f"
+  },
+  "power_log_excerpt": [
+    "2026-09-12 22:44:52 +0200 Sleep               \tEntering Sleep state due to 'Idle Sleep':TCPKeepAlive=active Using AC (Charge:97%) 19 secs   ",
+    "2026-09-12 22:44:54 +0200 Wake Requests       \t[process=mDNSResponder request=Maintenance deltaSecs=7198 wakeAt=2026-09-13 00:44:52 info=\"upkeep wake\"] [process=dasd request=SleepService deltaSecs=908 wakeAt=2026-09-12 23:00:01 info=\"com.apple.dasd:501:com.apple.intelligenceplatform.IntelligencePlatformCore.ViewEvery21Minutes\"] [process=dasd request=TimerPlugin deltaSecs=1036 wakeAt=2026-09-12 23:02:09 info=\"com.apple.dasd:501:com.apple.spotlightknowledged.task.keyphrases\"] [process=NotificationCenter request=Maintenance deltaSecs=29796 wakeAt=2026-09-13 07:01:30 info=\"com.apple.notificationcenter.dnd\"] [*process=PowerUIAgent request=Maintenance deltaSecs=898 wakeAt=2026-09-12 22:59:52 info=\"com.apple.obc\"] [process=powerd request=CSPNEvaluation deltaSecs=6642 wakeAt=2026-09-13 00:35:36] [process=powerd request=UserWake deltaSecs=11664 wakeAt=2026-09-13 01:59:18 info=\"com.apple.alarm.user-invisible-com.apple.osanalytics.hardhighengagementtimer,363\"]           ",
+    "2026-09-12 22:44:54 +0200 PM Client Acks      \tDelays to Sleep notifications: [com.apple.bluetooth.sleep is slow(1529 ms)]           ",
+    "2026-09-12 22:45:11 +0200 DarkWake            \tDarkWake from Deep Idle [CDNP] : due to smc.sysState.Wake(0x70070000) wifibt SMC.OutboxNotEmpty/ Using AC (Charge:97%) 44 secs   ",
+    "2026-09-12 22:45:11 +0200 Kernel Client Acks  \tDelays to Wake notifications: [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(98 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(117 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(122 ms)]           ",
+    "2026-09-12 22:45:20 +0200 ThermalEvent        \tIgnored DarkWake thermal emergency signal TCPKeepAlive=active              \t          ",
+    "2026-09-12 22:45:55 +0200 Sleep               \tEntering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:97%) 900 secs  ",
+    "2026-09-12 22:45:57 +0200 Wake Requests       \t[process=mDNSResponder request=Maintenance deltaSecs=7198 wakeAt=2026-09-13 00:45:55 info=\"upkeep wake\"] [process=dasd request=SleepService deltaSecs=980 wakeAt=2026-09-12 23:02:17 info=\"com.apple.dasd:0:com.apple.CoreAnalytics.6Hours\"] [process=dasd request=TimerPlugin deltaSecs=965 wakeAt=2026-09-12 23:02:02 info=\"com.apple.dasd:501:com.apple.spotlightknowledged.task.keyphrases\"] [process=NotificationCenter request=Maintenance deltaSecs=29677 wakeAt=2026-09-13 07:00:34 info=\"com.apple.notificationcenter.dnd\"] [*process=PowerUIAgent request=Maintenance deltaSecs=898 wakeAt=2026-09-12 23:00:55 info=\"com.apple.obc\"] [process=powerd request=CSPNEvaluation deltaSecs=6579 wakeAt=2026-09-13 00:35:36] [process=powerd request=UserWake deltaSecs=11601 wakeAt=2026-09-13 01:59:18 info=\"com.apple.alarm.user-invisible-com.apple.osanalytics.hardhighengagementtimer,363\"]           ",
+    "2026-09-12 22:45:57 +0200 PM Client Acks      \tDelays to Sleep notifications: [com.apple.audio.MacAudio is slow(309 ms)] [com.apple.bluetooth.sleep is slow(1537 ms)]           ",
+    "2026-09-12 23:00:55 +0200 DarkWake            \tDarkWake from Deep Idle [CDNP] : due to NUB.SPMI0Sw3IRQ nub-spmi.0x02 rtc/Maintenance Using AC (Charge:97%) 61 secs   ",
+    "2026-09-12 23:00:55 +0200 Kernel Client Acks  \tDelays to Wake notifications: [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(98 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(117 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(122 ms)] [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(99 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(119 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(122 ms)]           ",
+    "2026-09-12 23:01:56 +0200 Sleep               \tEntering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 239 secs  ",
+    "2026-09-12 23:01:57 +0200 Wake Requests       \t[process=mDNSResponder request=Maintenance deltaSecs=7198 wakeAt=2026-09-13 01:01:56 info=\"upkeep wake\"] [process=dasd request=SleepService deltaSecs=969 wakeAt=2026-09-12 23:18:07 info=\"com.apple.dasd:501:com.apple.intelligenceplatform.IntelligencePlatformCore.ViewEvery21Minutes\"] [process=dasd request=TimerPlugin deltaSecs=1035 wakeAt=2026-09-12 23:19:13 info=\"com.apple.dasd:501:com.apple.spotlightknowledged.task.keyphrases\"] [process=NotificationCenter request=Maintenance deltaSecs=28856 wakeAt=2026-09-13 07:02:54 info=\"com.apple.notificationcenter.dnd\"] [process=PowerUIAgent request=Maintenance deltaSecs=86398 wakeAt=2026-09-13 23:01:55 info=\"com.apple.obc\"] [process=powerd request=CSPNEvaluation deltaSecs=5618 wakeAt=2026-09-13 00:35:36] [*process=powerd request=UserWake deltaSecs=237 wakeAt=2026-09-12 23:05:55 info=\"com.apple.alarm.user-invisible-GaugingMitigationActions,363\"]           ",
+    "2026-09-12 23:01:57 +0200 PM Client Acks      \tDelays to Sleep notifications: [com.apple.audio.MacAudio is slow(310 ms)] [com.apple.bluetooth.sleep is slow(1551 ms)]           ",
+    "2026-09-12 23:05:55 +0200 DarkWake            \tDarkWake from Deep Idle [CDNPB] : due to NUB.SPMI0Sw3IRQ nub-spmi.0x02 rtc/Maintenance Using AC (Charge:100%)           ",
+    "2026-09-12 23:05:55 +0200 Kernel Client Acks  \tDelays to Wake notifications: [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(98 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(117 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(122 ms)] [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(99 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(119 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(122 ms)] [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(99 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(118 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(121 ms)]           ",
+    "2026-09-12 23:06:41 +0200 Sleep               \tEntering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 92 secs   ",
+    "2026-09-12 23:06:43 +0200 Wake Requests       \t[process=mDNSResponder request=Maintenance deltaSecs=7198 wakeAt=2026-09-13 01:06:41 info=\"upkeep wake\"] [process=dasd request=SleepService deltaSecs=967 wakeAt=2026-09-12 23:22:50 info=\"com.apple.dasd:501:com.apple.intelligenceplatform.IntelligencePlatformCore.ViewEvery21Minutes\"] [process=dasd request=TimerPlugin deltaSecs=948 wakeAt=2026-09-12 23:22:31 info=\"com.apple.dasd:501:com.apple.spotlightknowledged.pipelines.lssr5eventsandordersbackground.journal-processing\"] [process=NotificationCenter request=Maintenance deltaSecs=28548 wakeAt=2026-09-13 07:02:31 info=\"com.apple.notificationcenter.dnd\"] [process=PowerUIAgent request=Maintenance deltaSecs=86113 wakeAt=2026-09-13 23:01:55 info=\"com.apple.obc\"] [process=powerd request=CSPNEvaluation deltaSecs=5333 wakeAt=2026-09-13 00:35:36] [*process=powerd request=UserWake deltaSecs=252 wakeAt=2026-09-12 23:10:55 info=\"com.apple.alarm.user-invisible-GaugingMitigationActions,363\"]           ",
+    "2026-09-12 23:06:43 +0200 PM Client Acks      \tDelays to Sleep notifications: [com.apple.bluetooth.sleep is slow(1547 ms)]           ",
+    "2026-09-12 23:08:13 +0200 Wake                \tWake from Deep Idle [CDNVA] : due to smc.sysState.Wake(0x70070000) trackpadkeyboard SMC.OutboxNotEmpty/UserActivity Assertion Using AC (Charge:100%)           ",
+    "2026-09-12 23:08:13 +0200 Kernel Client Acks  \tDelays to Wake notifications: [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(98 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(117 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(122 ms)] [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(99 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(119 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(122 ms)] [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(99 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(118 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(121 ms)] [RTBuddy(ANS2) driver is slow(msg: SetState to 2)(99 ms)] [AppleConvergedIPCOLYBTControl driver is slow(msg: SetState to 1)(118 ms)] [AppleMultiFunctionManager driver is slow(msg: SetState to 1)(137 ms)]           "
+  ],
+  "accuracy_replaced": false,
+  "faster_measurement_selection": false
+}

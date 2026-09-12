@@ -38,7 +38,7 @@ def display(row):
     return [NAMES[row['method']], f"{row['fn']:,.0f}" if fixed else f"{row['fn']:,.2f}",
         f"{row['fp']:,.0f}" if fixed else f"{row['fp']:,.2f}",
         f"{row['f1_percent']:.5f}" if fixed else f"{row['f1_percent']:.5f} ({row['f1_percent_sd']:.4f})",
-        f"{row['workflow_seconds']:.2f}"]
+        number(row['workflow_seconds'],2)]
 
 
 def number(value, digits=5, signed=False):
@@ -58,8 +58,9 @@ def main():
     frozen = check_freeze()
     validation = load(HERE/'execution_validation.json')
     analysis = load(HERE/'analysis_validation.json')
-    data = load(HERE/'summary.json')
+    data = load(HERE/'publication_summary.json')
     raw = pd.DataFrame(load(HERE/'results.json'))
+    timing_raw = pd.DataFrame(load(HERE/'timing_results.json'))
     protocol = load(HERE/'final_protocol.json')
     generation = load(HERE/'generation_validation.json')
     contrasts = load(HERE/'accuracy_contrasts.json')
@@ -72,7 +73,11 @@ def main():
         if row['complete_population']:
             for metric in ['fn','fp','f1_percent','incorrect_reads','unassigned_reads','read_assignment_accuracy_percent','abundance_total_variation']:
                 assert np.isclose(row[metric], cells[metric].mean(), rtol=0, atol=1e-10)
-            assert np.isclose(row['workflow_seconds'], cells.workflow_seconds.median(), rtol=0, atol=1e-10)
+            timing_cells=timing_raw[(timing_raw.condition==row['condition'])&(timing_raw.method==row['method'])]
+            if row['timing_complete_population']:
+                assert np.isclose(row['workflow_seconds'], timing_cells.selected_workflow_seconds.median(), rtol=0, atol=1e-10)
+            else:
+                assert row['workflow_seconds'] is None
         else:
             assert row['f1_percent'] is None and row['workflow_seconds'] is None
         for cell in cells.to_dict('records'):
@@ -94,7 +99,8 @@ def main():
         commands += [('SPAN',(0,i),(-1,i)),('BACKGROUND',(0,i),(-1,i),PALE),('FONTNAME',(0,i),(-1,i),'Helvetica-Bold'),('TEXTCOLOR',(0,i),(-1,i),BLUE)]
         selected=[r for r in data if r['condition']==condition]
         full=[r for r in selected if r['complete_population']]
-        best={metric:(max if metric=='f1_percent' else min)(r[metric] for r in full) for metric in ['fn','fp','f1_percent','workflow_seconds']} if full else {}
+        best={metric:(max if metric=='f1_percent' else min)(r[metric] for r in full if r[metric] is not None)
+              for metric in ['fn','fp','f1_percent','workflow_seconds'] if any(r[metric] is not None for r in full)}
         for row in selected:
             i=len(rows); values=display(row); rows.append(values);displayed.append(values)
             if row['method'] in ['hamming','lv']:commands.append(('TEXTCOLOR',(0,i),(0,i),colors.HexColor('#255D8C')))
@@ -111,7 +117,7 @@ def main():
       f'The calibrated table ends at repeat length 13. Further indel recursion is stopped for affected reads beyond that support; reads, substitutions and truth are retained. Boundary use: {generation["boundary_reads"]:,} reads across {generation["inputs_reaching_boundary"]} of {generation["inputs"]} libraries. This is a declared finite-support model, not an empirical estimate beyond the table.',
       'Milo: unchanged deposited simulation, 100,000 true barcodes and 24,996,128 reads; used during development. Its single-reference scores do not establish independent-library statistical superiority. Its timing is one observation in this final campaign.',
       'All methods use distance 3 and one thread. Barbac: support ordering, ratio 20, configured error proxy 0.005, design scoring off, LV Poisson on. Hamming retains rare-indel rescue. Shepherd: nominal length, Bayes threshold 4. Starcode MP ratio 5. Bartender: seed length 5, step 1, z=5, cutoff 1.',
-      'Timing: serial fresh Python-worker wall time including worker/tool startup, required conversion and centroid/member exports; common staging, scoring and hashing excluded. One call per tool/input. Input-dependent timing distributions and paired ratios are in the supplement.',
+      'Timing: serial fresh-worker elapsed time including startup, required conversion and centroid/member exports; staging, scoring and hashing excluded. The 28 calls overlapping a system sleep/partial-wake interval were repeated once with sleep prevented; mappings had to match exactly. Original and repaired records are retained. Other cells ran once.',
       'The publication scope was selected after development inspection. Code, settings, seeds and test methods were frozen before final generation. A disclosed reporting addendum retains tool failures and tests only fully observed 60-pair contrasts, keeping the eight-comparison correction. All registered libraries remain. Development controls are preserved.'
     ]
     story += [Paragraph(escape(s),styles['Tiny']) for s in notes]
@@ -142,7 +148,7 @@ def main():
     st=Table(srows,colWidths=[68*mm,31*mm,26*mm,24*mm,29*mm]);st.setStyle(TableStyle(table_style()))
     supplement += [st,Spacer(1,8),Paragraph('Simulation entries are means over all 60 independent libraries; Milo entries are one fixed reference. Wrong reads exclude unassigned reads, which are counted separately. Read accuracy counts both as failures. Abundance TV is half the normalized absolute count difference, including unassigned reads.',styles['Tiny']),PageBreak(),
         Paragraph('Timing, simulation limits and reproducibility',styles['Title'])]
-    speeds=load(HERE/'speed_contrasts.json')
+    speeds=load(HERE/'timing_contrasts.json')
     trows=[['Design / competitor','LV / competitor time','95% interval']]
     for row in speeds:
         design='Random' if row['condition']=='random_mixed' else 'Anchored'
@@ -150,6 +156,7 @@ def main():
             number(row['ci95_lower'],3)+' to '+number(row['ci95_upper'],3) if row['status']=='complete' else 'n/a'])
     tt=Table(trows,colWidths=[90*mm,45*mm,43*mm]);tt.setStyle(TableStyle(table_style()))
     supplement += [tt,Spacer(1,8),Paragraph('A time ratio below one favours LV. Ratios are geometric means of within-library workflow ratios. Intervals use paired log times and are secondary descriptive 95% intervals; they are not the multiplicity-adjusted primary accuracy tests.',styles['Note']),
+        Paragraph('Timing repair: the Mac slept and partly woke during one block. The 28 successful cells whose receipt intervals overlapped that power-state window were selected before retiming, independently of their results. Their repaired observations replace the original timing without selecting the faster value. Clustering outputs must be byte-identical; accuracy is unchanged. The original single-invocation plan and all measurements remain preserved. See TIMING_REPAIR.md and timing_repair_protocol.json.',styles['Note']),
         Paragraph('Simulation boundary',styles['Heading2'])]
     boundary=[r for r in load(HERE/'datasets.json') if r['event_counts'].get('boundary_reads',0)>0]
     if boundary:
@@ -172,7 +179,7 @@ def main():
             frows.append([row['condition']+' / '+NAMES[row['method']],str(row['seed']),reason])
         ft=Table(frows,colWidths=[71*mm,36*mm,71*mm],repeatRows=1);ft.setStyle(TableStyle(table_style()))
         supplement += [ft,Spacer(1,10),Paragraph('Successful-only summaries for incomplete rows',styles['Heading2'])]
-        conditional=[r for r in load(HERE/'successful_only_summary.json') if not r['complete_population']]
+        conditional=[r for r in load(HERE/'publication_successful_only_summary.json') if not r['complete_population']]
         urows=[['Design / method','Succeeded','FN','FP','F1 %','Time s']]
         for row in conditional:
             selected=raw[(raw.condition==row['condition'])&(raw.method==row['method'])&(raw.status=='complete')]
@@ -188,7 +195,7 @@ def main():
     subprocess.run(['pdftoppm','-png','-singlefile','-scale-to','1800',str(pdf),str(HERE/'benchmark_table')],check=True)
     save(HERE/'report_validation.json',dict(rows=18,main_pdf_pages=1,all_displayed_aggregates_reconciled=True,
         all_execution_output_hashes_verified=True,main_pdf_text_rows_verified=True,pdf_sha256=sha(pdf),supplement_sha256=sha(spdf)))
-    lines=['# Final publication benchmark','', '[One-page table](benchmark_table.pdf) · [Statistical supplement](benchmark_supplement.pdf) · [Full per-input results](all_results.csv) · [Protocol](README.md)','',
+    lines=['# Final publication benchmark','', '[One-page table](benchmark_table.pdf) · [Statistical supplement](benchmark_supplement.pdf) · [Full per-input results](publication_results.csv) · [Protocol](README.md)','',
         f'{n} independent libraries per simulated design; all {validation["cells"]} registered tool cells attempted, {validation["failed_cells"]} failed. {analysis["supported_contrasts"]} of eight specified LV-versus-competitor F1 contrasts meet both lower-bound criteria; {8-analysis["available_contrasts"]} are unavailable. Only full 60-pair contrasts are tested under the disclosed [failure-reporting addendum](FAILURE_REPORTING.md). Milo is a fixed reference, not an independent replication test.','']
     for condition,title in TITLES.items():
         lines += ['## '+title,'','| Method | FN | FP | F1 % (SD) | Workflow seconds |','|---|---:|---:|---:|---:|']
@@ -199,6 +206,7 @@ def main():
         outcome='n/a' if row['status']!='complete' else ('Yes' if row['superiority_supported'] else 'No')
         lines.append(f"| {row['condition']} | {NAMES[row['competitor']]} | {number(row['mean_difference'],signed=True)} | {number(row['simultaneous_one_sided_lower'],signed=True)} | {number(row['bootstrap_lower'],signed=True)} | {outcome} |")
     lines += ['', '## Interpretation and scope','']+notes
+    lines += ['', 'The [timing repair](TIMING_REPAIR.md) retains both original and selected measurements. Original accuracy and timing receipts remain in [all_results.csv](all_results.csv).']
     (HERE/'RESULTS.md').write_text('\n'.join(lines)+'\n')
     print('VERIFIED',pdf,spdf,flush=True)
 

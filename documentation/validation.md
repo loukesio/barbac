@@ -30,12 +30,14 @@ warnings when loaded; the tests themselves completed as recorded above.
 
 The GitHub Linux package, Studio integration, documentation and Docker **build**
 checks passed before the merge into main. The R source release is published as
-[`v0.2.0`](https://github.com/loukesio/barbac/releases/tag/v0.2.0). Uploading the
-Docker image to GHCR was rejected with `permission_denied: write_package`; the
-README therefore builds the current source checkout. The package owner can grant
-`loukesio/barbac` Write access under the container package's **Settings → Manage
-Actions access**, then rerun the failed publication job. See
-[GitHub's package permissions documentation](https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages).
+[`v0.2.0`](https://github.com/loukesio/barbac/releases/tag/v0.2.0). The initial
+GHCR upload was rejected with `permission_denied: write_package`. The retained
+log from the [12 September release job](https://github.com/loukesio/barbac/actions/runs/34599964127)
+records a subsequent successful image push for source revision `25e8ed5`,
+with manifest digest
+`sha256:2fa5ccef00d396dc3050cf01164ef094b36dc00131e54a88dcbfe979540ffc33`.
+That image predates the startup change evaluated in the current publication
+candidate. The README's local build command builds the source checkout in use.
 
 ## Archived paired-read verification · 10 September 2026
 

@@ -26,6 +26,10 @@ All 726 registered timed cells run serially with one thread per tool. This
 includes one final-session Milo measurement per tool: the previous timings
 predate the startup improvement and remain preserved. The explicit final
 campaign is measured once; completed cells are never rerun for candidate tuning.
+An observed system-sleep interruption required the separately registered
+[timing repair](TIMING_REPAIR.md): 28 affected successful calls are repeated
+once with sleep prevented, retaining the original records and requiring
+identical cluster mappings. No faster-of-two selection is used.
 Inputs, source, binaries, commands, mappings, counts and receipts are retained.
 
 The five previously reserved seeds are included, plus 55 newly registered
@@ -102,6 +106,9 @@ python3 benchmark/publication_final/run.py freeze
 python3 benchmark/publication_final/run.py generate
 python3 benchmark/publication_final/resume.py
 python3 benchmark/publication_final/analyze_available.py
+caffeinate -i python3 benchmark/publication_final/timing_repair.py run
+python3 benchmark/publication_final/finalize_timing.py
+python3 benchmark/publication_final/verify_results.py
 python3 benchmark/publication_final/report.py
 ```
 
