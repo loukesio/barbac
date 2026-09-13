@@ -85,6 +85,8 @@ ui <- page_fluid(
           radioButtons('method',NULL,c('Levenshtein · substitutions and indels'='lv','Hamming · fixed-length substitutions'='hamming')),
           p(class='field-note','LV handles insertions, deletions and positional shifts. Use Hamming only for fixed-length A/C/G/T barcodes up to 32 bases when indels are excluded.'),
           numericInput('distance','Maximum edit distance',3,min=1,max=5,step=1),
+          actionButton('publication_preset','Use publication LV settings',class='button-secondary'),
+          p(class='field-note','Distance 3, support ordering and the Poisson indel option used in the three-benchmark comparison. Advanced settings remain editable.'),
           tags$details(tags$summary('Advanced clustering settings'),
             numericInput('merge_ratio','Count-ratio guard',20,min=1,max=1000),
             numericInput('error_rate','Per-base error rate',.005,min=.000001,max=.249,step=.001),
@@ -208,6 +210,15 @@ server <- function(input,output,session) {
   observeEvent(input$load_demo,{if(busy())return();data(studio_validate(studio_demo()));synthetic(TRUE);label('Synthetic example · 8 timepoints');extraction(NULL);reset_result();import_note(NULL)})
   observeEvent(input$reset,{if(busy())return();data(NULL);synthetic(FALSE);label('No data loaded');extraction(NULL);reset_result();import_note(NULL);set_page('data');session$sendCustomMessage('studio-clear-files',TRUE)})
   observeEvent(input$continue,set_page('cluster'))
+  observeEvent(input$publication_preset, {
+    settings <- studio_publication_settings()
+    updateRadioButtons(session,'method',selected=settings$method)
+    updateNumericInput(session,'distance',value=settings$distance)
+    updateNumericInput(session,'merge_ratio',value=settings$merge_ratio)
+    updateNumericInput(session,'error_rate',value=settings$error_rate)
+    updateSelectInput(session,'tie_break',selected=settings$tie_break)
+    updateCheckboxInput(session,'poisson',value=TRUE)
+  })
   observeEvent(input$go_downloads,set_page('downloads'))
   output$input_caption <- renderUI(p(class='field-note',label()))
   output$input_actions <- renderUI(if(!is.null(data()))actionButton('continue',tagList('Continue to clustering',arrow()),class='button-primary'))
@@ -258,7 +269,7 @@ server <- function(input,output,session) {
   outputOptions(output,'has_results',suspendWhenHidden=FALSE)
   output$result_caption <- renderUI({r<-result();if(is.null(r))return(p('Run an analysis to begin.'));p(
     if(isTRUE(r$provenance$synthetic))'Synthetic example · ' else '',
-    if(r$settings$method=='lv')'Levenshtein' else 'Hamming',' · distance ',r$settings$distance,' · ',sprintf('%.2f',r$seconds),' s clustering')})
+    if(r$settings$method=='lv')'Levenshtein' else 'Hamming',' · distance ',r$settings$distance,' · ',sprintf('%.2f',r$provenance$clustering_seconds),' s native clustering · ',sprintf('%.2f',r$seconds),' s analysis')})
   output$result_metrics <- renderUI({r<-result();if(is.null(r))return(NULL);div(class='metric-grid',
     metric('INFERRED CLUSTERS',fmt(nrow(r$centroids)),'Across all populations'),
     metric('BARCODE READS',fmt(sum(r$input$counts)),'All counts conserved'),

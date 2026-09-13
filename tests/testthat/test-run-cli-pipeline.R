@@ -55,6 +55,11 @@ test_that("R1-only reads map and extract exactly without requiring PEAR", {
   expect_identical(pipe$multiqc_status, "unavailable")
   expect_true(file.exists(paste0(pipe$bam_files, ".bai")))
   expect_false(any(grepl("PEAR|/pear", pipe$commands)))
+  expect_equal(pipe$command_timings$command, pipe$commands)
+  expect_true(all(pipe$command_timings$elapsed_seconds >= 0))
+  expect_true(all(pipe$command_timings$exit_status == 0L))
+  expect_gte(pipe$elapsed_seconds, sum(pipe$command_timings$elapsed_seconds))
+  expect_equal(nrow(read.csv(pipe$timing_file)), length(pipe$commands))
   cli_expect_extracted(pipe, f)
 })
 
@@ -102,5 +107,9 @@ test_that("a failed command stops the pipeline and records its diagnostics", {
   expect_error(run_cli_pipeline(data.frame(sample = "one", R1 = f$r1), f$reference, out, verbose = FALSE),
                "fastqc failed with exit code 17")
   expect_match(paste(readLines(file.path(out, "pipeline.log")), collapse = "\n"), "deliberate failure")
+  failed <- read.csv(file.path(out, "command_timings.csv"))
+  expect_equal(failed$exit_status, 17L)
+  expect_equal(failed$tool, "fastqc")
+  expect_gte(failed$elapsed_seconds, 0)
   expect_length(list.files(file.path(out, "merged", "bam")), 0)
 })

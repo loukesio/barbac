@@ -34,7 +34,7 @@ discovered as inputs or silently overwritten. Default: \code{"results"}.}
 \value{
 An invisible list containing \code{commands}, \code{output_dir}, \code{fastqc_dir},
 \code{merged_dir}, \code{bam_dir}, \code{stats}, \code{summary_file}, \code{log_file}, \code{multiqc_status},
-and \code{samples}. The \code{samples} table links original sample labels to mode,
+\code{command_timings}, \code{timing_file}, \code{elapsed_seconds}, and \code{samples}. The \code{samples} table links original sample labels to mode,
 mapping input and indexed BAM. \code{bam_files} is a vector named by sample.
 Paired BAM names retain \verb{<sample>_ANC.assembled_sorted.bam}; R1-only BAMs
 use \verb{<sample>_sorted.bam}. The \code{stats$sample} column retains these basenames
@@ -54,6 +54,10 @@ Mapping uses minimap2's short-read preset (\verb{-x sr}) with secondary alignmen
 disabled. Secondary and supplementary alignments are removed from the BAM;
 mapping statistics therefore count primary reads or merged molecules.
 FastQC input filenames must produce unique report names within a run.
+
+Each external command is timed in \code{command_timings.csv}, including failures.
+\code{elapsed_seconds} covers this complete wrapper call, ending at indexed BAMs
+and QC summaries; extraction, clustering and plotting are subsequent stages.
 
 Required commands stop the pipeline on failure, with their output recorded
 in the log. MultiQC runs when available; its failure raises a warning and is

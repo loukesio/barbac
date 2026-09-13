@@ -26,6 +26,10 @@
 #' mapping statistics therefore count primary reads or merged molecules.
 #' FastQC input filenames must produce unique report names within a run.
 #'
+#' Each external command is timed in `command_timings.csv`, including failures.
+#' `elapsed_seconds` covers this complete wrapper call, ending at indexed BAMs
+#' and QC summaries; extraction, clustering and plotting are subsequent stages.
+#'
 #' Required commands stop the pipeline on failure, with their output recorded
 #' in the log. MultiQC runs when available; its failure raises a warning and is
 #' reported as `multiqc_status = "failed"`. This wrapper does not extract barcodes,
@@ -33,7 +37,7 @@
 #'
 #' @return An invisible list containing `commands`, `output_dir`, `fastqc_dir`,
 #'   `merged_dir`, `bam_dir`, `stats`, `summary_file`, `log_file`, `multiqc_status`,
-#'   and `samples`. The `samples` table links original sample labels to mode,
+#'   `command_timings`, `timing_file`, `elapsed_seconds`, and `samples`. The `samples` table links original sample labels to mode,
 #'   mapping input and indexed BAM. `bam_files` is a vector named by sample.
 #'   Paired BAM names retain `<sample>_ANC.assembled_sorted.bam`; R1-only BAMs
 #'   use `<sample>_sorted.bam`. The `stats$sample` column retains these basenames
@@ -50,6 +54,7 @@
 run_cli_pipeline <- function(sample_table, reference, output_dir = "results",
                              verbose = TRUE, log_file = NULL,
                              create_output_dir = TRUE) {
+  pipeline_clock <- proc.time()[["elapsed"]]
   scalar_path <- function(x, label) {
     if (!is.character(x) || length(x) != 1L || is.na(x) || !nzchar(x))
       stop(label, " must be a nonempty path.", call. = FALSE)
@@ -107,6 +112,8 @@ run_cli_pipeline <- function(sample_table, reference, output_dir = "results",
     if (verbose) message(msg)
   }
   commands <- character()
+  command_timings <- list()
+  timing_file <- file.path(output_dir, "command_timings.csv")
   run <- function(tool, args, stdout = NULL, required = TRUE) {
     bin <- if (tool == "multiqc") multiqc_bin else bins[[tool]]
     cmd <- paste(c(shQuote(bin), shQuote(as.character(args))), collapse = " ")
@@ -115,8 +122,15 @@ run_cli_pipeline <- function(sample_table, reference, output_dir = "results",
     log_msg(cmd)
     diagnostic <- tempfile("barbac-command-")
     on.exit(unlink(diagnostic), add = TRUE)
+    command_clock <- proc.time()[["elapsed"]]
+    started_utc <- format(Sys.time(), tz = "UTC", usetz = TRUE)
     status <- system2(bin, shQuote(as.character(args)),
       stdout = if (is.null(stdout)) diagnostic else stdout, stderr = diagnostic)
+    command_timings[[length(command_timings) + 1L]] <<- data.frame(
+      command_index = length(commands), tool = tool, command = cmd,
+      started_utc = started_utc, elapsed_seconds = proc.time()[["elapsed"]] - command_clock,
+      exit_status = as.integer(status), stringsAsFactors = FALSE)
+    readr::write_csv(do.call(rbind, command_timings), timing_file)
     if (file.exists(diagnostic)) {
       cat(readLines(diagnostic, warn = FALSE), sep = "\n", file = log_conn)
       flush(log_conn)
@@ -183,5 +197,6 @@ run_cli_pipeline <- function(sample_table, reference, output_dir = "results",
   invisible(list(commands = commands, output_dir = output_dir, fastqc_dir = fastqc_dir,
     merged_dir = merged_dir, bam_dir = bam_dir, stats = stats_df, summary_file = summary_file,
     log_file = normalizePath(log_file), samples = samples, bam_files = bam_files,
-    multiqc_status = multiqc_status))
+    multiqc_status = multiqc_status, command_timings = do.call(rbind, command_timings),
+    timing_file = timing_file, elapsed_seconds = proc.time()[["elapsed"]] - pipeline_clock))
 }

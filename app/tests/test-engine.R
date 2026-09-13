@@ -130,3 +130,19 @@ test_that('the Quarto export is self-contained and includes actual analysis sett
   expect_match(html,'data:image/png;base64',fixed=TRUE)
   expect_match(html,'synthetic demonstration',fixed=TRUE)
 })
+
+
+test_that('the publication preset matches the frozen LV configuration and records native time', {
+  cfg <- studio_publication_settings()
+  expect_equal(cfg, list(method='lv', distance=3, merge_ratio=20, error_rate=.005,
+                        tie_break='support', indel_model='poisson'))
+  folder <- tempfile(); on.exit(unlink(folder, recursive=TRUE))
+  x <- studio_demo()
+  result <- studio_cluster(x, cfg, folder)
+  expect_equal(sum(result$centroids$sum_counts), sum(x$counts))
+  expect_gte(result$provenance$clustering_seconds, 0)
+  expect_gte(result$seconds, result$provenance$clustering_seconds)
+  exported <- jsonlite::read_json(file.path(folder,'analysis.json'), simplifyVector=TRUE)
+  expect_equal(exported$settings, cfg)
+  expect_equal(exported$provenance$analysis_seconds, result$seconds, tolerance=1e-4)
+})

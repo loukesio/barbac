@@ -2,7 +2,7 @@
 # Run from the repository root. CLI tools, app dependencies and Quarto are needed.
 # New receipts are separate from the archived scientific validation records.
 repo <- normalizePath('.')
-out <- file.path(repo, 'benchmark', 'validation', 'release_2026-09-11')
+out <- file.path(repo, 'benchmark', 'validation', 'release_2026-09-13')
 dir.create(out, recursive = TRUE, showWarnings = FALSE)
 verify <- function() {
   pkgload::load_all(repo, quiet = TRUE)

@@ -101,6 +101,11 @@ studio_settings <- function(method = 'lv', distance = 3, merge_ratio = 20,
        error_rate = error_rate, tie_break = tie_break, indel_model = indel_model)
 }
 
+studio_publication_settings <- function() {
+  studio_settings(method = 'lv', distance = 3, merge_ratio = 20,
+                  error_rate = .005, tie_break = 'support', indel_model = 'poisson')
+}
+
 studio_progress <- function(directory, message) {
   target <- file.path(directory, 'progress.txt')
   tmp <- paste0(target, '.tmp')
@@ -117,6 +122,7 @@ studio_cluster <- function(data, settings, directory, provenance = list()) {
        any(vapply(split(nchar(data$barcode), data$population), function(z) length(unique(z)) != 1L, logical(1)))))
     studio_error('Use LV for variable-length barcodes, N-containing sequences, or sequences longer than 32 bases. Hamming in Studio is restricted to fixed-length A/C/G/T libraries.')
   clock <- proc.time()[['elapsed']]
+  native_seconds <- 0
   populations <- unique(data$population)
   outputs <- memberships <- trajectories <- stats <- list()
   for (i in seq_along(populations)) {
@@ -124,7 +130,9 @@ studio_cluster <- function(data, settings, directory, provenance = list()) {
     studio_progress(directory, paste('Clustering population', i, 'of', length(populations)))
     part <- data[data$population == pop, ]
     pooled <- studio_sum(part$counts, list(barcode = part$barcode)); names(pooled)[2] <- 'counts'
+    native_clock <- proc.time()[['elapsed']]
     result <- do.call(barbac::super_cluster2, c(list(input_path = pooled, verbose = FALSE), settings))
+    native_seconds <- native_seconds + proc.time()[['elapsed']] - native_clock
     ids <- sprintf('P%02d-C%06d', i, seq_len(nrow(result)))
     members <- data.frame(population = pop, cluster_id = rep(ids, lengths(result$all_barcodes)),
       central_barcode = rep(result$central_barcode, lengths(result$all_barcodes)),
@@ -163,7 +171,9 @@ studio_cluster <- function(data, settings, directory, provenance = list()) {
       synthetic = isTRUE(provenance$synthetic),
       pooling = 'All supplied timepoints pooled within each population; independent populations clustered separately.',
       normalization = 'All supplied barcode counts per sample. No abundance cutoff; missing lineage counts are zero.',
-      clustering_seconds = elapsed), provenance[setdiff(names(provenance), 'synthetic')]))
+      clustering_seconds = native_seconds,
+      analysis_seconds = elapsed,
+      timing_scope = 'Analysis includes pooling, native clustering, sample assignment and statistics; excludes upload, extraction, exports and plotting.'), provenance[setdiff(names(provenance), 'synthetic')]))
   studio_progress(directory, 'Preparing downloads')
   for (name in c('centroids', 'memberships', 'time_series', 'stats'))
     readr::write_csv(out[[name]], file.path(directory, paste0(name, '.csv')))

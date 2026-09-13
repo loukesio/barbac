@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barbac workflow — v14 publication release</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  body { font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif; color: #14161a; -webkit-font-smoothing: antialiased; }
+  a { color: #1f8a7d; text-decoration: none; }
+  a:hover { color: #14161a; }
+</style>
+</helmet>
+<div style="position: relative; width: 2400px; height: 1040px; background: #ffffff; overflow: hidden">
+
+  <svg width="2400" height="1040" viewBox="0 0 2400 1040" style="position: absolute; inset: 0; pointer-events: none">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#14161a"></path>
+      </marker>
+      <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#9d978d"></path>
+      </marker>
+    </defs>
+    <g fill="none" stroke="#14161a" stroke-width="2.4" marker-end="url(#ah)">
+      <path d="M360,220 H700 Q720,220 720,242 V378 Q720,400 742,400 H750"></path>
+      <path d="M360,580 H700 Q720,580 720,558 V422 Q720,400 742,400 H750"></path>
+      <path d="M360,400 H418"></path>
+      <path d="M680,400 H750"></path>
+      <path d="M1080,400 H1150"></path>
+      <path d="M1490,400 H1560"></path>
+      <path d="M1900,400 H1970"></path>
+      <path d="M1735,177 V230"></path>
+    </g>
+    <g fill="none" stroke="#9d978d" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#ahg)">
+      <path d="M920,515 V690"></path>
+      <path d="M1325,535 V690"></path>
+      <path d="M1735,568 V690"></path>
+    </g>
+  </svg>
+
+  <div style="position: absolute; left: 40px; top: 24px; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a8a29a">01</span>
+    <span style="font-size: 15px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #6f6a63">Sequencing input</span>
+  </div>
+  <div style="position: absolute; left: 430px; top: 24px; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a8a29a">02</span>
+    <span style="font-size: 15px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #6f6a63">Merge</span>
+  </div>
+  <div style="position: absolute; left: 760px; top: 24px; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a8a29a">03</span>
+    <span style="font-size: 15px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #6f6a63">Alignment</span>
+  </div>
+  <div style="position: absolute; left: 1160px; top: 24px; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a8a29a">04</span>
+    <span style="font-size: 15px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #6f6a63">Extraction</span>
+  </div>
+  <div style="position: absolute; left: 1570px; top: 24px; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a8a29a">05</span>
+    <span style="font-size: 15px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #6f6a63">Clustering</span>
+  </div>
+  <div style="position: absolute; left: 1980px; top: 24px; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a8a29a">06</span>
+    <span style="font-size: 15px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #6f6a63">Output</span>
+  </div>
+
+  <div style="position: absolute; left: 40px; top: 220px; transform: translateY(-50%); width: 320px; box-sizing: border-box; border: 1.5px solid #e3e0da; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; background: #fff">
+    <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.2px">R1-only reads</div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #10635a; background: #e4f2ef; border-radius: 5px; padding: 4px 9px">.fastq</span>
+      <span style="font-size: 17px; color: #6f6a63">single-end input</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 40px; top: 400px; transform: translateY(-50%); width: 320px; box-sizing: border-box; border: 1.5px solid #e3e0da; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; background: #fff">
+    <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.2px">Overlapping R1 + R2</div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #10635a; background: #e4f2ef; border-radius: 5px; padding: 4px 9px">.fastq</span>
+      <span style="font-size: 17px; color: #6f6a63">overlapping read pairs</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 40px; top: 580px; transform: translateY(-50%); width: 320px; box-sizing: border-box; border: 1.5px solid #e3e0da; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; background: #fff">
+    <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.2px">Reference cassette</div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #9a6a12; background: #fbf0da; border-radius: 5px; padding: 4px 9px">.fasta</span>
+      <span style="font-size: 17px; color: #6f6a63">barcode locus</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 430px; top: 400px; transform: translateY(-50%); width: 250px; box-sizing: border-box; border: 1.5px solid #e3e0da; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; background: #fff">
+    <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.2px">Merge pairs</div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 19px; font-weight: 600; color: #e8544b">PEAR</div>
+    <div style="font-size: 17px; color: #6f6a63">assembled reads</div>
+  </div>
+
+  <div style="position: absolute; left: 760px; top: 400px; transform: translateY(-50%); width: 320px; box-sizing: border-box; border: 1.5px solid #14161a; border-radius: 16px; padding: 0 0 22px; display: flex; flex-direction: column; background: #fff; overflow: hidden">
+    <div style="background: #14161a; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; padding: 12px 22px">Map · sort · index</div>
+    <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; color: #e8544b">minimap2 · samtools</div>
+      <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 17px; line-height: 1.35; color: #3d3a35">
+        <li>Align reads to the cassette</li>
+        <li>Sort and index alignments</li>
+      </ul>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #a8322b; background: #fbe3e1; border-radius: 5px; padding: 4px 9px">.bam</span>
+        <span style="font-size: 17px; color: #6f6a63">sorted · indexed</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1160px; top: 400px; transform: translateY(-50%); width: 330px; box-sizing: border-box; border: 1.5px solid #14161a; border-radius: 16px; padding: 0 0 22px; display: flex; flex-direction: column; background: #fff; overflow: hidden">
+    <div style="background: #14161a; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; padding: 12px 22px">Extract barcodes</div>
+    <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+      <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 1.35; color: #3d3a35">
+        <li><i>barbac_xtr()</i>: flank or coordinate extraction</li>
+        <li><i>Count</i> barcodes and determine their length</li>
+        <li>Preserve observed indels with flank extraction</li>
+      </ul>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #a03362; background: #fbe4ed; border-radius: 5px; padding: 4px 9px">.csv</span>
+        <span style="font-size: 17px; color: #6f6a63">barcode table</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1570px; top: 140px; transform: translateY(-50%); width: 330px; box-sizing: border-box; border: 1.5px solid #e3e0da; border-radius: 14px; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff">
+    <div style="font-size: 21px; font-weight: 700; letter-spacing: -0.2px">External barcode counts</div>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #a03362; background: #fbe4ed; border-radius: 5px; padding: 4px 9px">.csv</span>
+  </div>
+
+  <div style="position: absolute; left: 1570px; top: 400px; transform: translateY(-50%); width: 330px; box-sizing: border-box; border: 1.5px solid #14161a; border-radius: 16px; padding: 0 0 22px; display: flex; flex-direction: column; background: #fff; overflow: hidden">
+    <div style="background: #14161a; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; padding: 12px 22px">Cluster barcodes</div>
+    <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; color: #e8544b">super_cluster2</div>
+      <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 1.35; color: #3d3a35">
+        <li>Find nearby eligible centroids with native C++ search</li>
+        <li>Apply edit-distance and abundance merge guards</li>
+        <li><i>Report</i> clusters and member barcodes</li>
+      </ul>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #a03362; background: #fbe4ed; border-radius: 5px; padding: 4px 9px">.csv</span>
+        <span style="font-size: 17px; color: #6f6a63">cluster map</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1980px; top: 400px; transform: translateY(-50%); width: 380px; box-sizing: border-box; border: 1.5px solid #14161a; border-radius: 16px; padding: 0 0 22px; display: flex; flex-direction: column; background: #fff; overflow: hidden">
+    <div style="background: #14161a; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; padding: 12px 22px">Lineages · statistics · plots</div>
+    <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+      <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 1.35; color: #3d3a35">
+        <li>Pool each population; assign samples to shared clusters</li>
+        <li>Length, count and cluster-size distributions</li>
+        <li><i>barbac_ts_area()</i>: lineage frequencies over time</li>
+      </ul>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #a03362; background: #fbe4ed; border-radius: 5px; padding: 4px 9px">.csv</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: #2f6b39; background: #e6f2e7; border-radius: 5px; padding: 4px 9px">.png</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 40px; top: 700px; display: flex; align-items: center; gap: 10px">
+    <span style="font-size: 15px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #9d978d">Quality control &amp; diagnostics</span>
+  </div>
+
+  <div style="position:absolute;left:40px;top:750px;width:615px;font-size:21px;line-height:1.5;color:#55514b">
+    <strong>run_cli_pipeline()</strong> runs FastQC, optional PEAR merging, mapping and BAM summaries; MultiQC runs when available.<br>
+    Extracted counts can be saved and clustered independently in R or local Studio.
+  </div>
+  <div style="position: absolute; left: 760px; top: 692px; width: 320px; box-sizing: border-box; border: 1.5px dashed #ddd9d2; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; background: #fcfbfa">
+    <div style="font-size: 21px; font-weight: 700; letter-spacing: -0.2px">Mapping stats</div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 600; color: #6f6a63">samtools</div>
+    <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; font-size: 16px; line-height: 1.35; color: #55514b">
+      <li>Mapped / unmapped reads</li>
+      <li>Primary-read counts</li>
+    </ul>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a03362; background: #fbe4ed; border-radius: 5px; padding: 3px 8px">.csv</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1160px; top: 692px; width: 330px; box-sizing: border-box; border: 1.5px dashed #ddd9d2; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; background: #fcfbfa">
+    <div style="font-size: 21px; font-weight: 700; letter-spacing: -0.2px">Barcode stats</div>
+    <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; font-size: 16px; line-height: 1.35; color: #55514b">
+      <li>Length, count and entropy distributions</li>
+      <li>Optional length filtering; retain indels when clustering</li>
+    </ul>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a03362; background: #fbe4ed; border-radius: 5px; padding: 3px 8px">.csv</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #2f6b39; background: #e6f2e7; border-radius: 5px; padding: 3px 8px">.png</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1570px; top: 692px; width: 330px; box-sizing: border-box; border: 1.5px dashed #ddd9d2; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; background: #fcfbfa">
+    <div style="font-size: 21px; font-weight: 700; letter-spacing: -0.2px">Clustering stats</div>
+    <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; font-size: 16px; line-height: 1.35; color: #55514b">
+      <li>Cluster-size distribution</li>
+      <li>Memberships, total counts and singleton clusters</li>
+    </ul>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #a03362; background: #fbe4ed; border-radius: 5px; padding: 3px 8px">.csv</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: #2f6b39; background: #e6f2e7; border-radius: 5px; padding: 3px 8px">.png</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 40px; top: 955px; width: 2320px; height: 1.5px; background: #e3e0da"></div>
+  <div style="position: absolute; left: 40px; top: 978px; display: flex; align-items: baseline; gap: 14px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; letter-spacing: 0.5px">barbac</span>
+    <span style="font-size: 19px; color: #6f6a63">from raw reads or barcode counts to lineage frequencies · optional plot exports: PDF / PNG / SVG</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 2400, &quot;height&quot;: 1040}}"></script>
+</body>
+</html>

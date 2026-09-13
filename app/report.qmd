@@ -37,8 +37,10 @@ The analysis contains **`r format(sum(x$input$counts),big.mark=',')` barcode rea
 **`r nrow(x$centroids)` inferred clusters** across
 **`r length(unique(x$input$population))` populations**.
 
-Clustering took `r sprintf('%.3f',x$seconds)` seconds on the machine running the app;
-this excludes upload, extraction, plotting and report rendering.
+Native clustering took `r sprintf('%.3f',x$provenance$clustering_seconds)` seconds.
+The analysis, including pooling, sample assignment and statistics, took
+`r sprintf('%.3f',x$seconds)` seconds on the machine running the app.
+These timings exclude upload, extraction, file export, plotting and report rendering.
 
 ## Clustering settings
 
