@@ -1,0 +1,38 @@
+[
+  {
+    "condition": "random_mixed",
+    "status": "complete",
+    "n": 60,
+    "mean_difference": 0.016172091135148038,
+    "sd_difference": 0.013086920212195102,
+    "se_difference": 0.0016895141344992288,
+    "mean_ci95_lower": 0.012791381160800282,
+    "mean_ci95_upper": 0.019552801109495796,
+    "simultaneous_one_sided_lower": 0.0118189100190858,
+    "bootstrap_lower": 0.012066413298589235,
+    "one_sided_p": 6.447315967353158e-14,
+    "wins": 46,
+    "ties": 13,
+    "losses": 1,
+    "superiority_supported": true,
+    "interpretation": "Post hoc supplementary contrast; not retroactively confirmatory"
+  },
+  {
+    "condition": "anchored_mixed",
+    "status": "complete",
+    "n": 60,
+    "mean_difference": 0.014868344635236971,
+    "sd_difference": 0.01548266522995481,
+    "se_difference": 0.0019988034863506533,
+    "mean_ci95_lower": 0.010868748097342599,
+    "mean_ci95_upper": 0.018867941173131342,
+    "simultaneous_one_sided_lower": 0.009718252420068825,
+    "bootstrap_lower": 0.009941169273603744,
+    "one_sided_p": 2.443444066406409e-10,
+    "wins": 48,
+    "ties": 2,
+    "losses": 10,
+    "superiority_supported": true,
+    "interpretation": "Post hoc supplementary contrast; not retroactively confirmatory"
+  }
+]

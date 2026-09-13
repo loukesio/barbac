@@ -1,0 +1,38 @@
+{
+  "source_sha256": {
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/summary.json": "ce3895e720f4c3cc85b8c4fae292f195123205ffd1c176bf84296fadfab7dc83",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/combined_results.json": "51718d23c66ee98ecc81540ffadf9ac5ce45ee4220d6127c764f4188095ebe04",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/protocol.json": "e2955b99b4911fdb4bb554036a66b504f06c5bf931edf40aa304e2e112c3e79d",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/freeze.json": "ef198c38edfb8c43c31fb3ac28b8fe3a57f1d5fc5c4834a8402807bfa3dc2283",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/independent_validation.json": "d41c26463ceb6fc55be452539296b6513e48077f749e37a781f4d552c3884925",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/accuracy_contrasts.json": "bc59abaaff8f549269ee36fb822f2fafe5296574176531d08be371ee65d71dee",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/timing_environment_validation.json": "94fd76f80a3526c0b9354f3de4cc8349ccda447096088b77bdd3b1959979cf01"
+  },
+  "renderer_sha256": "c62b635dea3b5a587d51dc751f828c6fc7e5b57562e36d810ed17a3dcef54437",
+  "rows": 18,
+  "configurations": 6,
+  "benchmarks": 3,
+  "simulated_libraries_per_design": 60,
+  "combined_execution_records": 726,
+  "displayed_metrics_recomputed_from_receipts": true,
+  "pdf_text_values_verified": true,
+  "docx_serialized_values_verified": true,
+  "main_pdf_pages": 1,
+  "pdf_fonts_embedded": true,
+  "pdffonts": "name                                 type              encoding         emb sub uni object ID\n------------------------------------ ----------------- ---------------- --- --- --- ---------\nAAAAAA+TimesNewRomanPS-BoldMT        TrueType          WinAnsi          yes yes yes      6  0\nAAAAAA+TimesNewRomanPSMT             TrueType          WinAnsi          yes yes yes     10  0\n",
+  "visual_inspection_pending": false,
+  "best_value_highlight_hex": "FBE0B7",
+  "highlighted_cells": 15,
+  "docx_shading_matches_metric_leaders": true,
+  "files_sha256": {
+    "table_1_unrounded_data.csv": "700e717d2666713263a3763547e24bae53086e4683b9dd984907f2125bf0fce3",
+    "table_1_methods.pdf": "a26ad78de17a093cc91540405233b6fc7c766e4913d7126342bc0264fa862580",
+    "table_1_benchmark_comparison.docx": "e8f47a07a01fa01802938cd36792a4a8932717067b08794e38b72635631fc0d2",
+    "table_1_benchmark_comparison.pdf": "895207ba1822d1cdfa51a1d066fec4b075852ff2bac8ed1d7207f2afa797e595",
+    "README.md": "c72499ec6941929ba1d2a4fa9c34789ef5b690a8c5e9c14beed3565b5a16f9d1",
+    "table_1_methods.md": "ea7f7cf8b75215af27e1c63d9f3822e5f7d086820d6e818b470e085cc5c117f0",
+    "table_1_benchmark_comparison.csv": "6b6c9871cbc09e512c7a9862f73713b0fae40f27083b4416fda6da3818a0017c"
+  },
+  "visual_inspection_passed": true,
+  "visual_scope": "Updated one-page PDF inspected: all 15 numerical leaders have pale orange fill and bold type, all values and footnotes remain readable, and no content clips. DOCX fill and bold properties match the same leader selection in serialized XML. Companion layout is unchanged from its previously inspected two-page version."
+}

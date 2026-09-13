@@ -1,0 +1,14 @@
+{
+  "rows": 726,
+  "summaries": 18,
+  "all_original_other_method_cells_reused": true,
+  "original_sources_sha256": {
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/results.json": "dafebfa4dffcacb1cddd5c32aeb421f2a1617ed1e6200e6c410c5e67dd16c907",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/timing_results.json": "3a1290e4b2656046ef17ebe75764e74f92a1285465edaf21be57c118c555e8cc",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/accuracy_contrasts.json": "0721ff2884927f36ede654dd51c1f10364c65f09ad0c0eea677c8f36e2e9390c",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/benchmark_table.pdf": "6a7f84f06785869c16490341678526306dc23d364caaa74a7c8fdcc0eafdaecb"
+  },
+  "complete_shepherd_calls": 121,
+  "summary_means_independently_reconciled": true,
+  "statistical_scope": "Post hoc configuration sensitivity; no final-seed Barbac tuning"
+}

@@ -1,0 +1,24 @@
+{
+  "frozen_at": "2026-09-12T22:40:33.267802+00:00",
+  "sha256": {
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/protocol.json": "e2955b99b4911fdb4bb554036a66b504f06c5bf931edf40aa304e2e112c3e79d",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/run.py": "1c5fa083e54f8df6fd931613c3f62fb4d127414af46931c97f80bad8285020bc",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/worker.py": "ddf917a4e4cd3c7e12f2d09469267376547e1d25f12ca398b46d4d4f438f62ec",
+    "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py": "0e5b88bb1849a34538c6c497889d9463ddb3a7a918cf644861274c46f828cfc4",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/freeze.json": "dbd487bb31502b2e20968797adeaf9675948bfa97795d54536a8e48055d6d83f",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/results.json": "dafebfa4dffcacb1cddd5c32aeb421f2a1617ed1e6200e6c410c5e67dd16c907",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/timing_results.json": "3a1290e4b2656046ef17ebe75764e74f92a1285465edaf21be57c118c555e8cc",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/publication_results.csv": "c7d49e2b8d3266e7eabd8e8e68610a7c174609c4234cc2c26bfb0d425d2d13b2",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/schedule.json": "e72c9cd8127edf8461cb341a25c634155a2fd17bd2263e0067a75a420a66aa7d",
+    "/Users/theodosiou/Documents/Projects/test_barbac/.codex/publication-final-2026-09-12/source/benchmark/publication_final/metrics.py": "b188b46dfca2e236fc25f53ebc2d50e87527cf0d0972f5cd11bdb4250b68a0ba"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "PYTHONHASHSEED": "0"
+  },
+  "expected_cells": 121,
+  "scope": "Post hoc sensitivity; not the original confirmatory configuration"
+}

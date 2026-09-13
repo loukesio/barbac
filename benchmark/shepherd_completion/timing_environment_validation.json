@@ -1,0 +1,10 @@
+{
+  "first_timed_start": "2026-09-12T22:40:44.548209+00:00",
+  "last_timed_end": "2026-09-12T23:02:40.644230+00:00",
+  "events_within_timed_campaign": [],
+  "last_event_before": "2026-09-12 23:46:46 +0200 Wake                \tWake from Deep Idle [CDNVA] : due to smc.sysState.Wake(0x70070000) trackpadkeyboard SMC.OutboxNotEmpty/UserActivity Assertion Using AC (Charge:100%)           ",
+  "first_event_after": "2026-09-13 01:15:04 +0200 Sleep               \tEntering Sleep state due to 'Clamshell Sleep':TCPKeepAlive=active Using Batt (Charge:95%) 950 secs  ",
+  "assertion_pid_at_start": 96474,
+  "assertion_seconds": 7200,
+  "later_session_timing_caveat": true
+}

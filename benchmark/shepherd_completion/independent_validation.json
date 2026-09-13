@@ -1,0 +1,22 @@
+{
+  "completed_at": "2026-09-13T07:26:22.117404+00:00",
+  "all_new_success_centroid_metrics_independently_recomputed": true,
+  "full_read_mapping_spot_checks": [
+    {
+      "condition": "random_mixed",
+      "seed": 20260912322
+    },
+    {
+      "condition": "random_mixed",
+      "seed": 20260912343
+    },
+    {
+      "condition": "milos",
+      "seed": null
+    }
+  ],
+  "all_605_other_method_records_exactly_preserved": true,
+  "registered_fingerprints_unchanged": true,
+  "base_R_paired_t_checks_passed": true,
+  "bootstrap_scope": "Existing previously validated paired-summary implementation reused; not independently reimplemented here"
+}

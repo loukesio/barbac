@@ -1,0 +1,20 @@
+{
+  "campaign": "shepherd-completion-2026-09-13",
+  "scope": "Post hoc supplementary sensitivity analysis after observing ten automatic-estimator failures; retain original confirmatory results unchanged.",
+  "shepherd_script": "/Users/theodosiou/Documents/Projects/Barcodes/barbac-benchmark/tools/Shepherd/shepherd_t0.py",
+  "author_documentation": "https://github.com/Nik-Tavakolian/Shepherd",
+  "simulation_substitution_rate": 0.004,
+  "rate_justification": "Known per-base substitution probability from the existing simulator, selected without optimizing Shepherd accuracy. Gives Shepherd the generating substitution rate; does not supply truth identities, counts or repeat-specific indel rates. Other methods retain their frozen settings.",
+  "milo_rate": "Original automatic estimation; no new error-rate assumption for the archived fixed reference.",
+  "bayes_factor_threshold": -4,
+  "threshold_justification": "Author-documented default. The original frozen benchmark explicitly used +4; preserve and disclose it rather than silently relabel it as default.",
+  "distance": 3,
+  "distance_justification": "Retain the original explicit distance limit, matching the benchmark's other configurations. This is not an all-default Shepherd configuration.",
+  "cells": "All 120 registered final simulated inputs plus fixed Milo, one call each in original dataset order; no outcome-based exclusions or parameter selection.",
+  "other_methods": "Reuse all frozen outputs and accepted timing observations. No Barbac code, simulator, truth, seeds or competitor binaries changed.",
+  "timeout_seconds": 900,
+  "timing": "Fresh Python worker, Shepherd startup and execution, canonical exports; excludes common staging and scoring. Serial runs; keep-awake assertion; later-session times must be labelled as such.",
+  "failures": "Retain every failure; no unregistered retry or success-only full-design inference.",
+  "analysis": "Report complete per-design means, FN, FP, read accuracy and median time. Supplementary paired LV-minus-Shepherd F1 differences with Bonferroni one-sided alpha 0.05/8 t and 100000-resample bootstrap lower bounds (seeds 2026091301 and 2026091302). Conservative reference to the original eight-comparison family; post hoc configuration choice precludes retroactive confirmatory status.",
+  "barbac_development": "Consumed final test seeds are not available for algorithm tuning. Diagnose recall only on existing development inputs and genuine-neighbour controls."
+}

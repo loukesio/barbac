@@ -1,0 +1,19 @@
+Benchmark,Method,FN ↓,FP ↓,F1 (%) ↑,Read accuracy (%) ↑,Runtimeᵇ (s) ↓
+A  Random N20: substitutions + indels (60 libraries),barbac Hamming,124.92,18.30,99.28004 ± 0.0758,99.997077,1.40
+A  Random N20: substitutions + indels (60 libraries),barbac LV + Poisson,124.90,18.25,99.28038 ± 0.0752,99.997083,1.76
+A  Random N20: substitutions + indels (60 libraries),Shepherdᵃ,126.53,19.83,99.26421 ± 0.0766,99.996495,4.67
+A  Random N20: substitutions + indels (60 libraries),Starcode sphere,129.72,22.32,99.23569 ± 0.0797,99.982520,3.29
+A  Random N20: substitutions + indels (60 libraries),Starcode MP,118.18,142.98,98.69582 ± 0.1112,99.983934,3.22
+A  Random N20: substitutions + indels (60 libraries),Bartender,125.17,48.03,99.13063 ± 0.0921,99.930972,1.89
+B  Anchored N20 + AA/TT: substitutions + indels (60 libraries),barbac Hamming,127.70,24.90,99.23302 ± 0.0736,99.993137,1.52
+B  Anchored N20 + AA/TT: substitutions + indels (60 libraries),barbac LV + Poisson,127.67,24.08,99.23726 ± 0.0741,99.994257,2.05
+B  Anchored N20 + AA/TT: substitutions + indels (60 libraries),Shepherdᵃ,129.65,25.05,99.22239 ± 0.0796,99.993818,13.45
+B  Anchored N20 + AA/TT: substitutions + indels (60 libraries),Starcode sphere,132.63,27.65,99.19431 ± 0.0829,99.986583,3.77
+B  Anchored N20 + AA/TT: substitutions + indels (60 libraries),Starcode MP,119.95,191.83,98.44674 ± 0.1384,99.979174,3.67
+B  Anchored N20 + AA/TT: substitutions + indels (60 libraries),Bartender,127.73,137.97,98.67218 ± 0.0786,99.906649,2.31
+C  Milo / Johnson published simulation (one fixed reference),barbac Hamming,469,87,99.72147,99.999088,17.50
+C  Milo / Johnson published simulation (one fixed reference),barbac LV + Poisson,471,83,99.72246,99.999476,33.65
+C  Milo / Johnson published simulation (one fixed reference),Shepherdᵃ,470,85,99.72196,99.999132,165.23
+C  Milo / Johnson published simulation (one fixed reference),Starcode sphere,771,353,99.43682,99.847880,170.68
+C  Milo / Johnson published simulation (one fixed reference),Starcode MP,532,560,99.45408,99.981789,193.39
+C  Milo / Johnson published simulation (one fixed reference),Bartender,496,795,99.35546,99.935342,41.77

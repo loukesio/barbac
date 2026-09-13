@@ -1,0 +1,2552 @@
+[
+  {
+    "condition": "random_substitutions",
+    "fn": 124,
+    "categories": {
+      "zero_read_truth": 102,
+      "observed_identity_merged_or_unassigned": 14,
+      "exact_sequence_unobserved": 8
+    },
+    "positive_missed_counts": {
+      "1": 8,
+      "2": 14
+    },
+    "positive_missed_multiple_distinct_descendants": 14,
+    "positive_examples": [
+      {
+        "barcode": "ACATTTATCTTAGGATGCGC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "ACATTTATCTTACGATGCGC",
+        "origins": [
+          {
+            "sequence": "ACATTTATCTTACGATGCGC",
+            "reads": 1,
+            "root": "ACATTTATCTTACGATGCGC"
+          },
+          {
+            "sequence": "ACATTTATCTTAGGATGCGC",
+            "reads": 1,
+            "root": "ACATTTATCTTACGATGCGC"
+          }
+        ]
+      },
+      {
+        "barcode": "AGTAAGAAACCTGTGATGCC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AGTAAGAAACCTGTGAAGCC",
+        "origins": [
+          {
+            "sequence": "AGTAAGAAACCTGTGAAGCC",
+            "reads": 1,
+            "root": "AGTAAGAAACCTGTGAAGCC"
+          },
+          {
+            "sequence": "AGTAAGAAACCTGTGATGCC",
+            "reads": 1,
+            "root": "AGTAAGAAACCTGTGAAGCC"
+          }
+        ]
+      },
+      {
+        "barcode": "AGTTGTGCGCCAAAACCTAA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AGTTATGCGCCAAAACCTAA",
+        "origins": [
+          {
+            "sequence": "AGTTATGCGCCAAAACCTAA",
+            "reads": 1,
+            "root": "AGTTATGCGCCAAAACCTAA"
+          },
+          {
+            "sequence": "AGTTGTGCGCCAAAACCTAA",
+            "reads": 1,
+            "root": "AGTTATGCGCCAAAACCTAA"
+          }
+        ]
+      },
+      {
+        "barcode": "ATGGTCAATATTCGCGCTTT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ATGGTCAATATTCACGCTTT",
+            "reads": 1,
+            "root": "ATGGTCAATATTCACGCTTT"
+          }
+        ]
+      },
+      {
+        "barcode": "CAATATGCGCTGTGGGTGCG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CAATATGCGCGGTGGGTGCG",
+            "reads": 1,
+            "root": "CAATATGCGCGGTGGGTGCG"
+          }
+        ]
+      },
+      {
+        "barcode": "CAGTTAAATCTCGGTCGATG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CAGTTAAATCTAGGTCGATG",
+        "origins": [
+          {
+            "sequence": "CAGTTAAATCTAGGTCGATG",
+            "reads": 1,
+            "root": "CAGTTAAATCTAGGTCGATG"
+          },
+          {
+            "sequence": "CAGTTAAATCTCGGTCGATG",
+            "reads": 1,
+            "root": "CAGTTAAATCTAGGTCGATG"
+          }
+        ]
+      },
+      {
+        "barcode": "CCTATACAAACCTCCCCGGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CCTAAACAAACCTCCCCGGG",
+        "origins": [
+          {
+            "sequence": "CCTAAACAAACCTCCCCGGG",
+            "reads": 1,
+            "root": "CCTAAACAAACCTCCCCGGG"
+          },
+          {
+            "sequence": "CCTATACAAACCTCCCCGGG",
+            "reads": 1,
+            "root": "CCTAAACAAACCTCCCCGGG"
+          }
+        ]
+      },
+      {
+        "barcode": "CGATGCTGTGTCAGGCTGTC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CAATGCTGTGTCAGGCTGTC",
+        "origins": [
+          {
+            "sequence": "CAATGCTGTGTCAGGCTGTC",
+            "reads": 1,
+            "root": "CAATGCTGTGTCAGGCTGTC"
+          },
+          {
+            "sequence": "CGATGCTGTGTCAGGCTGTC",
+            "reads": 1,
+            "root": "CAATGCTGTGTCAGGCTGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "CGGTGAGAGCCGCGCCAACT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CGGTGACAGCCGCGCCAACT",
+        "origins": [
+          {
+            "sequence": "CGGTGACAGCCGCGCCAACT",
+            "reads": 1,
+            "root": "CGGTGACAGCCGCGCCAACT"
+          },
+          {
+            "sequence": "CGGTGAGAGCCGCGCCAACT",
+            "reads": 1,
+            "root": "CGGTGACAGCCGCGCCAACT"
+          }
+        ]
+      },
+      {
+        "barcode": "GCGCGGCACGTTAGGAGTTC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GCGCCGCACGTTAGGAGTTC",
+        "origins": [
+          {
+            "sequence": "GCGCCGCACGTTAGGAGTTC",
+            "reads": 1,
+            "root": "GCGCCGCACGTTAGGAGTTC"
+          },
+          {
+            "sequence": "GCGCGGCACGTTAGGAGTTC",
+            "reads": 1,
+            "root": "GCGCCGCACGTTAGGAGTTC"
+          }
+        ]
+      },
+      {
+        "barcode": "GCGGCAGTACCTAGCTCACA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GGGGCAGTACCTAGCTCACA",
+            "reads": 1,
+            "root": "GGGGCAGTACCTAGCTCACA"
+          }
+        ]
+      },
+      {
+        "barcode": "GCTCAACCGGGCTACAAGGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GCTCAACCGGGCTAAAAGGG",
+        "origins": [
+          {
+            "sequence": "GCTCAACCGGGCTAAAAGGG",
+            "reads": 1,
+            "root": "GCTCAACCGGGCTAAAAGGG"
+          },
+          {
+            "sequence": "GCTCAACCGGGCTACAAGGG",
+            "reads": 1,
+            "root": "GCTCAACCGGGCTAAAAGGG"
+          }
+        ]
+      },
+      {
+        "barcode": "GGCTCCAAGCACACTTACGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GGCTACAAGCACACTTACGG",
+        "origins": [
+          {
+            "sequence": "GGCTACAAGCACACTTACGG",
+            "reads": 1,
+            "root": "GGCTACAAGCACACTTACGG"
+          },
+          {
+            "sequence": "GGCTCCAAGCACACTTACGG",
+            "reads": 1,
+            "root": "GGCTACAAGCACACTTACGG"
+          }
+        ]
+      },
+      {
+        "barcode": "GTACTCTTTTCCGGCGTAGC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GTACTCTCTTCCGGCGTAGC",
+        "origins": [
+          {
+            "sequence": "GTACTCTCTTCCGGCGTAGC",
+            "reads": 1,
+            "root": "GTACTCTCTTCCGGCGTAGC"
+          },
+          {
+            "sequence": "GTACTCTTTTCCGGCGTAGC",
+            "reads": 1,
+            "root": "GTACTCTCTTCCGGCGTAGC"
+          }
+        ]
+      },
+      {
+        "barcode": "GTTCGAGGAGCGACCCCGTA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GTTCGACGAGCGACCCCGTA",
+            "reads": 1,
+            "root": "GTTCGACGAGCGACCCCGTA"
+          }
+        ]
+      },
+      {
+        "barcode": "TACCAGTCACATCGTCACTA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TACCAGCCACATCGTCACTA",
+            "reads": 1,
+            "root": "TACCAGCCACATCGTCACTA"
+          }
+        ]
+      },
+      {
+        "barcode": "TAGTTGCGCTTCAGAGTTCG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TAGTTGCGCTCCAGAGTTCG",
+            "reads": 1,
+            "root": "TAGTTGCGCTCCAGAGTTCG"
+          }
+        ]
+      },
+      {
+        "barcode": "TCTTGACCTCCCTCTTAACA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TCTTGACCTCCCCCTTAACA",
+        "origins": [
+          {
+            "sequence": "TCTTGACCTCCCCCTTAACA",
+            "reads": 1,
+            "root": "TCTTGACCTCCCCCTTAACA"
+          },
+          {
+            "sequence": "TCTTGACCTCCCTCTTAACA",
+            "reads": 1,
+            "root": "TCTTGACCTCCCCCTTAACA"
+          }
+        ]
+      },
+      {
+        "barcode": "TGAACGGGGCCATGTTAGCT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TGAACGGGGACATGTTAGCT",
+            "reads": 1,
+            "root": "TGAACGGGGACATGTTAGCT"
+          }
+        ]
+      },
+      {
+        "barcode": "TGAATCCAGCCGTTAGTATC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TGAATCCAGTCGTTAGTATC",
+            "reads": 1,
+            "root": "TGAATCCAGTCGTTAGTATC"
+          }
+        ]
+      },
+      {
+        "barcode": "TGTTCACACAAATCATTCAA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TGCTCACACAAATCATTCAA",
+        "origins": [
+          {
+            "sequence": "TGCTCACACAAATCATTCAA",
+            "reads": 1,
+            "root": "TGCTCACACAAATCATTCAA"
+          },
+          {
+            "sequence": "TGTTCACACAAATCATTCAA",
+            "reads": 1,
+            "root": "TGCTCACACAAATCATTCAA"
+          }
+        ]
+      },
+      {
+        "barcode": "TTCTCAATGATGAAGGCTGC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TTCTCAATGATGAAGGCTGA",
+        "origins": [
+          {
+            "sequence": "TTCTCAATGATGAAGGCTGA",
+            "reads": 1,
+            "root": "TTCTCAATGATGAAGGCTGA"
+          },
+          {
+            "sequence": "TTCTCAATGATGAAGGCTGC",
+            "reads": 1,
+            "root": "TTCTCAATGATGAAGGCTGA"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "condition": "random_mixed",
+    "fn": 125,
+    "categories": {
+      "zero_read_truth": 102,
+      "exact_sequence_unobserved": 13,
+      "observed_identity_merged_or_unassigned": 10
+    },
+    "positive_missed_counts": {
+      "1": 12,
+      "2": 11
+    },
+    "positive_missed_multiple_distinct_descendants": 11,
+    "positive_examples": [
+      {
+        "barcode": "AATTAGCCTCCCACAATTTC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AATTAGCCTCCCACAATGTC",
+            "reads": 1,
+            "root": "AATTAGCCTCCCACAATGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "AGGCCATTAACACAGGTCCA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AGGCCATTAACACAGGGCCA",
+            "reads": 1,
+            "root": "AGGCCATTAACACAGGGCCA"
+          }
+        ]
+      },
+      {
+        "barcode": "ATAACCCCAATGGGTGGCAC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ATAACCCCAATGCGTGGCAC",
+            "reads": 1,
+            "root": "ATAACCCCAATGCGTGGCAC"
+          }
+        ]
+      },
+      {
+        "barcode": "CAGTGGAACAAAGGGCCATC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CAGCGGAACAAAGGGCCATC",
+        "origins": [
+          {
+            "sequence": "CAGCGGAACAAAGGGCCATC",
+            "reads": 1,
+            "root": "CAGCGGAACAAAGGGCCATC"
+          },
+          {
+            "sequence": "CAGTGGAACAAAGGGCCATC",
+            "reads": 1,
+            "root": "CAGCGGAACAAAGGGCCATC"
+          }
+        ]
+      },
+      {
+        "barcode": "CATTCAAGAGGCTGAGTTTT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CATTCAAGAGGCTGGGTTTT",
+            "reads": 1,
+            "root": "CATTCAAGAGGCTGGGTTTT"
+          }
+        ]
+      },
+      {
+        "barcode": "CCTGTCGAACTCAGTGCATA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CCTGACGAACTCAGTGCATA",
+        "origins": [
+          {
+            "sequence": "CCTGACGAACTCAGTGCATA",
+            "reads": 1,
+            "root": "CCTGACGAACTCAGTGCATA"
+          },
+          {
+            "sequence": "CCTGTCGAACTCAGTGCATA",
+            "reads": 1,
+            "root": "CCTGACGAACTCAGTGCATA"
+          }
+        ]
+      },
+      {
+        "barcode": "CCTTGGAACTCGTGACCCTC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CCTTGGAACTCGTGACACTC",
+        "origins": [
+          {
+            "sequence": "CCTTGGAACTCGTGACACTC",
+            "reads": 1,
+            "root": "CCTTGGAACTCGTGACACTC"
+          },
+          {
+            "sequence": "CCTTGGAACTCGTGACCCTC",
+            "reads": 1,
+            "root": "CCTTGGAACTCGTGACACTC"
+          }
+        ]
+      },
+      {
+        "barcode": "CGGTGAGAGCCGCGCCAACT",
+        "true_count": 2,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CGGGGAGAGCCGCGCCAACT",
+            "reads": 1,
+            "root": "CGGGGAGAGCCGCGCCAACT"
+          },
+          {
+            "sequence": "CGGTAAGAGCCGCGCCAACT",
+            "reads": 1,
+            "root": "CGGGGAGAGCCGCGCCAACT"
+          }
+        ]
+      },
+      {
+        "barcode": "CTAAGCAAGCACACGTGGTC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CTAAGGAAGCACACGTGGTC",
+            "reads": 1,
+            "root": "CTAAGGAAGCACACGTGGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "CTCGCCATTACGCCGTTAGT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CTCGCCATTACGCCGGTAGT",
+        "origins": [
+          {
+            "sequence": "CTCGCCATTACGCCGGTAGT",
+            "reads": 1,
+            "root": "CTCGCCATTACGCCGGTAGT"
+          },
+          {
+            "sequence": "CTCGCCATTACGCCGTTAGT",
+            "reads": 1,
+            "root": "CTCGCCATTACGCCGGTAGT"
+          }
+        ]
+      },
+      {
+        "barcode": "CTGACGATGGTGATTAGGGG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CTGACGATGATGATTAGGGG",
+            "reads": 1,
+            "root": "CTGACGATGATGATTAGGGG"
+          }
+        ]
+      },
+      {
+        "barcode": "CTGCTCTGTTATGTAAATAG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CTGCTCTGTTATGTTAATAG",
+            "reads": 1,
+            "root": "CTGCTCTGTTATGTTAATAG"
+          }
+        ]
+      },
+      {
+        "barcode": "CTTGGCCAGCCGTAGCGTCT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CTTGGCCAGCCGTAGCGTAT",
+        "origins": [
+          {
+            "sequence": "CTTGGCCAGCCGTAGCGTAT",
+            "reads": 1,
+            "root": "CTTGGCCAGCCGTAGCGTAT"
+          },
+          {
+            "sequence": "CTTGGCCAGCCGTAGCGTCT",
+            "reads": 1,
+            "root": "CTTGGCCAGCCGTAGCGTAT"
+          }
+        ]
+      },
+      {
+        "barcode": "GACATTCTTCTATTTGAGTC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GACATTCTACTATTTGAGTC",
+        "origins": [
+          {
+            "sequence": "GACATTCTACTATTTGAGTC",
+            "reads": 1,
+            "root": "GACATTCTACTATTTGAGTC"
+          },
+          {
+            "sequence": "GACATTCTTCTATTTGAGTC",
+            "reads": 1,
+            "root": "GACATTCTACTATTTGAGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "GGGCGTTCATGTGTCATGGT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CGGCGTTCATGTGTCATGGT",
+        "origins": [
+          {
+            "sequence": "CGGCGTTCATGTGTCATGGT",
+            "reads": 1,
+            "root": "CGGCGTTCATGTGTCATGGT"
+          },
+          {
+            "sequence": "GGGCGTTCATGTGTCATGGT",
+            "reads": 1,
+            "root": "CGGCGTTCATGTGTCATGGT"
+          }
+        ]
+      },
+      {
+        "barcode": "GTACCCGGTTTCAGGTGATG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GTACCCGGTTTCAGGTGGTG",
+            "reads": 1,
+            "root": "GTACCCGGTTTCAGGTGGTG"
+          }
+        ]
+      },
+      {
+        "barcode": "TACTCGTCGGTGATTATTCA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TACTCGTCAGTGATTATTCA",
+        "origins": [
+          {
+            "sequence": "TACTCGTCAGTGATTATTCA",
+            "reads": 1,
+            "root": "TACTCGTCAGTGATTATTCA"
+          },
+          {
+            "sequence": "TACTCGTCGGTGATTATTCA",
+            "reads": 1,
+            "root": "TACTCGTCAGTGATTATTCA"
+          }
+        ]
+      },
+      {
+        "barcode": "TACTGGGAAGCCGCCGAGCG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TACGGGGAAGCCGCCGAGCG",
+            "reads": 1,
+            "root": "TACGGGGAAGCCGCCGAGCG"
+          }
+        ]
+      },
+      {
+        "barcode": "TAGTTGCGCTTCAGAGTTCG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TAGTTGCGCTGCAGAGTTCG",
+            "reads": 1,
+            "root": "TAGTTGCGCTGCAGAGTTCG"
+          }
+        ]
+      },
+      {
+        "barcode": "TCGGTGCTAGGTGAGTAAAA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TCGGTGCTAGGTGACTAAAA",
+        "origins": [
+          {
+            "sequence": "TCGGTGCTAGGTGACTAAAA",
+            "reads": 1,
+            "root": "TCGGTGCTAGGTGACTAAAA"
+          },
+          {
+            "sequence": "TCGGTGCTAGGTGAGTAAAA",
+            "reads": 1,
+            "root": "TCGGTGCTAGGTGACTAAAA"
+          }
+        ]
+      },
+      {
+        "barcode": "TCTTGACCTCCCTCTTAACA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TCTTGACCTACCTCTTAACA",
+        "origins": [
+          {
+            "sequence": "TCTTGACCTACCTCTTAACA",
+            "reads": 1,
+            "root": "TCTTGACCTACCTCTTAACA"
+          },
+          {
+            "sequence": "TCTTGACCTCCCTCTTAACA",
+            "reads": 1,
+            "root": "TCTTGACCTACCTCTTAACA"
+          }
+        ]
+      },
+      {
+        "barcode": "TGAATCCAGCCGTTAGTATC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TGAATCCAGCCGATAGTATC",
+            "reads": 1,
+            "root": "TGAATCCAGCCGATAGTATC"
+          }
+        ]
+      },
+      {
+        "barcode": "TTGTTGGACGGGTGACCGTA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TTGGTGGACGGGTGACCGTA",
+            "reads": 1,
+            "root": "TTGGTGGACGGGTGACCGTA"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "condition": "anchored_substitutions",
+    "fn": 119,
+    "categories": {
+      "zero_read_truth": 102,
+      "observed_identity_merged_or_unassigned": 9,
+      "exact_sequence_unobserved": 8
+    },
+    "positive_missed_counts": {
+      "1": 7,
+      "2": 10
+    },
+    "positive_missed_multiple_distinct_descendants": 10,
+    "positive_examples": [
+      {
+        "barcode": "ACCGAAACGACTAAGCAAATTAAAAT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "ACCGAAACGACGAAGCAAATTAAAAT",
+        "origins": [
+          {
+            "sequence": "ACCGAAACGACGAAGCAAATTAAAAT",
+            "reads": 1,
+            "root": "ACCGAAACGACGAAGCAAATTAAAAT"
+          },
+          {
+            "sequence": "ACCGAAACGACTAAGCAAATTAAAAT",
+            "reads": 1,
+            "root": "ACCGAAACGACGAAGCAAATTAAAAT"
+          }
+        ]
+      },
+      {
+        "barcode": "ACCGGAATGATTAAGACTATTCGTGG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ACCGGAATAATTAAGACTATTCGTGG",
+            "reads": 1,
+            "root": "ACCGGAATAATTAAGACTATTCGTGG"
+          }
+        ]
+      },
+      {
+        "barcode": "AGGCCAAATTAAAACACAGTTGTCCA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AGGCCAGATTAAAACACAGTTGTCCA",
+            "reads": 1,
+            "root": "AGGCCAGATTAAAACACAGTTGTCCA"
+          }
+        ]
+      },
+      {
+        "barcode": "ATGTTAAGGGTGAAATCAGTTGAAGG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ATGTTAAGGGTGAAATCAGTTAAAGG",
+            "reads": 1,
+            "root": "ATGTTAAGGGTGAAATCAGTTAAAGG"
+          }
+        ]
+      },
+      {
+        "barcode": "CACATAAGCACAAATATACTTCTGGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CACATAAGCACAAATATACTTCTCGG",
+        "origins": [
+          {
+            "sequence": "CACATAAGCACAAATATACTTCTCGG",
+            "reads": 1,
+            "root": "CACATAAGCACAAATATACTTCTCGG"
+          },
+          {
+            "sequence": "CACATAAGCACAAATATACTTCTGGG",
+            "reads": 1,
+            "root": "CACATAAGCACAAATATACTTCTCGG"
+          }
+        ]
+      },
+      {
+        "barcode": "CAGGAAATTGGTAACGGCGTTAGTGT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CAGGAAATTGGTAACGGCGTTAATGT",
+        "origins": [
+          {
+            "sequence": "CAGGAAATTGGTAACGGCGTTAATGT",
+            "reads": 1,
+            "root": "CAGGAAATTGGTAACGGCGTTAATGT"
+          },
+          {
+            "sequence": "CAGGAAATTGGTAACGGCGTTAGTGT",
+            "reads": 1,
+            "root": "CAGGAAATTGGTAACGGCGTTAATGT"
+          }
+        ]
+      },
+      {
+        "barcode": "CAGTTAAAAATCAATCGGTTTCGATG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CAGTTAAAAATCAATCCGTTTCGAAG",
+        "origins": [
+          {
+            "sequence": "CAGTTAAAAATCAATCCGTTTCGAAG",
+            "reads": 1,
+            "root": "CAGTTAAAAATCAATCCGTTTCGAAG"
+          },
+          {
+            "sequence": "CAGTTAAAAATCAATCGGTTTCGATG",
+            "reads": 1,
+            "root": "CAGTTAAAAATCAATCCGTTTCGAAG"
+          }
+        ]
+      },
+      {
+        "barcode": "CCATAAACCCCTAATCCGGTTAGTTT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CCATAAACCCCTAATCCGCTTAGTTT",
+        "origins": [
+          {
+            "sequence": "CCATAAACCCCTAATCCGCTTAGTTT",
+            "reads": 1,
+            "root": "CCATAAACCCCTAATCCGCTTAGTTT"
+          },
+          {
+            "sequence": "CCATAAACCCCTAATCCGGTTAGTTT",
+            "reads": 1,
+            "root": "CCATAAACCCCTAATCCGCTTAGTTT"
+          }
+        ]
+      },
+      {
+        "barcode": "CCCAGAATTTGTAAACCGGTTTGGTC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CCCAGAATTTCTAAACCGGTTTGGTC",
+        "origins": [
+          {
+            "sequence": "CCCAGAATTTCTAAACCGGTTTGGTC",
+            "reads": 1,
+            "root": "CCCAGAATTTCTAAACCGGTTTGGTC"
+          },
+          {
+            "sequence": "CCCAGAATTTGTAAACCGGTTTGGTC",
+            "reads": 1,
+            "root": "CCCAGAATTTCTAAACCGGTTTGGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "CGCGCAATTATTAAAGGTTTTGTGAG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CGCGCAATTATTAAAGGTTTTATGAG",
+            "reads": 1,
+            "root": "CGCGCAATTATTAAAGGTTTTATGAG"
+          }
+        ]
+      },
+      {
+        "barcode": "CTAAGAACAAGCAAACACGTTTGGTC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CTAAGACCAAGCAAACACGTTTGGTC",
+            "reads": 1,
+            "root": "CTAAGACCAAGCAAACACGTTTGGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "CTTGAAACGCTTAAGCACTTTTCGAC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CTTGAAACGCTTAAGTACTTTTCGAC",
+            "reads": 1,
+            "root": "CTTGAAACGCTTAAGTACTTTTCGAC"
+          }
+        ]
+      },
+      {
+        "barcode": "GCCGTAAACATCAACTGATTTCGGAA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GCCGTATACATCAACTGATTTCGGAA",
+            "reads": 1,
+            "root": "GCCGTATACATCAACTGATTTCGGAA"
+          }
+        ]
+      },
+      {
+        "barcode": "TAAACAATTACAAAAAGCGTTCAGGA",
+        "true_count": 2,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TAAACAATTACAAAAGGCGTTCAGGA",
+            "reads": 1,
+            "root": "TAAACAATTACAAAAGGCGTTCAGGA"
+          },
+          {
+            "sequence": "TCAACAATTACAAAAAGCGTTCAGGA",
+            "reads": 1,
+            "root": "TAAACAATTACAAAAGGCGTTCAGGA"
+          }
+        ]
+      },
+      {
+        "barcode": "TCGGTAAGCTAGAAGTGAGTTTAAAA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TCGGTAAGCTAAAAGTGAGTTTAAAA",
+        "origins": [
+          {
+            "sequence": "TCGGTAAGCTAAAAGTGAGTTTAAAA",
+            "reads": 1,
+            "root": "TCGGTAAGCTAAAAGTGAGTTTAAAA"
+          },
+          {
+            "sequence": "TCGGTAAGCTAGAAGTGAGTTTAAAA",
+            "reads": 1,
+            "root": "TCGGTAAGCTAAAAGTGAGTTTAAAA"
+          }
+        ]
+      },
+      {
+        "barcode": "TCTATAAAGTTGAATTGCCTTTGACG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TCTATAAAGCTGAATTGCCTTTGACG",
+        "origins": [
+          {
+            "sequence": "TCTATAAAGCTGAATTGCCTTTGACG",
+            "reads": 1,
+            "root": "TCTATAAAGCTGAATTGCCTTTGACG"
+          },
+          {
+            "sequence": "TCTATAAAGTTGAATTGCCTTTGACG",
+            "reads": 1,
+            "root": "TCTATAAAGCTGAATTGCCTTTGACG"
+          }
+        ]
+      },
+      {
+        "barcode": "TTGCGAAGTCCTAATCACGTTAAGGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TTGCGAAGTCCTAATAACGTTAAGGG",
+        "origins": [
+          {
+            "sequence": "TTGCGAAGTCCTAATAACGTTAAGGG",
+            "reads": 1,
+            "root": "TTGCGAAGTCCTAATAACGTTAAGGG"
+          },
+          {
+            "sequence": "TTGCGAAGTCCTAATCACGTTAAGGG",
+            "reads": 1,
+            "root": "TTGCGAAGTCCTAATAACGTTAAGGG"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "condition": "anchored_mixed",
+    "fn": 125,
+    "categories": {
+      "zero_read_truth": 102,
+      "observed_identity_merged_or_unassigned": 15,
+      "exact_sequence_unobserved": 8
+    },
+    "positive_missed_counts": {
+      "1": 7,
+      "2": 16
+    },
+    "positive_missed_multiple_distinct_descendants": 16,
+    "positive_examples": [
+      {
+        "barcode": "AATAAAAATACTAAGCTAGTTCCTTA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AATAAAAAGACTAAGCTAGTTCCTTA",
+        "origins": [
+          {
+            "sequence": "AATAAAAAGACTAAGCTAGTTCCTTA",
+            "reads": 1,
+            "root": "AATAAAAAGACTAAGCTAGTTCCTTA"
+          },
+          {
+            "sequence": "AATAAAAATACTAAGCTAGTTCCTTA",
+            "reads": 1,
+            "root": "AATAAAAAGACTAAGCTAGTTCCTTA"
+          }
+        ]
+      },
+      {
+        "barcode": "ACACTAAAAGATAACGTCATTCGAAT",
+        "true_count": 2,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ACACTAAAAAATAACGTCATTCGAAT",
+            "reads": 1,
+            "root": "ACACTAAAAAATAACGTCATTCGAAT"
+          },
+          {
+            "sequence": "ACACTAAAAGGTAACGTCATTCAAAT",
+            "reads": 1,
+            "root": "ACACTAAAAAATAACGTCATTCGAAT"
+          }
+        ]
+      },
+      {
+        "barcode": "ACCATAAGAGCGAAGATCGTTTTCGA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ACCATAAGAGCGAAGGTCGTTTTCGA",
+            "reads": 1,
+            "root": "ACCATAAGAGCGAAGGTCGTTTTCGA"
+          }
+        ]
+      },
+      {
+        "barcode": "AGTCCAAGATTGAAAAGATTTAACGC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AGTCCAAGATTGAAAAGATTTAACCC",
+        "origins": [
+          {
+            "sequence": "AGTCCAAGATTGAAAAGATTTAACCC",
+            "reads": 1,
+            "root": "AGTCCAAGATTGAAAAGATTTAACCC"
+          },
+          {
+            "sequence": "AGTCCAAGATTGAAAAGATTTAACGC",
+            "reads": 1,
+            "root": "AGTCCAAGATTGAAAAGATTTAACCC"
+          }
+        ]
+      },
+      {
+        "barcode": "ATAACAACCCAAAATGGGTTTGGCAC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ATACCAACCCAAAATGGGTTTGGCAC",
+            "reads": 1,
+            "root": "ATACCAACCCAAAATGGGTTTGGCAC"
+          }
+        ]
+      },
+      {
+        "barcode": "ATGTTAACGGTAAAGTACTTTTCGCA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "ACGTTAACGGTAAAGTACTTTTCGCA",
+        "origins": [
+          {
+            "sequence": "ACGTTAACGGTAAAGTACTTTTCGCA",
+            "reads": 1,
+            "root": "ACGTTAACGGTAAAGTACTTTTCGCA"
+          },
+          {
+            "sequence": "ATGTTAACGGTAAAGTACTTTTCGCA",
+            "reads": 1,
+            "root": "ACGTTAACGGTAAAGTACTTTTCGCA"
+          }
+        ]
+      },
+      {
+        "barcode": "CACATAAGCACAAATATACTTCTGGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CACATAAGCACAAACATACTTCTGGG",
+        "origins": [
+          {
+            "sequence": "CACATAAGCACAAACATACTTCTGGG",
+            "reads": 1,
+            "root": "CACATAAGCACAAACATACTTCTGGG"
+          },
+          {
+            "sequence": "CACATAAGCACAAATATACTTCTGGG",
+            "reads": 1,
+            "root": "CACATAAGCACAAACATACTTCTGGG"
+          }
+        ]
+      },
+      {
+        "barcode": "CACGCAATGTTCAAGAGAATTCCTCT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CACGCAATGTTCAAGAGAATTCCCCT",
+        "origins": [
+          {
+            "sequence": "CACGCAATGTTCAAGAGAATTCCCCT",
+            "reads": 1,
+            "root": "CACGCAATGTTCAAGAGAATTCCCCT"
+          },
+          {
+            "sequence": "CACGCAATGTTCAAGAGAATTCCTCT",
+            "reads": 1,
+            "root": "CACGCAATGTTCAAGAGAATTCCCCT"
+          }
+        ]
+      },
+      {
+        "barcode": "CAGACAAACCGTAAATATATTTGCGT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CAGACAAACCGTAAATATATTTGCCT",
+        "origins": [
+          {
+            "sequence": "CAGACAAACCGTAAATATATTTGCCT",
+            "reads": 1,
+            "root": "CAGACAAACCGTAAATATATTTGCCT"
+          },
+          {
+            "sequence": "CAGACAAACCGTAAATATATTTGCGT",
+            "reads": 1,
+            "root": "CAGACAAACCGTAAATATATTTGCCT"
+          }
+        ]
+      },
+      {
+        "barcode": "CGATGAACTGTGAATCAGGTTCTGTC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CGAAGAACTGTGAATCAGGTTCTGTC",
+        "origins": [
+          {
+            "sequence": "CGAAGAACTGTGAATCAGGTTCTGTC",
+            "reads": 1,
+            "root": "CGAAGAACTGTGAATCAGGTTCTGTC"
+          },
+          {
+            "sequence": "CGATGAACTGTGAATCAGGTTCTGTC",
+            "reads": 1,
+            "root": "CGAAGAACTGTGAATCAGGTTCTGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "CGCTGAAGCACTAAAGGCTTTAACTT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CGCTGAAGCACTAAAGGCTTTAAATT",
+            "reads": 1,
+            "root": "CGCTGAAGCACTAAAGGCTTTAAATT"
+          }
+        ]
+      },
+      {
+        "barcode": "CGTATAAGACTAAACCAGGTTACTAT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CGTATAAGACTAATCCAGGTTACTAT",
+            "reads": 1,
+            "root": "CGTATAAGACTAATCCAGGTTACTAT"
+          }
+        ]
+      },
+      {
+        "barcode": "CTGGAAACAAAGAAGATGCTTTGGAC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GTGGAAACAAAGAAGATGCTTTGGAC",
+            "reads": 1,
+            "root": "GTGGAAACAAAGAAGATGCTTTGGAC"
+          }
+        ]
+      },
+      {
+        "barcode": "GCGCTAAAATTGAATTGACTTGTTAG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GCGCTAAAATTGAATTGACTAGTTAG",
+        "origins": [
+          {
+            "sequence": "GCGCTAAAATTGAATTGACTAGTTAG",
+            "reads": 1,
+            "root": "GCGCTAAAATTGAATTGACTAGTTAG"
+          },
+          {
+            "sequence": "GCGCTAAAATTGAATTGACTTGTTAG",
+            "reads": 1,
+            "root": "GCGCTAAAATTGAATTGACTAGTTAG"
+          }
+        ]
+      },
+      {
+        "barcode": "GCGCTAATCAAAAAAACGATTCGGAG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GCGCTAATCAAAAAAACGATTAGGAG",
+            "reads": 1,
+            "root": "GCGCTAATCAAAAAAACGATTAGGAG"
+          }
+        ]
+      },
+      {
+        "barcode": "GGTCTAATATAAAAGGTGGTTGAATC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AGTCTAATATAAAAGGTGGTTGAATC",
+            "reads": 1,
+            "root": "AGTCTAATATAAAAGGTGGTTGAATC"
+          }
+        ]
+      },
+      {
+        "barcode": "GTGACAAGGATGAATTCCCTTTTATT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GTCACAAGGATGAATTCCCTTTTATT",
+        "origins": [
+          {
+            "sequence": "GTCACAAGGATGAATTCCCTTTTATT",
+            "reads": 1,
+            "root": "GTCACAAGGATGAATTCCCTTTTATT"
+          },
+          {
+            "sequence": "GTGACAAGGATGAATTCCCTTTTATT",
+            "reads": 1,
+            "root": "GTCACAAGGATGAATTCCCTTTTATT"
+          }
+        ]
+      },
+      {
+        "barcode": "TAAGCAATGATTAACATACTTGCTAG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TAAGCAATGATTAACATACTGGCTAG",
+        "origins": [
+          {
+            "sequence": "TAAGCAATGATTAACATACTGGCTAG",
+            "reads": 1,
+            "root": "TAAGCAATGATTAACATACTGGCTAG"
+          },
+          {
+            "sequence": "TAAGCAATGATTAACATACTTGCTAG",
+            "reads": 1,
+            "root": "TAAGCAATGATTAACATACTGGCTAG"
+          }
+        ]
+      },
+      {
+        "barcode": "TACTCAAGTCGGAATGATTTTATTCA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TACTCAAGTCGGAATGATATTATTCA",
+        "origins": [
+          {
+            "sequence": "TACTCAAGTCGGAATGATATTATTCA",
+            "reads": 1,
+            "root": "TACTCAAGTCGGAATGATATTATTCA"
+          },
+          {
+            "sequence": "TACTCAAGTCGGAATGATTTTATTCA",
+            "reads": 1,
+            "root": "TACTCAAGTCGGAATGATATTATTCA"
+          }
+        ]
+      },
+      {
+        "barcode": "TCTATAAAGTTGAATTGCCTTTGACG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TCTATAAAGTTGAATTGCCCTTGACG",
+        "origins": [
+          {
+            "sequence": "TCTATAAAGTTGAATTGCCCTTGACG",
+            "reads": 1,
+            "root": "TCTATAAAGTTGAATTGCCCTTGACG"
+          },
+          {
+            "sequence": "TCTATAAAGTTGAATTGCCTTTGACG",
+            "reads": 1,
+            "root": "TCTATAAAGTTGAATTGCCCTTGACG"
+          }
+        ]
+      },
+      {
+        "barcode": "TTAAGAAGATGCAAGGGTCTTGCACA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TTAACAAGATGCAAGGGTCTTGCACA",
+        "origins": [
+          {
+            "sequence": "TTAACAAGATGCAAGGGTCTTGCACA",
+            "reads": 1,
+            "root": "TTAACAAGATGCAAGGGTCTTGCACA"
+          },
+          {
+            "sequence": "TTAAGAAGATGCAAGGGTCTTGCACA",
+            "reads": 1,
+            "root": "TTAACAAGATGCAAGGGTCTTGCACA"
+          }
+        ]
+      },
+      {
+        "barcode": "TTGCGAAGTCCTAATCACGTTAAGGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TTGCGAAGTCCTAATCACATTAAGGG",
+        "origins": [
+          {
+            "sequence": "TTGCGAAGTCCTAATCACATTAAGGG",
+            "reads": 1,
+            "root": "TTGCGAAGTCCTAATCACATTAAGGG"
+          },
+          {
+            "sequence": "TTGCGAAGTCCTAATCACGTTAAGGG",
+            "reads": 1,
+            "root": "TTGCGAAGTCCTAATCACATTAAGGG"
+          }
+        ]
+      },
+      {
+        "barcode": "TTGTAAATTAAGAACGTTGTTAGTCG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TTGTAAATTAAGAACGTTGTTAGTCC",
+        "origins": [
+          {
+            "sequence": "TTGTAAATTAAGAACGTTGTTAGTCC",
+            "reads": 1,
+            "root": "TTGTAAATTAAGAACGTTGTTAGTCC"
+          },
+          {
+            "sequence": "TTGTAAATTAAGAACGTTGTTAGTCG",
+            "reads": 1,
+            "root": "TTGTAAATTAAGAACGTTGTTAGTCC"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "condition": "milos",
+    "fn": 471,
+    "categories": {
+      "zero_read_truth": 409,
+      "observed_identity_merged_or_unassigned": 32,
+      "exact_sequence_unobserved": 30
+    },
+    "positive_missed_counts": {
+      "1": 30,
+      "2": 30,
+      "3": 1,
+      "4": 1
+    },
+    "positive_missed_multiple_distinct_descendants": 30,
+    "positive_examples": [
+      {
+        "barcode": "AACGGACGCGTGTTGGATGT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AACGGACGCGAGTTGGATGT",
+        "origins": [
+          {
+            "sequence": "AACGGACGCGAGTTGGATGT",
+            "reads": 1,
+            "root": "AACGGACGCGAGTTGGATGT"
+          },
+          {
+            "sequence": "AACGGACGCGTGTTGGATGT",
+            "reads": 1,
+            "root": "AACGGACGCGAGTTGGATGT"
+          }
+        ]
+      },
+      {
+        "barcode": "AACGGAGGAGAGTACACGCA",
+        "true_count": 4,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 2,
+        "assigned_to": "AACGCAGGAGAGTACACGCA",
+        "origins": [
+          {
+            "sequence": "AACGCAGGAGAGTACACGCA",
+            "reads": 2,
+            "root": "AACGCAGGAGAGTACACGCA"
+          },
+          {
+            "sequence": "AACGGAGGAGAGTACACGCA",
+            "reads": 2,
+            "root": "AACGCAGGAGAGTACACGCA"
+          }
+        ]
+      },
+      {
+        "barcode": "AAGTAACAAACACGTCGATA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AAGTAACAAACACGTCTATA",
+            "reads": 1,
+            "root": "AAGTAACAAACACGTCTATA"
+          }
+        ]
+      },
+      {
+        "barcode": "AATATATGTGGTATTTTCGT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AATATACGTGGTATTTTCGT",
+        "origins": [
+          {
+            "sequence": "AATATACGTGGTATTTTCGT",
+            "reads": 1,
+            "root": "AATATACGTGGTATTTTCGT"
+          },
+          {
+            "sequence": "AATATATGTGGTATTTTCGT",
+            "reads": 1,
+            "root": "AATATACGTGGTATTTTCGT"
+          }
+        ]
+      },
+      {
+        "barcode": "ACTTACTGGTTTAGACCCCA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "ACCTACTGGTTTAGACCCCA",
+        "origins": [
+          {
+            "sequence": "ACTTACTGGTTTAGACCCCA",
+            "reads": 1,
+            "root": "ACCTACTGGTTTAGACCCCA"
+          },
+          {
+            "sequence": "ACCTACTGGTTTAGACCCCA",
+            "reads": 1,
+            "root": "ACCTACTGGTTTAGACCCCA"
+          }
+        ]
+      },
+      {
+        "barcode": "AGAAGTGTCAGCCGCACTAA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AGAAGTGCCAGCCGCACTAA",
+            "reads": 1,
+            "root": "AGAAGTGCCAGCCGCACTAA"
+          }
+        ]
+      },
+      {
+        "barcode": "AGACTCCTAACTTCTTGTGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AGACTCCTAACTTCTTCTGG",
+        "origins": [
+          {
+            "sequence": "AGACTCCTAACTTCTTGTGG",
+            "reads": 1,
+            "root": "AGACTCCTAACTTCTTCTGG"
+          },
+          {
+            "sequence": "AGACTCCTAACTTCTTCTGG",
+            "reads": 1,
+            "root": "AGACTCCTAACTTCTTCTGG"
+          }
+        ]
+      },
+      {
+        "barcode": "AGGCATCGATCTTCATATCG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AGGCACCGATCTTCATATCG",
+            "reads": 1,
+            "root": "AGGCACCGATCTTCATATCG"
+          }
+        ]
+      },
+      {
+        "barcode": "AGGTCCGTATGCACTTTAGG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ATGTCCGTATGCACTTTAGG",
+            "reads": 1,
+            "root": "ATGTCCGTATGCACTTTAGG"
+          }
+        ]
+      },
+      {
+        "barcode": "AGTAATCGTTTACAAACTAA",
+        "true_count": 2,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "AGTTATCGTTTACAAACTAA",
+            "reads": 1,
+            "root": "AGTAATCGCTTACAAACTAA"
+          },
+          {
+            "sequence": "AGTAATCGCTTACAAACTAA",
+            "reads": 1,
+            "root": "AGTAATCGCTTACAAACTAA"
+          }
+        ]
+      },
+      {
+        "barcode": "AGTTTTTGACGTCTCATATT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "AGTTTTTCACGTCTCATATT",
+        "origins": [
+          {
+            "sequence": "AGTTTTTGACGTCTCATATT",
+            "reads": 1,
+            "root": "AGTTTTTCACGTCTCATATT"
+          },
+          {
+            "sequence": "AGTTTTTCACGTCTCATATT",
+            "reads": 1,
+            "root": "AGTTTTTCACGTCTCATATT"
+          }
+        ]
+      },
+      {
+        "barcode": "ATAAGTGTACACACTCCCGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "ATAAGTGAACACACTCCCGG",
+        "origins": [
+          {
+            "sequence": "ATAAGTGAACACACTCCCGG",
+            "reads": 1,
+            "root": "ATAAGTGAACACACTCCCGG"
+          },
+          {
+            "sequence": "ATAAGTGTACACACTCCCGG",
+            "reads": 1,
+            "root": "ATAAGTGAACACACTCCCGG"
+          }
+        ]
+      },
+      {
+        "barcode": "ATAGTATAAACGTAGAAACA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "ATAGTATATACGTAGAAACA",
+            "reads": 1,
+            "root": "ATAGTATATACGTAGAAACA"
+          }
+        ]
+      },
+      {
+        "barcode": "ATTTCGTCGCTTAACGACTT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "ATGTCGTCGCTTAACGACTT",
+        "origins": [
+          {
+            "sequence": "ATGTCGTCGCTTAACGACTT",
+            "reads": 1,
+            "root": "ATGTCGTCGCTTAACGACTT"
+          },
+          {
+            "sequence": "ATTTCGTCGCTTAACGACTT",
+            "reads": 1,
+            "root": "ATGTCGTCGCTTAACGACTT"
+          }
+        ]
+      },
+      {
+        "barcode": "CAGCCAATCGAGGCTTCAGC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CAGCCGATCGAGGCTTCAGC",
+            "reads": 1,
+            "root": "CAGCCGATCGAGGCTTCAGC"
+          }
+        ]
+      },
+      {
+        "barcode": "CATTTGCACAAGTCTTGCAG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CAATTGCACAAGTCTTGCAG",
+        "origins": [
+          {
+            "sequence": "CAATTGCACAAGTCTTGCAG",
+            "reads": 1,
+            "root": "CAATTGCACAAGTCTTGCAG"
+          },
+          {
+            "sequence": "CATTTGCACAAGTCTTGCAG",
+            "reads": 1,
+            "root": "CAATTGCACAAGTCTTGCAG"
+          }
+        ]
+      },
+      {
+        "barcode": "CCCACTGTGGCATTGATCTA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CCCCCTGTGGCATTGATCTA",
+            "reads": 1,
+            "root": "CCCCCTGTGGCATTGATCTA"
+          }
+        ]
+      },
+      {
+        "barcode": "CCGCCGCTTAAGATCTATAG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CCGCCGCGTAAGATCTATAG",
+            "reads": 1,
+            "root": "CCGCCGCGTAAGATCTATAG"
+          }
+        ]
+      },
+      {
+        "barcode": "CCGTCGGCAAAGATATCGCG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CCGTCGGCAAAGATATCGCA",
+        "origins": [
+          {
+            "sequence": "CCGTCGGCAAAGATATCGCA",
+            "reads": 1,
+            "root": "CCGTCGGCAAAGATATCGCA"
+          },
+          {
+            "sequence": "CCGTCGGCAAAGATATCGCG",
+            "reads": 1,
+            "root": "CCGTCGGCAAAGATATCGCA"
+          }
+        ]
+      },
+      {
+        "barcode": "CCTCGAAATTTTATATCCTT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CCTCCAAATTTTATATCCTT",
+        "origins": [
+          {
+            "sequence": "CCTCCAAATTTTATATCCTT",
+            "reads": 1,
+            "root": "CCTCCAAATTTTATATCCTT"
+          },
+          {
+            "sequence": "CCTCGAAATTTTATATCCTT",
+            "reads": 1,
+            "root": "CCTCCAAATTTTATATCCTT"
+          }
+        ]
+      },
+      {
+        "barcode": "CCTTTGGGTGTAGCTTCTGC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CCTTTCGGTGTAGCTTCTGC",
+            "reads": 1,
+            "root": "CCTTTCGGTGTAGCTTCTGC"
+          }
+        ]
+      },
+      {
+        "barcode": "CGAGATTGCCTGTTCAGCCC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CGAGATTGCCTGATCAGCCC",
+        "origins": [
+          {
+            "sequence": "CGAGATTGCCTGTTCAGCCC",
+            "reads": 1,
+            "root": "CGAGATTGCCTGATCAGCCC"
+          },
+          {
+            "sequence": "CGAGATTGCCTGATCAGCCC",
+            "reads": 1,
+            "root": "CGAGATTGCCTGATCAGCCC"
+          }
+        ]
+      },
+      {
+        "barcode": "CGATTGGCATAATACCCATG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CGAATGGCATAATACCCATG",
+        "origins": [
+          {
+            "sequence": "CGAATGGCATAATACCCATG",
+            "reads": 1,
+            "root": "CGAATGGCATAATACCCATG"
+          },
+          {
+            "sequence": "CGATTGGCATAATACCCATG",
+            "reads": 1,
+            "root": "CGAATGGCATAATACCCATG"
+          }
+        ]
+      },
+      {
+        "barcode": "CGCGTGCGAACATGGAGGGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CGCGTGCGAACATGCAGGGG",
+        "origins": [
+          {
+            "sequence": "CGCGTGCGAACATGCAGGGG",
+            "reads": 1,
+            "root": "CGCGTGCGAACATGCAGGGG"
+          },
+          {
+            "sequence": "CGCGTGCGAACATGGAGGGG",
+            "reads": 1,
+            "root": "CGCGTGCGAACATGCAGGGG"
+          }
+        ]
+      },
+      {
+        "barcode": "CGGGATATTCTCATTAAAGT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CGGGATATTCGCATTAAAGT",
+            "reads": 1,
+            "root": "CGGGATATTCGCATTAAAGT"
+          }
+        ]
+      },
+      {
+        "barcode": "CGTGTAGAGACCTTGTATGA",
+        "true_count": 3,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "CGTGTAGAGACCTTGTATTA",
+            "reads": 1,
+            "root": "CGTGTAGAGACCTTGTATTA"
+          },
+          {
+            "sequence": "CGTGTAGAGACCTTGTCTGA",
+            "reads": 1,
+            "root": "CGTGTAGAGACCTTGTATTA"
+          },
+          {
+            "sequence": "CGTGTAGAGAGCTTATATGA",
+            "reads": 1,
+            "root": "CGTGTAGAGACCTTGTATTA"
+          }
+        ]
+      },
+      {
+        "barcode": "CTAATCCGATAACTCATACT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CTAATCCGATAACTCATACA",
+        "origins": [
+          {
+            "sequence": "CTAATCCGATAACTCATACA",
+            "reads": 1,
+            "root": "CTAATCCGATAACTCATACA"
+          },
+          {
+            "sequence": "CTAATCCGATAACTCATACT",
+            "reads": 1,
+            "root": "CTAATCCGATAACTCATACA"
+          }
+        ]
+      },
+      {
+        "barcode": "CTACAATTTCGATCCGCCAA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 2,
+        "assigned_to": "CTACAAGGTGGATCCGCCAA",
+        "origins": [
+          {
+            "sequence": "CTACAATTTCGATCCGCCAA",
+            "reads": 2,
+            "root": "CTACAAGGTGGATCCGCCAA"
+          }
+        ]
+      },
+      {
+        "barcode": "GAAAAGCATGCCTGCCAGAG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GAAAAGCATGCCTGTCAGAG",
+            "reads": 1,
+            "root": "GAAAAGCATGCCTGTCAGAG"
+          }
+        ]
+      },
+      {
+        "barcode": "GAAACTCACGCTTTAAGCGT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GAAACTCACACTTTAAGCGT",
+        "origins": [
+          {
+            "sequence": "GAAACTCACGCTTTAAGCGT",
+            "reads": 1,
+            "root": "GAAACTCACACTTTAAGCGT"
+          },
+          {
+            "sequence": "GAAACTCACACTTTAAGCGT",
+            "reads": 1,
+            "root": "GAAACTCACACTTTAAGCGT"
+          }
+        ]
+      },
+      {
+        "barcode": "GACTTGGGTAAGTGCTAAGG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GACTTGGGTAAGTGCTAAGC",
+        "origins": [
+          {
+            "sequence": "GACTTGGGTAAGTGCTAAGG",
+            "reads": 1,
+            "root": "GACTTGGGTAAGTGCTAAGC"
+          },
+          {
+            "sequence": "GACTTGGGTAAGTGCTAAGC",
+            "reads": 1,
+            "root": "GACTTGGGTAAGTGCTAAGC"
+          }
+        ]
+      },
+      {
+        "barcode": "GAGTCCCTGAAGAGACGCTC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GAGTACCTGAAGAGACGCTG",
+            "reads": 1,
+            "root": "GAGTACCTGAAGAGACGCTG"
+          }
+        ]
+      },
+      {
+        "barcode": "GCAGAACGATGTCCCGCACA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GCCGAACGATGTCCCGCACA",
+            "reads": 1,
+            "root": "GCCGAACGATGTCCCGCACA"
+          }
+        ]
+      },
+      {
+        "barcode": "GCCCGCGAGGGAGGTGTCGC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GCCCGGGAGGGAGGTGTCGC",
+            "reads": 1,
+            "root": "GCCCGGGAGGGAGGTGTCGC"
+          }
+        ]
+      },
+      {
+        "barcode": "GCGTATCATAGCTGCTCAGA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GCGTATCATAGCTGCACAGA",
+        "origins": [
+          {
+            "sequence": "GCGTATCATAGCTGCTCAGA",
+            "reads": 1,
+            "root": "GCGTATCATAGCTGCACAGA"
+          },
+          {
+            "sequence": "GCGTATCATAGCTGCACAGA",
+            "reads": 1,
+            "root": "GCGTATCATAGCTGCACAGA"
+          }
+        ]
+      },
+      {
+        "barcode": "GCTCACTGTTACGTCTACAC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GCTCAGTGTTACGTCTACAC",
+            "reads": 1,
+            "root": "GCTCAGTGTTACGTCTACAC"
+          }
+        ]
+      },
+      {
+        "barcode": "GGAGGGGGAGCCTGCTTTAG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GGACGGGGAGCCTGCTTTAG",
+        "origins": [
+          {
+            "sequence": "GGACGGGGAGCCTGCTTTAG",
+            "reads": 1,
+            "root": "GGACGGGGAGCCTGCTTTAG"
+          },
+          {
+            "sequence": "GGAGGGGGAGCCTGCTTTAG",
+            "reads": 1,
+            "root": "GGACGGGGAGCCTGCTTTAG"
+          }
+        ]
+      },
+      {
+        "barcode": "GGCTCGTCGAGGCCGTTTTG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 2,
+        "assigned_to": "GGCTGGACGAGGCCGTTATG",
+        "origins": [
+          {
+            "sequence": "GGCTCGTCGAGGCCGTTTTG",
+            "reads": 2,
+            "root": "GGCTGGACGAGGCCGTTATG"
+          }
+        ]
+      },
+      {
+        "barcode": "GGTCGTGGCAAGGGACCTTA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GGTCCTGGCAAGGGACCTTA",
+        "origins": [
+          {
+            "sequence": "GGTCCTGGCAAGGGACCTTA",
+            "reads": 1,
+            "root": "GGTCCTGGCAAGGGACCTTA"
+          },
+          {
+            "sequence": "GGTCGTGGCAAGGGACCTTA",
+            "reads": 1,
+            "root": "GGTCCTGGCAAGGGACCTTA"
+          }
+        ]
+      },
+      {
+        "barcode": "GTACTCATACACGCCAGCAC",
+        "true_count": 1,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GTTCTCATATACCCCAGCAC",
+        "origins": [
+          {
+            "sequence": "GTACTCATACACGCCAGCAC",
+            "reads": 1,
+            "root": "GTTCTCATATACCCCAGCAC"
+          }
+        ]
+      },
+      {
+        "barcode": "GTATGGCTAGGGGTAGGAGC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GTATGGATAGGGGTAGGAGC",
+            "reads": 1,
+            "root": "GTATGGATAGGGGTAGGAGC"
+          }
+        ]
+      },
+      {
+        "barcode": "TAAGCACCTAACCACGGGTC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TAAGCACTTAACCACGGGTC",
+            "reads": 1,
+            "root": "TAAGCACTTAACCACGGGTC"
+          }
+        ]
+      },
+      {
+        "barcode": "TAATGCACCAAATGTACTAC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TAATGCACCAAATTTACTAC",
+            "reads": 1,
+            "root": "TAATGCACCAAATTTACTAC"
+          }
+        ]
+      },
+      {
+        "barcode": "TACAAATTAAGAGAGTTTAA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "GACAAATTAAGAGAGTTTAA",
+            "reads": 1,
+            "root": "GACAAATTAAGAGAGTTTAA"
+          }
+        ]
+      },
+      {
+        "barcode": "TACCAGAAATGATAGGAACC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TACCAGAAATGAAAGGAACC",
+        "origins": [
+          {
+            "sequence": "TACCAGAAATGAAAGGAACC",
+            "reads": 1,
+            "root": "TACCAGAAATGAAAGGAACC"
+          },
+          {
+            "sequence": "TACCAGAAATGATAGGAACC",
+            "reads": 1,
+            "root": "TACCAGAAATGAAAGGAACC"
+          }
+        ]
+      },
+      {
+        "barcode": "TACTCATGACTCCCTATCTA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "CACTCATGACTCCCTATCTA",
+        "origins": [
+          {
+            "sequence": "TACTCATGACTCCCTATCTA",
+            "reads": 1,
+            "root": "CACTCATGACTCCCTATCTA"
+          },
+          {
+            "sequence": "CACTCATGACTCCCTATCTA",
+            "reads": 1,
+            "root": "CACTCATGACTCCCTATCTA"
+          }
+        ]
+      },
+      {
+        "barcode": "TACTTCAACTTCCTGAATGA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TACTTCAACTTCCAGAATGA",
+            "reads": 1,
+            "root": "TACTTCAACTTCCAGAATGA"
+          }
+        ]
+      },
+      {
+        "barcode": "TAGGGTTCTCTGGTCTCTAA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TACGGTTCTCTGGTCTCTAA",
+        "origins": [
+          {
+            "sequence": "TAGGGTTCTCTGGTCTCTAA",
+            "reads": 1,
+            "root": "TACGGTTCTCTGGTCTCTAA"
+          },
+          {
+            "sequence": "TACGGTTCTCTGGTCTCTAA",
+            "reads": 1,
+            "root": "TACGGTTCTCTGGTCTCTAA"
+          }
+        ]
+      },
+      {
+        "barcode": "TATCAGTTAACCTAGTGCTA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TATCAGTTAACCTAGTGGTA",
+            "reads": 1,
+            "root": "TATCAGTTAACCTAGTGGTA"
+          }
+        ]
+      },
+      {
+        "barcode": "TCAGGCACACGACAACATTA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TCAGGCACACGACAACTTTA",
+            "reads": 1,
+            "root": "TCAGGCACACGACAACTTTA"
+          }
+        ]
+      },
+      {
+        "barcode": "TCATCTCATTGCCTCATTGT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TCATCTCACTGCCTCATTGT",
+            "reads": 1,
+            "root": "TCATCTCACTGCCTCATTGT"
+          }
+        ]
+      },
+      {
+        "barcode": "TCCTGCCCAGCGTGGTGGAG",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TCCTGCCCAACGTGGTGGAG",
+        "origins": [
+          {
+            "sequence": "TCCTGCCCAGCGTGGTGGAG",
+            "reads": 1,
+            "root": "TCCTGCCCAACGTGGTGGAG"
+          },
+          {
+            "sequence": "TCCTGCCCAACGTGGTGGAG",
+            "reads": 1,
+            "root": "TCCTGCCCAACGTGGTGGAG"
+          }
+        ]
+      },
+      {
+        "barcode": "TCTACTGCTCTATCTCCTTA",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TCTACTGCTCTATATCCTTA",
+            "reads": 1,
+            "root": "TCTACTGCTCTATATCCTTA"
+          }
+        ]
+      },
+      {
+        "barcode": "TCTATCCGCCGACGGGACTC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TCTATACGCCGACGGGACTC",
+            "reads": 1,
+            "root": "TCTATACGCCGACGGGACTC"
+          }
+        ]
+      },
+      {
+        "barcode": "TCTTTTCATAGCACGGCATT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "GCTTTTCATAGCACGGCATT",
+        "origins": [
+          {
+            "sequence": "GCTTTTCATAGCACGGCATT",
+            "reads": 1,
+            "root": "GCTTTTCATAGCACGGCATT"
+          },
+          {
+            "sequence": "TCTTTTCATAGCACGGCATT",
+            "reads": 1,
+            "root": "GCTTTTCATAGCACGGCATT"
+          }
+        ]
+      },
+      {
+        "barcode": "TGATATTGAGTGTGGACAGT",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TGATATTGCGTGTGGACAGT",
+            "reads": 1,
+            "root": "TGATATTGCGTGTGGACAGT"
+          }
+        ]
+      },
+      {
+        "barcode": "TGGAGGCTATACCCCTGATT",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TGGAGGCTATAACCCTGATT",
+        "origins": [
+          {
+            "sequence": "TGGAGGCTATACCCCTGATT",
+            "reads": 1,
+            "root": "TGGAGGCTATAACCCTGATT"
+          },
+          {
+            "sequence": "TGGAGGCTATAACCCTGATT",
+            "reads": 1,
+            "root": "TGGAGGCTATAACCCTGATT"
+          }
+        ]
+      },
+      {
+        "barcode": "TGTTAAATTGCCCTTGTACC",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TGTCAAATTGCCCTTGTACC",
+        "origins": [
+          {
+            "sequence": "TGTTAAATTGCCCTTGTACC",
+            "reads": 1,
+            "root": "TGTCAAATTGCCCTTGTACC"
+          },
+          {
+            "sequence": "TGTCAAATTGCCCTTGTACC",
+            "reads": 1,
+            "root": "TGTCAAATTGCCCTTGTACC"
+          }
+        ]
+      },
+      {
+        "barcode": "TGTTCAAATACCCACCTTTC",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TGTTCAGATACCCACCTTTC",
+            "reads": 1,
+            "root": "TGTTCAGATACCCACCTTTC"
+          }
+        ]
+      },
+      {
+        "barcode": "TTAAAATATCAGAGTAATAG",
+        "true_count": 1,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TTAAAAATATTAGAGTAATG",
+        "origins": [
+          {
+            "sequence": "TTAAAATATCAGAGTAATAG",
+            "reads": 1,
+            "root": "TTAAAAATATTAGAGTAATG"
+          }
+        ]
+      },
+      {
+        "barcode": "TTCAACGTGACGTCCAGGTG",
+        "true_count": 1,
+        "category": "exact_sequence_unobserved",
+        "observed_exact_count": 0,
+        "assigned_to": null,
+        "origins": [
+          {
+            "sequence": "TTCAACCTGACGTCCAGGTG",
+            "reads": 1,
+            "root": "TTCAACCTGACGTCCAGGTG"
+          }
+        ]
+      },
+      {
+        "barcode": "TTCCGCAACCCTAAGGCGAA",
+        "true_count": 2,
+        "category": "observed_identity_merged_or_unassigned",
+        "observed_exact_count": 1,
+        "assigned_to": "TTCAGCAACCCTAAGGCGAA",
+        "origins": [
+          {
+            "sequence": "TTCCGCAACCCTAAGGCGAA",
+            "reads": 1,
+            "root": "TTCAGCAACCCTAAGGCGAA"
+          },
+          {
+            "sequence": "TTCAGCAACCCTAAGGCGAA",
+            "reads": 1,
+            "root": "TTCAGCAACCCTAAGGCGAA"
+          }
+        ]
+      }
+    ]
+  }
+]

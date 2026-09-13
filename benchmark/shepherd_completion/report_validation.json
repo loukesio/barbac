@@ -1,0 +1,10 @@
+{
+  "pdf_pages": 1,
+  "displayed_rows": 18,
+  "all_pdf_rows_equal_source": true,
+  "pdf_sha256": "a50380adff5799978bcc470edef7f5f6e3126e739e558b907f47c26057aeac66",
+  "rendered_image": "/Users/theodosiou/Documents/Projects/test_barbac/.codex/shepherd-completion-2026-09-13/source/benchmark/shepherd_completion/benchmark_table.png",
+  "visual_inspection_pending": false,
+  "visual_inspection_passed": true,
+  "visual_scope": "Entire one-page final PDF inspected at 1800px; all table rows, highlights, footnotes and footer present, readable and unclipped."
+}

@@ -174,6 +174,13 @@ indels. The [full comparison](benchmark/publication_final/RESULTS.md) includes
 the Milo reference, Shepherd's incomplete runs, workflow timings and limitations.
 See the [one-page table](benchmark/publication_final/benchmark_table.pdf) and
 [statistical supplement](benchmark/publication_final/benchmark_supplement.pdf).
+A separate [completed Shepherd comparison](benchmark/shepherd_completion/RESULTS.md)
+uses the documented Bayes threshold and the known simulation substitution rate;
+all 121 calls succeed. Barbac LV retains the highest mean centroid F1 in both
+simulated designs and the highest F1 on the fixed Milo reference. This is an
+explicitly post hoc sensitivity analysis; the original results are preserved.
+The [updated comparison PDF](benchmark/shepherd_completion/benchmark_table.pdf)
+includes every method, FN, FP, F1 and workflow time.
 Results depend on the design, settings and metric; the
 [verification record](documentation/validation.md) also preserves earlier evidence.
 
