@@ -44,7 +44,7 @@ matches <- gregexpr('href="[^"]+"', html)
 links <- regmatches(html, matches)
 regmatches(html, matches) <- lapply(links, function(line) vapply(line, function(link) {
   href <- substring(link, 7, nchar(link) - 1)
-  if (!grepl('^((documentation|benchmark|[.]github|inst)/|app/README[.])', href)) return(link)
+  if (!grepl('^((documentation|benchmark|manuscript|[.]github|inst)/|app/README[.])', href)) return(link)
   path <- sub('#.*$', '', href)
   fragment <- substring(href, nchar(path) + 1)
   # pkgdown rewrites Markdown links to .html even for source-only guides.

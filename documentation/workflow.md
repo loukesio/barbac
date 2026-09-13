@@ -68,7 +68,10 @@ plot_bam_stats(pipeline$stats)
 
 The returned list includes `bam_files` named by original sample label, a
 `samples` table linking input modes to outputs, `stats`, output directories and
-the executed `commands`. Required commands stop on failure and retain diagnostic
+the executed `commands`, `command_timings`, `timing_file` and `elapsed_seconds`.
+The elapsed time ends at the wrapper output; command timings are nested within
+it. A failed command is recorded with its exit status before the pipeline stops.
+Do not add command times to the whole-wrapper time. Required commands stop on failure and retain diagnostic
 output in `log_file`. Optional MultiQC failures raise a warning and set
 `multiqc_status` to `failed`. Mapping uses minimap2's short-read preset and
 retains primary alignments only.
@@ -82,6 +85,7 @@ results/
 │       ├── sample1_ANC.assembled_sorted.bam
 │       └── sample1_ANC.assembled_sorted.bam.bai
 ├── multiqc/multiqc_report.html          # when MultiQC is available
+├── command_timings.csv                  # one row per external command
 ├── bam_summary.csv
 └── pipeline.log
 ```
@@ -221,3 +225,13 @@ plots and interactive tables/other charts.
 
 
 See the [Studio guide](../app/README.md) for uploading tables and FASTQs through the app.
+
+
+## Record the whole workflow
+
+Use an outer timer when reporting FASTQ-to-plot runtime. The BAM wrapper's time
+alone excludes extraction, clustering, sample assignment and figure saving.
+The [complete real-data example](../benchmark/workflow_runtime/README.md) provides
+an executable workflow, declared input selection and separate stage measurements.
+`run.R` shows every call from local FASTQ files through saved PDF and PNG plots;
+`run.py` verifies the downloaded inputs and records the outer R-process time.

@@ -10,7 +10,12 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--input-root',type=pathlib.Path,required=True)
     parser.add_argument('--output',type=pathlib.Path,required=True)
+    parser.add_argument('--library',type=pathlib.Path)
     args=parser.parse_args()
+    if args.library is None:
+        active=ROOT/'app/.runtime/active-library.txt'
+        args.library=pathlib.Path(active.read_text().strip()) if active.exists() else ROOT/'app/.runtime/library'
+    args.library=args.library.resolve()
     out=args.output.resolve(); out.mkdir(parents=True,exist_ok=False)
     rows=list(csv.DictReader(open(args.input_root/'samples.tsv'),delimiter='\t'))
     rows=[r for r in rows if r['well']=='A3' and int(r['passage']) in (2,4,6)]
@@ -31,7 +36,7 @@ def main():
     tool_dir=pathlib.Path.home()/'Library/r-miniconda/envs/barbac_env/bin'
     env['PATH']=str(tool_dir)+os.pathsep+env['PATH']
     cmd=['Rscript','--vanilla',str(HERE/'run.R'),str(args.input_root.resolve()),str(out),
-         str(ROOT/'app/.runtime/library')]
+         str(args.library)]
     receipt=dict(protocol='protocol.md',source_commit=subprocess.check_output(
         ['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),inputs=inputs,
         source_sha256={p:sha(ROOT/p) for p in sources},

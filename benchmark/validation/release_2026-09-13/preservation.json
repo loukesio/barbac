@@ -1,0 +1,27 @@
+{
+  "source_commit": "ecc26af3e1a4c983e0cc3110fd4e455247634565",
+  "native_build": "barbac-2026-09-10-eligible-parent-v14",
+  "core_equal_main": true,
+  "exact_search_branch_is_ancestor": true,
+  "sha256": {
+    "src/clustering.cpp": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+    "src/RcppExports.cpp": "480e2a802534003f3af01e8ce86feb6ab18fae35bccfe62d45ac789419f51c61",
+    "R/RcppExports.R": "c46d8468ba91e7db9cb22d450034ea65ebea57c83d16ac516c8f15e47c592e83",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058"
+  },
+  "included": [
+    "R1-only and overlapping paired processing",
+    "indel-preserving flank extraction",
+    "native v14 Hamming and LV clustering",
+    "optional support ordering and Poisson merge exception",
+    "32 native LTC palettes",
+    "local Studio and downloads",
+    "lazy BAM namespace loading"
+  ],
+  "preserved": [
+    "original main application library",
+    "publication-final worktree and freeze",
+    "prior candidate experiment branches"
+  ],
+  "adopted_accuracy_changes_after_final_benchmark": false
+}

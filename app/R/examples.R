@@ -19,11 +19,22 @@ studio_demo <- function() {
   do.call(rbind,rows)
 }
 
-studio_fastq_example <- function(directory) {
-  dir.create(directory,recursive=TRUE,showWarnings=FALSE)
+studio_fastq_construct <- function() {
   set.seed(20260910)
   dna <- function(n) paste(sample(c('A','C','G','T'),n,TRUE),collapse='')
-  prefix <- dna(170); suffix <- dna(170); truth <- replicate(3,dna(26))
+  list(prefix=dna(170),suffix=dna(170),truth=replicate(3,dna(26)))
+}
+
+studio_fastq_settings <- function() {
+  x <- studio_fastq_construct()
+  list(start=171,end=196,left=substr(x$prefix,159,170),right=substr(x$suffix,1,12),
+       min_length=24,max_length=28,mode='flanks')
+}
+
+studio_fastq_example <- function(directory) {
+  dir.create(directory,recursive=TRUE,showWarnings=FALSE)
+  construct <- studio_fastq_construct()
+  prefix <- construct$prefix; suffix <- construct$suffix; truth <- construct$truth
   bc <- rep(truth,c(80,40,20))
   molecules <- paste0(prefix,bc,suffix)
   writeLines(c('>example_cassette',paste0(prefix,strrep('N',26),suffix)),file.path(directory,'reference.fasta'))

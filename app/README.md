@@ -11,8 +11,8 @@ implementation is maintained inside the interface.
 
 | Video | Workflow |
 |---|---|
-| [Barcode counts → complete analysis · 44 seconds](media/studio-walkthrough.mp4) | Upload a count table, run native LV clustering, inspect trajectories, palettes and memberships, download the results ZIP, and generate an HTML report |
-| [FASTQ → extracted barcodes · 24 seconds](media/studio-fastq.mp4) | Upload paired FASTQs and a reference, apply extraction settings, download extracted counts immediately, and continue to clustering |
+| [Barcode counts → complete analysis · 42 seconds](media/studio-walkthrough.mp4) | Upload a count table, run native LV clustering, inspect trajectories, palettes and memberships, download the results ZIP, and generate an HTML report |
+| [FASTQ → extracted barcodes · 22 seconds](media/studio-fastq.mp4) | Upload paired FASTQs and a reference, apply extraction settings, download extracted counts immediately, and continue to clustering |
 
 The [offline video viewer](media/watch.html) plays both clips in a browser with
 no R session or internet connection required. Keep it alongside the videos and
@@ -21,6 +21,19 @@ using only synthetic fixtures, with captions and no playback speedup. They are
 workflow demonstrations, not performance benchmarks. The animated preview is a
 ten-second excerpt of the first video. Recording details are in
 [recording.json](media/recording.json).
+
+## Publication settings and recorded time
+
+On **Cluster sequences**, choose **Use publication LV settings** to apply distance
+3, count ratio 20, error proxy 0.005, support ordering and the Poisson indel option.
+These are the settings in [the three-benchmark comparison](../manuscript/publication_tables/table_1_benchmark_comparison.pdf).
+They remain editable; the package's default Poisson setting remains disabled.
+
+Results and the downloaded report distinguish **native clustering time** from
+**analysis time**, which also includes count pooling, sample assignment and
+statistics. Both exclude uploads, extraction, file export and plotting. Settings
+and both times are saved in `analysis.json`. Full FASTQ-to-plot timing is documented
+separately in [the real-data workflow receipt](../benchmark/workflow_runtime/README.md).
 
 ## Start locally
 
@@ -31,8 +44,10 @@ Rscript app/run.R
 ```
 
 Open **http://127.0.0.1:3838**. The launch script builds the current package with
-normal release compiler flags into `app/.runtime/library`, keeping it separate
-from your global R library and the archived benchmark installations. It rebuilds
+normal release compiler flags into a source-fingerprinted folder under `app/.runtime/releases/`, keeping it separate
+from your global R library and the archived benchmark installations. The selected
+library path is recorded in `app/.runtime/active-library.txt`. Earlier libraries
+remain intact, including the legacy `app/.runtime/library` folder. It rebuilds
 when package source hashes change. The first launch needs the package's normal
 dependencies and a working C++ compiler.
 
@@ -171,3 +186,10 @@ recover known truth from real single/paired FASTQs, and inspect the Quarto expor
 
 To record the walkthroughs again, use `Rscript app/scripts/record_demo.R` with
 the same local app and Chrome endpoints. Recording also requires `ffmpeg` on PATH.
+
+
+Studio renders up to 5,000 lineages per population (and at most two million
+lineage/timepoint cells). Larger analyses retain every centroid, membership and
+sample count in the downloads. The interface explains when to use
+`barbac_ts_area()` directly in R, where this browser limit does not apply.
+Drawing hundreds of thousands of individual bands can take longer than clustering.

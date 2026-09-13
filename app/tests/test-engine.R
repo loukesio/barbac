@@ -1,6 +1,8 @@
 library(testthat)
 app <- if(file.exists('app/R/engine.R')) normalizePath('app') else normalizePath('..')
-.libPaths(c(file.path(app,'.runtime','library'),.libPaths()))
+active <- file.path(app,'.runtime','active-library.txt')
+lib <- if(file.exists(active))readLines(active,warn=FALSE)[1] else file.path(app,'.runtime','library')
+.libPaths(c(lib,.libPaths()))
 source(file.path(app,'R','engine.R'))
 source(file.path(app,'R','examples.R'))
 source(file.path(app,'R','report.R'))
@@ -145,4 +147,13 @@ test_that('the publication preset matches the frozen LV configuration and record
   exported <- jsonlite::read_json(file.path(folder,'analysis.json'), simplifyVector=TRUE)
   expect_equal(exported$settings, cfg)
   expect_equal(exported$provenance$analysis_seconds, result$seconds, tolerance=1e-4)
+})
+
+
+test_that('large populations retain their counts when Studio defers expensive plots', {
+  ts <- expand.grid(cluster_id=sprintf('L%05d',seq_len(5001)),time=c(0,1))
+  ts$counts <- 1; ts$population <- 'large'
+  result <- list(time_series=ts)
+  expect_error(studio_area(result,'large'),'All counts are retained')
+  expect_equal(sum(result$time_series$counts),10002)
 })

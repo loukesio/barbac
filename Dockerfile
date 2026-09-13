@@ -80,7 +80,16 @@ stopifnot(
   is.function(barbac::barbac_ts_area),
   is.function(barbac::run_cli_pipeline)
 )
-message("barbac loaded successfully.")
+stopifnot(
+  identical(as.character(utils::packageVersion("barbac")), read.dcf("DESCRIPTION")[1, "Version"]),
+  grepl("-v14$", barbac:::barbac_build_id())
+)
+fixture <- data.frame(barcode = c("ACGTACGTACGTACGTACGTACGTA", "ACGTACGTACGTACGTACGTACGTT"),
+                      counts = c(1000L, 1L))
+clustered <- barbac::super_cluster2(fixture, method = "lv", tie_break = "support",
+                                    indel_model = "poisson", verbose = FALSE)
+stopifnot(nrow(clustered) == 1L, sum(clustered$sum_counts) == 1001L)
+message("Current source release loaded with the preserved v14 engine.")
 RSCRIPT
 
 # Sensible working directory for user data mounts

@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "package_version": "0.2.1",
+  "build_id": "barbac-2026-09-10-eligible-parent-v14",
+  "R": "R version 4.5.1 (2025-06-13)",
+  "settings": {
+    "method": "lv",
+    "distance": 3,
+    "merge_ratio": 20,
+    "error_rate": 0.005,
+    "tie_break": "support",
+    "indel_model": "poisson"
+  },
+  "elapsed_seconds": 1997.5029999999999,
+  "input_reads": 10754210,
+  "mapped_reads": 8591566,
+  "extracted_reads": 8578419,
+  "unique_sequences": 437009,
+  "clusters": 144537,
+  "samples": [
+    {
+      "sample": "A3_p02",
+      "time": 12
+    },
+    {
+      "sample": "A3_p04",
+      "time": 24
+    },
+    {
+      "sample": "A3_p06",
+      "time": 36
+    }
+  ],
+  "sample_counts": {
+    "A3_p02": 2992625,
+    "A3_p04": 2208249,
+    "A3_p06": 3377545
+  },
+  "no_count_loss": true,
+  "all_lineages_plotted": true,
+  "multiqc_status": "completed",
+  "scope": "Raw local R1 reads; all four technical runs per sample; no quality filtering or UMI deduplication. Entire count matrix plotted, no abundance cutoff. Downloads, installation and input verification excluded; input concatenation included."
+}

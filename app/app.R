@@ -156,6 +156,7 @@ server <- function(input,output,session) {
     r<-result();if(is.null(r)||is.null(input$population))return(FALSE)
     ts<-r$time_series[r$time_series$population==input$population,]
     nrow(ts)>0 && !anyNA(ts$time) && length(unique(ts$time))>=2 &&
+      length(unique(ts$cluster_id))<=5000 &&
       length(unique(ts$cluster_id))*length(unique(ts$time))<=2000000
   })
   session$onSessionEnded(function(){
@@ -274,12 +275,12 @@ server <- function(input,output,session) {
     metric('INFERRED CLUSTERS',fmt(nrow(r$centroids)),'Across all populations'),
     metric('BARCODE READS',fmt(sum(r$input$counts)),'All counts conserved'),
     metric('SEQUENCES ABSORBED',fmt(nrow(r$memberships)-nrow(r$centroids)),'Non-centroid sequences'),
-    metric('CLUSTERING TIME',paste0(sprintf('%.2f',r$seconds),' s'),'Excludes upload & extraction'))})
+    metric('CLUSTERING TIME',paste0(sprintf('%.2f',r$provenance$clustering_seconds),' s'),'Native engine only'))})
   output$trajectory <- renderUI({
     req(result(),input$population)
     ts<-result()$time_series;ts<-ts[ts$population==input$population,]
     if(anyNA(ts$time)||length(unique(ts$time))<2)return(empty('A timeline needs timepoints','Provide a time column, or sample metadata with at least two timepoints in each population.'))
-    if(length(unique(ts$cluster_id))*length(unique(ts$time))>2000000)return(empty('A larger story','Download the complete count table to plot this large lineage grid in R.'))
+    if(length(unique(ts$cluster_id))>5000 || length(unique(ts$cluster_id))*length(unique(ts$time))>2000000)return(empty('All your lineages are retained','Studio draws up to 5,000 lineages per population. Download the complete count table to plot larger populations in R with barbac_ts_area().'))
     if(length(unique(ts$cluster_id))>1500)plotOutput('area_static',height='365px') else ggiraph::girafeOutput('area_interactive',height='365px')
   })
   output$area_interactive <- ggiraph::renderGirafe({
@@ -308,7 +309,7 @@ server <- function(input,output,session) {
   output$demo_csv <- downloadHandler('barbac-example.csv',function(file)readr::write_csv(studio_demo(),file))
   output$metadata_csv <- downloadHandler('sample-metadata.csv',function(file)readr::write_csv(unique(studio_demo()[c('sample','time','population')]),file))
   output$demo_fastq <- downloadHandler('barbac-fastq-example.zip',function(file){d<-tempfile('fastq-example-');dir.create(d);on.exit(unlink(d,recursive=TRUE));studio_fastq_example(d);zip::zipr(file,list.files(d,full.names=TRUE),root=d)})
-  observeEvent(input$demo_flanks,{d<-tempfile();dir.create(d);cfg<-studio_fastq_example(d);unlink(d,recursive=TRUE);
+  observeEvent(input$demo_flanks,{cfg<-studio_fastq_settings();
     updateNumericInput(session,'start',value=cfg$start);updateNumericInput(session,'end',value=cfg$end);updateNumericInput(session,'min_length',value=cfg$min_length);updateNumericInput(session,'max_length',value=cfg$max_length);
     updateTextInput(session,'left_flank',value=cfg$left);updateTextInput(session,'right_flank',value=cfg$right);updateSelectInput(session,'extract_mode',selected='flanks')})
   output$download_input <- downloadHandler('extracted_barcodes.csv',function(file){req(data());readr::write_csv(data(),file)})

@@ -1,3 +1,18 @@
+# barbac 0.2.1
+
+- Preserve the verified v14 native clustering engine and all R1/paired-read,
+  indel-preserving extraction and native palette functionality.
+- Load BAM-related namespaces only when extraction needs them, reducing standalone
+  clustering startup work.
+- Save every pipeline command's elapsed time and exit status, including failed
+  commands; return the whole FASTQ-to-BAM wrapper duration separately.
+- Add a labelled publication LV preset in local Studio and distinguish native
+  clustering time from pooling, assignment and summary computation.
+- Keep local native libraries by source fingerprint; defer very large Studio
+  plots while preserving all barcode counts and downloads.
+- Include the complete three-benchmark table, paired statistical supplement,
+  real-data FASTQ-to-plot timing workflow and corrected workflow diagram.
+
 # barbac 0.2.0
 
 * Publish the validated v14 clustering engine on the main development line,

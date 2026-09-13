@@ -11,24 +11,26 @@ if (length(missing)) stop('Install app dependencies: install.packages(c(',
                          paste(sprintf('"%s"', missing), collapse = ', '), '))')
 if (packageVersion('shiny') < '1.8.1') stop('Shiny >= 1.8.1 is required.')
 runtime <- file.path(here, '.runtime')
-lib <- file.path(runtime, 'library')
-dir.create(lib, recursive = TRUE, showWarnings = FALSE)
 sources <- c(file.path(repo, c('DESCRIPTION', 'NAMESPACE')),
   list.files(file.path(repo, 'R'), '[.]R$', full.names = TRUE),
   list.files(file.path(repo, 'src'), '[.](cpp|h)$', full.names = TRUE))
 signature <- digest::digest(vapply(sources, digest::digest, character(1),
                                   algo = 'sha256', file = TRUE), algo = 'sha256')
-stamp <- file.path(runtime, 'source.sha256')
+release <- file.path(runtime, 'releases', signature)
+lib <- file.path(release, 'library')
+dir.create(lib, recursive = TRUE, showWarnings = FALSE)
+stamp <- file.path(release, 'source.sha256')
 if (!file.exists(stamp) || readLines(stamp, warn = FALSE)[1] != signature ||
     !file.exists(file.path(lib, 'barbac', 'DESCRIPTION'))) {
   message('Preparing the current barbac release for Studio…')
-  log <- file.path(runtime, 'install.log')
+  log <- file.path(release, 'install.log')
   status <- system2(file.path(R.home('bin'), 'R'),
     c('CMD', 'INSTALL', '--preclean', '--no-multiarch', '--no-docs',
       paste0('--library=', shQuote(lib)), shQuote(repo)), stdout = log, stderr = log)
   if (status != 0L) stop(paste(readLines(log, warn = FALSE), collapse = '\n'))
   writeLines(signature, stamp)
 }
+writeLines(normalizePath(lib), file.path(runtime, 'active-library.txt'))
 .libPaths(c(lib, .libPaths()))
 Sys.setenv(BARBAC_STUDIO_SOURCE_SHA256 = signature)
 if ('--prepare-only' %in% commandArgs(TRUE)) {

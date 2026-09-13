@@ -191,8 +191,8 @@ studio_area <- function(result, population, palette = 'alger', interactive = FAL
   if (anyNA(ts$time) || length(unique(ts$time)) < 2)
     studio_error('Add at least two numeric timepoints to this population to show lineage trajectories.')
   n <- length(unique(ts$cluster_id))
-  if (n * length(unique(ts$time)) > 2000000)
-    studio_error('This lineage grid is too large for the browser view. Download all counts for plotting in R.')
+  if (n > 5000 || n * length(unique(ts$time)) > 2000000)
+    studio_error('Studio draws up to 5,000 lineages per population and two million lineage/timepoint cells. All counts are retained; download them for plotting in R.')
   theme <- ggplot2::theme_minimal(base_size = 12, base_family = 'sans') +
     ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
       panel.grid.major.x = ggplot2::element_blank(),

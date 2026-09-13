@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "pdf_pages": 11,
+  "visual_review": "Every page reviewed in contact sheet; main figures inspected individually. No clipped axes or duplicated automatic captions.",
+  "editable_word_tables": 1,
+  "orange_leader_cells": 15,
+  "media": {
+    "status": "passed",
+    "offline": true,
+    "videos": 2,
+    "playback": true,
+    "mobile": true,
+    "network_requests": 0
+  },
+  "timing_receipt": "benchmark/workflow_runtime/results/receipt.json",
+  "remaining_author_items": "manuscript/submission_readiness.md"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "fixture_reads": 142,
+  "expected_centroids": 2,
+  "f1_percent": 100,
+  "read_accuracy_percent": 100,
+  "competitors_run": false,
+  "final_evaluation_inputs_used": false
+}

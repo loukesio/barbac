@@ -1,0 +1,114 @@
+{
+  "status": "passed",
+  "checked_utc": "2026-09-13 08:46:30 UTC",
+  "package_version": "0.2.1",
+  "native_build": "barbac-2026-09-10-eligible-parent-v14",
+  "R": "R version 4.5.1 (2025-06-13)",
+  "platform": "aarch64-apple-darwin20",
+  "package_tests": {
+    "cases": 44,
+    "assertions": 534,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "warnings": 0
+  },
+  "app_tests": {
+    "status": "passed",
+    "cases": 10,
+    "assertions": 65,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tools": [
+    {
+      "tool": "fastqc",
+      "version": "FastQC v0.12.1"
+    },
+    {
+      "tool": "pear",
+      "version": "PEAR v0.9.6 [January 15, 2015]  - [+bzlib +zlib]"
+    },
+    {
+      "tool": "minimap2",
+      "version": "2.30-r1287"
+    },
+    {
+      "tool": "samtools",
+      "version": "samtools 1.22"
+    }
+  ],
+  "integration": {
+    "R1_only_without_PEAR": true,
+    "mixed_single_paired": true,
+    "expected_reads_per_fixture_sample": 144,
+    "expected_clusters_per_fixture_sample": 3,
+    "known_indel_sequences_and_counts": true,
+    "fail_fast_commands": true,
+    "native_membership_and_plot_parity": true,
+    "Quarto_export": true
+  },
+  "source_hashes": {
+    "DESCRIPTION": "6fa7568f8d017a7db43c884957b3c3fa1d9d41e38e51ef50b2e1e0bf3c781b44",
+    "NAMESPACE": "87aaa8e559ef947c87a0db70de2c510ad2337827e2421051644dfc67b7332020",
+    "R/01_configure_environment.R": "eb61e4673c680bd4d3743047a5c92a22f569f32362fe652cf0533973dc2f91b7",
+    "R/02_use_barbac_env.R": "f5c678444cccbce23c463ef3bc572bed63b48808a6a16cae150464ce907ce202",
+    "R/03_check-barbac-tools.R": "25d2a6f9fb167364d12754b82fd68e611c8700010c656279c613c532128f3e1d",
+    "R/04_run_fastqc.R": "27de29bb0478b9a301e6801c0bf2dd08e15b7e146a53bfdf0e435362a8a658f3",
+    "R/05_run_multiqc.R": "e7ede42a2ff6a473c1f5224133bec411319aaf1139f7dec0142ffeecb3e32c6a",
+    "R/06_run_pear.R": "1f0cbf42223a7f6b1ba23e80229efeccbaa460f3baee8ec4a168e9b79b71bf80",
+    "R/07_run_minimap2.R": "2c26d01a8ad89a8eb71a2faff4ad3722495863768c3805d33512316eaff28ccf",
+    "R/08_summarise_bam_stats.R": "974f357b2f654310f25f3196344608b4eb7ac88241b0046e372c52919f10b7e5",
+    "R/09_run_cli_pipeline.R": "fbc08e4e56985011108d9d5cbf51ce853f331b9b7bb078504b28a6d9229ce552",
+    "R/10_barbac_xtr.R": "9397b039bc0eed87fd485b744bf189486ac5646d96510881f3a8e00b248fb9b4",
+    "R/10a_extract_flanked_bam.R": "7fd6e98001d8de236fc9f1aad1623ea3068864550810a502d685f849520baa88",
+    "R/11_super_cluster2.R": "d26577d44e6f23ec7cc12cf5eb8a2db284b806d091837f83d2571070d08b8058",
+    "R/12_barbac_ts_area.R": "6a8d174a3f078d897b011246dec5ed160355927d119296f5ac19394a19689d8b",
+    "R/13_theme_barbac.R": "c71d0b2674a592a2a1d47022a9c432cbfef9835fa7c0770c6b521bab63d61a33",
+    "R/14_barbac_palettes.R": "9ed56e3e48d8f54a503c66644c4aaf7b4a12d1bbf53cf5bc0846838f016cf245",
+    "R/14_cluster_stats.R": "08fd00a0c74462e255e239682c4cdf40638bbf4169f44b0f1535f2a68bf11212",
+    "R/barbac-package.R": "db5aa4bdd19c4f581864fe41322ac238253b5d2ab4d0c788555f76e8011377a6",
+    "R/RcppExports.R": "c46d8468ba91e7db9cb22d450034ea65ebea57c83d16ac516c8f15e47c592e83",
+    "src/clustering.cpp": "8d7612323fb89c64f4fdc3db9f0fa0c80dec35849024f9a80da8dd53b45b95db",
+    "src/RcppExports.cpp": "480e2a802534003f3af01e8ce86feb6ab18fae35bccfe62d45ac789419f51c61",
+    "tests/testthat/test-barbac_ts_area.R": "309f0d19c5129159fe61d28f114d1088b559ada91a7bed1849cd08ad3241748f",
+    "tests/testthat/test-barbac-palettes.R": "49d60d7b79bcd1aeffe4958781138a98348892a41733f5c7efded4171790d250",
+    "tests/testthat/test-extraction-stats.R": "f80942298703bae3275624dedd76ee8e14e64c2e9b61fcaf4bd52115fdd5df27",
+    "tests/testthat/test-flanked-bam-extraction.R": "1cfb39e830da545fd29a7a0175a89a2bad3f2a35f77486fcf498332c42423971",
+    "tests/testthat/test-lv-indel-model.R": "b4488282117c7d4d94c905826b9ed27f945ffdfe7770eb673c2817f41d59e25f",
+    "tests/testthat/test-run-cli-pipeline.R": "d7e5d11d48518e134b7ecec4f2c5af46ef718a03f3bfc114ecfb455b0d910cc1",
+    "tests/testthat/test-super_cluster2.R": "47c933fd9dd27ee0a1520c2c3e9a18930afad8508fdc2beda81650afa710a7ba",
+    "app/app.R": "07aad03340f4b221c0232c3e000f30aad57db4f9383731c65c54ddff2b769616",
+    "app/run.R": "8785e50a6039491c677e99efebbf0375818a01629d47222d619ce1093b2c78e7",
+    "app/R/engine.R": "3a926f635827f9ee870f33792e72b4a62aaa9f3bbef9d01745ebacd748b75d2a",
+    "app/R/examples.R": "11bd22daf7451e09f3b6ed3c642459368f36f41fadf4b14d3c043ca10692af66",
+    "app/R/report.R": "5c20814f2275d40d96778d68fcdd4ff69cd785a55c5de44693c5c21fcf0d60a6",
+    "app/tests/test-engine.R": "85de35caf5daf1e552e54970218d6a18a708f8d86ae3058442d6e17950b038f1",
+    "app/report.qmd": "fb12ad4088a93dfa558a07dda5c525dad9975bb25dc2a03af76c4831133c2643",
+    "tools/verify_release.R": "0388805f373bcf726ebd128bbf7349d5126d2bda67bafc697bb16aeadbebe676"
+  },
+  "scope": "Local correctness and integration verification using synthetic fixtures and real executables. Not a runtime benchmark or a validation of every library design.",
+  "browser_tests": {
+    "status": "passed",
+    "desktop": true,
+    "mobile": true,
+    "upload_validation": true,
+    "synthetic_clusters": 18,
+    "synthetic_counts": 192000,
+    "paired_extraction_counts": 140,
+    "paired_clusters": 3,
+    "csv_zip_download": true,
+    "quarto_download": true,
+    "javascript_exceptions": 0
+  },
+  "package_checks_reused_from": "validation.json (unchanged R/native/test sources, checked by SHA-256)",
+  "note": "App example settings now avoid generating FASTQs; large plots are deferred without losing counts; installations are retained by source fingerprint. Earlier receipt preserved.",
+  "finalized_utc": "2026-09-13T12:36:29.973171+00:00",
+  "R_CMD_check": {
+    "errors": 0,
+    "warnings": 1,
+    "notes": 0,
+    "warning": "Local Apple clang: R_ext/Boolean.h requests unsupported -Wfixed-enum-extension warning group; package installation, examples, tests and vignettes pass."
+  }
+}

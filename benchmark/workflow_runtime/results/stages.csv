@@ -1,0 +1,10 @@
+"stage","elapsed_seconds"
+"package_loading",0.725
+"input_staging",0.447
+"fastq_to_bam_and_qc",203.783
+"barcode_extraction",45.638
+"count_pooling",1.566
+"native_clustering",343.514
+"cluster_statistics",0.0080000000000382
+"sample_assignment_and_export",3.72499999999991
+"lineage_plot_and_export",1398.07

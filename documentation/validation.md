@@ -1,3 +1,15 @@
+# Current publication release verification
+
+Barbac **0.2.1** preserves the v14 clustering engine and the verified lazy BAM
+namespace loading. The [13 September receipt](../benchmark/validation/release_2026-09-13/validation_final.json)
+records **534 passing package assertions across 44 cases** and **65 passing Studio
+assertions across ten cases**, with no failures, errors or skips. Tests cover
+R1 and overlapping paired reads, indel-preserving extraction, failure receipts,
+complete memberships, conserved sample counts, the publication preset, plots
+and self-contained reports. Command timing is an additive pipeline output.
+
+Earlier release and scientific receipts below remain unchanged.
+
 # Verification and benchmark evidence
 
 ## Replicated v14 benchmark · 12 September 2026
@@ -66,7 +78,8 @@ Rscript tools/verify_release.R
 
 This requires the package and Studio dependencies, the four CLI tools above,
 Quarto, `pkgload`, `testthat`, `jsonlite` and `digest`. It writes a separate receipt
-under `benchmark/validation/release_2026-09-11/`. Timings are not speed benchmarks.
+under `benchmark/validation/release_2026-09-13/` for the current release. The earlier
+receipt remains archived. Timings are not speed benchmarks.
 The local installed dependencies emit package-version and stack-imbalance
 warnings when loaded; the tests themselves completed as recorded above.
 

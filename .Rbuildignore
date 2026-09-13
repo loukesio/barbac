@@ -27,3 +27,5 @@
 ^app$
 ^documentation$
 ^tools$
+^CITATION[.]cff$
+^.*[.]dc[.]html$

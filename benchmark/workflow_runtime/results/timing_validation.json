@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "source_commit": "ecc26af3e1a4c983e0cc3110fd4e455247634565",
+  "all_recorded_source_and_output_hashes_match": true,
+  "sleep_wake_events_during_run": [],
+  "one_attempt": true,
+  "outer_elapsed_seconds": 1997.9767264170077,
+  "scope": "Single real-data workflow; ordinary desktop use including browser/video activity, with no other agent-launched analysis jobs during timing. Not a competitor speed comparison.",
+  "sleep_parser": "Event-type field, not mentions of Wake in assertion names."
+}

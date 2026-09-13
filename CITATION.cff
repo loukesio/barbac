@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use barbac, please cite this software release."
+type: software
+title: "barbac: DNA barcode clustering and lineage analysis"
+authors:
+  - family-names: Theodosiou
+    given-names: Loukas
+    affiliation: Max Planck Institute for Evolutionary Biology
+    email: theodosiou@evolbio.mpg.de
+version: 0.2.1
+date-released: 2026-09-13
+url: https://loukesio.github.io/barbac/
+repository-code: https://github.com/loukesio/barbac
+license: GPL-2.0-or-later

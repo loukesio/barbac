@@ -69,7 +69,9 @@ lineages, not known-truth accuracy estimates.
 
 Frequencies divide each lineage's counts by all supplied barcode counts in that
 sample. No abundance cutoff is applied. Missing lineage counts are filled with zero.
-Plots require at least two numeric timepoints in a population.
+Plots require at least two numeric timepoints in a population. Studio plots at most
+5,000 lineages per population and two million lineage/timepoint cells. Larger
+populations retain their complete tables; use `barbac_ts_area()` in R to plot them.
 
 ```{r, results='asis'}
 if(!length(plots))cat('No trajectory plots are available for this input.\n')
