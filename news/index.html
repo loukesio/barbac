@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">barbac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,15 @@
       <small>Source: <a href="https://github.com/loukesio/barbac/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.1" id="barbac-021">barbac 0.2.1<a class="anchor" aria-label="anchor" href="#barbac-021"></a></h2>
+<ul><li>Preserve the verified v14 native clustering engine and all R1/paired-read, indel-preserving extraction and native palette functionality.</li>
+<li>Load BAM-related namespaces only when extraction needs them, reducing standalone clustering startup work.</li>
+<li>Save every pipeline command’s elapsed time and exit status, including failed commands; return the whole FASTQ-to-BAM wrapper duration separately.</li>
+<li>Add a labelled publication LV preset in local Studio and distinguish native clustering time from pooling, assignment and summary computation.</li>
+<li>Keep local native libraries by source fingerprint; defer very large Studio plots while preserving all barcode counts and downloads.</li>
+<li>Include the complete three-benchmark table, paired statistical supplement, real-data FASTQ-to-plot timing workflow and corrected workflow diagram.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="barbac-020">barbac 0.2.0<a class="anchor" aria-label="anchor" href="#barbac-020"></a></h2>
 <ul><li>Publish the validated v14 clustering engine on the main development line, including exact LV candidate partitions, abundance-bound pruning, support-based tie ordering and the optional Poisson indel model.</li>

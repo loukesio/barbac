@@ -137,8 +137,8 @@ results](reference/figures/studio-preview.gif)](https://loukesio.github.io/barba
 
 | Watch the workflow | What you will see |
 |----|----|
-| [Barcode counts → complete analysis · 44 s](https://loukesio.github.io/barbac/app/media/studio-walkthrough.mp4) | Upload, clustering, lineage plots, LTC palettes, memberships and exports |
-| [FASTQ → extracted barcodes · 24 s](https://loukesio.github.io/barbac/app/media/studio-fastq.mp4) | Paired-read extraction, downloading counts before clustering, and clustering |
+| [Barcode counts → complete analysis · 42 s](https://loukesio.github.io/barbac/app/media/studio-walkthrough.mp4) | Upload, clustering, lineage plots, LTC palettes, memberships and exports |
+| [FASTQ → extracted barcodes · 22 s](https://loukesio.github.io/barbac/app/media/studio-fastq.mp4) | Paired-read extraction, downloading counts before clustering, and clustering |
 
 These are actual app recordings using small synthetic examples. Their
 timings illustrate the interface and are not benchmarks for large
@@ -163,6 +163,16 @@ complete memberships, per-sample lineage counts, clustering statistics,
 figures and a self-contained Quarto HTML report. The [offline video
 viewer](https://loukesio.github.io/barbac/app/media/watch.md) plays both
 walkthroughs without R or Shiny.
+
+## How long does the complete workflow take?
+
+A recorded run on an M1 laptop processed **10.75 million R1 reads** into
+extracted barcodes, shared clusters, statistics and saved plots in **33
+min 18 s**. Native LV clustering took **5 min 44 s**; exporting every
+one of the 144,537 lineage bands to both PDF and PNG dominated the
+remaining time. The [full stage breakdown and reproducible
+example](https://loukesio.github.io/barbac/benchmark/workflow_runtime/README.md)
+separate mapping, extraction, clustering and plotting.
 
 ## Plot every lineage
 
@@ -190,14 +200,41 @@ vignette](https://loukesio.github.io/barbac/articles/barbac.html).
 
 ## Evidence and reproducibility
 
-A barbac mode achieved the highest centroid F1 in **four of five
-datasets** in the recorded comparison with Shepherd, Starcode and
-Bartender. Rankings depend on the dataset, mode and metric. The
-[benchmark
-evidence](https://loukesio.github.io/barbac/documentation/validation.md)
-provides settings, complete tables, timings and limitations; the
-comparison’s v13 measurements remain separate from the current v14
-search improvements.
+**Barbac LV has the highest F1 and read-assignment accuracy, and the
+fewest false positive centroids, across all three benchmarks. Barbac
+Hamming is fastest.**
+
+| Benchmark | LV F1 | LV read accuracy | LV workflow | Hamming workflow |
+|----|---:|---:|---:|---:|
+| Random N20 · substitutions + indels | 99.28038% | 99.997083% | 1.76 s | 1.40 s |
+| Anchored · substitutions + indels | 99.23726% | 99.994257% | 2.05 s | 1.52 s |
+| Milo / Johnson reference | 99.72246% | 99.999476% | 33.65 s | 17.50 s |
+
+[**See every method in Table 1
+→**](https://loukesio.github.io/barbac/manuscript/publication_tables/table_1_benchmark_comparison.pdf)
+[Editable Word
+table](https://loukesio.github.io/barbac/manuscript/publication_tables/table_1_benchmark_comparison.docx)
+· [Methods and
+statistics](https://loukesio.github.io/barbac/manuscript/publication_tables/table_1_methods.pdf)
+
+The simulated designs each contain 60 independent libraries. Accuracy is
+averaged across libraries; times are median clustering workflow times,
+including startup and required exports. Milo is one fixed deposited
+simulation. The evaluated LV settings are distance 3, support ordering,
+ratio 20, error proxy 0.005 and the optional Poisson indel model.
+Studio’s **Use publication LV settings** button selects this
+configuration.
+
+Paired comparisons support LV’s F1 advantage over Bartender and both
+Starcode configurations. The [completed Shepherd sensitivity
+comparison](https://loukesio.github.io/barbac/benchmark/shepherd_completion/RESULTS.md)
+also favours LV, using Shepherd’s documented Bayes threshold and the
+known simulation substitution rate. That comparison is explicitly post
+hoc; [original
+outcomes](https://loukesio.github.io/barbac/benchmark/publication_final/RESULTS.md)
+remain available. The full table also shows where other configurations
+lead, including Starcode message passing’s lower FN on the two simulated
+designs.
 
 The repository also includes reproducible workflows for the [Chen
 2023](https://loukesio.github.io/barbac/benchmark/time_series_chen2023/README.md)
@@ -205,8 +242,10 @@ and [Jasinska
 2020](https://loukesio.github.io/barbac/benchmark/time_series_jasinska2020/README.md)
 applications, known-truth extraction checks, and tests of indexed versus
 exhaustive clustering. Raw study data and large generated analyses are
-recreated locally from the provided scripts. [Verification instructions
-and
+recreated locally from the provided scripts. The [portable reproduction
+guide](https://loukesio.github.io/barbac/benchmark/REPRODUCE.md) accepts
+your local library and tool paths and can evaluate Barbac alone.
+[Verification instructions and
 receipts](https://loukesio.github.io/barbac/documentation/validation.md)
 explain exactly what was checked.
 
@@ -214,13 +253,19 @@ explain exactly what was checked.
 
 The [container
 workflow](https://loukesio.github.io/barbac/.github/workflows/docker.yml)
-builds the R package and FASTQ toolchain for `linux/amd64`. Build the
-current release from a checkout:
+builds the R package and FASTQ toolchain for `linux/amd64`. Download the
+named release:
 
 ``` sh
-docker build --platform linux/amd64 -t barbac:0.2.0 .
-docker run --platform linux/amd64 --rm -it -v "$PWD":/data barbac:0.2.0 R
+docker pull --platform linux/amd64 ghcr.io/loukesio/barbac:0.2.1
+docker run --platform linux/amd64 --rm -it -v "$PWD":/data ghcr.io/loukesio/barbac:0.2.1 R
 ```
+
+To build from a checkout, use
+`docker build --platform linux/amd64 -t barbac:dev .`. The [0.2.1
+release](https://github.com/loukesio/barbac/releases/tag/v0.2.1)
+includes the R package, complete source and the frozen simulation test
+inputs.
 
 [Documentation](https://loukesio.github.io/barbac/) ·
 [Issues](https://github.com/loukesio/barbac/issues) ·

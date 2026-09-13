@@ -11,7 +11,7 @@ map directly. Extract barcodes from the returned BAMs with barbac_xtr()."><meta 
 
     <a class="navbar-brand me-2" href="../index.html">barbac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@ discovered as inputs or silently overwritten. Default: <code>"results"</code>.</
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An invisible list containing <code>commands</code>, <code>output_dir</code>, <code>fastqc_dir</code>,
 <code>merged_dir</code>, <code>bam_dir</code>, <code>stats</code>, <code>summary_file</code>, <code>log_file</code>, <code>multiqc_status</code>,
-and <code>samples</code>. The <code>samples</code> table links original sample labels to mode,
+<code>command_timings</code>, <code>timing_file</code>, <code>elapsed_seconds</code>, and <code>samples</code>. The <code>samples</code> table links original sample labels to mode,
 mapping input and indexed BAM. <code>bam_files</code> is a vector named by sample.
 Paired BAM names retain <code>&lt;sample&gt;_ANC.assembled_sorted.bam</code>; R1-only BAMs
 use <code>&lt;sample&gt;_sorted.bam</code>. The <code>stats$sample</code> column retains these basenames
@@ -109,6 +109,9 @@ reads, not general paired-end mapping. A table may mix paired and R1-only rows.<
 disabled. Secondary and supplementary alignments are removed from the BAM;
 mapping statistics therefore count primary reads or merged molecules.
 FastQC input filenames must produce unique report names within a run.</p>
+<p>Each external command is timed in <code>command_timings.csv</code>, including failures.
+<code>elapsed_seconds</code> covers this complete wrapper call, ending at indexed BAMs
+and QC summaries; extraction, clustering and plotting are subsequent stages.</p>
 <p>Required commands stop the pipeline on failure, with their output recorded
 in the log. MultiQC runs when available; its failure raises a warning and is
 reported as <code>multiqc_status = "failed"</code>. This wrapper does not extract barcodes,

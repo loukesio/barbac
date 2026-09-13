@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="index.html">barbac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -171,11 +171,11 @@
 </tr></thead>
 <tbody>
 <tr>
-<td><a href="app/media/studio-walkthrough.mp4">Barcode counts → complete analysis · 44 s</a></td>
+<td><a href="app/media/studio-walkthrough.mp4">Barcode counts → complete analysis · 42 s</a></td>
 <td>Upload, clustering, lineage plots, LTC palettes, memberships and exports</td>
 </tr>
 <tr>
-<td><a href="app/media/studio-fastq.mp4">FASTQ → extracted barcodes · 24 s</a></td>
+<td><a href="app/media/studio-fastq.mp4">FASTQ → extracted barcodes · 22 s</a></td>
 <td>Paired-read extraction, downloading counts before clustering, and clustering</td>
 </tr>
 </tbody>
@@ -187,6 +187,11 @@
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="ex">Rscript</span> app/run.R</span></code></pre></div>
 <p>Open <strong><a href="http://127.0.0.1:3838" class="external-link uri">http://127.0.0.1:3838</a></strong> on the same computer. The <a href="https://github.com/loukesio/barbac/blob/main/app/README.md">Studio guide</a> covers the additional R dependencies and optional Quarto installation. Studio builds an isolated release installation of the current package and runs locally; no public upload service is provided.</p>
 <p>Download extracted counts <strong>before clustering</strong>, or export centroids, complete memberships, per-sample lineage counts, clustering statistics, figures and a self-contained Quarto HTML report. The <a href="app/media/watch.html">offline video viewer</a> plays both walkthroughs without R or Shiny.</p>
+</div>
+<div class="section level2">
+<h2 id="how-long-does-the-complete-workflow-take">How long does the complete workflow take?<a class="anchor" aria-label="anchor" href="#how-long-does-the-complete-workflow-take"></a>
+</h2>
+<p>A recorded run on an M1 laptop processed <strong>10.75 million R1 reads</strong> into extracted barcodes, shared clusters, statistics and saved plots in <strong>33 min 18 s</strong>. Native LV clustering took <strong>5 min 44 s</strong>; exporting every one of the 144,537 lineage bands to both PDF and PNG dominated the remaining time. The <a href="https://github.com/loukesio/barbac/blob/main/benchmark/workflow_runtime/README.md">full stage breakdown and reproducible example</a> separate mapping, extraction, clustering and plotting.</p>
 </div>
 <div class="section level2">
 <h2 id="plot-every-lineage">Plot every lineage<a class="anchor" aria-label="anchor" href="#plot-every-lineage"></a>
@@ -206,15 +211,58 @@
 <div class="section level2">
 <h2 id="evidence-and-reproducibility">Evidence and reproducibility<a class="anchor" aria-label="anchor" href="#evidence-and-reproducibility"></a>
 </h2>
-<p>A barbac mode achieved the highest centroid F1 in <strong>four of five datasets</strong> in the recorded comparison with Shepherd, Starcode and Bartender. Rankings depend on the dataset, mode and metric. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.md">benchmark evidence</a> provides settings, complete tables, timings and limitations; the comparison’s v13 measurements remain separate from the current v14 search improvements.</p>
-<p>The repository also includes reproducible workflows for the <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_chen2023/README.md">Chen 2023</a> and <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_jasinska2020/README.md">Jasinska 2020</a> applications, known-truth extraction checks, and tests of indexed versus exhaustive clustering. Raw study data and large generated analyses are recreated locally from the provided scripts. <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.md">Verification instructions and receipts</a> explain exactly what was checked.</p>
+<p><strong>Barbac LV has the highest F1 and read-assignment accuracy, and the fewest false positive centroids, across all three benchmarks. Barbac Hamming is fastest.</strong></p>
+<table class="table">
+<colgroup>
+<col width="15%">
+<col width="21%">
+<col width="21%">
+<col width="21%">
+<col width="21%">
+</colgroup>
+<thead><tr>
+<th>Benchmark</th>
+<th align="right">LV F1</th>
+<th align="right">LV read accuracy</th>
+<th align="right">LV workflow</th>
+<th align="right">Hamming workflow</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Random N20 · substitutions + indels</td>
+<td align="right">99.28038%</td>
+<td align="right">99.997083%</td>
+<td align="right">1.76 s</td>
+<td align="right">1.40 s</td>
+</tr>
+<tr>
+<td>Anchored · substitutions + indels</td>
+<td align="right">99.23726%</td>
+<td align="right">99.994257%</td>
+<td align="right">2.05 s</td>
+<td align="right">1.52 s</td>
+</tr>
+<tr>
+<td>Milo / Johnson reference</td>
+<td align="right">99.72246%</td>
+<td align="right">99.999476%</td>
+<td align="right">33.65 s</td>
+<td align="right">17.50 s</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://github.com/loukesio/barbac/blob/main/manuscript/publication_tables/table_1_benchmark_comparison.pdf"><strong>See every method in Table 1 →</strong></a> <a href="https://github.com/loukesio/barbac/blob/main/manuscript/publication_tables/table_1_benchmark_comparison.docx">Editable Word table</a> · <a href="https://github.com/loukesio/barbac/blob/main/manuscript/publication_tables/table_1_methods.pdf">Methods and statistics</a></p>
+<p>The simulated designs each contain 60 independent libraries. Accuracy is averaged across libraries; times are median clustering workflow times, including startup and required exports. Milo is one fixed deposited simulation. The evaluated LV settings are distance 3, support ordering, ratio 20, error proxy 0.005 and the optional Poisson indel model. Studio’s <strong>Use publication LV settings</strong> button selects this configuration.</p>
+<p>Paired comparisons support LV’s F1 advantage over Bartender and both Starcode configurations. The <a href="https://github.com/loukesio/barbac/blob/main/benchmark/shepherd_completion/RESULTS.md">completed Shepherd sensitivity comparison</a> also favours LV, using Shepherd’s documented Bayes threshold and the known simulation substitution rate. That comparison is explicitly post hoc; <a href="https://github.com/loukesio/barbac/blob/main/benchmark/publication_final/RESULTS.md">original outcomes</a> remain available. The full table also shows where other configurations lead, including Starcode message passing’s lower FN on the two simulated designs.</p>
+<p>The repository also includes reproducible workflows for the <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_chen2023/README.md">Chen 2023</a> and <a href="https://github.com/loukesio/barbac/blob/main/benchmark/time_series_jasinska2020/README.md">Jasinska 2020</a> applications, known-truth extraction checks, and tests of indexed versus exhaustive clustering. Raw study data and large generated analyses are recreated locally from the provided scripts. The <a href="https://github.com/loukesio/barbac/blob/main/benchmark/REPRODUCE.md">portable reproduction guide</a> accepts your local library and tool paths and can evaluate Barbac alone. <a href="https://github.com/loukesio/barbac/blob/main/documentation/validation.md">Verification instructions and receipts</a> explain exactly what was checked.</p>
 </div>
 <div class="section level2">
 <h2 id="containers-and-help">Containers and help<a class="anchor" aria-label="anchor" href="#containers-and-help"></a>
 </h2>
-<p>The <a href="https://github.com/loukesio/barbac/blob/main/.github/workflows/docker.yml">container workflow</a> builds the R package and FASTQ toolchain for <code>linux/amd64</code>. Build the current release from a checkout:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">--platform</span> linux/amd64 <span class="at">-t</span> barbac:0.2.0 .</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--platform</span> linux/amd64 <span class="at">--rm</span> <span class="at">-it</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">"</span>:/data barbac:0.2.0 R</span></code></pre></div>
+<p>The <a href="https://github.com/loukesio/barbac/blob/main/.github/workflows/docker.yml">container workflow</a> builds the R package and FASTQ toolchain for <code>linux/amd64</code>. Download the named release:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">docker</span> pull <span class="at">--platform</span> linux/amd64 ghcr.io/loukesio/barbac:0.2.1</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--platform</span> linux/amd64 <span class="at">--rm</span> <span class="at">-it</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">"</span>:/data ghcr.io/loukesio/barbac:0.2.1 R</span></code></pre></div>
+<p>To build from a checkout, use <code>docker build --platform linux/amd64 -t barbac:dev .</code>. The <a href="https://github.com/loukesio/barbac/releases/tag/v0.2.1" class="external-link">0.2.1 release</a> includes the R package, complete source and the frozen simulation test inputs.</p>
 <p><a href="https://loukesio.github.io/barbac/">Documentation</a> · <a href="https://github.com/loukesio/barbac/issues" class="external-link">Issues</a> · <a href="https://github.com/loukesio/barbac" class="external-link">Source</a></p>
 <p>Developed by Loukas Theodosiou. Use <code>citation("barbac")</code> for the package citation. GPL (≥ 2); see <a href="LICENSE.html">LICENSE.md</a>. Bundled LTC palettes retain their <a href="https://github.com/loukesio/barbac/blob/main/inst/COPYRIGHTS">attribution and permission notice</a>.</p>
 </div>

@@ -54,12 +54,13 @@ run_cli_pipeline(
 
 An invisible list containing `commands`, `output_dir`, `fastqc_dir`,
 `merged_dir`, `bam_dir`, `stats`, `summary_file`, `log_file`,
-`multiqc_status`, and `samples`. The `samples` table links original
-sample labels to mode, mapping input and indexed BAM. `bam_files` is a
-vector named by sample. Paired BAM names retain
-`<sample>_ANC.assembled_sorted.bam`; R1-only BAMs use
-`<sample>_sorted.bam`. The `stats$sample` column retains these basenames
-without `_sorted.bam` for compatibility with earlier paired runs.
+`multiqc_status`, `command_timings`, `timing_file`, `elapsed_seconds`,
+and `samples`. The `samples` table links original sample labels to mode,
+mapping input and indexed BAM. `bam_files` is a vector named by sample.
+Paired BAM names retain `<sample>_ANC.assembled_sorted.bam`; R1-only
+BAMs use `<sample>_sorted.bam`. The `stats$sample` column retains these
+basenames without `_sorted.bam` for compatibility with earlier paired
+runs.
 
 ## Details
 
@@ -73,6 +74,11 @@ alignments disabled. Secondary and supplementary alignments are removed
 from the BAM; mapping statistics therefore count primary reads or merged
 molecules. FastQC input filenames must produce unique report names
 within a run.
+
+Each external command is timed in `command_timings.csv`, including
+failures. `elapsed_seconds` covers this complete wrapper call, ending at
+indexed BAMs and QC summaries; extraction, clustering and plotting are
+subsequent stages.
 
 Required commands stop the pipeline on failure, with their output
 recorded in the log. MultiQC runs when available; its failure raises a

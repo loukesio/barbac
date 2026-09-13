@@ -410,51 +410,28 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.2.1  tibble_3.3.1 barbac_0.2.0
+#> [1] dplyr_1.2.1  tibble_3.3.1 barbac_0.2.1
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] stringdist_0.9.17           SummarizedExperiment_1.42.0
-#>  [3] gtable_0.3.6                xfun_0.60                  
-#>  [5] bslib_0.12.0                ggplot2_4.0.3              
-#>  [7] htmlwidgets_1.6.4           Biobase_2.72.0             
-#>  [9] lattice_0.22-9              tzdb_0.5.0                 
-#> [11] bitops_1.1-0                vctrs_0.7.3                
-#> [13] tools_4.6.1                 PNWColors_0.1.0            
-#> [15] generics_0.1.4              parallel_4.6.1             
-#> [17] stats4_4.6.1                pkgconfig_2.0.3            
-#> [19] Matrix_1.7-5                RColorBrewer_1.1-3         
-#> [21] cigarillo_1.2.1             S7_0.2.2                   
-#> [23] desc_1.4.3                  S4Vectors_0.50.2           
-#> [25] lifecycle_1.0.5             stringr_1.6.0              
-#> [27] compiler_4.6.1              farver_2.1.2               
-#> [29] Rsamtools_2.28.0            textshaping_1.0.5          
-#> [31] Biostrings_2.80.2           codetools_0.2-20           
-#> [33] Seqinfo_1.2.0               fontquiver_0.2.1           
-#> [35] fontLiberation_0.1.0        htmltools_0.5.9            
-#> [37] sass_0.4.10                 yaml_2.3.12                
-#> [39] tidyr_1.3.2                 pillar_1.11.1              
-#> [41] pkgdown_2.2.1               crayon_1.5.3               
-#> [43] jquerylib_0.1.4             MASS_7.3-65                
-#> [45] BiocParallel_1.46.0         cachem_1.1.0               
-#> [47] DelayedArray_0.38.2         abind_1.4-8                
-#> [49] fontBitstreamVera_0.1.1     tidyselect_1.2.1           
-#> [51] digest_0.6.39               stringi_1.8.9              
-#> [53] purrr_1.2.2                 labeling_0.4.3             
-#> [55] fastmap_1.2.0               grid_4.6.1                 
-#> [57] cli_3.6.6                   SparseArray_1.12.2         
-#> [59] magrittr_2.0.5              patchwork_1.3.2            
-#> [61] S4Arrays_1.12.0             utf8_1.2.6                 
-#> [63] withr_3.0.3                 readr_2.2.0                
-#> [65] gdtools_0.5.1               scales_1.4.0               
-#> [67] rmarkdown_2.32              XVector_0.52.0             
-#> [69] matrixStats_1.5.0           otel_0.2.0                 
-#> [71] gridExtra_2.3.1             hms_1.1.4                  
-#> [73] ragg_1.5.2                  evaluate_1.0.5             
-#> [75] knitr_1.52                  GenomicRanges_1.64.0       
-#> [77] IRanges_2.46.0              rlang_1.3.0                
-#> [79] ggiraph_0.9.6               Rcpp_1.1.2                 
-#> [81] glue_1.8.1                  BiocGenerics_0.58.1        
-#> [83] jsonlite_2.0.0              R6_2.6.1                   
-#> [85] MatrixGenerics_1.24.0       GenomicAlignments_1.48.0   
-#> [87] systemfonts_1.3.2           fs_2.1.0
+#>  [1] utf8_1.2.6              tidyr_1.3.2             sass_0.4.10            
+#>  [4] generics_0.1.4          fontLiberation_0.1.0    stringi_1.8.9          
+#>  [7] hms_1.1.4               digest_0.6.39           magrittr_2.0.5         
+#> [10] evaluate_1.0.5          grid_4.6.1              RColorBrewer_1.1-3     
+#> [13] fastmap_1.2.0           jsonlite_2.0.0          PNWColors_0.1.0        
+#> [16] gridExtra_2.3.1         purrr_1.2.2             scales_1.4.0           
+#> [19] stringdist_0.9.17       fontBitstreamVera_0.1.1 textshaping_1.0.5      
+#> [22] jquerylib_0.1.4         cli_3.6.6               rlang_1.3.0            
+#> [25] fontquiver_0.2.1        withr_3.0.3             cachem_1.1.0           
+#> [28] yaml_2.3.12             otel_0.2.0              gdtools_0.5.1          
+#> [31] tools_4.6.1             parallel_4.6.1          tzdb_0.5.0             
+#> [34] ggplot2_4.0.3           vctrs_0.7.3             R6_2.6.1               
+#> [37] lifecycle_1.0.5         stringr_1.6.0           fs_2.1.0               
+#> [40] htmlwidgets_1.6.4       MASS_7.3-65             ragg_1.5.2             
+#> [43] pkgconfig_2.0.3         desc_1.4.3              pkgdown_2.2.1          
+#> [46] pillar_1.11.1           bslib_0.12.0            gtable_0.3.6           
+#> [49] glue_1.8.1              Rcpp_1.1.2              systemfonts_1.3.2      
+#> [52] xfun_0.60               tidyselect_1.2.1        ggiraph_0.9.6          
+#> [55] knitr_1.52              farver_2.1.2            htmltools_0.5.9        
+#> [58] patchwork_1.3.2         labeling_0.4.3          rmarkdown_2.32         
+#> [61] readr_2.2.0             compiler_4.6.1          S7_0.2.2
 ```
