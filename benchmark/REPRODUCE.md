@@ -7,6 +7,11 @@ output directory. It reuses the frozen simulator and scoring functions. The
 completed Shepherd configuration is distance 3, Bayes threshold −4 and e=0.004
 for new simulations, with automatic e for Milo.
 
+The [0.2.1 release assets](https://github.com/loukesio/barbac/releases/tag/v0.2.1)
+include all 120 canonical simulated libraries as `barbac-0.2.1-simulation-test-data.tar.gz`,
+with per-file SHA-256 hashes. Use these to rerun the exact inputs without depending
+on simulator byte reproducibility. The separate Milo reference remains linked below.
+
 Prerequisites: Python 3.11+ with NumPy, pandas and SciPy; R and the Barbac package
 dependencies. Original numerical-library versions are NumPy 2.2.6, pandas 2.3.3 and SciPy
 1.15.3, recorded in `publication_final/freeze.json`. Install the checked-out release in an isolated
