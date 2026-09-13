@@ -81,7 +81,7 @@ stopifnot(
   is.function(barbac::run_cli_pipeline)
 )
 stopifnot(
-  identical(as.character(utils::packageVersion("barbac")), read.dcf("DESCRIPTION")[1, "Version"]),
+  identical(as.character(utils::packageVersion("barbac")), unname(read.dcf("DESCRIPTION")[1, "Version"])),
   grepl("-v14$", barbac:::barbac_build_id())
 )
 fixture <- data.frame(barcode = c("ACGTACGTACGTACGTACGTACGTA", "ACGTACGTACGTACGTACGTACGTT"),

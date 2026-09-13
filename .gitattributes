@@ -1,3 +1,6 @@
 *.pdf binary
 *.png binary
 *.docx binary
+
+# Preserve the measured R sessionInfo receipt byte for byte, including padding.
+benchmark/workflow_runtime/results/session_info.txt -whitespace

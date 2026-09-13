@@ -13,5 +13,16 @@
     "network_requests": 0
   },
   "timing_receipt": "benchmark/workflow_runtime/results/receipt.json",
-  "remaining_author_items": "manuscript/submission_readiness.md"
+  "remaining_author_items": "manuscript/submission_readiness.md",
+  "website": {
+    "desktop": true,
+    "mobile": true,
+    "all_readme_images_loaded": true
+  },
+  "workflow_figure": {
+    "wide_html_reviewed": true,
+    "compact_print_figure_reviewed": true,
+    "original_preserved": true,
+    "pooling_before_clustering": true
+  }
 }

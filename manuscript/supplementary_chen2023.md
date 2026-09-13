@@ -49,4 +49,3 @@ selected using publication agreement. Unassigned totals span all eight samples.
 ![](media/time_series_trajectories.png)
 
 **Figure S1. Barcode frequency trajectories in the Chen et al. (2023) hBFA1 YPD assay.** L01–L03 identify the three barcode pairs with the largest pooled published counts, shown in both biological assay replicates. Frequencies are conditional on the same 2,314 published pair identifiers for the publication and each barbac configuration. Markers denote generations 8, 16, 24 and 40; lines connect measurements without fitting a growth model. Published-pair molecule coverage and unmatched counts are reported separately in the accompanying time-series analysis. Publication agreement is not a ground-truth accuracy measurement.
-
