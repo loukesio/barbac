@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">barbac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,9 +31,13 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/loukesio/barbac/blob/v0.2.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/loukesio/barbac/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.2" id="barbac-022">barbac 0.2.2<a class="anchor" aria-label="anchor" href="#barbac-022"></a></h2>
+<ul><li>Add preferred public names for the core workflow: <code><a href="../reference/barbac_cluster.html">barbac_cluster()</a></code>, <code><a href="../reference/barbac_extract.html">barbac_extract()</a></code>, <code><a href="../reference/barbac_extract_stats.html">barbac_extract_stats()</a></code> and <code><a href="../reference/barbac_map.html">barbac_map()</a></code>. Each forwards all arguments to <code><a href="../reference/super_cluster2.html">super_cluster2()</a></code>, <code><a href="../reference/barbac_xtr.html">barbac_xtr()</a></code>, <code><a href="../reference/barbac_xtr.stats.html">barbac_xtr.stats()</a></code> and <code><a href="../reference/run_cli_pipeline.html">run_cli_pipeline()</a></code>, which remain exported and unchanged. The validated v14 clustering sources are not modified.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="barbac-021">barbac 0.2.1<a class="anchor" aria-label="anchor" href="#barbac-021"></a></h2>
 <ul><li>Preserve the verified v14 native clustering engine and all R1/paired-read, indel-preserving extraction and native palette functionality.</li>

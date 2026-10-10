@@ -5,12 +5,12 @@
 **barbac** is an R package for end-to-end DNA barcode lineage tracking.
 This vignette walks through the core R-level workflow — clustering a
 count table with
-[`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md)
+[`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md)
 and visualising a time series with
 [`barbac_ts_area()`](https://loukesio.github.io/barbac/reference/barbac_ts_area.md)
 — without requiring any external CLI tools. For the full FASTQ→BAM
 pipeline (FastQC → PEAR → minimap2 → samtools), see
-[`?run_cli_pipeline`](https://loukesio.github.io/barbac/reference/run_cli_pipeline.md).
+[`?barbac_map`](https://loukesio.github.io/barbac/reference/barbac_map.md).
 
 ``` r
 
@@ -65,16 +65,21 @@ head(input)
 #> 43 CCGTTTCAAGCATTAGTCCG      3
 ```
 
-## Clustering with `super_cluster2()`
+## Clustering with `barbac_cluster()`
 
+[`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md)
+is the preferred name of the clustering engine; the original name
 [`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md)
+still works and is used in the benchmark records.
+
+[`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md)
 accepts either a data.frame with columns `barcode` and `counts`, or a
 path to a CSV in the same layout. Here we pass the data.frame directly
 and use a Levenshtein distance threshold of 2.
 
 ``` r
 
-result <- super_cluster2(
+result <- barbac_cluster(
   input,
   distance    = 2,
   merge_ratio = 20,
@@ -349,7 +354,7 @@ barbac_ts_area(
 )
 ```
 
-## What is `super_cluster2()` doing?
+## What is `barbac_cluster()` doing?
 
 Briefly: the algorithm sorts input sequences by descending abundance,
 scans each sequence for candidate centroids within edit distance
@@ -361,11 +366,11 @@ over-represented children of large clusters and reassigns their
 neighbours.
 
 On the Johnson *et al.* (2023) 100k-barcode benchmark
-[`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md)
+[`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md)
 matches Shepherd on the four Johnson metrics (Pearson R, FN%, FP%, WS%)
 while running roughly 1.7× faster. When indel errors are added to the
 simulator — which is where Shepherd’s Hamming-based index struggles —
-[`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md)’s
+[`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md)’s
 wrong-sequence rate stays an order of magnitude below Shepherd’s.
 Reproducibility scripts live in the `benchmark/` directory of the
 package repository.
@@ -376,10 +381,10 @@ For a complete analysis starting from raw FASTQ files, `barbac` ships a
 CLI-wrapping pipeline that runs FastQC, PEAR, minimap2 and samtools,
 then extracts barcodes at fixed genomic coordinates and hands the result
 to
-[`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md).
+[`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md).
 See
-[`?run_cli_pipeline`](https://loukesio.github.io/barbac/reference/run_cli_pipeline.md),
-[`?barbac_xtr`](https://loukesio.github.io/barbac/reference/barbac_xtr.md)
+[`?barbac_map`](https://loukesio.github.io/barbac/reference/barbac_map.md),
+[`?barbac_extract`](https://loukesio.github.io/barbac/reference/barbac_extract.md)
 and
 [`?configure_environment`](https://loukesio.github.io/barbac/reference/configure_environment.md)
 for details.
@@ -410,7 +415,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.2.1  tibble_3.3.1 barbac_0.2.1
+#> [1] dplyr_1.2.1  tibble_3.3.1 barbac_0.2.2
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] utf8_1.2.6              tidyr_1.3.2             sass_0.4.10            
@@ -430,7 +435,7 @@ sessionInfo()
 #> [43] pkgconfig_2.0.3         desc_1.4.3              pkgdown_2.2.1          
 #> [46] pillar_1.11.1           bslib_0.12.0            gtable_0.3.6           
 #> [49] glue_1.8.1              Rcpp_1.1.2              systemfonts_1.3.2      
-#> [52] xfun_0.60               tidyselect_1.2.1        ggiraph_0.9.6          
+#> [52] xfun_0.61               tidyselect_1.2.1        ggiraph_0.9.6          
 #> [55] knitr_1.52              farver_2.1.2            htmltools_0.5.9        
 #> [58] patchwork_1.3.2         labeling_0.4.3          rmarkdown_2.32         
 #> [61] readr_2.2.0             compiler_4.6.1          S7_0.2.2

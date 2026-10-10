@@ -1,5 +1,22 @@
 # Changelog
 
+## barbac 0.2.2
+
+- Add preferred public names for the core workflow:
+  [`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md),
+  [`barbac_extract()`](https://loukesio.github.io/barbac/reference/barbac_extract.md),
+  [`barbac_extract_stats()`](https://loukesio.github.io/barbac/reference/barbac_extract_stats.md)
+  and
+  [`barbac_map()`](https://loukesio.github.io/barbac/reference/barbac_map.md).
+  Each forwards all arguments to
+  [`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md),
+  [`barbac_xtr()`](https://loukesio.github.io/barbac/reference/barbac_xtr.md),
+  [`barbac_xtr.stats()`](https://loukesio.github.io/barbac/reference/barbac_xtr.stats.md)
+  and
+  [`run_cli_pipeline()`](https://loukesio.github.io/barbac/reference/run_cli_pipeline.md),
+  which remain exported and unchanged. The validated v14 clustering
+  sources are not modified.
+
 ## barbac 0.2.1
 
 - Preserve the verified v14 native clustering engine and all

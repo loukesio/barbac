@@ -5,6 +5,8 @@
 Abundance-ranked greedy Levenshtein clustering with a bit-parallel C++
 kernel.
 
+- [`barbac_cluster()`](https://loukesio.github.io/barbac/reference/barbac_cluster.md)
+  : Cluster barcodes (preferred name for \`super_cluster2()\`)
 - [`super_cluster2()`](https://loukesio.github.io/barbac/reference/super_cluster2.md)
   : Fast Centroid-Based Sequence Clustering
 
@@ -22,6 +24,12 @@ Stacked-area plots of lineage frequencies over time.
 
 ## Barcode extraction
 
+- [`barbac_extract()`](https://loukesio.github.io/barbac/reference/barbac_extract.md)
+  : Extract barcodes from BAM files (preferred name for
+  \`barbac_xtr()\`)
+- [`barbac_extract_stats()`](https://loukesio.github.io/barbac/reference/barbac_extract_stats.md)
+  : Summarise extracted barcodes (preferred name for
+  \`barbac_xtr.stats()\`)
 - [`barbac_xtr()`](https://loukesio.github.io/barbac/reference/barbac_xtr.md)
   : Extract Barcodes from BAM File
 - [`barbac_xtr.stats()`](https://loukesio.github.io/barbac/reference/barbac_xtr.stats.md)
@@ -39,6 +47,8 @@ pipeline.
 
 ## End-to-end pipeline orchestrator
 
+- [`barbac_map()`](https://loukesio.github.io/barbac/reference/barbac_map.md)
+  : Map reads to a reference (preferred name for \`run_cli_pipeline()\`)
 - [`run_cli_pipeline()`](https://loukesio.github.io/barbac/reference/run_cli_pipeline.md)
   : Map Single-End or Overlapping Paired-End Reads
 

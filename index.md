@@ -57,7 +57,7 @@ reads <- data.frame(
   counts = c(1000, 12, 800)
 )
 
-clusters <- super_cluster2(reads, method = "lv", distance = 3)
+clusters <- barbac_cluster(reads, method = "lv", distance = 3)
 cluster_stats(clusters)
 ```
 
@@ -80,7 +80,7 @@ Use LV for indel-containing or variable-length libraries. Hamming is
 useful for fixed-length substitution-focused designs. The Poisson model
 and support-based tie ordering are explicit options; choose settings
 using your library design and controls. See the [function
-reference](https://loukesio.github.io/barbac/reference/super_cluster2.html).
+reference](https://loukesio.github.io/barbac/reference/barbac_cluster.html).
 
 ## From FASTQ to barcodes
 
@@ -90,7 +90,7 @@ flowchart LR
     PE["Overlapping R1 + R2"] --> Merge["PEAR merge"] --> Map
     Ref["Reference cassette"] --> Map
     Map --> Extract["Extract barcodes"]
-    Extract --> Cluster["super_cluster2"]
+    Extract --> Cluster["barbac_cluster"]
     Counts["Barcode counts"] --> Cluster
     Cluster --> Results["Lineages · statistics · plots"]
 ```
@@ -108,14 +108,14 @@ use_barbac_env()
 
 # R1-only reads map directly. Add R2 for overlapping paired reads.
 samples <- data.frame(sample = "sample1", R1 = "data/sample1_R1.fastq.gz")
-pipeline <- run_cli_pipeline(samples, "data/cassette.fasta", "results")
+pipeline <- barbac_map(samples, "data/cassette.fasta", "results")
 
-barcode_csv <- barbac_xtr(
+barcode_csv <- barbac_extract(
   pipeline$bam_files[["sample1"]],
   ref_name = "my_cassette", start_pos = 171, end_pos = 196,
   output_file = "results/sample1_barcodes.csv"
 )
-clusters <- super_cluster2(barcode_csv)
+clusters <- barbac_cluster(barcode_csv)
 ```
 
 Use your construct’s reference name and **one-based, inclusive**

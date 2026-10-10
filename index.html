@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="index.html">barbac</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,7 @@
 <span>  counts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">12</span>, <span class="fl">800</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/super_cluster2.html">super_cluster2</a></span><span class="op">(</span><span class="va">reads</span>, method <span class="op">=</span> <span class="st">"lv"</span>, distance <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/barbac_cluster.html">barbac_cluster</a></span><span class="op">(</span><span class="va">reads</span>, method <span class="op">=</span> <span class="st">"lv"</span>, distance <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">clusters</span><span class="op">)</span></span></code></pre></div>
 <p>Each result row contains a <code>central_barcode</code>, its <code>all_barcodes</code> and <code>all_counts</code>, and the combined <code>sum_counts</code>. Member sequences remain available for inspection and for mapping the original samples back to a shared lineage identity.</p>
 </div>
@@ -125,7 +125,7 @@
 </tr>
 </tbody>
 </table>
-<p>Use LV for indel-containing or variable-length libraries. Hamming is useful for fixed-length substitution-focused designs. The Poisson model and support-based tie ordering are explicit options; choose settings using your library design and controls. See the <a href="https://loukesio.github.io/barbac/reference/super_cluster2.html">function reference</a>.</p>
+<p>Use LV for indel-containing or variable-length libraries. Hamming is useful for fixed-length substitution-focused designs. The Poisson model and support-based tie ordering are explicit options; choose settings using your library design and controls. See the <a href="https://loukesio.github.io/barbac/reference/barbac_cluster.html">function reference</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="from-fastq-to-barcodes">From FASTQ to barcodes<a class="anchor" aria-label="anchor" href="#from-fastq-to-barcodes"></a>
@@ -135,7 +135,7 @@
     PE["Overlapping R1 + R2"] --&gt; Merge["PEAR merge"] --&gt; Map
     Ref["Reference cassette"] --&gt; Map
     Map --&gt; Extract["Extract barcodes"]
-    Extract --&gt; Cluster["super_cluster2"]
+    Extract --&gt; Cluster["barbac_cluster"]
     Counts["Barcode counts"] --&gt; Cluster
     Cluster --&gt; Results["Lineages · statistics · plots"]</code></pre>
 <p>Set up the external tools once with <code><a href="reference/configure_environment.html">configure_environment()</a></code>, or use equivalent tools already on your system. FastQC, minimap2 and samtools are required; PEAR is needed for paired reads, and MultiQC is optional.</p>
@@ -145,14 +145,14 @@
 <span></span>
 <span><span class="co"># R1-only reads map directly. Add R2 for overlapping paired reads.</span></span>
 <span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="st">"sample1"</span>, R1 <span class="op">=</span> <span class="st">"data/sample1_R1.fastq.gz"</span><span class="op">)</span></span>
-<span><span class="va">pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_cli_pipeline.html">run_cli_pipeline</a></span><span class="op">(</span><span class="va">samples</span>, <span class="st">"data/cassette.fasta"</span>, <span class="st">"results"</span><span class="op">)</span></span>
+<span><span class="va">pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/barbac_map.html">barbac_map</a></span><span class="op">(</span><span class="va">samples</span>, <span class="st">"data/cassette.fasta"</span>, <span class="st">"results"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">barcode_csv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/barbac_xtr.html">barbac_xtr</a></span><span class="op">(</span></span>
+<span><span class="va">barcode_csv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/barbac_extract.html">barbac_extract</a></span><span class="op">(</span></span>
 <span>  <span class="va">pipeline</span><span class="op">$</span><span class="va">bam_files</span><span class="op">[[</span><span class="st">"sample1"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  ref_name <span class="op">=</span> <span class="st">"my_cassette"</span>, start_pos <span class="op">=</span> <span class="fl">171</span>, end_pos <span class="op">=</span> <span class="fl">196</span>,</span>
 <span>  output_file <span class="op">=</span> <span class="st">"results/sample1_barcodes.csv"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/super_cluster2.html">super_cluster2</a></span><span class="op">(</span><span class="va">barcode_csv</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/barbac_cluster.html">barbac_cluster</a></span><span class="op">(</span><span class="va">barcode_csv</span><span class="op">)</span></span></code></pre></div>
 <p>Use your construct’s reference name and <strong>one-based, inclusive</strong> coordinates. For indel-preserving extraction, supply a <code>flank_pattern</code> whose capture group matches the observed barcode between constant flanks. The <a href="https://github.com/loukesio/barbac/blob/main/documentation/workflow.md">complete workflow</a> explains both extraction modes, QC, mixed single/paired sample tables and time-series joins.</p>
 </div>
 <div class="section level2">
