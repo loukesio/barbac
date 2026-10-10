@@ -7,7 +7,7 @@ Authors@R: person("Loukas", "Theodosiou", role = c("aut", "cre"), email
         = "theodosiou@evolbio.mpg.de")
 Description: barbac provides an end-to-end workflow for DNA barcode
         lineage analysis, from raw FASTQ reads through error-corrected
-        centroid clusters. The core clustering routine super_cluster2()
+        centroid clusters. The core clustering routine barbac_cluster()
         implements abundance-ranked greedy Levenshtein clustering with
         a distance-aware count-ratio merge guard, backed by a
         bit-parallel 64-bit edit-distance kernel written in C++.

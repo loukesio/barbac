@@ -104,7 +104,7 @@ record, paired read counts, and paired identifiers before processing.
 1. Paired reads are merged with PEAR. Single-end reads map directly.
 2. Minimap2 maps reads to the supplied cassette; secondary/supplementary
    alignments are removed before extraction. Samtools sorts and indexes the BAM.
-3. `barbac_xtr()` extracts the barcode using explicit reference coordinates and
+3. `barbac_extract()` extracts the barcode using explicit reference coordinates and
    either exact flanks in query space or fixed reference coordinates.
 4. Extracted counts can be downloaded immediately or used for clustering.
 
@@ -121,7 +121,7 @@ settings, expected counts, paired reads and a separate single-end example.
 
 ## Scientific behavior
 
-`super_cluster2()` runs on pooled counts within each population, then memberships
+`barbac_cluster()` runs on pooled counts within each population, then memberships
 are mapped back to every original sample. The adapter checks membership coverage,
 population totals and every sample total. Pooling is retrospective: later
 timepoints can inform the cluster identity used at earlier timepoints.

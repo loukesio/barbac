@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="178mm" height="117.8mm" viewBox="0 0 1300 860" role="img" aria-labelledby="t d">
+<title id="t">barbac pipeline: Illumina reads or barcode counts to lineage trajectories</title>
+<desc id="d">Reads pass quality control, optional pair merging, mapping and barcode extraction. Extracted counts or an independent count table enter native abundance-aware clustering. Clusters feed statistics and lineage-frequency plots over time.</desc>
+<rect width="1300" height="860" fill="#fff"/>
+<rect x="40" y="40" width="215" height="92" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M58 62h21.0l9.0 9.0v28.0H58z" fill="#1A5B5B"/><path d="M79.0 62v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="73.0" y="114.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.fastq</text>
+<text x="104" y="76" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="bold" fill="#14161a">Illumina reads</text>
+<text x="104" y="98" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#6f6a63">R1-only or overlapping</text>
+<text x="104" y="116" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#6f6a63">R1 + R2</text>
+<rect x="805" y="40" width="200" height="92" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M823 62h21.0l9.0 9.0v28.0H823z" fill="#D1422F"/><path d="M844.0 62v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="838.0" y="114.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.csv</text>
+<text x="869" y="76" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="bold" fill="#14161a">Barcode counts</text>
+<text x="869" y="98" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#6f6a63">enter clustering</text>
+<text x="869" y="116" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#6f6a63">without FASTQ</text>
+<rect x="40" y="180" width="215" height="300" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M54 180H241Q255 180 255 194V214H40V194Q40 180 54 180z" fill="#1A5B5B"/>
+<text x="58" y="203" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Quality control</text>
+<rect x="56" y="227" width="123.0" height="26" rx="6" fill="#FBE7E3"/>
+<text x="65" y="245" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="16" font-weight="bold" fill="#D1422F">barbac_map()</text>
+<text x="58" y="278" font-family="Arial,Helvetica,sans-serif" font-size="16" font-style="italic" font-weight="bold" fill="#14161a">FastQC</text>
+<text x="58" y="306" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">Merge overlapping pairs</text>
+<text x="58" y="329" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">PEAR; R1-only skips this</text>
+<path d="M60 416h21.0l9.0 9.0v28.0H60z" fill="#ACC8BE"/><path d="M81.0 416v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="75.0" y="468.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.html</text>
+<path d="M114 416h21.0l9.0 9.0v28.0H114z" fill="#1A5B5B"/><path d="M135.0 416v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="129.0" y="468.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.fastq</text>
+<rect x="300" y="240" width="190" height="200" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M314 240H476Q490 240 490 254V274H300V254Q300 240 314 240z" fill="#1A5B5B"/>
+<text x="318" y="263" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Map to reference</text>
+<text x="318" y="304" font-family="Arial,Helvetica,sans-serif" font-size="16" font-style="italic" font-weight="bold" fill="#14161a">minimap2 · samtools</text>
+<text x="318" y="332" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">primary alignments</text>
+<text x="318" y="355" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">sorted, indexed</text>
+<path d="M320 376h21.0l9.0 9.0v28.0H320z" fill="#F4AB5C"/><path d="M341.0 376v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="335.0" y="428.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.bam</text>
+<rect x="300" y="505" width="200" height="215" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M314 505H486Q500 505 500 519V539H300V519Q300 505 314 505z" fill="#1A5B5B"/>
+<text x="318" y="528" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Mapping stats</text>
+<text x="318" y="569" font-family="Arial,Helvetica,sans-serif" font-size="16" font-style="italic" font-weight="bold" fill="#14161a">samtools · MultiQC</text>
+<text x="318" y="597" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">mapped, unmapped reads</text>
+<text x="318" y="620" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">command timings</text>
+<path d="M320 656h21.0l9.0 9.0v28.0H320z" fill="#D1422F"/><path d="M341.0 656v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="335.0" y="708.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.csv</text>
+<rect x="545" y="180" width="205" height="300" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M559 180H736Q750 180 750 194V214H545V194Q545 180 559 180z" fill="#1A5B5B"/>
+<text x="563" y="203" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Extract barcodes</text>
+<rect x="561" y="227" width="165.0" height="26" rx="6" fill="#FBE7E3"/>
+<text x="570" y="245" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="16" font-weight="bold" fill="#D1422F">barbac_extract()</text>
+<circle cx="569" cy="273" r="2.6" fill="#1A5B5B"/>
+<text x="579" y="278" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Extract</tspan> by coordinates</text>
+<text x="563" y="301" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">or flank pattern</text>
+<circle cx="569" cy="319" r="2.6" fill="#1A5B5B"/>
+<text x="579" y="324" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Keep</tspan> observed indels</text>
+<circle cx="569" cy="342" r="2.6" fill="#1A5B5B"/>
+<text x="579" y="347" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Count</tspan> distinct barcodes</text>
+<text x="563" y="370" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">and record their length</text>
+<path d="M565 416h21.0l9.0 9.0v28.0H565z" fill="#D1422F"/><path d="M586.0 416v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="580.0" y="468.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.csv</text>
+<rect x="545" y="515" width="205" height="285" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M559 515H736Q750 515 750 529V549H545V529Q545 515 559 515z" fill="#1A5B5B"/>
+<text x="563" y="538" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Barcode stats</text>
+<rect x="561" y="562" width="228.0" height="26" rx="6" fill="#FBE7E3"/>
+<text x="570" y="580" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="16" font-weight="bold" fill="#D1422F">barbac_extract_stats()</text>
+<circle cx="569" cy="608" r="2.6" fill="#1A5B5B"/>
+<text x="579" y="613" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Length</tspan> distribution</text>
+<circle cx="569" cy="631" r="2.6" fill="#1A5B5B"/>
+<text x="579" y="636" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Count</tspan> distribution</text>
+<circle cx="569" cy="654" r="2.6" fill="#1A5B5B"/>
+<text x="579" y="659" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Entropy</tspan> distribution</text>
+<text x="563" y="682" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">optional length filter</text>
+<path d="M565 736h21.0l9.0 9.0v28.0H565z" fill="#D1422F"/><path d="M586.0 736v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="580.0" y="788.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.csv</text>
+<path d="M619 736h21.0l9.0 9.0v28.0H619z" fill="#ACC8BE"/><path d="M640.0 736v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="634.0" y="788.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.png</text>
+<rect x="805" y="180" width="200" height="365" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M819 180H991Q1005 180 1005 194V214H805V194Q805 180 819 180z" fill="#1A5B5B"/>
+<text x="823" y="203" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Cluster barcodes</text>
+<rect x="821" y="227" width="165.0" height="26" rx="6" fill="#FBE7E3"/>
+<text x="830" y="245" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="16" font-weight="bold" fill="#D1422F">barbac_cluster()</text>
+<circle cx="829" cy="273" r="2.6" fill="#1A5B5B"/>
+<text x="839" y="278" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Pool</tspan> timepoints per</text>
+<text x="823" y="301" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">population (optional)</text>
+<circle cx="829" cy="319" r="2.6" fill="#1A5B5B"/>
+<text x="839" y="324" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Rank</tspan> by abundance;</text>
+<text x="823" y="347" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">assign to best centroid</text>
+<text x="823" y="370" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">within distance d</text>
+<circle cx="829" cy="388" r="2.6" fill="#1A5B5B"/>
+<text x="839" y="393" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Guard</tspan> with count ratio</text>
+<text x="823" y="416" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">and error rate</text>
+<circle cx="829" cy="434" r="2.6" fill="#1A5B5B"/>
+<text x="839" y="439" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Report</tspan> centroids and</text>
+<text x="823" y="462" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">every member</text>
+<path d="M825 481h21.0l9.0 9.0v28.0H825z" fill="#D1422F"/><path d="M846.0 481v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="840.0" y="533.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.csv</text>
+<rect x="805" y="582" width="205" height="210" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M819 582H996Q1010 582 1010 596V616H805V596Q805 582 819 582z" fill="#1A5B5B"/>
+<text x="823" y="605" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Clustering stats</text>
+<rect x="821" y="629" width="154.5" height="26" rx="6" fill="#FBE7E3"/>
+<text x="830" y="647" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="16" font-weight="bold" fill="#D1422F">cluster_stats()</text>
+<text x="823" y="680" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">clusters, total reads</text>
+<text x="823" y="703" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">singletons, largest cluster</text>
+<text x="823" y="726" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">top-K abundance share</text>
+<path d="M825 728h21.0l9.0 9.0v28.0H825z" fill="#D1422F"/><path d="M846.0 728v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="840.0" y="780.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.csv</text>
+<rect x="1060" y="205" width="200" height="270" rx="14" fill="#fff" stroke="#1A5B5B" stroke-width="2.5"/>
+<path d="M1074 205H1246Q1260 205 1260 219V239H1060V219Q1060 205 1074 205z" fill="#1A5B5B"/>
+<text x="1078" y="228" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="bold" fill="#fff">Time series</text>
+<rect x="1076" y="252" width="165.0" height="26" rx="6" fill="#FBE7E3"/>
+<text x="1085" y="270" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="16" font-weight="bold" fill="#D1422F">barbac_ts_area()</text>
+<circle cx="1084" cy="298" r="2.6" fill="#1A5B5B"/>
+<text x="1094" y="303" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Plot</tspan> lineage</text>
+<text x="1078" y="326" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">frequencies over time</text>
+<circle cx="1084" cy="344" r="2.6" fill="#1A5B5B"/>
+<text x="1094" y="349" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#2f2c28"><tspan font-style="italic" font-weight="bold">Choose</tspan> one of 32 LTC</text>
+<text x="1078" y="372" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#6f6a63">palettes</text>
+<path d="M1080 411h21.0l9.0 9.0v28.0H1080z" fill="#ACC8BE"/><path d="M1101.0 411v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="1095.0" y="463.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.png</text>
+<path d="M1134 411h21.0l9.0 9.0v28.0H1134z" fill="#F4AB5C"/><path d="M1155.0 411v9.0h9.0z" fill="#fff" fill-opacity="0.6"/><text x="1149.0" y="463.0" text-anchor="middle" font-family="Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="12.0" fill="#2f2c28">.pdf</text>
+<path d="M262 314L284 330L262 346z" fill="#1A5B5B"/>
+<path d="M503 314L525 330L503 346z" fill="#1A5B5B"/>
+<path d="M763 314L785 330L763 346z" fill="#1A5B5B"/>
+<path d="M1018 314L1040 330L1018 346z" fill="#1A5B5B"/>
+<path d="M131 136L163 136L147 158z" fill="#1A5B5B"/>
+<path d="M889 136L921 136L905 158z" fill="#1A5B5B"/>
+<path d="M379 444L411 444L395 466z" fill="#1A5B5B"/>
+<path d="M631 484L663 484L647 506z" fill="#1A5B5B"/>
+<path d="M889 549L921 549L905 571z" fill="#1A5B5B"/>
+<text x="40" y="838" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#6f6a63">Distance d uses Hamming or Levenshtein. Colours: LTC palette alger.</text>
+</svg>

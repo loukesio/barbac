@@ -137,7 +137,7 @@ clustering and lineage visualization.
 
 **2.1 From sequencing reads to barcode counts**
 
-The public `run_cli_pipeline()` accepts a sample table containing R1 paths and
+The public `barbac_map()` accepts a sample table containing R1 paths and
 optional R2 paths. FastQC assesses the input reads. R1-only samples map directly;
 overlapping paired reads are assembled with PEAR (Zhang et al., 2014) before mapping, and unassembled
 pairs do not enter downstream analysis. Minimap2 (Li, 2018) uses its short-read preset,
@@ -146,14 +146,14 @@ alignments and produces sorted, indexed BAM files. Primary mapped and unmapped
 counts, command logs and command-level elapsed times are saved. MultiQC summarizes
 QC reports when available. This wrapper ends at BAM and QC outputs (Figure 1).
 
-`barbac_xtr()` extracts barcodes from primary mapped reads using reference
+`barbac_extract()` extracts barcodes from primary mapped reads using reference
 coordinates or a supplied flank pattern. Variable-length flank extraction retains
 observed insertions and deletions instead of forcing all barcodes to a nominal
 length. The resulting CSV records each distinct sequence, its count and length.
 Length, abundance and entropy diagnostics are available through
-`barbac_xtr.stats()`. Study-specific quality filters and UMI deduplication must
+`barbac_extract_stats()`. Study-specific quality filters and UMI deduplication must
 be specified separately. Neither FASTQ quality scores nor mapping tools are
-required when `super_cluster2()` receives an existing barcode-count table.
+required when `barbac_cluster()` receives an existing barcode-count table.
 
 ![Figure 1. The Barbac workflow. R1-only reads map directly; overlapping paired reads merge with PEAR. Extracted barcodes or independent count tables enter the same native clustering engine. Shared memberships support sample counts, statistics and lineage-frequency plots.](figures/workflow.png){width=178mm}
 
@@ -246,7 +246,8 @@ a separate workflow and must not be compared directly with Table 1 times.
 
 **3.1 Abundance-aware centroid assignment**
 
-`super_cluster2()` collapses exact duplicate sequences, processes sequences in
+`barbac_cluster()` (named `super_cluster2()` in release 0.2.1 and in the
+benchmark receipts) collapses exact duplicate sequences, processes sequences in
 abundance order and returns centroids, complete memberships and conserved counts.
 For equal counts, the optional support ordering sums the counts of one-edit
 neighbours that are no more abundant than the candidate, with sequence order as
@@ -313,10 +314,11 @@ defers figures above 5,000 lineages per population to direct R plotting. Native 
 the broader analysis time. Synthetic examples and local video walkthroughs allow
 users to inspect the workflow without submitting data to a public service.
 
-The 0.2.1 release retains the verified v14 native clustering implementation and
-adds command-level workflow timings. Lazy loading of BAM-related namespaces reduces
-startup work for standalone count clustering. Release verification passed 534
-package assertions in 44 cases and 65 Studio assertions in ten cases, including
+The 0.2.2 release retains the verified v14 native clustering implementation,
+adds command-level workflow timings and introduces the preferred public
+function names used here; the original names remain supported. Lazy loading of BAM-related namespaces reduces
+startup work for standalone count clustering. Release verification passed 547
+package assertions in 47 cases and 65 Studio assertions in ten cases, including
 known indel recovery, R1 and paired processing, complete memberships, sample-level
 count reconciliation, native plot parity and report export.
 
