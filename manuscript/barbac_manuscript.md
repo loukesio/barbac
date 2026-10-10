@@ -155,7 +155,7 @@ Length, abundance and entropy diagnostics are available through
 be specified separately. Neither FASTQ quality scores nor mapping tools are
 required when `barbac_cluster()` receives an existing barcode-count table.
 
-![Figure 1. The Barbac workflow. R1-only reads map directly; overlapping paired reads merge with PEAR. Extracted barcodes or independent count tables enter the same native clustering engine. Shared memberships support sample counts, statistics and lineage-frequency plots.](figures/workflow.png){width=178mm}
+![Figure 1. The barbac pipeline. Illumina reads, either R1-only or overlapping pairs, pass quality control, optional merging, mapping and barcode extraction; extracted counts or an independent count table enter the native clustering engine; clusters feed statistics and lineage-frequency plots. Icons show the file type written at each stage.](figures/pipeline.png){width=178mm}
 
 **2.2 Barcode designs, error generation and reference data**
 
@@ -462,7 +462,7 @@ applicable no-specific-funding statement.]
 
 **Competing interests**
 
-[Author completion required.]
+The authors declare no competing interests.
 
 **References**
 

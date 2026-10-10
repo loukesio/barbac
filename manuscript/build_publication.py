@@ -48,7 +48,7 @@ with tempfile.TemporaryDirectory(prefix='barbac-manuscript-') as folder:
         run=para.add_run();field=OxmlElement('w:fldSimple');field.set(qn('w:instr'),'PAGE')
         run._r.addnext(field)
     doc.save(output)
-    pdf_text=text.replace('](figures/workflow.png)','](figures/workflow.pdf)').replace('](figures/workflow_application.png)','](figures/workflow_application.pdf)')
+    pdf_text=re.sub(r'\]\(figures/([A-Za-z0-9_]+)\.png\)', r'](figures/\1.pdf)', text)
     pdf_text=re.sub(table_pattern,lambda _: '\\clearpage\n\n![](publication_tables/table_1_benchmark_comparison.png){width=166mm}',pdf_text)
     pdf_text=re.sub(r'\*\*Table 1[.]\*\*.*?(?=### 4[.]2)', lambda _: '\\clearpage\n\n',pdf_text,flags=re.S)
     (temp/'pdf.md').write_text(pdf_text)

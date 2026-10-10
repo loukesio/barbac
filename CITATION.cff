@@ -7,8 +7,8 @@ authors:
     given-names: Loukas
     affiliation: Max Planck Institute for Evolutionary Biology
     email: theodosiou@evolbio.mpg.de
-version: 0.2.1
-date-released: 2026-09-13
+version: 0.2.2
+date-released: 2026-10-10
 url: https://loukesio.github.io/barbac/
 repository-code: https://github.com/loukesio/barbac
 license: GPL-2.0-or-later
