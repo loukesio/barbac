@@ -6,7 +6,10 @@
 - [Table 1 PDF](publication_tables/table_1_benchmark_comparison.pdf) and
   [editable Word table](publication_tables/table_1_benchmark_comparison.docx)
 - [Benchmark methods and paired comparisons](publication_tables/table_1_methods.pdf)
-- [Experimental-reference supplement](supplementary_chen2023.md)
+- [Supplementary information PDF](supplementary_information.pdf) (Supplementary Methods,
+  Tables S1–S3, Figure S1; rebuild with `python3 manuscript/build_supplement.py`)
+- [Experimental-reference supplement source](supplementary_chen2023.md)
+- [Development reference, Table S3 data](publication_tables/table_s3_development_reference.csv)
 - [Corrected workflow figure](figures/workflow.pdf)
 - [Remaining author submission details](submission_readiness.md)
 - [Cover letter draft](cover_letter_draft.md)

@@ -28,8 +28,9 @@ The submitted release and test-data archive identifier will be added before subm
 
 **Contact:** theodosiou@evolbio.mpg.de
 
-**Supplementary information:** Benchmark methods, statistical comparisons,
-execution records and application analyses accompany this manuscript.
+**Supplementary information:** Supplementary Methods and Tables S1–S3
+(benchmark settings, paired comparisons, the Chen et al. (2023) application
+and the development reference) accompany this manuscript.
 
 **1 Introduction**
 
@@ -180,6 +181,10 @@ remain intact. This boundary affected 249 of 119,992,068 reads across 16 of 120
 libraries. The model represents a specified barcode error process; it does not
 claim to calibrate every instrument or protocol, and it does not explicitly
 model all dinucleotide, PCR-family or synthesis effects.
+Substitution-only variants of both designs were examined during development
+and are reported in Supplementary Table S3; the main comparison uses the
+indel-containing designs because repeat-dependent indels are characteristic
+of barcode libraries.
 
 The fixed Milo input contains 100,000 listed true identities, 1,544,850 distinct
 observed sequences and 24,996,128 reads. It was used during development. Its
