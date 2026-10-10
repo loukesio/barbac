@@ -457,8 +457,9 @@ responsible for reviewing the code, analyses and scientific conclusions.
 
 **Funding**
 
-[Author completion required: funding sources and grant identifiers, or the
-applicable no-specific-funding statement.]
+We acknowledge the Max Planck Society for generous core support and funding
+from the Deutsche Forschungsgemeinschaft (DFG) Collaborative Research Center
+1182 ‘Origin and Function of Metaorganisms’ (grant no. SFB1182).
 
 **Competing interests**
 
