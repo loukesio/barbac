@@ -23,6 +23,7 @@ reference:
     Abundance-ranked greedy Levenshtein clustering with a bit-parallel
     C++ kernel.
   contents:
+  - barbac_cluster
   - super_cluster2
 
 - title: Time-series visualisation
@@ -35,6 +36,8 @@ reference:
 
 - title: Barcode extraction
   contents:
+  - barbac_extract
+  - barbac_extract_stats
   - barbac_xtr
   - barbac_xtr.stats
 
@@ -48,6 +51,7 @@ reference:
 
 - title: End-to-end pipeline orchestrator
   contents:
+  - barbac_map
   - run_cli_pipeline
 
 - title: Individual pipeline steps

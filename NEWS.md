@@ -1,3 +1,11 @@
+# barbac 0.2.2
+
+- Add preferred public names for the core workflow: `barbac_cluster()`,
+  `barbac_extract()`, `barbac_extract_stats()` and `barbac_map()`. Each
+  forwards all arguments to `super_cluster2()`, `barbac_xtr()`,
+  `barbac_xtr.stats()` and `run_cli_pipeline()`, which remain exported and
+  unchanged. The validated v14 clustering sources are not modified.
+
 # barbac 0.2.1
 
 - Preserve the verified v14 native clustering engine and all R1/paired-read,
